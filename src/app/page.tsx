@@ -1,8 +1,13 @@
 import { createClient } from "@/lib/supabase/server";
 import WalletCard from "@/components/WalletCard";
 import NewBetForm from "@/components/NewBetForm";
-import PendingBets from "@/components/PendingBets";
+import LiveBets from "@/components/LiveBets";
+import StatsRow from "@/components/StatsRow";
+import BetHistory from "@/components/BetHistory";
 import type { BetWithLegs } from "@/lib/types";
+
+// Settled bets stay on a Live now card with Undo for this long.
+const UNDO_WINDOW_MS = 15 * 60 * 1000;
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -37,7 +42,21 @@ export default async function HomePage() {
   const balance = deposits - withdrawals - totalStaked + totalPayouts;
   const netProfit = balance + withdrawals - deposits;
 
-  const pendingBets = allBets.filter((b) => b.status === "pending");
+  const now = Date.now();
+  const liveBets = allBets.filter(
+    (b) =>
+      b.status === "pending" ||
+      b.legs.some((leg) => leg.result === "pending") ||
+      (b.settled_at &&
+        now - new Date(b.settled_at).getTime() < UNDO_WINDOW_MS)
+  );
+  const settledBets = allBets
+    .filter((b) => b.status !== "pending")
+    .sort(
+      (a, b) =>
+        new Date(b.settled_at ?? 0).getTime() -
+        new Date(a.settled_at ?? 0).getTime()
+    );
 
   return (
     <main className="min-h-dvh px-4 py-6 sm:px-6">
@@ -62,7 +81,11 @@ export default async function HomePage() {
 
         <NewBetForm />
 
-        <PendingBets bets={pendingBets} />
+        <LiveBets bets={liveBets} />
+
+        <StatsRow bets={settledBets} />
+
+        <BetHistory bets={settledBets} />
       </div>
     </main>
   );

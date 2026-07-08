@@ -12,27 +12,61 @@ import {
 } from "@/lib/format";
 import { SPORTS, SPORT_EMOJI, type Sport } from "@/lib/types";
 
+interface LegDraft {
+  sport: Sport | null;
+  description: string;
+  odds: string;
+}
+
+function emptyLeg(): LegDraft {
+  return { sport: null, description: "", odds: "" };
+}
+
 export default function NewBetForm() {
   const router = useRouter();
   const [stake, setStake] = useState("");
-  const [sport, setSport] = useState<Sport | null>(null);
-  const [description, setDescription] = useState("");
-  const [odds, setOdds] = useState("");
+  const [legs, setLegs] = useState<LegDraft[]>([emptyLeg()]);
   const [error, setError] = useState<string | null>(null);
   const [placed, setPlaced] = useState(false);
   const [saving, setSaving] = useState(false);
 
   const stakeValue = parseMoney(stake);
-  const oddsValue = parseOdds(odds);
-  const previewReady = stakeValue !== null && oddsValue !== null;
-  const toWin = previewReady ? round2(stakeValue * (oddsValue - 1)) : null;
-  const toCollect = previewReady ? round2(stakeValue * oddsValue) : null;
+  const legOdds = legs.map((leg) => parseOdds(leg.odds));
+  const allOddsValid = legOdds.every((o) => o !== null);
+  const totalOdds = allOddsValid
+    ? round2(legOdds.reduce((product, o) => product * (o as number), 1))
+    : null;
+  const toWin =
+    stakeValue !== null && totalOdds !== null
+      ? round2(stakeValue * (totalOdds - 1))
+      : null;
+  const toCollect =
+    stakeValue !== null && totalOdds !== null
+      ? round2(stakeValue * totalOdds)
+      : null;
 
-  const canPlace =
-    previewReady && sport !== null && description.trim().length > 0 && !saving;
+  const allLegsComplete = legs.every(
+    (leg, i) =>
+      leg.sport !== null && leg.description.trim().length > 0 && legOdds[i] !== null
+  );
+  const canPlace = stakeValue !== null && allLegsComplete && !saving;
+
+  function updateLeg(index: number, patch: Partial<LegDraft>) {
+    setLegs((prev) =>
+      prev.map((leg, i) => (i === index ? { ...leg, ...patch } : leg))
+    );
+  }
+
+  function addLeg() {
+    setLegs((prev) => [...prev, emptyLeg()]);
+  }
+
+  function removeLeg(index: number) {
+    setLegs((prev) => prev.filter((_, i) => i !== index));
+  }
 
   async function placeBet() {
-    if (!canPlace || stakeValue === null || oddsValue === null) return;
+    if (!canPlace || stakeValue === null || totalOdds === null) return;
 
     setError(null);
     setSaving(true);
@@ -40,10 +74,12 @@ export default function NewBetForm() {
     const supabase = createClient();
     const { error: dbError } = await supabase.rpc("place_bet", {
       p_stake: stakeValue,
-      p_total_odds: oddsValue,
-      p_legs: [
-        { sport, description: description.trim(), odds: oddsValue },
-      ],
+      p_total_odds: totalOdds,
+      p_legs: legs.map((leg, i) => ({
+        sport: leg.sport,
+        description: leg.description.trim(),
+        odds: legOdds[i],
+      })),
     });
 
     setSaving(false);
@@ -54,9 +90,7 @@ export default function NewBetForm() {
     }
 
     setStake("");
-    setSport(null);
-    setDescription("");
-    setOdds("");
+    setLegs([emptyLeg()]);
     setPlaced(true);
     setTimeout(() => setPlaced(false), 2500);
     router.refresh();
@@ -82,54 +116,92 @@ export default function NewBetForm() {
         className={inputClass}
       />
 
-      <p className="mt-4 text-sm font-medium">Sport</p>
-      <div className="mt-2 flex flex-wrap gap-2">
-        {SPORTS.map((s) => (
-          <button
-            key={s}
-            type="button"
-            onClick={() => setSport(s)}
-            className={`rounded-xl border px-4 py-2.5 text-sm font-semibold ${
-              sport === s
-                ? "border-emerald-600 bg-emerald-600 text-white"
-                : "border-neutral-300 dark:border-neutral-700"
-            }`}
+      {legs.map((leg, index) => (
+        <div
+          key={index}
+          className={
+            legs.length > 1
+              ? "mt-4 rounded-xl border border-neutral-200 p-3 dark:border-neutral-800"
+              : ""
+          }
+        >
+          {legs.length > 1 && (
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-bold">Leg {index + 1}</p>
+              <button
+                type="button"
+                onClick={() => removeLeg(index)}
+                className="rounded-lg px-2 py-1 text-xs font-medium text-red-600 dark:text-red-400"
+              >
+                Remove
+              </button>
+            </div>
+          )}
+
+          <p className="mt-3 text-sm font-medium">Sport</p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {SPORTS.map((s) => (
+              <button
+                key={s}
+                type="button"
+                onClick={() => updateLeg(index, { sport: s })}
+                className={`rounded-xl border px-4 py-2.5 text-sm font-semibold ${
+                  leg.sport === s
+                    ? "border-emerald-600 bg-emerald-600 text-white"
+                    : "border-neutral-300 dark:border-neutral-700"
+                }`}
+              >
+                {SPORT_EMOJI[s]} {s}
+              </button>
+            ))}
+          </div>
+
+          <label
+            htmlFor={`description-${index}`}
+            className="mt-4 block text-sm font-medium"
           >
-            {SPORT_EMOJI[s]} {s}
-          </button>
-        ))}
-      </div>
+            Pick
+          </label>
+          <input
+            id={`description-${index}`}
+            type="text"
+            placeholder="Man Utd ML vs Arsenal"
+            value={leg.description}
+            onChange={(e) => updateLeg(index, { description: e.target.value })}
+            className={inputClass}
+          />
 
-      <label htmlFor="description" className="mt-4 block text-sm font-medium">
-        Pick
-      </label>
-      <input
-        id="description"
-        type="text"
-        placeholder="Man Utd ML vs Arsenal"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        className={inputClass}
-      />
+          <label
+            htmlFor={`odds-${index}`}
+            className="mt-4 block text-sm font-medium"
+          >
+            Odds (decimal)
+          </label>
+          <input
+            id={`odds-${index}`}
+            type="text"
+            inputMode="decimal"
+            placeholder="2.50"
+            value={leg.odds}
+            onChange={(e) => updateLeg(index, { odds: e.target.value })}
+            className={inputClass}
+          />
+        </div>
+      ))}
 
-      <label htmlFor="odds" className="mt-4 block text-sm font-medium">
-        Odds (decimal)
-      </label>
-      <input
-        id="odds"
-        type="text"
-        inputMode="decimal"
-        placeholder="2.50"
-        value={odds}
-        onChange={(e) => setOdds(e.target.value)}
-        className={inputClass}
-      />
+      <button
+        type="button"
+        onClick={addLeg}
+        className="mt-4 h-11 w-full rounded-xl border border-dashed border-neutral-300 text-sm font-semibold text-neutral-600 dark:border-neutral-700 dark:text-neutral-300"
+      >
+        + Add leg (makes it a parlay)
+      </button>
 
       <div className="mt-5 grid grid-cols-3 gap-2 rounded-xl bg-neutral-100 p-3 text-center dark:bg-neutral-900">
         <div>
           <p className="text-xs text-neutral-500">Total odds</p>
           <p className="mt-0.5 text-sm font-bold">
-            {oddsValue !== null ? formatOdds(oddsValue) : "-"}
+            {totalOdds !== null ? formatOdds(totalOdds) : "-"}
           </p>
         </div>
         <div>
