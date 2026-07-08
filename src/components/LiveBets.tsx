@@ -86,9 +86,11 @@ export default function LiveBets({ bets }: Props) {
                         <p className="text-sm font-medium">
                           {SPORT_EMOJI[leg.sport]} {leg.description}
                         </p>
-                        <p className="text-sm font-semibold text-neutral-500">
-                          {formatOdds(Number(leg.odds))}
-                        </p>
+                        {leg.odds !== null && (
+                          <p className="text-sm font-semibold text-neutral-500">
+                            {formatOdds(Number(leg.odds))}
+                          </p>
+                        )}
                       </div>
 
                       <div className="mt-1.5 flex items-center gap-2">

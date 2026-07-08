@@ -23,7 +23,7 @@ export interface Leg {
   id: string;
   sport: Sport;
   description: string;
-  odds: number;
+  odds: number | null;
   result: LegResult;
 }
 

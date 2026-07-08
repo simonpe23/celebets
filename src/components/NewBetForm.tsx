@@ -18,6 +18,11 @@ interface LegDraft {
   odds: string;
 }
 
+type LegOddsState =
+  | { kind: "blank" }
+  | { kind: "invalid" }
+  | { kind: "valid"; value: number };
+
 function emptyLeg(): LegDraft {
   return { sport: null, description: "", odds: "" };
 }
@@ -26,16 +31,37 @@ export default function NewBetForm() {
   const router = useRouter();
   const [stake, setStake] = useState("");
   const [legs, setLegs] = useState<LegDraft[]>([emptyLeg()]);
+  // On parlays the user can type over the auto-calculated total odds,
+  // for example when the betting app charges a fee.
+  const [totalOverride, setTotalOverride] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [placed, setPlaced] = useState(false);
   const [saving, setSaving] = useState(false);
 
+  const isParlay = legs.length > 1;
   const stakeValue = parseMoney(stake);
-  const legOdds = legs.map((leg) => parseOdds(leg.odds));
-  const allOddsValid = legOdds.every((o) => o !== null);
-  const totalOdds = allOddsValid
-    ? round2(legOdds.reduce((product, o) => product * (o as number), 1))
+
+  const legOddsStates: LegOddsState[] = legs.map((leg) => {
+    const text = leg.odds.trim();
+    if (text === "") return { kind: "blank" };
+    const value = parseOdds(text);
+    return value === null ? { kind: "invalid" } : { kind: "valid", value };
+  });
+
+  const autoTotal = legOddsStates.every((s) => s.kind === "valid")
+    ? round2(
+        legOddsStates.reduce(
+          (product, s) => product * (s.kind === "valid" ? s.value : 1),
+          1
+        )
+      )
     : null;
+
+  const totalOdds =
+    isParlay && totalOverride !== null
+      ? parseOdds(totalOverride)
+      : autoTotal;
+
   const toWin =
     stakeValue !== null && totalOdds !== null
       ? round2(stakeValue * (totalOdds - 1))
@@ -45,11 +71,14 @@ export default function NewBetForm() {
       ? round2(stakeValue * totalOdds)
       : null;
 
-  const allLegsComplete = legs.every(
-    (leg, i) =>
-      leg.sport !== null && leg.description.trim().length > 0 && legOdds[i] !== null
-  );
-  const canPlace = stakeValue !== null && allLegsComplete && !saving;
+  const allLegsComplete = legs.every((leg, i) => {
+    const oddsOk = isParlay
+      ? legOddsStates[i].kind !== "invalid"
+      : legOddsStates[i].kind === "valid";
+    return leg.sport !== null && leg.description.trim().length > 0 && oddsOk;
+  });
+  const canPlace =
+    stakeValue !== null && allLegsComplete && totalOdds !== null && !saving;
 
   function updateLeg(index: number, patch: Partial<LegDraft>) {
     setLegs((prev) =>
@@ -62,7 +91,11 @@ export default function NewBetForm() {
   }
 
   function removeLeg(index: number) {
-    setLegs((prev) => prev.filter((_, i) => i !== index));
+    setLegs((prev) => {
+      const next = prev.filter((_, i) => i !== index);
+      if (next.length === 1) setTotalOverride(null);
+      return next;
+    });
   }
 
   async function placeBet() {
@@ -75,11 +108,14 @@ export default function NewBetForm() {
     const { error: dbError } = await supabase.rpc("place_bet", {
       p_stake: stakeValue,
       p_total_odds: totalOdds,
-      p_legs: legs.map((leg, i) => ({
-        sport: leg.sport,
-        description: leg.description.trim(),
-        odds: legOdds[i],
-      })),
+      p_legs: legs.map((leg, i) => {
+        const state = legOddsStates[i];
+        return {
+          sport: leg.sport,
+          description: leg.description.trim(),
+          odds: state.kind === "valid" ? state.value : null,
+        };
+      }),
     });
 
     setSaving(false);
@@ -91,6 +127,7 @@ export default function NewBetForm() {
 
     setStake("");
     setLegs([emptyLeg()]);
+    setTotalOverride(null);
     setPlaced(true);
     setTimeout(() => setPlaced(false), 2500);
     router.refresh();
@@ -120,12 +157,12 @@ export default function NewBetForm() {
         <div
           key={index}
           className={
-            legs.length > 1
+            isParlay
               ? "mt-4 rounded-xl border border-neutral-200 p-3 dark:border-neutral-800"
               : ""
           }
         >
-          {legs.length > 1 && (
+          {isParlay && (
             <div className="flex items-center justify-between">
               <p className="text-sm font-bold">Leg {index + 1}</p>
               <button
@@ -176,12 +213,18 @@ export default function NewBetForm() {
             className="mt-4 block text-sm font-medium"
           >
             Odds (decimal)
+            {isParlay && (
+              <span className="font-normal text-neutral-500">
+                {" "}
+                , optional
+              </span>
+            )}
           </label>
           <input
             id={`odds-${index}`}
             type="text"
             inputMode="decimal"
-            placeholder="2.50"
+            placeholder={isParlay ? "Leave empty if unknown" : "2.50"}
             value={leg.odds}
             onChange={(e) => updateLeg(index, { odds: e.target.value })}
             className={inputClass}
@@ -196,6 +239,47 @@ export default function NewBetForm() {
       >
         + Add leg (makes it a parlay)
       </button>
+
+      {isParlay && (
+        <div className="mt-4">
+          <div className="flex items-center justify-between">
+            <label htmlFor="total-odds" className="block text-sm font-medium">
+              Total odds
+            </label>
+            {totalOverride !== null && autoTotal !== null && (
+              <button
+                type="button"
+                onClick={() => setTotalOverride(null)}
+                className="rounded-lg px-2 py-1 text-xs font-medium text-emerald-600 dark:text-emerald-400"
+              >
+                Reset to auto ({formatOdds(autoTotal)})
+              </button>
+            )}
+          </div>
+          <input
+            id="total-odds"
+            type="text"
+            inputMode="decimal"
+            placeholder={autoTotal !== null ? formatOdds(autoTotal) : "3.96"}
+            value={
+              totalOverride !== null
+                ? totalOverride
+                : autoTotal !== null
+                  ? formatOdds(autoTotal)
+                  : ""
+            }
+            onChange={(e) => setTotalOverride(e.target.value)}
+            className={inputClass}
+          />
+          <p className="mt-1 text-xs text-neutral-500">
+            {totalOverride !== null
+              ? "Using your number. To Win and To Collect follow it."
+              : autoTotal !== null
+                ? "Calculated from the legs. Type over it if your betting app shows different total odds."
+                : "Some legs have no odds, so type the total odds from your betting app."}
+          </p>
+        </div>
+      )}
 
       <div className="mt-5 grid grid-cols-3 gap-2 rounded-xl bg-neutral-100 p-3 text-center dark:bg-neutral-900">
         <div>
