@@ -20,7 +20,31 @@ const STATUS_BADGE: Record<string, string> = {
 export default function LiveBets({ bets }: Props) {
   const router = useRouter();
   const [busyLeg, setBusyLeg] = useState<string | null>(null);
+  const [confirmingDelete, setConfirmingDelete] = useState<string | null>(
+    null
+  );
   const [error, setError] = useState<string | null>(null);
+
+  async function deleteBet(betId: string) {
+    setError(null);
+    setBusyLeg("deleting");
+
+    const supabase = createClient();
+    const { error: dbError } = await supabase
+      .from("bets")
+      .delete()
+      .eq("id", betId);
+
+    setBusyLeg(null);
+    setConfirmingDelete(null);
+
+    if (dbError) {
+      setError(dbError.message);
+      return;
+    }
+
+    router.refresh();
+  }
 
   async function setResult(legId: string, result: LegResult) {
     setError(null);
@@ -72,12 +96,48 @@ export default function LiveBets({ bets }: Props) {
                   >
                     {bet.status}
                   </span>
-                  {bet.legs.length > 1 && (
-                    <span className="text-xs font-medium text-neutral-500">
-                      Parlay, {bet.legs.length} legs
-                    </span>
-                  )}
+                  <div className="flex items-center gap-3">
+                    {bet.legs.length > 1 && (
+                      <span className="text-xs font-medium text-neutral-500">
+                        Parlay, {bet.legs.length} legs
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      disabled={busyLeg !== null}
+                      onClick={() => setConfirmingDelete(bet.id)}
+                      className="rounded-lg border border-neutral-300 px-2.5 py-1 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-neutral-700"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
+
+                {confirmingDelete === bet.id && (
+                  <div className="mt-3 flex items-center justify-between gap-2 rounded-xl bg-red-50 p-3 dark:bg-red-950">
+                    <p className="text-sm text-red-700 dark:text-red-300">
+                      Delete this bet? The stake returns to your wallet.
+                    </p>
+                    <div className="flex shrink-0 gap-2">
+                      <button
+                        type="button"
+                        disabled={busyLeg !== null}
+                        onClick={() => setConfirmingDelete(null)}
+                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium dark:border-neutral-700"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        disabled={busyLeg !== null}
+                        onClick={() => deleteBet(bet.id)}
+                        className="rounded-lg bg-red-600 px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
+                      >
+                        Yes, delete
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 <div className="mt-3 space-y-3">
                   {bet.legs.map((leg) => (

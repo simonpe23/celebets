@@ -27,6 +27,13 @@ export interface Leg {
   result: LegResult;
 }
 
+export interface Transaction {
+  id: string;
+  type: "deposit" | "withdrawal";
+  amount: number;
+  created_at: string;
+}
+
 export interface BetWithLegs {
   id: string;
   stake: number;

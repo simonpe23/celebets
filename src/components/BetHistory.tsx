@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 import { formatOdds, formatMoney, formatSignedMoney } from "@/lib/format";
 import { SPORT_EMOJI, type BetWithLegs } from "@/lib/types";
 
@@ -14,14 +16,79 @@ function profitOf(bet: BetWithLegs): number {
     : -Number(bet.stake);
 }
 
+// Formats a timestamp as yyyy-mm-dd in local time, for the date input.
+function toDateInputValue(timestamp: string): string {
+  const d = new Date(timestamp);
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${d.getFullYear()}-${month}-${day}`;
+}
+
 export default function BetHistory({ bets }: Props) {
-  // Dates are rendered after mount so they use the phone's timezone.
+  const router = useRouter();
+  const [confirming, setConfirming] = useState<string | null>(null);
+  const [editing, setEditing] = useState<string | null>(null);
+  const [dateValue, setDateValue] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  // Dates render after mount so they use the phone's timezone.
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
+
+  async function deleteBet(betId: string) {
+    setError(null);
+    setBusy(true);
+
+    const supabase = createClient();
+    const { error: dbError } = await supabase
+      .from("bets")
+      .delete()
+      .eq("id", betId);
+
+    setBusy(false);
+    setConfirming(null);
+
+    if (dbError) {
+      setError(dbError.message);
+      return;
+    }
+
+    router.refresh();
+  }
+
+  async function saveDate(betId: string) {
+    if (!dateValue) return;
+    setError(null);
+    setBusy(true);
+
+    // Saved at noon local time so the day stays right in every view.
+    const settledAt = new Date(dateValue + "T12:00:00").toISOString();
+    const supabase = createClient();
+    const { error: dbError } = await supabase
+      .from("bets")
+      .update({ settled_at: settledAt })
+      .eq("id", betId);
+
+    setBusy(false);
+    setEditing(null);
+
+    if (dbError) {
+      setError(dbError.message);
+      return;
+    }
+
+    router.refresh();
+  }
 
   return (
     <section>
       <h2 className="text-lg font-bold">Betting history</h2>
+
+      {error && (
+        <p className="mt-3 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
+          {error}
+        </p>
+      )}
 
       {bets.length === 0 ? (
         <p className="mt-3 rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:border-neutral-700">
@@ -69,6 +136,97 @@ export default function BetHistory({ bets }: Props) {
                     {formatSignedMoney(profit)}
                   </p>
                 </div>
+
+                <div className="mt-2 flex gap-2">
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => {
+                      setConfirming(null);
+                      setEditing(bet.id);
+                      setDateValue(
+                        bet.settled_at ? toDateInputValue(bet.settled_at) : ""
+                      );
+                    }}
+                    className="rounded-lg border border-neutral-300 px-2.5 py-1 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-neutral-700"
+                  >
+                    Edit date
+                  </button>
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => {
+                      setEditing(null);
+                      setConfirming(bet.id);
+                    }}
+                    className="rounded-lg border border-neutral-300 px-2.5 py-1 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-neutral-700"
+                  >
+                    Delete
+                  </button>
+                </div>
+
+                {editing === bet.id && (
+                  <div className="mt-3 flex items-end gap-2 rounded-xl bg-neutral-100 p-3 dark:bg-neutral-900">
+                    <div className="grow">
+                      <label
+                        htmlFor={`date-${bet.id}`}
+                        className="block text-xs text-neutral-500"
+                      >
+                        Settled on
+                      </label>
+                      <input
+                        id={`date-${bet.id}`}
+                        type="date"
+                        value={dateValue}
+                        onChange={(e) => setDateValue(e.target.value)}
+                        className="mt-1 block h-10 w-full rounded-lg border border-neutral-300 bg-white px-3 text-sm text-neutral-900 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={() => setEditing(null)}
+                      className="h-10 rounded-lg border border-neutral-300 px-3 text-xs font-medium dark:border-neutral-700"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      disabled={busy || !dateValue}
+                      onClick={() => saveDate(bet.id)}
+                      className="h-10 rounded-lg bg-emerald-600 px-3 text-xs font-semibold text-white disabled:opacity-50"
+                    >
+                      Save
+                    </button>
+                  </div>
+                )}
+
+                {confirming === bet.id && (
+                  <div className="mt-3 flex items-center justify-between gap-2 rounded-xl bg-red-50 p-3 dark:bg-red-950">
+                    <p className="text-sm text-red-700 dark:text-red-300">
+                      Delete this bet? The stake returns to your wallet and
+                      all stats forget it.
+                    </p>
+                    <div className="flex shrink-0 gap-2">
+                      <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() => setConfirming(null)}
+                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium dark:border-neutral-700"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() => deleteBet(bet.id)}
+                        className="rounded-lg bg-red-600 px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
+                      >
+                        Yes, delete
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             );
           })}

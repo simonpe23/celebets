@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { formatMoney, formatSignedMoney, parseMoney } from "@/lib/format";
@@ -67,17 +68,31 @@ export default function WalletCard({ balance, netProfit, userId }: Props) {
           <p className={`mt-1 text-sm font-semibold ${profitColor}`}>
             Net profit {formatSignedMoney(netProfit)}
           </p>
+          <Link
+            href="/transactions"
+            className="mt-2 inline-block text-sm font-medium text-neutral-500 underline underline-offset-2"
+          >
+            Transactions
+          </Link>
         </div>
-        <button
-          type="button"
-          onClick={() => {
-            setError(null);
-            setOpen(true);
-          }}
-          className="rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white active:bg-emerald-700"
-        >
-          Deposit
-        </button>
+        <div className="flex flex-col gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              setError(null);
+              setOpen(true);
+            }}
+            className="rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white active:bg-emerald-700"
+          >
+            Deposit
+          </button>
+          <Link
+            href="/stats"
+            className="rounded-xl border border-neutral-300 px-4 py-2.5 text-center text-sm font-semibold dark:border-neutral-700"
+          >
+            Stats
+          </Link>
+        </div>
       </div>
 
       {open && (
