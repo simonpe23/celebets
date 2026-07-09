@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { buildInsightPool, pickInsights } from "@/lib/stats";
 import type { BetWithLegs } from "@/lib/types";
 
@@ -45,6 +46,12 @@ export default function Recommendations({ bets }: { bets: BetWithLegs[] }) {
               ))}
             </ul>
           )}
+          <Link
+            href="/recommendations"
+            className="mt-3 block text-center text-sm font-semibold text-emerald-600 dark:text-emerald-400"
+          >
+            Show all recommendations
+          </Link>
         </div>
       )}
     </section>

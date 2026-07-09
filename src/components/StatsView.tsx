@@ -6,6 +6,7 @@ import { formatMoney, formatSignedMoney, round2 } from "@/lib/format";
 import BetHistory from "@/components/BetHistory";
 import {
   bucketRows,
+  categoryRows,
   sportRows,
   sportTypeRows,
   totals,
@@ -93,6 +94,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
   const bySportType = sport === null ? null : sportTypeRows(filtered, sport);
   const sportTotals = sport === null ? null : bySport[0];
   const byBucket = bucketRows(filtered, sport);
+  const byCategory = sport === null ? [] : categoryRows(filtered, sport);
   const historyBets = [...filtered].sort(
     (a, b) =>
       new Date(b.settled_at ?? 0).getTime() -
@@ -366,6 +368,49 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
                 ))}
               </div>
             </section>
+
+            {sport !== null && byCategory.length > 0 && (
+              <section className="rounded-2xl border border-neutral-200 p-4 dark:border-neutral-800">
+                <h2 className="text-base font-bold">Per category</h2>
+                <p className="mt-1 text-xs text-neutral-500">
+                  Your {sport} picks grouped by what you bet on. Same money
+                  rules as everywhere else.
+                </p>
+                <div className="mt-3 space-y-2">
+                  {byCategory.map((row) => (
+                    <div
+                      key={row.label}
+                      className="flex items-center justify-between gap-2"
+                    >
+                      <p className="min-w-0 truncate text-sm font-medium">
+                        {row.label}
+                      </p>
+                      <div className="flex shrink-0 items-center gap-3">
+                        <p className="text-sm text-neutral-500">
+                          {row.wins}-{row.losses}
+                        </p>
+                        <p
+                          className={`w-20 text-right text-sm font-bold ${profitColor(
+                            row.profit
+                          )}`}
+                        >
+                          {formatSignedMoney(round2(row.profit))}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {sport !== null && (
+              <Link
+                href={`/recommendations?sport=${encodeURIComponent(sport)}`}
+                className="block h-12 w-full rounded-xl border border-emerald-600 text-center text-base font-semibold leading-[3rem] text-emerald-600 dark:text-emerald-400"
+              >
+                All {sport} recommendations
+              </Link>
+            )}
 
             <BetHistory bets={historyBets} />
           </>

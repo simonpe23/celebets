@@ -61,4 +61,10 @@ The owner has no coding experience. These rules are permanent.
 - A lost parlay pays nothing. Legs that were right in a lost parlay earn
   zero money. They only count in the per-sport won/lost record.
 - Sports (fixed): Football (soccer), American Football, Basketball,
-  Baseball, Ice Hockey.
+  Baseball, Ice Hockey, Tennis, Golf, esports (lowercase).
+- Picks have an optional sub-category (Corners, BTTS, ...). The lists
+  live in SUBCATEGORIES in src/lib/types.ts, Football only so far.
+  Adding sub-categories is a code change, never a database change.
+  Nested choices are stored as "Group: Choice" (Player Props: Assists).
+- Owner must still run supabase/phase5.sql (new sports, subcategory
+  column, updated place_bet). Update this note once confirmed.

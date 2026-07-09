@@ -11,12 +11,15 @@ import {
   round2,
   round4,
 } from "@/lib/format";
-import { SPORTS, SPORT_EMOJI, type Sport } from "@/lib/types";
+import { SPORTS, SPORT_EMOJI, SUBCATEGORIES, type Sport } from "@/lib/types";
 
 interface LegDraft {
   sport: Sport | null;
   description: string;
   odds: string;
+  subcategory: string | null;
+  // Which chip group (like Player Props) currently shows its third row.
+  openGroup: string | null;
 }
 
 type LegOddsState =
@@ -25,7 +28,13 @@ type LegOddsState =
   | { kind: "valid"; value: number };
 
 function emptyLeg(): LegDraft {
-  return { sport: null, description: "", odds: "" };
+  return {
+    sport: null,
+    description: "",
+    odds: "",
+    subcategory: null,
+    openGroup: null,
+  };
 }
 
 export default function NewBetForm() {
@@ -133,6 +142,7 @@ export default function NewBetForm() {
           sport: leg.sport,
           description: leg.description.trim(),
           odds: state.kind === "valid" ? state.value : null,
+          subcategory: leg.subcategory,
         };
       }),
     });
@@ -201,7 +211,13 @@ export default function NewBetForm() {
               <button
                 key={s}
                 type="button"
-                onClick={() => updateLeg(index, { sport: s })}
+                onClick={() =>
+                  updateLeg(index, {
+                    sport: s,
+                    subcategory: leg.sport === s ? leg.subcategory : null,
+                    openGroup: leg.sport === s ? leg.openGroup : null,
+                  })
+                }
                 className={`rounded-xl border px-4 py-2.5 text-sm font-semibold ${
                   leg.sport === s
                     ? "border-emerald-600 bg-emerald-600 text-white"
@@ -212,6 +228,108 @@ export default function NewBetForm() {
               </button>
             ))}
           </div>
+
+          {leg.sport !== null && SUBCATEGORIES[leg.sport] !== undefined && (
+            <>
+              <p className="mt-4 text-sm font-medium">
+                Category
+                <span className="font-normal text-neutral-500">
+                  , optional
+                </span>
+              </p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {SUBCATEGORIES[leg.sport]!.map((item) => {
+                  if (typeof item === "string") {
+                    const selected = leg.subcategory === item;
+                    return (
+                      <button
+                        key={item}
+                        type="button"
+                        onClick={() =>
+                          updateLeg(index, {
+                            subcategory: selected ? null : item,
+                            openGroup: null,
+                          })
+                        }
+                        className={`rounded-xl border px-3.5 py-2 text-sm font-semibold ${
+                          selected
+                            ? "border-emerald-600 bg-emerald-600 text-white"
+                            : "border-neutral-300 dark:border-neutral-700"
+                        }`}
+                      >
+                        {item}
+                      </button>
+                    );
+                  }
+                  const groupSelected =
+                    leg.subcategory?.startsWith(item.label + ": ") ?? false;
+                  const groupOpen =
+                    leg.openGroup === item.label || groupSelected;
+                  return (
+                    <button
+                      key={item.label}
+                      type="button"
+                      onClick={() =>
+                        updateLeg(index, {
+                          openGroup:
+                            leg.openGroup === item.label && !groupSelected
+                              ? null
+                              : item.label,
+                        })
+                      }
+                      className={`rounded-xl border px-3.5 py-2 text-sm font-semibold ${
+                        groupSelected
+                          ? "border-emerald-600 bg-emerald-600 text-white"
+                          : groupOpen
+                            ? "border-emerald-600 text-emerald-600 dark:text-emerald-400"
+                            : "border-neutral-300 dark:border-neutral-700"
+                      }`}
+                    >
+                      {item.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {SUBCATEGORIES[leg.sport]!.map((item) => {
+                if (typeof item === "string") return null;
+                const groupSelected =
+                  leg.subcategory?.startsWith(item.label + ": ") ?? false;
+                if (leg.openGroup !== item.label && !groupSelected) {
+                  return null;
+                }
+                return (
+                  <div
+                    key={item.label}
+                    className="mt-2 flex flex-wrap gap-2 rounded-xl bg-neutral-100 p-2 dark:bg-neutral-900"
+                  >
+                    {item.children.map((child) => {
+                      const value = `${item.label}: ${child}`;
+                      const selected = leg.subcategory === value;
+                      return (
+                        <button
+                          key={child}
+                          type="button"
+                          onClick={() =>
+                            updateLeg(index, {
+                              subcategory: selected ? null : value,
+                            })
+                          }
+                          className={`rounded-xl border px-3.5 py-2 text-sm font-semibold ${
+                            selected
+                              ? "border-emerald-600 bg-emerald-600 text-white"
+                              : "border-neutral-300 bg-white dark:border-neutral-700 dark:bg-neutral-950"
+                          }`}
+                        >
+                          {child}
+                        </button>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+            </>
+          )}
 
           <label
             htmlFor={`description-${index}`}

@@ -108,6 +108,11 @@ export default function BetHistory({ bets }: Props) {
                     {bet.legs.map((leg) => (
                       <p key={leg.id} className="truncate text-sm font-medium">
                         {SPORT_EMOJI[leg.sport]} {leg.description}
+                        {leg.subcategory !== null && (
+                          <span className="ml-1.5 text-xs font-normal text-neutral-500">
+                            {leg.subcategory}
+                          </span>
+                        )}
                       </p>
                     ))}
                     <p className="mt-1 text-xs text-neutral-500">

@@ -126,6 +126,39 @@ export function sportTypeRows(
   return rows;
 }
 
+export interface CategoryRow {
+  label: string;
+  wins: number;
+  losses: number;
+  profit: number;
+}
+
+// One sport's picks grouped by sub-category (Corners, BTTS, ...).
+// Picks without a sub-category are grouped under "No category".
+export function categoryRows(
+  bets: BetWithLegs[],
+  sport: Sport
+): CategoryRow[] {
+  const map = new Map<string, CategoryRow>();
+
+  for (const bet of bets) {
+    const shares = legShares(bet);
+    bet.legs.forEach((leg, i) => {
+      if (leg.sport !== sport) return;
+      const label = leg.subcategory ?? "No category";
+      const row = map.get(label) ?? { label, wins: 0, losses: 0, profit: 0 };
+      if (leg.result === "won") row.wins += 1;
+      if (leg.result === "lost") row.losses += 1;
+      row.profit += shares[i];
+      map.set(label, row);
+    });
+  }
+
+  return [...map.values()].sort(
+    (a, b) => b.wins + b.losses - (a.wins + a.losses)
+  );
+}
+
 export const ODDS_BUCKETS = [
   { label: "Low (1.01-1.80)", min: 1.01, max: 1.8 },
   { label: "Medium (1.81-3.00)", min: 1.81, max: 3.0 },
@@ -375,6 +408,57 @@ function observationInsights(settledBets: BetWithLegs[]): Insight[] {
 // The full pool of statements that are currently true.
 export function buildInsightPool(settledBets: BetWithLegs[]): Insight[] {
   return [...adviceInsights(settledBets), ...observationInsights(settledBets)];
+}
+
+// Every statement that is currently true about ONE sport.
+export function buildSportInsightPool(
+  settledBets: BetWithLegs[],
+  sport: Sport
+): Insight[] {
+  // Records and money for this sport, per period, from the full pool.
+  const out = buildInsightPool(settledBets).filter(
+    (i) => i.category === `record-${sport}` || i.category === `money-${sport}`
+  );
+
+  // This sport's picks in singles vs in parlays.
+  const [singles, parlays] = sportTypeRows(settledBets, sport);
+  const typeLabels = ["singles", "parlays"];
+  [singles, parlays].forEach((row, i) => {
+    const picks = row.wins + row.losses;
+    if (picks === 0) return;
+    out.push({
+      category: `sport-type-${typeLabels[i]}`,
+      text:
+        `Your ${sport} picks in ${typeLabels[i]}: picked right on ` +
+        `${row.wins} of ${picks}, money result ${usd(row.profit)}.`,
+    });
+  });
+
+  // This sport's picks per odds group.
+  for (const bucket of bucketRows(settledBets, sport)) {
+    if (bucket.total === 0) continue;
+    out.push({
+      category: `sport-odds-${bucket.label}`,
+      text:
+        `At ${bucket.label.toLowerCase()} odds you have picked right on ` +
+        `${bucket.wins} of ${bucket.total} ${sport} picks.`,
+    });
+  }
+
+  // This sport's picks per sub-category.
+  for (const row of categoryRows(settledBets, sport)) {
+    if (row.label === "No category") continue;
+    const picks = row.wins + row.losses;
+    if (picks === 0) continue;
+    out.push({
+      category: `sport-cat-${row.label}`,
+      text:
+        `${sport}, ${row.label}: picked right on ${row.wins} of ${picks}, ` +
+        `money result ${usd(row.profit)}.`,
+    });
+  }
+
+  return out;
 }
 
 function shuffle<T>(items: T[]): T[] {

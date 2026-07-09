@@ -8,7 +8,7 @@ export default async function StatsPage() {
   const { data: bets } = await supabase
     .from("bets")
     .select(
-      "id, stake, total_odds, status, placed_at, settled_at, payout, legs (id, sport, description, odds, result)"
+      "id, stake, total_odds, status, placed_at, settled_at, payout, legs (id, sport, description, odds, result, subcategory)"
     )
     .order("placed_at", { ascending: false });
 
