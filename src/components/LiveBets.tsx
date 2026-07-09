@@ -144,12 +144,14 @@ export default function LiveBets({ bets }: Props) {
                     <div key={leg.id}>
                       <div className="flex items-center justify-between gap-3">
                         <p className="text-sm font-medium">
-                          {SPORT_EMOJI[leg.sport]} {leg.description}
-                          {leg.subcategory !== null && (
-                            <span className="ml-1.5 text-xs font-normal text-neutral-500">
-                              {leg.subcategory}
-                            </span>
-                          )}
+                          {SPORT_EMOJI[leg.sport]}{" "}
+                          {leg.description ?? leg.subcategory ?? leg.sport}
+                          {leg.description !== null &&
+                            leg.subcategory !== null && (
+                              <span className="ml-1.5 text-xs font-normal text-neutral-500">
+                                {leg.subcategory}
+                              </span>
+                            )}
                         </p>
                         {leg.odds !== null && (
                           <p className="text-sm font-semibold text-neutral-500">

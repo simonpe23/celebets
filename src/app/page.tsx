@@ -10,12 +10,7 @@ import type { BetWithLegs, Sport } from "@/lib/types";
 // Settled bets stay on a Live now card with Undo for this long.
 const UNDO_WINDOW_MS = 15 * 60 * 1000;
 
-interface Props {
-  searchParams: Promise<{ repeat?: string }>;
-}
-
-export default async function HomePage({ searchParams }: Props) {
-  const { repeat } = await searchParams;
+export default async function HomePage() {
   const supabase = await createClient();
   const {
     data: { user },
@@ -64,11 +59,6 @@ export default async function HomePage({ searchParams }: Props) {
     }
   }
 
-  // Repeat bet: pre-fill the form from an existing bet's id.
-  const repeatBet = repeat
-    ? (allBets.find((b) => b.id === repeat) ?? null)
-    : null;
-
   const now = Date.now();
   const liveBets = allBets.filter(
     (b) =>
@@ -107,20 +97,8 @@ export default async function HomePage({ searchParams }: Props) {
         />
 
         <NewBetForm
-          key={repeatBet?.id ?? "fresh"}
           defaultStake={defaultStake}
           defaultSport={defaultSport}
-          repeatBet={
-            repeatBet
-              ? {
-                  stake: String(Number(repeatBet.stake)),
-                  legs: repeatBet.legs.map((leg) => ({
-                    sport: leg.sport,
-                    subcategory: leg.subcategory,
-                  })),
-                }
-              : null
-          }
         />
 
         <Recommendations bets={settledBets} />

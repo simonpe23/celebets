@@ -17,6 +17,9 @@ interface LegDraft {
   sport: Sport | null;
   description: string;
   odds: string;
+  // How the odds field is read: decimal odds or a chance percentage
+  // like Kalshi shows (44% converts to decimal odds 100 / 44 = 2.27).
+  oddsMode: "decimal" | "percent";
   subcategory: string | null;
   // Which chip group (like Player Props) currently shows its third row.
   openGroup: string | null;
@@ -34,45 +37,37 @@ function emptyLeg(): LegDraft {
     sport: null,
     description: "",
     odds: "",
+    oddsMode: "decimal",
     subcategory: null,
     openGroup: null,
     categoriesOpen: true,
   };
 }
 
-interface RepeatBet {
-  stake: string;
-  legs: { sport: Sport; subcategory: string | null }[];
+// Parses a chance percentage like "44" or "55.5" (must be above 0 and
+// below 100) into decimal odds: 100 / 44 = 2.27.
+function parsePercent(input: string): number | null {
+  const normalized = input.trim().replace(",", ".");
+  if (!/^\d+(\.\d{1,2})?$/.test(normalized)) return null;
+  const value = parseFloat(normalized);
+  if (value <= 0 || value >= 100) return null;
+  return round2(100 / value);
 }
 
 interface Props {
   // Pre-fills for a fresh form: last stake and most used sport.
   defaultStake: string;
   defaultSport: Sport | null;
-  // When set, the form starts as a copy of that bet's stake,
-  // sports, and categories. Pick and odds start fresh.
-  repeatBet: RepeatBet | null;
 }
 
 const QUICK_STAKES = ["20", "50", "100"];
 
-export default function NewBetForm({
-  defaultStake,
-  defaultSport,
-  repeatBet,
-}: Props) {
+export default function NewBetForm({ defaultStake, defaultSport }: Props) {
   const router = useRouter();
-  const [stake, setStake] = useState(repeatBet?.stake ?? defaultStake);
-  const [legs, setLegs] = useState<LegDraft[]>(() =>
-    repeatBet
-      ? repeatBet.legs.map((leg) => ({
-          ...emptyLeg(),
-          sport: leg.sport,
-          subcategory: leg.subcategory,
-          categoriesOpen: false,
-        }))
-      : [{ ...emptyLeg(), sport: defaultSport }]
-  );
+  const [stake, setStake] = useState(defaultStake);
+  const [legs, setLegs] = useState<LegDraft[]>(() => [
+    { ...emptyLeg(), sport: defaultSport },
+  ]);
   // On parlays the user can type over the auto-calculated total odds,
   // for example when the betting app charges a fee.
   const [totalOverride, setTotalOverride] = useState<string | null>(null);
@@ -89,7 +84,8 @@ export default function NewBetForm({
   const legOddsStates: LegOddsState[] = legs.map((leg) => {
     const text = leg.odds.trim();
     if (text === "") return { kind: "blank" };
-    const value = parseOdds(text);
+    const value =
+      leg.oddsMode === "percent" ? parsePercent(text) : parseOdds(text);
     return value === null ? { kind: "invalid" } : { kind: "valid", value };
   });
 
@@ -127,11 +123,13 @@ export default function NewBetForm({
       ? round2(toCollect - stakeValue)
       : null;
 
+  // The pick text is optional everywhere: only sport and valid odds
+  // (odds required on singles only) gate the Place Bet button.
   const allLegsComplete = legs.every((leg, i) => {
     const oddsOk = isParlay
       ? legOddsStates[i].kind !== "invalid"
       : legOddsStates[i].kind === "valid";
-    return leg.sport !== null && leg.description.trim().length > 0 && oddsOk;
+    return leg.sport !== null && oddsOk;
   });
   const canPlace =
     stakeValue !== null &&
@@ -147,7 +145,11 @@ export default function NewBetForm({
   }
 
   function addLeg() {
-    setLegs((prev) => [...prev, emptyLeg()]);
+    // New legs keep the odds-or-percent mode of the leg above.
+    setLegs((prev) => [
+      ...prev,
+      { ...emptyLeg(), oddsMode: prev[prev.length - 1]?.oddsMode ?? "decimal" },
+    ]);
   }
 
   function removeLeg(index: number) {
@@ -170,9 +172,10 @@ export default function NewBetForm({
       p_total_odds: totalOdds,
       p_legs: legs.map((leg, i) => {
         const state = legOddsStates[i];
+        const description = leg.description.trim();
         return {
           sport: leg.sport,
-          description: leg.description.trim(),
+          description: description === "" ? null : description,
           odds: state.kind === "valid" ? state.value : null,
           subcategory: leg.subcategory,
         };
@@ -186,9 +189,15 @@ export default function NewBetForm({
       return;
     }
 
-    // Keep the just-used stake and sport as the new starting point.
+    // Keep the just-used stake, sport, and odds mode as the new start.
     setStake(String(stakeValue));
-    setLegs([{ ...emptyLeg(), sport: legs[0]?.sport ?? defaultSport }]);
+    setLegs([
+      {
+        ...emptyLeg(),
+        sport: legs[0]?.sport ?? defaultSport,
+        oddsMode: legs[0]?.oddsMode ?? "decimal",
+      },
+    ]);
     setTotalOverride(null);
     setCollectOverride("");
     setPlaced(true);
@@ -404,7 +413,8 @@ export default function NewBetForm({
             htmlFor={`description-${index}`}
             className="mt-4 block text-sm font-medium"
           >
-            Pick
+            Pick{" "}
+            <span className="font-normal text-neutral-500">(optional)</span>
           </label>
           <input
             id={`description-${index}`}
@@ -415,27 +425,74 @@ export default function NewBetForm({
             className={inputClass}
           />
 
-          <label
-            htmlFor={`odds-${index}`}
-            className="mt-4 block text-sm font-medium"
-          >
-            Odds (decimal)
-            {isParlay && (
-              <span className="font-normal text-neutral-500">
-                {" "}
-                , optional
-              </span>
-            )}
-          </label>
+          <div className="mt-4 flex items-end justify-between">
+            <label
+              htmlFor={`odds-${index}`}
+              className="block text-sm font-medium"
+            >
+              {leg.oddsMode === "percent" ? "Chance (%)" : "Odds (decimal)"}
+              {isParlay && (
+                <span className="font-normal text-neutral-500">
+                  {" "}
+                  (optional)
+                </span>
+              )}
+            </label>
+            <div className="flex gap-1">
+              <button
+                type="button"
+                onClick={() => updateLeg(index, { oddsMode: "decimal" })}
+                className={`rounded-lg border px-2.5 py-1 text-xs font-semibold ${
+                  leg.oddsMode === "decimal"
+                    ? "border-emerald-600 text-emerald-600 dark:text-emerald-400"
+                    : "border-neutral-300 text-neutral-500 dark:border-neutral-700"
+                }`}
+              >
+                Odds
+              </button>
+              <button
+                type="button"
+                onClick={() => updateLeg(index, { oddsMode: "percent" })}
+                className={`rounded-lg border px-2.5 py-1 text-xs font-semibold ${
+                  leg.oddsMode === "percent"
+                    ? "border-emerald-600 text-emerald-600 dark:text-emerald-400"
+                    : "border-neutral-300 text-neutral-500 dark:border-neutral-700"
+                }`}
+              >
+                %
+              </button>
+            </div>
+          </div>
           <input
             id={`odds-${index}`}
             type="text"
             inputMode="decimal"
-            placeholder={isParlay ? "Leave empty if unknown" : "2.50"}
+            placeholder={
+              leg.oddsMode === "percent"
+                ? "44"
+                : isParlay
+                  ? "Leave empty if unknown"
+                  : "2.50"
+            }
             value={leg.odds}
             onChange={(e) => updateLeg(index, { odds: e.target.value })}
             className={inputClass}
           />
+          {leg.oddsMode === "percent" &&
+            legOddsStates[index].kind === "valid" && (
+              <p className="mt-1 text-xs text-neutral-500">
+                = decimal odds{" "}
+                {formatOdds(
+                  (legOddsStates[index] as { value: number }).value
+                )}
+              </p>
+            )}
+          {leg.oddsMode === "percent" &&
+            legOddsStates[index].kind === "invalid" && (
+              <p className="mt-1 text-xs text-neutral-500">
+                Enter a percentage above 0 and below 100.
+              </p>
+            )}
         </div>
       ))}
 

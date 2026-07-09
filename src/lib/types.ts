@@ -54,7 +54,7 @@ export type LegResult = "pending" | "won" | "lost";
 export interface Leg {
   id: string;
   sport: Sport;
-  description: string;
+  description: string | null;
   odds: number | null;
   result: LegResult;
   subcategory: string | null;

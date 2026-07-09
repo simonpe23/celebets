@@ -107,12 +107,14 @@ export default function BetHistory({ bets }: Props) {
                   <div className="min-w-0">
                     {bet.legs.map((leg) => (
                       <p key={leg.id} className="truncate text-sm font-medium">
-                        {SPORT_EMOJI[leg.sport]} {leg.description}
-                        {leg.subcategory !== null && (
-                          <span className="ml-1.5 text-xs font-normal text-neutral-500">
-                            {leg.subcategory}
-                          </span>
-                        )}
+                        {SPORT_EMOJI[leg.sport]}{" "}
+                        {leg.description ?? leg.subcategory ?? leg.sport}
+                        {leg.description !== null &&
+                          leg.subcategory !== null && (
+                            <span className="ml-1.5 text-xs font-normal text-neutral-500">
+                              {leg.subcategory}
+                            </span>
+                          )}
                       </p>
                     ))}
                     <p className="mt-1 text-xs text-neutral-500">
@@ -143,14 +145,6 @@ export default function BetHistory({ bets }: Props) {
                 </div>
 
                 <div className="mt-2 flex gap-2">
-                  <button
-                    type="button"
-                    disabled={busy}
-                    onClick={() => router.push(`/?repeat=${bet.id}`)}
-                    className="rounded-lg border border-emerald-600 px-3 py-1.5 text-xs font-medium text-emerald-600 disabled:opacity-50 dark:text-emerald-400"
-                  >
-                    Repeat
-                  </button>
                   <button
                     type="button"
                     disabled={busy}
