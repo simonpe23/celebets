@@ -39,6 +39,14 @@ The owner has no coding experience. These rules are permanent.
 - Recommendations rotate randomly on each tap: advice needs 5 settled
   bets or picks per group, plain facts have no minimum.
 
+## Idea backlog
+
+- New ideas go into IDEAS.md, in a NOW, SOON, or FUTURE bucket.
+- When the owner says "I have a new idea, store it", add it to
+  IDEAS.md in the bucket they pick (recommend one if they don't).
+- Ideas are never built from the file alone. Building always needs a
+  presented plan and explicit approval, per the workflow rules.
+
 ## Product facts
 
 - App: Celebets, a mobile-first manual sports bet tracker. Single user.
