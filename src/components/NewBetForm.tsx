@@ -95,10 +95,19 @@ export default function NewBetForm({ lastStake }: Props) {
       )
     : null;
 
+  // Percentages come from betting app market prices, and those apps
+  // pay less than the multiplied estimate (fees). So when any leg
+  // uses % mode, the multiplied total is shown as a reference only
+  // and the real total must be typed in.
+  const anyPercent = legs.some((leg) => leg.oddsMode === "percent");
+  const showTotalField = isParlay || anyPercent;
+
   const oddsBasedTotal =
-    isParlay && totalOverride !== null
+    showTotalField && totalOverride !== null
       ? parseOdds(totalOverride)
-      : autoTotal;
+      : anyPercent
+        ? null
+        : autoTotal;
 
   // The exact To Collect amount, when filled, wins over the odds.
   const collectActive = collectOverride.trim() !== "";
@@ -497,13 +506,13 @@ export default function NewBetForm({ lastStake }: Props) {
         + Add leg (makes it a parlay)
       </button>
 
-      {isParlay && (
+      {showTotalField && (
         <div className="mt-4">
           <div className="flex items-center justify-between">
             <label htmlFor="total-odds" className="block text-sm font-medium">
               Total odds
             </label>
-            {totalOverride !== null && autoTotal !== null && (
+            {totalOverride !== null && autoTotal !== null && !anyPercent && (
               <button
                 type="button"
                 onClick={() => setTotalOverride(null)}
@@ -517,11 +526,17 @@ export default function NewBetForm({ lastStake }: Props) {
             id="total-odds"
             type="text"
             inputMode="decimal"
-            placeholder={autoTotal !== null ? formatOdds(autoTotal) : "3.96"}
+            placeholder={
+              anyPercent
+                ? "1.66 from your betting app"
+                : autoTotal !== null
+                  ? formatOdds(autoTotal)
+                  : "3.96"
+            }
             value={
               totalOverride !== null
                 ? totalOverride
-                : autoTotal !== null
+                : autoTotal !== null && !anyPercent
                   ? formatOdds(autoTotal)
                   : ""
             }
@@ -533,9 +548,13 @@ export default function NewBetForm({ lastStake }: Props) {
               ? "Ignored right now: the exact To Collect amount below wins."
               : totalOverride !== null
                 ? "Using your number. To Win and To Collect follow it."
-                : autoTotal !== null
-                  ? "Calculated from the legs. Type over it if your betting app shows different total odds."
-                  : "Some legs have no odds, so type the total odds from your betting app."}
+                : anyPercent
+                  ? autoTotal !== null
+                    ? `The percentages multiply to ${formatOdds(autoTotal)}, but betting apps usually pay less. Type the real total odds here, or the exact To Collect below.`
+                    : "Type the total odds from your betting app here, or the exact To Collect below."
+                  : autoTotal !== null
+                    ? "Calculated from the legs. Type over it if your betting app shows different total odds."
+                    : "Some legs have no odds, so type the total odds from your betting app."}
           </p>
         </div>
       )}
