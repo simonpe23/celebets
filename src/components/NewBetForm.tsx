@@ -360,7 +360,7 @@ export default function NewBetForm() {
           <input
             id={`description-${index}`}
             type="text"
-            placeholder="Man Utd ML vs Arsenal"
+            placeholder="Man Utd vs Arsenal"
             value={leg.description}
             onChange={(e) => updateLeg(index, { description: e.target.value })}
             className={inputClass}
