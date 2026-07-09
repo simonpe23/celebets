@@ -37,3 +37,9 @@ export function parseOdds(input: string): number | null {
 export function round2(value: number): number {
   return Math.round(value * 100) / 100;
 }
+
+// Rounds to 4 decimals. Used for odds derived from an exact
+// To Collect amount, so payouts land on the exact cent.
+export function round4(value: number): number {
+  return Math.round(value * 10000) / 10000;
+}

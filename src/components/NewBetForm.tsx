@@ -9,6 +9,7 @@ import {
   parseMoney,
   parseOdds,
   round2,
+  round4,
 } from "@/lib/format";
 import { SPORTS, SPORT_EMOJI, type Sport } from "@/lib/types";
 
@@ -34,6 +35,9 @@ export default function NewBetForm() {
   // On parlays the user can type over the auto-calculated total odds,
   // for example when the betting app charges a fee.
   const [totalOverride, setTotalOverride] = useState<string | null>(null);
+  // The exact payout from the betting app. When filled, it beats
+  // every odds calculation: To Win and the stored odds follow it.
+  const [collectOverride, setCollectOverride] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [placed, setPlaced] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -57,18 +61,29 @@ export default function NewBetForm() {
       )
     : null;
 
-  const totalOdds =
+  const oddsBasedTotal =
     isParlay && totalOverride !== null
       ? parseOdds(totalOverride)
       : autoTotal;
 
-  const toWin =
-    stakeValue !== null && totalOdds !== null
-      ? round2(stakeValue * (totalOdds - 1))
-      : null;
-  const toCollect =
-    stakeValue !== null && totalOdds !== null
+  // The exact To Collect amount, when filled, wins over the odds.
+  const collectActive = collectOverride.trim() !== "";
+  const collectValue = collectActive ? parseMoney(collectOverride) : null;
+  const collectValid =
+    collectValue !== null && stakeValue !== null && collectValue > stakeValue;
+
+  const totalOdds = collectValid
+    ? round4(collectValue / stakeValue)
+    : oddsBasedTotal;
+
+  const toCollect = collectValid
+    ? collectValue
+    : stakeValue !== null && totalOdds !== null
       ? round2(stakeValue * totalOdds)
+      : null;
+  const toWin =
+    stakeValue !== null && toCollect !== null
+      ? round2(toCollect - stakeValue)
       : null;
 
   const allLegsComplete = legs.every((leg, i) => {
@@ -78,7 +93,11 @@ export default function NewBetForm() {
     return leg.sport !== null && leg.description.trim().length > 0 && oddsOk;
   });
   const canPlace =
-    stakeValue !== null && allLegsComplete && totalOdds !== null && !saving;
+    stakeValue !== null &&
+    allLegsComplete &&
+    totalOdds !== null &&
+    (!collectActive || collectValid) &&
+    !saving;
 
   function updateLeg(index: number, patch: Partial<LegDraft>) {
     setLegs((prev) =>
@@ -128,6 +147,7 @@ export default function NewBetForm() {
     setStake("");
     setLegs([emptyLeg()]);
     setTotalOverride(null);
+    setCollectOverride("");
     setPlaced(true);
     setTimeout(() => setPlaced(false), 2500);
     router.refresh();
@@ -272,14 +292,40 @@ export default function NewBetForm() {
             className={inputClass}
           />
           <p className="mt-1 text-xs text-neutral-500">
-            {totalOverride !== null
-              ? "Using your number. To Win and To Collect follow it."
-              : autoTotal !== null
-                ? "Calculated from the legs. Type over it if your betting app shows different total odds."
-                : "Some legs have no odds, so type the total odds from your betting app."}
+            {collectValid
+              ? "Ignored right now: the exact To Collect amount below wins."
+              : totalOverride !== null
+                ? "Using your number. To Win and To Collect follow it."
+                : autoTotal !== null
+                  ? "Calculated from the legs. Type over it if your betting app shows different total odds."
+                  : "Some legs have no odds, so type the total odds from your betting app."}
           </p>
         </div>
       )}
+
+      <div className="mt-4">
+        <label htmlFor="collect" className="block text-sm font-medium">
+          Exact To Collect (optional)
+        </label>
+        <input
+          id="collect"
+          type="text"
+          inputMode="decimal"
+          placeholder="Payout shown by your betting app"
+          value={collectOverride}
+          onChange={(e) => setCollectOverride(e.target.value)}
+          className={inputClass}
+        />
+        <p className="mt-1 text-xs text-neutral-500">
+          {!collectActive
+            ? "Type the exact payout from your betting app and To Win follows it."
+            : collectValid
+              ? "Using this exact amount. To Win updates from it."
+              : stakeValue === null
+                ? "Enter the stake first."
+                : "Must be a valid amount larger than the stake."}
+        </p>
+      </div>
 
       <div className="mt-5 grid grid-cols-3 gap-2 rounded-xl bg-neutral-100 p-3 text-center dark:bg-neutral-900">
         <div>
