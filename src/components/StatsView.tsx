@@ -102,7 +102,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
   );
 
   const chipClass = (active: boolean) =>
-    `rounded-xl border px-3 py-2 text-sm font-semibold ${
+    `shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
       active
         ? "border-emerald-600 bg-emerald-600 text-white"
         : "border-neutral-300 dark:border-neutral-700"
@@ -126,7 +126,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
 
         <section>
           <p className="text-sm font-medium">Sport</p>
-          <div className="mt-2 flex flex-wrap gap-2">
+          <div className="-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1">
             <button
               type="button"
               onClick={() => setSport(null)}
@@ -147,7 +147,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
           </div>
 
           <p className="mt-4 text-sm font-medium">Period</p>
-          <div className="mt-2 flex flex-wrap gap-2">
+          <div className="-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1">
             {PERIOD_LABELS.map(({ key, label }) => (
               <button
                 key={key}

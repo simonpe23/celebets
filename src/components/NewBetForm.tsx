@@ -209,7 +209,7 @@ export default function NewBetForm() {
           )}
 
           <p className="mt-3 text-sm font-medium">Sport</p>
-          <div className="mt-2 flex flex-wrap gap-2">
+          <div className="-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1">
             {SPORTS.map((s) => (
               <button
                 key={s}
@@ -227,7 +227,7 @@ export default function NewBetForm() {
                         }
                   )
                 }
-                className={`rounded-xl border px-4 py-2.5 text-sm font-semibold ${
+                className={`shrink-0 whitespace-nowrap rounded-xl border px-4 py-2.5 text-sm font-semibold ${
                   leg.sport === s
                     ? "border-emerald-600 bg-emerald-600 text-white"
                     : "border-neutral-300 dark:border-neutral-700"
