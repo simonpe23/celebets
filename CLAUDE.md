@@ -22,6 +22,23 @@ The owner has no coding experience. These rules are permanent.
 - The owner runs SQL pastes in the Supabase SQL Editor themselves.
   Give exact click-by-click instructions and the expected success message.
 
+## Status
+
+- v1 is complete and verified by the owner (July 2026). All five build
+  phases shipped: auth, wallet, singles, parlays, settlement with undo,
+  stats page, recommendations, deletes, editable dates, mobile polish.
+- All SQL files in supabase/ have been run by the owner, in order:
+  schema.sql, phase2.sql, phase3.sql, phase3b.sql, phase4.sql,
+  phase4b.sql.
+- Exact To Collect: the owner can type the exact payout on any bet,
+  To Win follows it, odds are stored with 4 decimals to pay out exactly.
+- Stats money rules: won bet profit splits across sports weighted by
+  leg odds (minus 1). Lost bet stake is charged to the losing pick(s).
+  With a sport filter active, the whole stats page speaks in that
+  sport's picks and that sport's share of money.
+- Recommendations rotate randomly on each tap: advice needs 5 settled
+  bets or picks per group, plain facts have no minimum.
+
 ## Product facts
 
 - App: Celebets, a mobile-first manual sports bet tracker. Single user.
