@@ -66,5 +66,5 @@ The owner has no coding experience. These rules are permanent.
   live in SUBCATEGORIES in src/lib/types.ts, Football only so far.
   Adding sub-categories is a code change, never a database change.
   Nested choices are stored as "Group: Choice" (Player Props: Assists).
-- All SQL files through supabase/phase5.sql have been run and
-  confirmed by the owner (July 2026).
+- All SQL files through supabase/phase5b.sql have been run and
+  confirmed by the owner (July 2026). Transaction dates are editable.
