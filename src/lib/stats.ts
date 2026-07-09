@@ -280,7 +280,7 @@ function observationInsights(settledBets: BetWithLegs[]): Insight[] {
       if (picks === 0) continue;
       out.push({
         category: `record-${row.sport}`,
-        text: `You have won ${row.wins} of ${picks} ${row.sport} picks ${label}.`,
+        text: `You have picked right on ${row.wins} of ${picks} ${row.sport} picks ${label}.`,
       });
       const profit = round2(row.profit);
       if (profit > 0) {
