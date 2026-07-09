@@ -148,7 +148,7 @@ export default function BetHistory({ bets }: Props) {
                         bet.settled_at ? toDateInputValue(bet.settled_at) : ""
                       );
                     }}
-                    className="rounded-lg border border-neutral-300 px-2.5 py-1 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-neutral-700"
+                    className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-neutral-700"
                   >
                     Edit date
                   </button>
@@ -159,7 +159,7 @@ export default function BetHistory({ bets }: Props) {
                       setEditing(null);
                       setConfirming(bet.id);
                     }}
-                    className="rounded-lg border border-neutral-300 px-2.5 py-1 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-neutral-700"
+                    className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-neutral-700"
                   >
                     Delete
                   </button>

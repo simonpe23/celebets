@@ -59,7 +59,7 @@ export default function WalletCard({ balance, netProfit, userId }: Props) {
         <div>
           <h2 className="text-sm font-medium text-neutral-500">My Wallet</h2>
           <p
-            className={`mt-1 text-4xl font-bold tracking-tight ${
+            className={`mt-1 break-words text-4xl font-bold tracking-tight ${
               balance < 0 ? "text-red-600 dark:text-red-400" : ""
             }`}
           >
@@ -97,7 +97,7 @@ export default function WalletCard({ balance, netProfit, userId }: Props) {
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center">
-          <div className="w-full max-w-sm rounded-t-2xl bg-white p-6 sm:rounded-2xl dark:bg-neutral-900">
+          <div className="w-full max-w-sm rounded-t-2xl bg-white p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:rounded-2xl sm:pb-6 dark:bg-neutral-900">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-bold">Move money</h3>
               <button
