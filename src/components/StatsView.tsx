@@ -3,11 +3,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import { formatMoney, formatSignedMoney, round2 } from "@/lib/format";
+import BetHistory from "@/components/BetHistory";
 import {
   bucketRows,
   buildInsightPool,
   pickInsights,
   sportRows,
+  sportTypeRows,
   totals,
   typeRows,
 } from "@/lib/stats";
@@ -90,7 +92,16 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
     (row) => sport === null || row.sport === sport
   );
   const byType = typeRows(filtered);
+  // With a sport selected, singles vs parlays counts only that
+  // sport's picks and that sport's share of the money.
+  const bySportType = sport === null ? null : sportTypeRows(filtered, sport);
+  const sportTotals = sport === null ? null : bySport[0];
   const byBucket = bucketRows(filtered, sport);
+  const historyBets = [...filtered].sort(
+    (a, b) =>
+      new Date(b.settled_at ?? 0).getTime() -
+      new Date(a.settled_at ?? 0).getTime()
+  );
 
   const chipClass = (active: boolean) =>
     `rounded-xl border px-3 py-2 text-sm font-semibold ${
@@ -187,30 +198,57 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
           </p>
         ) : (
           <>
-            <section className="grid grid-cols-3 gap-2">
-              <div className="rounded-2xl border border-neutral-200 p-3 text-center dark:border-neutral-800">
-                <p className="text-xs text-neutral-500">Staked</p>
-                <p className="mt-0.5 text-sm font-bold">
-                  {formatMoney(round2(t.staked))}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-neutral-200 p-3 text-center dark:border-neutral-800">
-                <p className="text-xs text-neutral-500">Returned</p>
-                <p className="mt-0.5 text-sm font-bold">
-                  {formatMoney(round2(t.returned))}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-neutral-200 p-3 text-center dark:border-neutral-800">
-                <p className="text-xs text-neutral-500">ROI</p>
-                <p
-                  className={`mt-0.5 text-sm font-bold ${profitColor(
-                    t.roi ?? 0
-                  )}`}
-                >
-                  {t.roi === null ? "-" : `${t.roi.toFixed(1)}%`}
-                </p>
-              </div>
-            </section>
+            {sportTotals === null ? (
+              <section className="grid grid-cols-3 gap-2">
+                <div className="rounded-2xl border border-neutral-200 p-3 text-center dark:border-neutral-800">
+                  <p className="text-xs text-neutral-500">Staked</p>
+                  <p className="mt-0.5 text-sm font-bold">
+                    {formatMoney(round2(t.staked))}
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-neutral-200 p-3 text-center dark:border-neutral-800">
+                  <p className="text-xs text-neutral-500">Returned</p>
+                  <p className="mt-0.5 text-sm font-bold">
+                    {formatMoney(round2(t.returned))}
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-neutral-200 p-3 text-center dark:border-neutral-800">
+                  <p className="text-xs text-neutral-500">ROI</p>
+                  <p
+                    className={`mt-0.5 text-sm font-bold ${profitColor(
+                      t.roi ?? 0
+                    )}`}
+                  >
+                    {t.roi === null ? "-" : `${t.roi.toFixed(1)}%`}
+                  </p>
+                </div>
+              </section>
+            ) : (
+              <section className="grid grid-cols-3 gap-2">
+                <div className="rounded-2xl border border-neutral-200 p-3 text-center dark:border-neutral-800">
+                  <p className="text-xs text-neutral-500">Picks</p>
+                  <p className="mt-0.5 text-sm font-bold">
+                    {sportTotals.wins + sportTotals.losses}
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-neutral-200 p-3 text-center dark:border-neutral-800">
+                  <p className="text-xs text-neutral-500">Record</p>
+                  <p className="mt-0.5 text-sm font-bold">
+                    {sportTotals.wins}-{sportTotals.losses}
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-neutral-200 p-3 text-center dark:border-neutral-800">
+                  <p className="text-xs text-neutral-500">Profit</p>
+                  <p
+                    className={`mt-0.5 text-sm font-bold ${profitColor(
+                      sportTotals.profit
+                    )}`}
+                  >
+                    {formatSignedMoney(round2(sportTotals.profit))}
+                  </p>
+                </div>
+              </section>
+            )}
 
             <section className="rounded-2xl border border-neutral-200 p-4 dark:border-neutral-800">
               <h2 className="text-base font-bold">Per sport</h2>
@@ -247,31 +285,66 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
 
             <section className="rounded-2xl border border-neutral-200 p-4 dark:border-neutral-800">
               <h2 className="text-base font-bold">Singles vs parlays</h2>
+              {bySportType !== null && (
+                <p className="mt-1 text-xs text-neutral-500">
+                  Only {sport} picks, and only {sport}&apos;s share of the
+                  money.
+                </p>
+              )}
               <div className="mt-3 space-y-2">
-                {byType.map((row) => (
-                  <div
-                    key={row.label}
-                    className="flex items-center justify-between gap-2"
-                  >
-                    <p className="text-sm font-medium">{row.label}</p>
-                    <div className="flex items-center gap-3">
-                      <p className="text-sm text-neutral-500">
-                        {row.betsTotal === 0
-                          ? "no bets"
-                          : `${pctLabel(row.betsWon, row.betsTotal)} (${row.betsWon} of ${row.betsTotal})`}
-                      </p>
-                      <p
-                        className={`w-20 text-right text-sm font-bold ${profitColor(
-                          row.profit
-                        )}`}
+                {bySportType !== null
+                  ? bySportType.map((row, i) => {
+                      const label = i === 0 ? "Singles" : "Parlays";
+                      const picks = row.wins + row.losses;
+                      return (
+                        <div
+                          key={label}
+                          className="flex items-center justify-between gap-2"
+                        >
+                          <p className="text-sm font-medium">{label}</p>
+                          <div className="flex items-center gap-3">
+                            <p className="text-sm text-neutral-500">
+                              {picks === 0
+                                ? "no picks"
+                                : `${pctLabel(row.wins, picks)} right (${row.wins} of ${picks})`}
+                            </p>
+                            <p
+                              className={`w-20 text-right text-sm font-bold ${profitColor(
+                                row.profit
+                              )}`}
+                            >
+                              {picks === 0
+                                ? "-"
+                                : formatSignedMoney(round2(row.profit))}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })
+                  : byType.map((row) => (
+                      <div
+                        key={row.label}
+                        className="flex items-center justify-between gap-2"
                       >
-                        {row.betsTotal === 0
-                          ? "-"
-                          : formatSignedMoney(round2(row.profit))}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                        <p className="text-sm font-medium">{row.label}</p>
+                        <div className="flex items-center gap-3">
+                          <p className="text-sm text-neutral-500">
+                            {row.betsTotal === 0
+                              ? "no bets"
+                              : `${pctLabel(row.betsWon, row.betsTotal)} (${row.betsWon} of ${row.betsTotal})`}
+                          </p>
+                          <p
+                            className={`w-20 text-right text-sm font-bold ${profitColor(
+                              row.profit
+                            )}`}
+                          >
+                            {row.betsTotal === 0
+                              ? "-"
+                              : formatSignedMoney(round2(row.profit))}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
               </div>
             </section>
 
@@ -297,6 +370,8 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
                 ))}
               </div>
             </section>
+
+            <BetHistory bets={historyBets} />
           </>
         )}
 

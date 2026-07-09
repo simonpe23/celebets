@@ -101,6 +101,31 @@ export function typeRows(bets: BetWithLegs[]): TypeRow[] {
   return rows;
 }
 
+// Singles vs parlays seen from one sport's perspective: counts only
+// that sport's picks, and only that sport's share of the money.
+export function sportTypeRows(
+  bets: BetWithLegs[],
+  sport: Sport
+): SportRow[] {
+  const rows: SportRow[] = [
+    { sport, wins: 0, losses: 0, profit: 0 },
+    { sport, wins: 0, losses: 0, profit: 0 },
+  ];
+
+  for (const bet of bets) {
+    const row = bet.legs.length > 1 ? rows[1] : rows[0];
+    const shares = legShares(bet);
+    bet.legs.forEach((leg, i) => {
+      if (leg.sport !== sport) return;
+      if (leg.result === "won") row.wins += 1;
+      if (leg.result === "lost") row.losses += 1;
+      row.profit += shares[i];
+    });
+  }
+
+  return rows;
+}
+
 export const ODDS_BUCKETS = [
   { label: "Low (1.01-1.80)", min: 1.01, max: 1.8 },
   { label: "Medium (1.81-3.00)", min: 1.81, max: 3.0 },
