@@ -163,11 +163,17 @@ function usd(amount: number): string {
   return formatSignedMoney(round2(amount));
 }
 
-// Rule-based recommendations over ALL settled bets.
-// Every statement needs at least 5 settled legs or bets behind
-// each group it talks about, otherwise it is not shown.
-export function buildRecommendations(settledBets: BetWithLegs[]): string[] {
-  const out: string[] = [];
+export interface Insight {
+  // Statements are grouped by category so one mix shows variety
+  // instead of four statements of the same kind.
+  category: string;
+  text: string;
+}
+
+// Advice: judgment calls that need at least 5 settled bets or picks
+// behind every group they compare. Less data would mislead.
+function adviceInsights(settledBets: BetWithLegs[]): Insight[] {
+  const out: Insight[] = [];
   const MIN = 5;
 
   // 1. Best and worst sport by money.
@@ -178,11 +184,13 @@ export function buildRecommendations(settledBets: BetWithLegs[]): string[] {
     const sorted = [...bySport].sort((a, b) => b.profit - a.profit);
     const best = sorted[0];
     const worst = sorted[sorted.length - 1];
-    out.push(
-      `${best.sport} is your best sport: ${usd(best.profit)} over ` +
+    out.push({
+      category: "advice-sport",
+      text:
+        `${best.sport} is your best sport: ${usd(best.profit)} over ` +
         `${best.wins + best.losses} picks. ${worst.sport} is your worst: ` +
-        `${usd(worst.profit)} over ${worst.wins + worst.losses} picks.`
-    );
+        `${usd(worst.profit)} over ${worst.wins + worst.losses} picks.`,
+    });
   }
 
   // 2. Singles vs parlays.
@@ -200,11 +208,13 @@ export function buildRecommendations(settledBets: BetWithLegs[]): string[] {
     } else if (singles.profit > 0 && parlays.profit > 0) {
       verdict = "Both types are profitable. Nice.";
     }
-    out.push(
-      `Your singles hit ${sPct}% (${singles.betsWon} of ${singles.betsTotal}) ` +
+    out.push({
+      category: "advice-type",
+      text:
+        `Your singles hit ${sPct}% (${singles.betsWon} of ${singles.betsTotal}) ` +
         `vs ${pPct}% (${parlays.betsWon} of ${parlays.betsTotal}) on parlays. ` +
-        verdict
-    );
+        verdict,
+    });
   }
 
   // 3. Odds groups: compare your strongest and weakest group.
@@ -215,23 +225,168 @@ export function buildRecommendations(settledBets: BetWithLegs[]): string[] {
     );
     const hi = sorted[0];
     const lo = sorted[sorted.length - 1];
-    out.push(
-      `You win ${pct(hi.wins, hi.total)}% of picks at ${hi.label.toLowerCase()} ` +
-        `odds but only ${pct(lo.wins, lo.total)}% at ${lo.label.toLowerCase()} odds.`
-    );
+    out.push({
+      category: "advice-odds",
+      text:
+        `You win ${pct(hi.wins, hi.total)}% of picks at ${hi.label.toLowerCase()} ` +
+        `odds but only ${pct(lo.wins, lo.total)}% at ${lo.label.toLowerCase()} odds.`,
+    });
   }
 
   // 4. Overall ROI.
   if (settledBets.length >= MIN) {
     const t = totals(settledBets);
     if (t.roi !== null) {
-      out.push(
-        `All time you have staked ${formatMoney(round2(t.staked))} ` +
+      out.push({
+        category: "advice-roi",
+        text:
+          `All time you have staked ${formatMoney(round2(t.staked))} ` +
           `and collected ${formatMoney(round2(t.returned))}. ` +
-          `That is an ROI of ${t.roi.toFixed(1)}%.`
-      );
+          `That is an ROI of ${t.roi.toFixed(1)}%.`,
+      });
     }
   }
 
-  return out.slice(0, 4);
+  return out;
+}
+
+// Observations: plain facts. Any true fact qualifies, no minimum.
+function observationInsights(settledBets: BetWithLegs[]): Insight[] {
+  const out: Insight[] = [];
+
+  const now = new Date();
+  const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const daysSinceMonday = (startToday.getDay() + 6) % 7;
+  const startWeek = new Date(startToday);
+  startWeek.setDate(startToday.getDate() - daysSinceMonday);
+  const startMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  const periods: { label: string; from: Date | null }[] = [
+    { label: "this week", from: startWeek },
+    { label: "this month", from: startMonth },
+    { label: "overall", from: null },
+  ];
+
+  // Per sport, per period: a record fact and a money fact.
+  for (const { label, from } of periods) {
+    const bets =
+      from === null
+        ? settledBets
+        : settledBets.filter(
+            (b) => b.settled_at && new Date(b.settled_at) >= from
+          );
+    for (const row of sportRows(bets)) {
+      const picks = row.wins + row.losses;
+      if (picks === 0) continue;
+      out.push({
+        category: `record-${row.sport}`,
+        text: `You have won ${row.wins} of ${picks} ${row.sport} picks ${label}.`,
+      });
+      const profit = round2(row.profit);
+      if (profit > 0) {
+        out.push({
+          category: `money-${row.sport}`,
+          text: `${row.sport} has made you ${formatMoney(profit)} ${label}.`,
+        });
+      } else if (profit < 0) {
+        out.push({
+          category: `money-${row.sport}`,
+          text: `${row.sport} has cost you ${formatMoney(-profit)} ${label}.`,
+        });
+      }
+    }
+  }
+
+  // Current streak of won or lost bets, newest first.
+  const byDate = [...settledBets].sort(
+    (a, b) =>
+      new Date(b.settled_at ?? 0).getTime() -
+      new Date(a.settled_at ?? 0).getTime()
+  );
+  if (byDate.length >= 2) {
+    const streakStatus = byDate[0].status;
+    let streak = 0;
+    for (const bet of byDate) {
+      if (bet.status !== streakStatus) break;
+      streak += 1;
+    }
+    if (streak >= 2) {
+      out.push({
+        category: "streak",
+        text: `You have ${streakStatus} your last ${streak} bets.`,
+      });
+    }
+  }
+
+  // Biggest win and biggest loss.
+  const wonBets = settledBets.filter((b) => b.status === "won");
+  if (wonBets.length > 0) {
+    const biggest = wonBets.reduce((a, b) =>
+      betProfit(b) > betProfit(a) ? b : a
+    );
+    out.push({
+      category: "biggest-win",
+      text:
+        `Your biggest win so far: ${usd(betProfit(biggest))} ` +
+        `(${formatMoney(Number(biggest.stake))} at odds ${Number(
+          biggest.total_odds
+        ).toFixed(2)}).`,
+    });
+  }
+  const lostBets = settledBets.filter((b) => b.status === "lost");
+  if (lostBets.length > 0) {
+    const biggest = lostBets.reduce((a, b) =>
+      betProfit(b) < betProfit(a) ? b : a
+    );
+    out.push({
+      category: "biggest-loss",
+      text: `Your biggest loss so far: ${usd(betProfit(biggest))}.`,
+    });
+  }
+
+  return out;
+}
+
+// The full pool of statements that are currently true.
+export function buildInsightPool(settledBets: BetWithLegs[]): Insight[] {
+  return [...adviceInsights(settledBets), ...observationInsights(settledBets)];
+}
+
+function shuffle<T>(items: T[]): T[] {
+  const arr = [...items];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// Picks a random mix, at most one statement per category per round,
+// so one tap never shows four facts of the same kind.
+export function pickInsights(pool: Insight[], count = 4): string[] {
+  const byCategory = new Map<string, Insight[]>();
+  for (const insight of shuffle(pool)) {
+    const list = byCategory.get(insight.category) ?? [];
+    list.push(insight);
+    byCategory.set(insight.category, list);
+  }
+
+  const categories = shuffle([...byCategory.keys()]);
+  const picked: string[] = [];
+  let round = 0;
+  while (picked.length < count) {
+    let added = false;
+    for (const category of categories) {
+      if (picked.length >= count) break;
+      const list = byCategory.get(category) ?? [];
+      if (round < list.length) {
+        picked.push(list[round].text);
+        added = true;
+      }
+    }
+    if (!added) break;
+    round += 1;
+  }
+
+  return picked;
 }
