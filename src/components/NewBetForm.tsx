@@ -20,6 +20,8 @@ interface LegDraft {
   subcategory: string | null;
   // Which chip group (like Player Props) currently shows its third row.
   openGroup: string | null;
+  // Tapping the selected sport again hides or shows the category row.
+  categoriesOpen: boolean;
 }
 
 type LegOddsState =
@@ -34,6 +36,7 @@ function emptyLeg(): LegDraft {
     odds: "",
     subcategory: null,
     openGroup: null,
+    categoriesOpen: true,
   };
 }
 
@@ -212,11 +215,17 @@ export default function NewBetForm() {
                 key={s}
                 type="button"
                 onClick={() =>
-                  updateLeg(index, {
-                    sport: s,
-                    subcategory: leg.sport === s ? leg.subcategory : null,
-                    openGroup: leg.sport === s ? leg.openGroup : null,
-                  })
+                  updateLeg(
+                    index,
+                    leg.sport === s
+                      ? { categoriesOpen: !leg.categoriesOpen }
+                      : {
+                          sport: s,
+                          subcategory: null,
+                          openGroup: null,
+                          categoriesOpen: true,
+                        }
+                  )
                 }
                 className={`rounded-xl border px-4 py-2.5 text-sm font-semibold ${
                   leg.sport === s
@@ -229,15 +238,26 @@ export default function NewBetForm() {
             ))}
           </div>
 
-          {leg.sport !== null && SUBCATEGORIES[leg.sport] !== undefined && (
+          {leg.sport !== null &&
+            SUBCATEGORIES[leg.sport] !== undefined &&
+            !leg.categoriesOpen &&
+            leg.subcategory !== null && (
+              <p className="mt-2 text-xs text-neutral-500">
+                Category: {leg.subcategory} (tap {leg.sport} to change)
+              </p>
+            )}
+
+          {leg.sport !== null &&
+            SUBCATEGORIES[leg.sport] !== undefined &&
+            leg.categoriesOpen && (
             <>
               <p className="mt-4 text-sm font-medium">
                 Category
                 <span className="font-normal text-neutral-500">
-                  , optional
+                  , optional. Scroll for more, tap {leg.sport} to hide.
                 </span>
               </p>
-              <div className="mt-2 flex flex-wrap gap-2">
+              <div className="-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1">
                 {SUBCATEGORIES[leg.sport]!.map((item) => {
                   if (typeof item === "string") {
                     const selected = leg.subcategory === item;
@@ -251,7 +271,7 @@ export default function NewBetForm() {
                             openGroup: null,
                           })
                         }
-                        className={`rounded-xl border px-3.5 py-2 text-sm font-semibold ${
+                        className={`shrink-0 whitespace-nowrap rounded-xl border px-3.5 py-2 text-sm font-semibold ${
                           selected
                             ? "border-emerald-600 bg-emerald-600 text-white"
                             : "border-neutral-300 dark:border-neutral-700"
@@ -277,7 +297,7 @@ export default function NewBetForm() {
                               : item.label,
                         })
                       }
-                      className={`rounded-xl border px-3.5 py-2 text-sm font-semibold ${
+                      className={`shrink-0 whitespace-nowrap rounded-xl border px-3.5 py-2 text-sm font-semibold ${
                         groupSelected
                           ? "border-emerald-600 bg-emerald-600 text-white"
                           : groupOpen
@@ -301,7 +321,7 @@ export default function NewBetForm() {
                 return (
                   <div
                     key={item.label}
-                    className="mt-2 flex flex-wrap gap-2 rounded-xl bg-neutral-100 p-2 dark:bg-neutral-900"
+                    className="mt-2 flex gap-2 overflow-x-auto rounded-xl bg-neutral-100 p-2 dark:bg-neutral-900"
                   >
                     {item.children.map((child) => {
                       const value = `${item.label}: ${child}`;
@@ -315,7 +335,7 @@ export default function NewBetForm() {
                               subcategory: selected ? null : value,
                             })
                           }
-                          className={`rounded-xl border px-3.5 py-2 text-sm font-semibold ${
+                          className={`shrink-0 whitespace-nowrap rounded-xl border px-3.5 py-2 text-sm font-semibold ${
                             selected
                               ? "border-emerald-600 bg-emerald-600 text-white"
                               : "border-neutral-300 bg-white dark:border-neutral-700 dark:bg-neutral-950"
