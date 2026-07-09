@@ -55,19 +55,16 @@ function parsePercent(input: string): number | null {
 }
 
 interface Props {
-  // Pre-fills for a fresh form: last stake and most used sport.
-  defaultStake: string;
-  defaultSport: Sport | null;
+  // The most recent stake, offered as a quick chip only.
+  lastStake: string;
 }
 
 const QUICK_STAKES = ["20", "50", "100"];
 
-export default function NewBetForm({ defaultStake, defaultSport }: Props) {
+export default function NewBetForm({ lastStake }: Props) {
   const router = useRouter();
-  const [stake, setStake] = useState(defaultStake);
-  const [legs, setLegs] = useState<LegDraft[]>(() => [
-    { ...emptyLeg(), sport: defaultSport },
-  ]);
+  const [stake, setStake] = useState("");
+  const [legs, setLegs] = useState<LegDraft[]>([emptyLeg()]);
   // On parlays the user can type over the auto-calculated total odds,
   // for example when the betting app charges a fee.
   const [totalOverride, setTotalOverride] = useState<string | null>(null);
@@ -189,14 +186,10 @@ export default function NewBetForm({ defaultStake, defaultSport }: Props) {
       return;
     }
 
-    // Keep the just-used stake, sport, and odds mode as the new start.
-    setStake(String(stakeValue));
+    // The form clears fully. Only the odds-or-percent mode carries over.
+    setStake("");
     setLegs([
-      {
-        ...emptyLeg(),
-        sport: legs[0]?.sport ?? defaultSport,
-        oddsMode: legs[0]?.oddsMode ?? "decimal",
-      },
+      { ...emptyLeg(), oddsMode: legs[0]?.oddsMode ?? "decimal" },
     ]);
     setTotalOverride(null);
     setCollectOverride("");
@@ -225,8 +218,8 @@ export default function NewBetForm({ defaultStake, defaultSport }: Props) {
         className={inputClass}
       />
       <div className="-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1">
-        {(defaultStake !== "" && !QUICK_STAKES.includes(defaultStake)
-          ? [defaultStake, ...QUICK_STAKES]
+        {(lastStake !== "" && !QUICK_STAKES.includes(lastStake)
+          ? [lastStake, ...QUICK_STAKES]
           : QUICK_STAKES
         ).map((amount) => (
           <button

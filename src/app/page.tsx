@@ -5,7 +5,7 @@ import Recommendations from "@/components/Recommendations";
 import LiveBets from "@/components/LiveBets";
 import StatsRow from "@/components/StatsRow";
 import BetHistory from "@/components/BetHistory";
-import type { BetWithLegs, Sport } from "@/lib/types";
+import type { BetWithLegs } from "@/lib/types";
 
 // Settled bets stay on a Live now card with Undo for this long.
 const UNDO_WINDOW_MS = 15 * 60 * 1000;
@@ -43,21 +43,10 @@ export default async function HomePage() {
   const balance = deposits - withdrawals - totalStaked + totalPayouts;
   const netProfit = balance + withdrawals - deposits;
 
-  // Defaults that pre-fill the form: last stake, most used sport.
-  const defaultStake =
+  // The most recent stake, shown only as a quick chip under the
+  // stake field. The form itself always opens blank.
+  const lastStake =
     allBets.length > 0 ? String(Number(allBets[0].stake)) : "";
-  const sportCounts = new Map<Sport, number>();
-  for (const bet of allBets) {
-    for (const leg of bet.legs) {
-      sportCounts.set(leg.sport, (sportCounts.get(leg.sport) ?? 0) + 1);
-    }
-  }
-  let defaultSport: Sport | null = null;
-  for (const [sport, count] of sportCounts) {
-    if (defaultSport === null || count > (sportCounts.get(defaultSport) ?? 0)) {
-      defaultSport = sport;
-    }
-  }
 
   const now = Date.now();
   const liveBets = allBets.filter(
@@ -96,10 +85,7 @@ export default async function HomePage() {
           userId={user!.id}
         />
 
-        <NewBetForm
-          defaultStake={defaultStake}
-          defaultSport={defaultSport}
-        />
+        <NewBetForm lastStake={lastStake} />
 
         <Recommendations bets={settledBets} />
 
