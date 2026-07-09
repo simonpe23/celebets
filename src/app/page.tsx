@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import WalletCard from "@/components/WalletCard";
 import NewBetForm from "@/components/NewBetForm";
+import Recommendations from "@/components/Recommendations";
 import LiveBets from "@/components/LiveBets";
 import StatsRow from "@/components/StatsRow";
 import BetHistory from "@/components/BetHistory";
@@ -80,6 +81,8 @@ export default async function HomePage() {
         />
 
         <NewBetForm />
+
+        <Recommendations bets={settledBets} />
 
         <LiveBets bets={liveBets} />
 

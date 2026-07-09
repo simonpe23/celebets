@@ -6,8 +6,6 @@ import { formatMoney, formatSignedMoney, round2 } from "@/lib/format";
 import BetHistory from "@/components/BetHistory";
 import {
   bucketRows,
-  buildInsightPool,
-  pickInsights,
   sportRows,
   sportTypeRows,
   totals,
@@ -57,8 +55,6 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
   const [period, setPeriod] = useState<Period>("all");
   const [customFrom, setCustomFrom] = useState("");
   const [customTo, setCustomTo] = useState("");
-  // null means the recommendations panel is closed.
-  const [recs, setRecs] = useState<string[] | null>(null);
 
   const allSettled = bets.filter(
     (b) => b.status !== "pending" && b.settled_at !== null
@@ -374,49 +370,6 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
             <BetHistory bets={historyBets} />
           </>
         )}
-
-        <section>
-          <button
-            type="button"
-            onClick={() =>
-              setRecs(pickInsights(buildInsightPool(allSettled)))
-            }
-            className="h-12 w-full rounded-xl bg-emerald-600 text-base font-semibold text-white active:bg-emerald-700"
-          >
-            {recs === null ? "Show recommendations" : "New recommendations"}
-          </button>
-
-          {recs !== null && (
-            <div className="mt-3 rounded-2xl border border-neutral-200 p-4 dark:border-neutral-800">
-              <div className="flex items-center justify-between">
-                <p className="text-xs text-neutral-500">
-                  Based on all your settled bets. Filters above do not
-                  apply here.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setRecs(null)}
-                  className="shrink-0 rounded-lg px-2 py-1 text-xs font-medium text-neutral-500"
-                >
-                  Hide
-                </button>
-              </div>
-              {recs.length === 0 ? (
-                <p className="mt-2 text-sm">
-                  Nothing to say yet. Settle a few bets and tap again.
-                </p>
-              ) : (
-                <ul className="mt-2 space-y-2">
-                  {recs.map((text, i) => (
-                    <li key={i} className="text-sm leading-relaxed">
-                      {text}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          )}
-        </section>
       </div>
     </main>
   );
