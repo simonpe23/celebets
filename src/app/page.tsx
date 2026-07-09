@@ -5,12 +5,17 @@ import Recommendations from "@/components/Recommendations";
 import LiveBets from "@/components/LiveBets";
 import StatsRow from "@/components/StatsRow";
 import BetHistory from "@/components/BetHistory";
-import type { BetWithLegs } from "@/lib/types";
+import type { BetWithLegs, Sport } from "@/lib/types";
 
 // Settled bets stay on a Live now card with Undo for this long.
 const UNDO_WINDOW_MS = 15 * 60 * 1000;
 
-export default async function HomePage() {
+interface Props {
+  searchParams: Promise<{ repeat?: string }>;
+}
+
+export default async function HomePage({ searchParams }: Props) {
+  const { repeat } = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -42,6 +47,27 @@ export default async function HomePage() {
 
   const balance = deposits - withdrawals - totalStaked + totalPayouts;
   const netProfit = balance + withdrawals - deposits;
+
+  // Defaults that pre-fill the form: last stake, most used sport.
+  const defaultStake =
+    allBets.length > 0 ? String(Number(allBets[0].stake)) : "";
+  const sportCounts = new Map<Sport, number>();
+  for (const bet of allBets) {
+    for (const leg of bet.legs) {
+      sportCounts.set(leg.sport, (sportCounts.get(leg.sport) ?? 0) + 1);
+    }
+  }
+  let defaultSport: Sport | null = null;
+  for (const [sport, count] of sportCounts) {
+    if (defaultSport === null || count > (sportCounts.get(defaultSport) ?? 0)) {
+      defaultSport = sport;
+    }
+  }
+
+  // Repeat bet: pre-fill the form from an existing bet's id.
+  const repeatBet = repeat
+    ? (allBets.find((b) => b.id === repeat) ?? null)
+    : null;
 
   const now = Date.now();
   const liveBets = allBets.filter(
@@ -80,7 +106,22 @@ export default async function HomePage() {
           userId={user!.id}
         />
 
-        <NewBetForm />
+        <NewBetForm
+          key={repeatBet?.id ?? "fresh"}
+          defaultStake={defaultStake}
+          defaultSport={defaultSport}
+          repeatBet={
+            repeatBet
+              ? {
+                  stake: String(Number(repeatBet.stake)),
+                  legs: repeatBet.legs.map((leg) => ({
+                    sport: leg.sport,
+                    subcategory: leg.subcategory,
+                  })),
+                }
+              : null
+          }
+        />
 
         <Recommendations bets={settledBets} />
 

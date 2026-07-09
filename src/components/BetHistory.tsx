@@ -146,6 +146,14 @@ export default function BetHistory({ bets }: Props) {
                   <button
                     type="button"
                     disabled={busy}
+                    onClick={() => router.push(`/?repeat=${bet.id}`)}
+                    className="rounded-lg border border-emerald-600 px-3 py-1.5 text-xs font-medium text-emerald-600 disabled:opacity-50 dark:text-emerald-400"
+                  >
+                    Repeat
+                  </button>
+                  <button
+                    type="button"
+                    disabled={busy}
                     onClick={() => {
                       setConfirming(null);
                       setEditing(bet.id);

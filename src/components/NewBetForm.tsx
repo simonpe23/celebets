@@ -40,10 +40,39 @@ function emptyLeg(): LegDraft {
   };
 }
 
-export default function NewBetForm() {
+interface RepeatBet {
+  stake: string;
+  legs: { sport: Sport; subcategory: string | null }[];
+}
+
+interface Props {
+  // Pre-fills for a fresh form: last stake and most used sport.
+  defaultStake: string;
+  defaultSport: Sport | null;
+  // When set, the form starts as a copy of that bet's stake,
+  // sports, and categories. Pick and odds start fresh.
+  repeatBet: RepeatBet | null;
+}
+
+const QUICK_STAKES = ["20", "50", "100"];
+
+export default function NewBetForm({
+  defaultStake,
+  defaultSport,
+  repeatBet,
+}: Props) {
   const router = useRouter();
-  const [stake, setStake] = useState("");
-  const [legs, setLegs] = useState<LegDraft[]>([emptyLeg()]);
+  const [stake, setStake] = useState(repeatBet?.stake ?? defaultStake);
+  const [legs, setLegs] = useState<LegDraft[]>(() =>
+    repeatBet
+      ? repeatBet.legs.map((leg) => ({
+          ...emptyLeg(),
+          sport: leg.sport,
+          subcategory: leg.subcategory,
+          categoriesOpen: false,
+        }))
+      : [{ ...emptyLeg(), sport: defaultSport }]
+  );
   // On parlays the user can type over the auto-calculated total odds,
   // for example when the betting app charges a fee.
   const [totalOverride, setTotalOverride] = useState<string | null>(null);
@@ -157,8 +186,9 @@ export default function NewBetForm() {
       return;
     }
 
-    setStake("");
-    setLegs([emptyLeg()]);
+    // Keep the just-used stake and sport as the new starting point.
+    setStake(String(stakeValue));
+    setLegs([{ ...emptyLeg(), sport: legs[0]?.sport ?? defaultSport }]);
     setTotalOverride(null);
     setCollectOverride("");
     setPlaced(true);
@@ -185,6 +215,25 @@ export default function NewBetForm() {
         onChange={(e) => setStake(e.target.value)}
         className={inputClass}
       />
+      <div className="-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1">
+        {(defaultStake !== "" && !QUICK_STAKES.includes(defaultStake)
+          ? [defaultStake, ...QUICK_STAKES]
+          : QUICK_STAKES
+        ).map((amount) => (
+          <button
+            key={amount}
+            type="button"
+            onClick={() => setStake(amount)}
+            className={`shrink-0 whitespace-nowrap rounded-lg border px-3 py-1.5 text-xs font-semibold ${
+              stake === amount
+                ? "border-emerald-600 text-emerald-600 dark:text-emerald-400"
+                : "border-neutral-300 text-neutral-500 dark:border-neutral-700"
+            }`}
+          >
+            ${amount}
+          </button>
+        ))}
+      </div>
 
       {legs.map((leg, index) => (
         <div
