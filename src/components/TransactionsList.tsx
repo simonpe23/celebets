@@ -14,11 +14,45 @@ export default function TransactionsList({
 }) {
   const router = useRouter();
   const [confirming, setConfirming] = useState<string | null>(null);
+  const [editing, setEditing] = useState<string | null>(null);
+  const [dateValue, setDateValue] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   // Dates render after mount so they use the phone's timezone.
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
+
+  // Formats a timestamp as yyyy-mm-dd in local time, for the date input.
+  function toDateInputValue(timestamp: string): string {
+    const d = new Date(timestamp);
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${d.getFullYear()}-${month}-${day}`;
+  }
+
+  async function saveDate(id: string) {
+    if (!dateValue) return;
+    setError(null);
+    setBusy(true);
+
+    // Saved at noon local time so the day stays right in every view.
+    const createdAt = new Date(dateValue + "T12:00:00").toISOString();
+    const supabase = createClient();
+    const { error: dbError } = await supabase
+      .from("transactions")
+      .update({ created_at: createdAt })
+      .eq("id", id);
+
+    setBusy(false);
+    setEditing(null);
+
+    if (dbError) {
+      setError(dbError.message);
+      return;
+    }
+
+    router.refresh();
+  }
 
   async function deleteTransaction(id: string) {
     setError(null);
@@ -100,13 +134,64 @@ export default function TransactionsList({
                     <button
                       type="button"
                       disabled={busy}
-                      onClick={() => setConfirming(tx.id)}
+                      onClick={() => {
+                        setConfirming(null);
+                        setEditing(tx.id);
+                        setDateValue(toDateInputValue(tx.created_at));
+                      }}
+                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-neutral-700"
+                    >
+                      Edit date
+                    </button>
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={() => {
+                        setEditing(null);
+                        setConfirming(tx.id);
+                      }}
                       className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-neutral-700"
                     >
                       Delete
                     </button>
                   </div>
                 </div>
+
+                {editing === tx.id && (
+                  <div className="mt-3 flex items-end gap-2 rounded-xl bg-neutral-100 p-3 dark:bg-neutral-900">
+                    <div className="grow">
+                      <label
+                        htmlFor={`date-${tx.id}`}
+                        className="block text-xs text-neutral-500"
+                      >
+                        Date
+                      </label>
+                      <input
+                        id={`date-${tx.id}`}
+                        type="date"
+                        value={dateValue}
+                        onChange={(e) => setDateValue(e.target.value)}
+                        className="mt-1 block h-10 w-full rounded-lg border border-neutral-300 bg-white px-3 text-sm text-neutral-900 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={() => setEditing(null)}
+                      className="h-10 rounded-lg border border-neutral-300 px-3 text-xs font-medium dark:border-neutral-700"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      disabled={busy || !dateValue}
+                      onClick={() => saveDate(tx.id)}
+                      className="h-10 rounded-lg bg-emerald-600 px-3 text-xs font-semibold text-white disabled:opacity-50"
+                    >
+                      Save
+                    </button>
+                  </div>
+                )}
 
                 {confirming === tx.id && (
                   <div className="mt-3 flex items-center justify-between gap-2 border-t border-neutral-100 pt-3 dark:border-neutral-800">
