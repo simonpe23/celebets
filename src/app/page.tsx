@@ -89,13 +89,13 @@ export default async function HomePage() {
           userId={user!.id}
         />
 
+        <StatsRow bets={settledBets} />
+
         <NewBetForm lastStake={lastStake} />
 
         <Recommendations bets={settledBets} />
 
         <LiveBets bets={liveBets} />
-
-        <StatsRow bets={settledBets} />
 
         <BetHistory bets={settledBets} />
       </div>

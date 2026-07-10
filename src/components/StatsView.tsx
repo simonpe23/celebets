@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { formatMoney, formatSignedMoney, round2 } from "@/lib/format";
 import BetHistory from "@/components/BetHistory";
+import StatsRow from "@/components/StatsRow";
 import {
   bucketRows,
   categoryRows,
@@ -123,6 +124,8 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
             Home
           </Link>
         </header>
+
+        <StatsRow bets={allSettled} />
 
         <section>
           <p className="text-sm font-medium">Sport</p>
