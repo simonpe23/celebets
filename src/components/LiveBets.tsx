@@ -260,7 +260,7 @@ export default function LiveBets({ bets }: Props) {
                       type="text"
                       inputMode="decimal"
                       autoFocus
-                      placeholder="100.01"
+                      placeholder="0.00"
                       value={addAmount}
                       onChange={(e) => setAddAmount(e.target.value)}
                       className="mt-1 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"
@@ -279,7 +279,7 @@ export default function LiveBets({ bets }: Props) {
                       id={`add-payout-${bet.id}`}
                       type="text"
                       inputMode="decimal"
-                      placeholder="298.30"
+                      placeholder="0.00"
                       value={addPayout}
                       onChange={(e) => setAddPayout(e.target.value)}
                       className="mt-1 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"
@@ -367,7 +367,7 @@ export default function LiveBets({ bets }: Props) {
                       type="text"
                       inputMode="decimal"
                       autoFocus
-                      placeholder="142.03"
+                      placeholder="0.00"
                       value={cashOutAmount}
                       onChange={(e) => setCashOutAmount(e.target.value)}
                       className="mt-2 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"

@@ -42,8 +42,17 @@ The owner has no coding experience. These rules are permanent.
   settle at the exact amount received. At or above stake counts as won,
   below as lost, payout = the amount either way, so profit is always
   payout minus stake. Cash out means done: no pick settling afterwards,
-  the card leaves Live now after the 15 minute undo window. Picks of a
-  cashed out bet do not join the per sport won/lost record.
+  the card leaves Live now after the 15 minute undo window.
+- Picks still open at cash out inherit the cash out outcome in the
+  records: profit = won picks, loss = lost picks (rule changed by the
+  owner in phase 7, replacing the old "cashed out picks do not count").
+- Add money (phase7.sql, run and verified July 2026): a pending bet
+  can absorb more buys, each with its own amount and payout (bet_buys
+  table). The bet's stake and To Collect grow to the merged totals,
+  matching how Kalshi merges positions. On singles every buy counts
+  as its own pick at its own odds (payout / amount) in the records
+  and odds groups. On parlays picks stay = legs. A "N buys" button on
+  cards expands the individual buys.
 
 ## Idea backlog
 
@@ -82,5 +91,5 @@ The owner has no coding experience. These rules are permanent.
   live in SUBCATEGORIES in src/lib/types.ts, Football only so far.
   Adding sub-categories is a code change, never a database change.
   Nested choices are stored as "Group: Choice" (Player Props: Assists).
-- All SQL files through supabase/phase5b.sql have been run and
+- All SQL files through supabase/phase7.sql have been run and
   confirmed by the owner (July 2026). Transaction dates are editable.
