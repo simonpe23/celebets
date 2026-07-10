@@ -4,6 +4,40 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { formatOdds, formatMoney, formatSignedMoney } from "@/lib/format";
+
+function BuysList({ bet }: { bet: BetWithLegs }) {
+  const [expanded, setExpanded] = useState(false);
+  if ((bet.bet_buys?.length ?? 0) < 2) return null;
+
+  return (
+    <div className="mt-2">
+      <button
+        type="button"
+        onClick={() => setExpanded((v) => !v)}
+        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 dark:border-neutral-700"
+      >
+        {expanded ? "Hide buys" : `${bet.bet_buys.length} buys`}
+      </button>
+      {expanded && (
+        <div className="mt-2 space-y-1 rounded-xl bg-neutral-100 p-3 dark:bg-neutral-900">
+          {[...bet.bet_buys]
+            .sort(
+              (a, b) =>
+                new Date(a.created_at).getTime() -
+                new Date(b.created_at).getTime()
+            )
+            .map((buy, i) => (
+              <p key={buy.id} className="text-xs">
+                Buy {i + 1}: {formatMoney(Number(buy.amount))} pays{" "}
+                {formatMoney(Number(buy.payout))} (odds{" "}
+                {formatOdds(Number(buy.payout) / Number(buy.amount))})
+              </p>
+            ))}
+        </div>
+      )}
+    </div>
+  );
+}
 import { SPORT_EMOJI, type BetWithLegs } from "@/lib/types";
 
 interface Props {
@@ -144,6 +178,8 @@ export default function BetHistory({ bets }: Props) {
                     {formatSignedMoney(profit)}
                   </p>
                 </div>
+
+                <BuysList bet={bet} />
 
                 <div className="mt-2 flex gap-2">
                   <button

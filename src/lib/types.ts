@@ -67,6 +67,13 @@ export interface Transaction {
   created_at: string;
 }
 
+export interface BetBuy {
+  id: string;
+  amount: number;
+  payout: number;
+  created_at: string;
+}
+
 export interface BetWithLegs {
   id: string;
   stake: number;
@@ -77,4 +84,5 @@ export interface BetWithLegs {
   payout: number | null;
   cashed_out: boolean;
   legs: Leg[];
+  bet_buys: BetBuy[];
 }

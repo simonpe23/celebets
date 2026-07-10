@@ -1,5 +1,26 @@
 import { formatMoney, formatSignedMoney, round2 } from "./format";
-import { SPORTS, type BetWithLegs, type Sport } from "./types";
+import {
+  SPORTS,
+  type BetWithLegs,
+  type Leg,
+  type LegResult,
+  type Sport,
+} from "./types";
+
+// A pick's result for the records. Picks that were still open when
+// the bet was cashed out inherit the cash out outcome: profit means
+// won picks, loss means lost picks.
+export function effectiveResult(bet: BetWithLegs, leg: Leg): LegResult {
+  if (leg.result !== "pending") return leg.result;
+  if (bet.cashed_out && bet.status !== "pending") return bet.status;
+  return "pending";
+}
+
+// Every buy on a single bet counts as its own pick. Falls back to 1
+// for bets that predate the buys table.
+function pickCount(bet: BetWithLegs): number {
+  return Math.max(1, (bet.bet_buys ?? []).length);
+}
 
 // Realized profit of a settled bet. A payout exists on won bets and
 // on cashed out bets (even lost ones), so the formula is the same
@@ -34,10 +55,12 @@ export function legShares(bet: BetWithLegs): number[] {
   }
 
   if (bet.status === "lost") {
-    const losers = bet.legs.filter((leg) => leg.result === "lost").length;
+    const losers = bet.legs.filter(
+      (leg) => effectiveResult(bet, leg) === "lost"
+    ).length;
     if (losers > 0) {
       return bet.legs.map((leg) =>
-        leg.result === "lost" ? profit / losers : 0
+        effectiveResult(bet, leg) === "lost" ? profit / losers : 0
       );
     }
     return bet.legs.map(() => profit / n);
@@ -61,13 +84,26 @@ export function sportRows(bets: BetWithLegs[]): SportRow[] {
 
   for (const bet of bets) {
     const shares = legShares(bet);
-    bet.legs.forEach((leg, i) => {
+    if (bet.legs.length === 1) {
+      // Singles: every buy counts as its own pick, all sharing the
+      // bet's outcome (they are the same pick, bought several times).
+      const leg = bet.legs[0];
       const row = map.get(leg.sport);
-      if (!row) return;
-      if (leg.result === "won") row.wins += 1;
-      if (leg.result === "lost") row.losses += 1;
-      row.profit += shares[i];
-    });
+      if (!row) continue;
+      const result = effectiveResult(bet, leg);
+      if (result === "won") row.wins += pickCount(bet);
+      if (result === "lost") row.losses += pickCount(bet);
+      row.profit += shares[0] ?? 0;
+    } else {
+      bet.legs.forEach((leg, i) => {
+        const row = map.get(leg.sport);
+        if (!row) return;
+        const result = effectiveResult(bet, leg);
+        if (result === "won") row.wins += 1;
+        if (result === "lost") row.losses += 1;
+        row.profit += shares[i];
+      });
+    }
   }
 
   return [...map.values()];
@@ -109,14 +145,23 @@ export function sportTypeRows(
   ];
 
   for (const bet of bets) {
-    const row = bet.legs.length > 1 ? rows[1] : rows[0];
     const shares = legShares(bet);
-    bet.legs.forEach((leg, i) => {
-      if (leg.sport !== sport) return;
-      if (leg.result === "won") row.wins += 1;
-      if (leg.result === "lost") row.losses += 1;
-      row.profit += shares[i];
-    });
+    if (bet.legs.length === 1) {
+      const leg = bet.legs[0];
+      if (leg.sport !== sport) continue;
+      const result = effectiveResult(bet, leg);
+      if (result === "won") rows[0].wins += pickCount(bet);
+      if (result === "lost") rows[0].losses += pickCount(bet);
+      rows[0].profit += shares[0] ?? 0;
+    } else {
+      bet.legs.forEach((leg, i) => {
+        if (leg.sport !== sport) return;
+        const result = effectiveResult(bet, leg);
+        if (result === "won") rows[1].wins += 1;
+        if (result === "lost") rows[1].losses += 1;
+        rows[1].profit += shares[i];
+      });
+    }
   }
 
   return rows;
@@ -139,12 +184,15 @@ export function categoryRows(
 
   for (const bet of bets) {
     const shares = legShares(bet);
+    const isSingle = bet.legs.length === 1;
     bet.legs.forEach((leg, i) => {
       if (leg.sport !== sport) return;
       const label = leg.subcategory ?? "No category";
       const row = map.get(label) ?? { label, wins: 0, losses: 0, profit: 0 };
-      if (leg.result === "won") row.wins += 1;
-      if (leg.result === "lost") row.losses += 1;
+      const result = effectiveResult(bet, leg);
+      const picks = isSingle ? pickCount(bet) : 1;
+      if (result === "won") row.wins += picks;
+      if (result === "lost") row.losses += picks;
       row.profit += shares[i];
       map.set(label, row);
     });
@@ -179,15 +227,37 @@ export function bucketRows(
     total: 0,
   }));
 
+  const add = (odds: number, won: boolean) => {
+    if (!(odds > 1)) return;
+    const index = odds <= 1.8 ? 0 : odds <= 3.0 ? 1 : 2;
+    rows[index].total += 1;
+    if (won) rows[index].wins += 1;
+  };
+
   for (const bet of bets) {
-    for (const leg of bet.legs) {
-      if (leg.result === "pending") continue;
-      if (leg.odds === null) continue;
+    if (bet.legs.length === 1) {
+      // Singles: each buy is its own pick, at that buy's own odds
+      // (its payout divided by its amount).
+      const leg = bet.legs[0];
       if (sportFilter !== null && leg.sport !== sportFilter) continue;
-      const odds = Number(leg.odds);
-      const index = odds <= 1.8 ? 0 : odds <= 3.0 ? 1 : 2;
-      rows[index].total += 1;
-      if (leg.result === "won") rows[index].wins += 1;
+      const result = effectiveResult(bet, leg);
+      if (result === "pending") continue;
+      const buys = bet.bet_buys ?? [];
+      if (buys.length > 0) {
+        for (const buy of buys) {
+          add(Number(buy.payout) / Number(buy.amount), result === "won");
+        }
+      } else if (leg.odds !== null) {
+        add(Number(leg.odds), result === "won");
+      }
+    } else {
+      for (const leg of bet.legs) {
+        if (leg.odds === null) continue;
+        if (sportFilter !== null && leg.sport !== sportFilter) continue;
+        const result = effectiveResult(bet, leg);
+        if (result === "pending") continue;
+        add(Number(leg.odds), result === "won");
+      }
     }
   }
 

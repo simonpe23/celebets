@@ -31,7 +31,47 @@ export default function LiveBets({ bets }: Props) {
   );
   const [cashingOut, setCashingOut] = useState<string | null>(null);
   const [cashOutAmount, setCashOutAmount] = useState("");
+  const [addingMoney, setAddingMoney] = useState<string | null>(null);
+  const [addAmount, setAddAmount] = useState("");
+  const [addPayout, setAddPayout] = useState("");
+  const [expandedBuys, setExpandedBuys] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  async function addMoney(betId: string, stake: number, totalOdds: number) {
+    const amount = parseMoney(addAmount);
+    const payout = parseMoney(addPayout);
+    if (amount === null || payout === null) {
+      setError("Enter a valid amount and payout, both above 0.");
+      return;
+    }
+    const newCollect = round2(stake * totalOdds) + payout;
+    if (newCollect <= stake + amount) {
+      setError("The total payout must stay above the total stake.");
+      return;
+    }
+
+    setError(null);
+    setBusyLeg("adding-money");
+
+    const supabase = createClient();
+    const { error: dbError } = await supabase.rpc("add_money", {
+      p_bet_id: betId,
+      p_amount: amount,
+      p_payout: payout,
+    });
+
+    setBusyLeg(null);
+
+    if (dbError) {
+      setError(dbError.message);
+      return;
+    }
+
+    setAddingMoney(null);
+    setAddAmount("");
+    setAddPayout("");
+    router.refresh();
+  }
 
   async function cashOut(betId: string) {
     const amount = parseMoney(cashOutAmount);
@@ -157,25 +197,12 @@ export default function LiveBets({ bets }: Props) {
                         Parlay, {bet.legs.length} legs
                       </span>
                     )}
-                    {bet.status === "pending" && (
-                      <button
-                        type="button"
-                        disabled={busyLeg !== null}
-                        onClick={() => {
-                          setConfirmingDelete(null);
-                          setCashOutAmount("");
-                          setCashingOut(bet.id);
-                        }}
-                        className="rounded-lg border border-emerald-600 px-3 py-1.5 text-xs font-medium text-emerald-600 disabled:opacity-50 dark:text-emerald-400"
-                      >
-                        Cash out
-                      </button>
-                    )}
                     <button
                       type="button"
                       disabled={busyLeg !== null}
                       onClick={() => {
                         setCashingOut(null);
+                        setAddingMoney(null);
                         setConfirmingDelete(bet.id);
                       }}
                       className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-neutral-700"
@@ -184,6 +211,120 @@ export default function LiveBets({ bets }: Props) {
                     </button>
                   </div>
                 </div>
+
+                {bet.status === "pending" && (
+                  <div className="mt-3 grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      disabled={busyLeg !== null}
+                      onClick={() => {
+                        setCashingOut(null);
+                        setConfirmingDelete(null);
+                        setAddAmount("");
+                        setAddPayout("");
+                        setAddingMoney(addingMoney === bet.id ? null : bet.id);
+                      }}
+                      className="h-9 rounded-lg border border-emerald-600 text-sm font-semibold text-emerald-600 disabled:opacity-50 dark:text-emerald-400"
+                    >
+                      Add money
+                    </button>
+                    <button
+                      type="button"
+                      disabled={busyLeg !== null}
+                      onClick={() => {
+                        setAddingMoney(null);
+                        setConfirmingDelete(null);
+                        setCashOutAmount("");
+                        setCashingOut(cashingOut === bet.id ? null : bet.id);
+                      }}
+                      className="h-9 rounded-lg border border-emerald-600 text-sm font-semibold text-emerald-600 disabled:opacity-50 dark:text-emerald-400"
+                    >
+                      Cash out
+                    </button>
+                  </div>
+                )}
+
+                {addingMoney === bet.id && (
+                  <div className="mt-3 rounded-xl bg-neutral-100 p-3 dark:bg-neutral-900">
+                    <label
+                      htmlFor={`add-amount-${bet.id}`}
+                      className="block text-sm font-medium"
+                    >
+                      Amount added (USD)
+                    </label>
+                    <input
+                      id={`add-amount-${bet.id}`}
+                      type="text"
+                      inputMode="decimal"
+                      autoFocus
+                      placeholder="100.01"
+                      value={addAmount}
+                      onChange={(e) => setAddAmount(e.target.value)}
+                      className="mt-1 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"
+                    />
+                    <label
+                      htmlFor={`add-payout-${bet.id}`}
+                      className="mt-3 block text-sm font-medium"
+                    >
+                      That buy&apos;s own payout (USD)
+                    </label>
+                    <p className="mt-0.5 text-xs text-neutral-500">
+                      The payout if right for this buy alone, from your
+                      betting app&apos;s order history.
+                    </p>
+                    <input
+                      id={`add-payout-${bet.id}`}
+                      type="text"
+                      inputMode="decimal"
+                      placeholder="298.30"
+                      value={addPayout}
+                      onChange={(e) => setAddPayout(e.target.value)}
+                      className="mt-1 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"
+                    />
+                    {parseMoney(addAmount) !== null &&
+                      parseMoney(addPayout) !== null && (
+                        <p className="mt-2 text-xs font-medium">
+                          New totals: stake{" "}
+                          {formatMoney(
+                            round2(stake + (parseMoney(addAmount) as number))
+                          )}
+                          , To Collect{" "}
+                          {formatMoney(
+                            round2(
+                              round2(stake * totalOdds) +
+                                (parseMoney(addPayout) as number)
+                            )
+                          )}
+                        </p>
+                      )}
+                    <div className="mt-2 flex justify-end gap-2">
+                      <button
+                        type="button"
+                        disabled={busyLeg !== null}
+                        onClick={() => {
+                          setAddingMoney(null);
+                          setAddAmount("");
+                          setAddPayout("");
+                        }}
+                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium dark:border-neutral-700"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        disabled={
+                          busyLeg !== null ||
+                          parseMoney(addAmount) === null ||
+                          parseMoney(addPayout) === null
+                        }
+                        onClick={() => addMoney(bet.id, stake, totalOdds)}
+                        className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
+                      >
+                        Confirm add
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 {bet.cashed_out && (
                   <div className="mt-3 flex items-center justify-between gap-2 rounded-xl bg-neutral-100 p-3 dark:bg-neutral-900">
@@ -349,6 +490,44 @@ export default function LiveBets({ bets }: Props) {
                     </div>
                   ))}
                 </div>
+
+                {(bet.bet_buys?.length ?? 0) > 1 && (
+                  <div className="mt-3">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setExpandedBuys(
+                          expandedBuys === bet.id ? null : bet.id
+                        )
+                      }
+                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-semibold text-neutral-500 dark:border-neutral-700"
+                    >
+                      {expandedBuys === bet.id
+                        ? "Hide buys"
+                        : `${bet.bet_buys.length} buys`}
+                    </button>
+                    {expandedBuys === bet.id && (
+                      <div className="mt-2 space-y-1 rounded-xl bg-neutral-100 p-3 dark:bg-neutral-900">
+                        {[...bet.bet_buys]
+                          .sort(
+                            (a, b) =>
+                              new Date(a.created_at).getTime() -
+                              new Date(b.created_at).getTime()
+                          )
+                          .map((buy, i) => (
+                            <p key={buy.id} className="text-xs">
+                              Buy {i + 1}: {formatMoney(Number(buy.amount))}{" "}
+                              pays {formatMoney(Number(buy.payout))} (odds{" "}
+                              {formatOdds(
+                                Number(buy.payout) / Number(buy.amount)
+                              )}
+                              )
+                            </p>
+                          ))}
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {bet.cashed_out ? (
                   <div className="mt-3 grid grid-cols-3 gap-2 border-t border-neutral-100 pt-3 text-center dark:border-neutral-800">
