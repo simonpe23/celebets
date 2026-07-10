@@ -403,7 +403,7 @@ export default function NewBetForm({ lastStake }: Props) {
                 id={`percent-${index}`}
                 type="text"
                 inputMode="decimal"
-                placeholder="44"
+                placeholder="Leave empty if unknown"
                 value={leg.percent}
                 onChange={(e) => updateLeg(index, { percent: e.target.value })}
                 className={inputClass}
