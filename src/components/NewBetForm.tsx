@@ -7,7 +7,6 @@ import {
   formatMoney,
   formatOdds,
   parseMoney,
-  parseOdds,
   round2,
   round4,
 } from "@/lib/format";
@@ -16,10 +15,8 @@ import { SPORTS, SPORT_EMOJI, SUBCATEGORIES, type Sport } from "@/lib/types";
 interface LegDraft {
   sport: Sport | null;
   description: string;
-  odds: string;
-  // How the odds field is read: decimal odds or a chance percentage
-  // like Kalshi shows (44% converts to decimal odds 100 / 44 = 2.27).
-  oddsMode: "decimal" | "percent";
+  // Kalshi style chance percentage, used on parlays only.
+  percent: string;
   subcategory: string | null;
   // Which chip group (like Player Props) currently shows its third row.
   openGroup: string | null;
@@ -27,7 +24,7 @@ interface LegDraft {
   categoriesOpen: boolean;
 }
 
-type LegOddsState =
+type PercentState =
   | { kind: "blank" }
   | { kind: "invalid" }
   | { kind: "valid"; value: number };
@@ -36,22 +33,21 @@ function emptyLeg(): LegDraft {
   return {
     sport: null,
     description: "",
-    odds: "",
-    oddsMode: "decimal",
+    percent: "",
     subcategory: null,
     openGroup: null,
     categoriesOpen: true,
   };
 }
 
-// Parses a chance percentage like "44" or "55.5" (must be above 0 and
-// below 100) into decimal odds: 100 / 44 = 2.27.
+// Parses a chance percentage like "44" or "55.5". Must be above 0
+// and below 100.
 function parsePercent(input: string): number | null {
   const normalized = input.trim().replace(",", ".");
   if (!/^\d+(\.\d{1,2})?$/.test(normalized)) return null;
   const value = parseFloat(normalized);
   if (value <= 0 || value >= 100) return null;
-  return round2(100 / value);
+  return value;
 }
 
 interface Props {
@@ -65,105 +61,60 @@ export default function NewBetForm({ lastStake }: Props) {
   const router = useRouter();
   const [stake, setStake] = useState("");
   const [legs, setLegs] = useState<LegDraft[]>([emptyLeg()]);
-  // On parlays the user can type over the auto-calculated total odds,
-  // for example when the betting app charges a fee.
-  const [totalOverride, setTotalOverride] = useState<string | null>(null);
-  // The exact payout from the betting app. When filled, it beats
-  // every odds calculation: To Win and the stored odds follow it.
-  const [collectOverride, setCollectOverride] = useState("");
+  const [collect, setCollect] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [placed, setPlaced] = useState(false);
   const [saving, setSaving] = useState(false);
 
   const isParlay = legs.length > 1;
   const stakeValue = parseMoney(stake);
-
-  const legOddsStates: LegOddsState[] = legs.map((leg) => {
-    const text = leg.odds.trim();
-    if (text === "") return { kind: "blank" };
-    const value =
-      leg.oddsMode === "percent" ? parsePercent(text) : parseOdds(text);
-    return value === null ? { kind: "invalid" } : { kind: "valid", value };
-  });
-
-  const autoTotal = legOddsStates.every((s) => s.kind === "valid")
-    ? round2(
-        legOddsStates.reduce(
-          (product, s) => product * (s.kind === "valid" ? s.value : 1),
-          1
-        )
-      )
-    : null;
-
-  // Percentages come from betting app market prices, and those apps
-  // pay less than the multiplied estimate (fees). So when any leg
-  // uses % mode, the money must come from the exact To Collect
-  // amount, and the total odds field is hidden entirely.
-  const anyPercent = legs.some((leg) => leg.oddsMode === "percent");
-  const showTotalField = isParlay && !anyPercent;
-
-  const oddsBasedTotal =
-    showTotalField && totalOverride !== null
-      ? parseOdds(totalOverride)
-      : anyPercent
-        ? null
-        : autoTotal;
-
-  // The exact To Collect amount, when filled, wins over the odds.
-  const collectActive = collectOverride.trim() !== "";
-  const collectValue = collectActive ? parseMoney(collectOverride) : null;
+  const collectValue = parseMoney(collect);
   const collectValid =
     collectValue !== null && stakeValue !== null && collectValue > stakeValue;
 
+  // All odds come from the money: To Collect divided by stake.
   const totalOdds = collectValid
-    ? round4(collectValue / stakeValue)
-    : oddsBasedTotal;
+    ? round4((collectValue as number) / (stakeValue as number))
+    : null;
+  const toWin = collectValid
+    ? round2((collectValue as number) - (stakeValue as number))
+    : null;
 
-  const toCollect = collectValid
-    ? collectValue
-    : stakeValue !== null && totalOdds !== null
-      ? round2(stakeValue * totalOdds)
-      : null;
-  const toWin =
-    stakeValue !== null && toCollect !== null
-      ? round2(toCollect - stakeValue)
-      : null;
-
-  // The pick text is optional everywhere: only sport and valid odds
-  // (odds required on singles only) gate the Place Bet button.
-  const allLegsComplete = legs.every((leg, i) => {
-    const oddsOk = isParlay
-      ? legOddsStates[i].kind !== "invalid"
-      : legOddsStates[i].kind === "valid";
-    return leg.sport !== null && oddsOk;
+  const percentStates: PercentState[] = legs.map((leg) => {
+    const text = leg.percent.trim();
+    if (text === "") return { kind: "blank" };
+    const value = parsePercent(text);
+    return value === null ? { kind: "invalid" } : { kind: "valid", value };
   });
-  const canPlace =
-    stakeValue !== null &&
-    allLegsComplete &&
-    totalOdds !== null &&
-    (!collectActive || collectValid) &&
-    !saving;
 
-  function updateLeg(index: number, patch: Partial<LegDraft>) {
-    setLegs((prev) =>
-      prev.map((leg, i) => (i === index ? { ...leg, ...patch } : leg))
+  const allLegsOk = legs.every(
+    (leg, i) => leg.sport !== null && percentStates[i].kind !== "invalid"
+  );
+  const canPlace = stakeValue !== null && collectValid && allLegsOk && !saving;
+
+  // Per pick odds for the stats. Singles: the bet's own odds. Parlays:
+  // odds from each percentage, scaled by one shared factor so together
+  // they multiply to the real total odds (the fee gap gets spread
+  // across the picks). Scaling needs every pick's percentage.
+  function computeLegOdds(): (number | null)[] {
+    if (!isParlay) {
+      return [totalOdds !== null ? round2(totalOdds) : null];
+    }
+
+    const raw = percentStates.map((s) =>
+      s.kind === "valid" ? 100 / s.value : null
     );
-  }
 
-  function addLeg() {
-    // New legs keep the odds-or-percent mode of the leg above.
-    setLegs((prev) => [
-      ...prev,
-      { ...emptyLeg(), oddsMode: prev[prev.length - 1]?.oddsMode ?? "decimal" },
-    ]);
-  }
+    if (raw.every((r) => r !== null) && totalOdds !== null) {
+      const product = raw.reduce((p, r) => p * (r as number), 1);
+      if (product > 0) {
+        const factor = Math.pow(totalOdds / product, 1 / raw.length);
+        const scaled = raw.map((r) => round2((r as number) * factor));
+        if (scaled.every((o) => o > 1)) return scaled;
+      }
+    }
 
-  function removeLeg(index: number) {
-    setLegs((prev) => {
-      const next = prev.filter((_, i) => i !== index);
-      if (next.length === 1) setTotalOverride(null);
-      return next;
-    });
+    return raw.map((r) => (r === null ? null : round2(r)));
   }
 
   async function placeBet() {
@@ -172,17 +123,17 @@ export default function NewBetForm({ lastStake }: Props) {
     setError(null);
     setSaving(true);
 
+    const legOdds = computeLegOdds();
     const supabase = createClient();
     const { error: dbError } = await supabase.rpc("place_bet", {
       p_stake: stakeValue,
       p_total_odds: totalOdds,
       p_legs: legs.map((leg, i) => {
-        const state = legOddsStates[i];
         const description = leg.description.trim();
         return {
           sport: leg.sport,
           description: description === "" ? null : description,
-          odds: state.kind === "valid" ? state.value : null,
+          odds: legOdds[i],
           subcategory: leg.subcategory,
         };
       }),
@@ -195,16 +146,26 @@ export default function NewBetForm({ lastStake }: Props) {
       return;
     }
 
-    // The form clears fully. Only the odds-or-percent mode carries over.
     setStake("");
-    setLegs([
-      { ...emptyLeg(), oddsMode: legs[0]?.oddsMode ?? "decimal" },
-    ]);
-    setTotalOverride(null);
-    setCollectOverride("");
+    setLegs([emptyLeg()]);
+    setCollect("");
     setPlaced(true);
     setTimeout(() => setPlaced(false), 2500);
     router.refresh();
+  }
+
+  function updateLeg(index: number, patch: Partial<LegDraft>) {
+    setLegs((prev) =>
+      prev.map((leg, i) => (i === index ? { ...leg, ...patch } : leg))
+    );
+  }
+
+  function addLeg() {
+    setLegs((prev) => [...prev, emptyLeg()]);
+  }
+
+  function removeLeg(index: number) {
+    setLegs((prev) => prev.filter((_, i) => i !== index));
   }
 
   const inputClass =
@@ -310,106 +271,106 @@ export default function NewBetForm({ lastStake }: Props) {
           {leg.sport !== null &&
             SUBCATEGORIES[leg.sport] !== undefined &&
             leg.categoriesOpen && (
-            <>
-              <p className="mt-4 text-sm font-medium">
-                Category
-                <span className="font-normal text-neutral-500">
-                  , optional. Scroll for more, tap {leg.sport} to hide.
-                </span>
-              </p>
-              <div className="-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1">
-                {SUBCATEGORIES[leg.sport]!.map((item) => {
-                  if (typeof item === "string") {
-                    const selected = leg.subcategory === item;
-                    return (
-                      <button
-                        key={item}
-                        type="button"
-                        onClick={() =>
-                          updateLeg(index, {
-                            subcategory: selected ? null : item,
-                            openGroup: null,
-                          })
-                        }
-                        className={`shrink-0 whitespace-nowrap rounded-xl border px-3.5 py-2 text-sm font-semibold ${
-                          selected
-                            ? "border-emerald-600 bg-emerald-600 text-white"
-                            : "border-neutral-300 dark:border-neutral-700"
-                        }`}
-                      >
-                        {item}
-                      </button>
-                    );
-                  }
-                  const groupSelected =
-                    leg.subcategory?.startsWith(item.label + ": ") ?? false;
-                  const groupOpen =
-                    leg.openGroup === item.label || groupSelected;
-                  return (
-                    <button
-                      key={item.label}
-                      type="button"
-                      onClick={() =>
-                        updateLeg(index, {
-                          openGroup:
-                            leg.openGroup === item.label && !groupSelected
-                              ? null
-                              : item.label,
-                        })
-                      }
-                      className={`shrink-0 whitespace-nowrap rounded-xl border px-3.5 py-2 text-sm font-semibold ${
-                        groupSelected
-                          ? "border-emerald-600 bg-emerald-600 text-white"
-                          : groupOpen
-                            ? "border-emerald-600 text-emerald-600 dark:text-emerald-400"
-                            : "border-neutral-300 dark:border-neutral-700"
-                      }`}
-                    >
-                      {item.label}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {SUBCATEGORIES[leg.sport]!.map((item) => {
-                if (typeof item === "string") return null;
-                const groupSelected =
-                  leg.subcategory?.startsWith(item.label + ": ") ?? false;
-                if (leg.openGroup !== item.label && !groupSelected) {
-                  return null;
-                }
-                return (
-                  <div
-                    key={item.label}
-                    className="mt-2 flex gap-2 overflow-x-auto rounded-xl bg-neutral-100 p-2 dark:bg-neutral-900"
-                  >
-                    {item.children.map((child) => {
-                      const value = `${item.label}: ${child}`;
-                      const selected = leg.subcategory === value;
+              <>
+                <p className="mt-4 text-sm font-medium">
+                  Category
+                  <span className="font-normal text-neutral-500">
+                    , optional. Scroll for more, tap {leg.sport} to hide.
+                  </span>
+                </p>
+                <div className="-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1">
+                  {SUBCATEGORIES[leg.sport]!.map((item) => {
+                    if (typeof item === "string") {
+                      const selected = leg.subcategory === item;
                       return (
                         <button
-                          key={child}
+                          key={item}
                           type="button"
                           onClick={() =>
                             updateLeg(index, {
-                              subcategory: selected ? null : value,
+                              subcategory: selected ? null : item,
+                              openGroup: null,
                             })
                           }
                           className={`shrink-0 whitespace-nowrap rounded-xl border px-3.5 py-2 text-sm font-semibold ${
                             selected
                               ? "border-emerald-600 bg-emerald-600 text-white"
-                              : "border-neutral-300 bg-white dark:border-neutral-700 dark:bg-neutral-950"
+                              : "border-neutral-300 dark:border-neutral-700"
                           }`}
                         >
-                          {child}
+                          {item}
                         </button>
                       );
-                    })}
-                  </div>
-                );
-              })}
-            </>
-          )}
+                    }
+                    const groupSelected =
+                      leg.subcategory?.startsWith(item.label + ": ") ?? false;
+                    const groupOpen =
+                      leg.openGroup === item.label || groupSelected;
+                    return (
+                      <button
+                        key={item.label}
+                        type="button"
+                        onClick={() =>
+                          updateLeg(index, {
+                            openGroup:
+                              leg.openGroup === item.label && !groupSelected
+                                ? null
+                                : item.label,
+                          })
+                        }
+                        className={`shrink-0 whitespace-nowrap rounded-xl border px-3.5 py-2 text-sm font-semibold ${
+                          groupSelected
+                            ? "border-emerald-600 bg-emerald-600 text-white"
+                            : groupOpen
+                              ? "border-emerald-600 text-emerald-600 dark:text-emerald-400"
+                              : "border-neutral-300 dark:border-neutral-700"
+                        }`}
+                      >
+                        {item.label}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {SUBCATEGORIES[leg.sport]!.map((item) => {
+                  if (typeof item === "string") return null;
+                  const groupSelected =
+                    leg.subcategory?.startsWith(item.label + ": ") ?? false;
+                  if (leg.openGroup !== item.label && !groupSelected) {
+                    return null;
+                  }
+                  return (
+                    <div
+                      key={item.label}
+                      className="mt-2 flex gap-2 overflow-x-auto rounded-xl bg-neutral-100 p-2 dark:bg-neutral-900"
+                    >
+                      {item.children.map((child) => {
+                        const value = `${item.label}: ${child}`;
+                        const selected = leg.subcategory === value;
+                        return (
+                          <button
+                            key={child}
+                            type="button"
+                            onClick={() =>
+                              updateLeg(index, {
+                                subcategory: selected ? null : value,
+                              })
+                            }
+                            className={`shrink-0 whitespace-nowrap rounded-xl border px-3.5 py-2 text-sm font-semibold ${
+                              selected
+                                ? "border-emerald-600 bg-emerald-600 text-white"
+                                : "border-neutral-300 bg-white dark:border-neutral-700 dark:bg-neutral-950"
+                            }`}
+                          >
+                            {child}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+              </>
+            )}
 
           <label
             htmlFor={`description-${index}`}
@@ -427,74 +388,33 @@ export default function NewBetForm({ lastStake }: Props) {
             className={inputClass}
           />
 
-          <div className="mt-4 flex items-end justify-between">
-            <label
-              htmlFor={`odds-${index}`}
-              className="block text-sm font-medium"
-            >
-              {leg.oddsMode === "percent" ? "Chance (%)" : "Odds (decimal)"}
-              {isParlay && (
+          {isParlay && (
+            <>
+              <label
+                htmlFor={`percent-${index}`}
+                className="mt-4 block text-sm font-medium"
+              >
+                Chance (%){" "}
                 <span className="font-normal text-neutral-500">
-                  {" "}
                   (optional)
                 </span>
+              </label>
+              <input
+                id={`percent-${index}`}
+                type="text"
+                inputMode="decimal"
+                placeholder="44"
+                value={leg.percent}
+                onChange={(e) => updateLeg(index, { percent: e.target.value })}
+                className={inputClass}
+              />
+              {percentStates[index].kind === "invalid" && (
+                <p className="mt-1 text-xs text-neutral-500">
+                  Enter a percentage above 0 and below 100.
+                </p>
               )}
-            </label>
-            <div className="flex gap-1">
-              <button
-                type="button"
-                onClick={() => updateLeg(index, { oddsMode: "decimal" })}
-                className={`rounded-lg border px-2.5 py-1 text-xs font-semibold ${
-                  leg.oddsMode === "decimal"
-                    ? "border-emerald-600 text-emerald-600 dark:text-emerald-400"
-                    : "border-neutral-300 text-neutral-500 dark:border-neutral-700"
-                }`}
-              >
-                Odds
-              </button>
-              <button
-                type="button"
-                onClick={() => updateLeg(index, { oddsMode: "percent" })}
-                className={`rounded-lg border px-2.5 py-1 text-xs font-semibold ${
-                  leg.oddsMode === "percent"
-                    ? "border-emerald-600 text-emerald-600 dark:text-emerald-400"
-                    : "border-neutral-300 text-neutral-500 dark:border-neutral-700"
-                }`}
-              >
-                %
-              </button>
-            </div>
-          </div>
-          <input
-            id={`odds-${index}`}
-            type="text"
-            inputMode="decimal"
-            placeholder={
-              leg.oddsMode === "percent"
-                ? "44"
-                : isParlay
-                  ? "Leave empty if unknown"
-                  : "2.50"
-            }
-            value={leg.odds}
-            onChange={(e) => updateLeg(index, { odds: e.target.value })}
-            className={inputClass}
-          />
-          {leg.oddsMode === "percent" &&
-            legOddsStates[index].kind === "valid" && (
-              <p className="mt-1 text-xs text-neutral-500">
-                = decimal odds{" "}
-                {formatOdds(
-                  (legOddsStates[index] as { value: number }).value
-                )}
-              </p>
-            )}
-          {leg.oddsMode === "percent" &&
-            legOddsStates[index].kind === "invalid" && (
-              <p className="mt-1 text-xs text-neutral-500">
-                Enter a percentage above 0 and below 100.
-              </p>
-            )}
+            </>
+          )}
         </div>
       ))}
 
@@ -506,81 +426,25 @@ export default function NewBetForm({ lastStake }: Props) {
         + Add leg (makes it a parlay)
       </button>
 
-      {showTotalField && (
-        <div className="mt-4">
-          <div className="flex items-center justify-between">
-            <label htmlFor="total-odds" className="block text-sm font-medium">
-              Total odds
-            </label>
-            {totalOverride !== null && autoTotal !== null && !anyPercent && (
-              <button
-                type="button"
-                onClick={() => setTotalOverride(null)}
-                className="rounded-lg px-2 py-1 text-xs font-medium text-emerald-600 dark:text-emerald-400"
-              >
-                Reset to auto ({formatOdds(autoTotal)})
-              </button>
-            )}
-          </div>
-          <input
-            id="total-odds"
-            type="text"
-            inputMode="decimal"
-            placeholder={autoTotal !== null ? formatOdds(autoTotal) : "3.96"}
-            value={
-              totalOverride !== null
-                ? totalOverride
-                : autoTotal !== null
-                  ? formatOdds(autoTotal)
-                  : ""
-            }
-            onChange={(e) => setTotalOverride(e.target.value)}
-            className={inputClass}
-          />
-          <p className="mt-1 text-xs text-neutral-500">
-            {collectValid
-              ? "Ignored right now: the exact To Collect amount below wins."
-              : totalOverride !== null
-                ? "Using your number. To Win and To Collect follow it."
-                : autoTotal !== null
-                  ? "Calculated from the legs. Type over it if your betting app shows different total odds."
-                  : "Some legs have no odds, so type the total odds from your betting app."}
-          </p>
-        </div>
-      )}
-
       <div className="mt-4">
         <label htmlFor="collect" className="block text-sm font-medium">
-          Exact To Collect{" "}
-          <span className="font-normal text-neutral-500">
-            {anyPercent ? "(required with %)" : "(optional)"}
-          </span>
+          To Collect (USD)
         </label>
         <input
           id="collect"
           type="text"
           inputMode="decimal"
-          placeholder="Payout shown by your betting app"
-          value={collectOverride}
-          onChange={(e) => setCollectOverride(e.target.value)}
+          placeholder="0.00"
+          value={collect}
+          onChange={(e) => setCollect(e.target.value)}
           className={inputClass}
         />
         <p className="mt-1 text-xs text-neutral-500">
-          {!collectActive
-            ? anyPercent
-              ? `Type the payout your betting app shows (Kalshi calls it Max Payout).${
-                  stakeValue !== null && autoTotal !== null
-                    ? ` The percentages hint at roughly ${formatMoney(
-                        round2(stakeValue * autoTotal)
-                      )}, expect a bit less.`
-                    : ""
-                }`
-              : "Type the exact payout from your betting app and To Win follows it."
-            : collectValid
-              ? "Using this exact amount. To Win updates from it."
-              : stakeValue === null
-                ? "Enter the stake first."
-                : "Must be a valid amount larger than the stake."}
+          {collectValid
+            ? "The odds are calculated from this and the stake."
+            : collectValue !== null && stakeValue !== null
+              ? "Must be larger than the stake."
+              : "The exact payout your betting app shows for this bet."}
         </p>
       </div>
 
@@ -600,7 +464,7 @@ export default function NewBetForm({ lastStake }: Props) {
         <div>
           <p className="text-xs text-neutral-500">To Collect</p>
           <p className="mt-0.5 text-sm font-bold">
-            {toCollect !== null ? formatMoney(toCollect) : "-"}
+            {collectValid ? formatMoney(collectValue as number) : "-"}
           </p>
         </div>
       </div>
