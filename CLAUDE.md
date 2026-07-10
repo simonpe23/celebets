@@ -38,6 +38,12 @@ The owner has no coding experience. These rules are permanent.
   sport's picks and that sport's share of money.
 - Recommendations rotate randomly on each tap: advice needs 5 settled
   bets or picks per group, plain facts have no minimum.
+- Cash out (phase6.sql, run and verified July 2026): a pending bet can
+  settle at the exact amount received. At or above stake counts as won,
+  below as lost, payout = the amount either way, so profit is always
+  payout minus stake. Cash out means done: no pick settling afterwards,
+  the card leaves Live now after the 15 minute undo window. Picks of a
+  cashed out bet do not join the per sport won/lost record.
 
 ## Idea backlog
 
