@@ -1,16 +1,12 @@
 import { formatMoney, formatSignedMoney, round2 } from "./format";
 import { SPORTS, type BetWithLegs, type Sport } from "./types";
 
-// Realized profit of a settled bet.
-// Won: payout minus stake. Lost: minus the stake.
+// Realized profit of a settled bet. A payout exists on won bets and
+// on cashed out bets (even lost ones), so the formula is the same
+// everywhere: payout minus stake. A plain lost bet has no payout.
 export function betProfit(bet: BetWithLegs): number {
-  if (bet.status === "won") {
-    return Number(bet.payout ?? 0) - Number(bet.stake);
-  }
-  if (bet.status === "lost") {
-    return -Number(bet.stake);
-  }
-  return 0;
+  if (bet.status === "pending") return 0;
+  return Number(bet.payout ?? 0) - Number(bet.stake);
 }
 
 // Splits a settled bet's profit across its legs, by index.
@@ -206,9 +202,8 @@ export interface Totals {
 
 export function totals(bets: BetWithLegs[]): Totals {
   const staked = bets.reduce((sum, b) => sum + Number(b.stake), 0);
-  const returned = bets
-    .filter((b) => b.status === "won")
-    .reduce((sum, b) => sum + Number(b.payout ?? 0), 0);
+  // Payouts exist on won bets and on cashed out bets (even lost ones).
+  const returned = bets.reduce((sum, b) => sum + Number(b.payout ?? 0), 0);
   const roi = staked > 0 ? ((returned - staked) / staked) * 100 : null;
   return { staked, returned, roi };
 }

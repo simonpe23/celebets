@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { formatMoney, formatOdds, round2 } from "@/lib/format";
+import { formatMoney, formatOdds, parseMoney, round2 } from "@/lib/format";
 import { SPORT_EMOJI, type BetWithLegs, type LegResult } from "@/lib/types";
 
 interface Props {
@@ -23,7 +23,56 @@ export default function LiveBets({ bets }: Props) {
   const [confirmingDelete, setConfirmingDelete] = useState<string | null>(
     null
   );
+  const [cashingOut, setCashingOut] = useState<string | null>(null);
+  const [cashOutAmount, setCashOutAmount] = useState("");
   const [error, setError] = useState<string | null>(null);
+
+  async function cashOut(betId: string) {
+    const amount = parseMoney(cashOutAmount);
+    if (amount === null) {
+      setError("Enter a valid cash out amount above 0.");
+      return;
+    }
+
+    setError(null);
+    setBusyLeg("cashing-out");
+
+    const supabase = createClient();
+    const { error: dbError } = await supabase.rpc("cash_out_bet", {
+      p_bet_id: betId,
+      p_amount: amount,
+    });
+
+    setBusyLeg(null);
+
+    if (dbError) {
+      setError(dbError.message);
+      return;
+    }
+
+    setCashingOut(null);
+    setCashOutAmount("");
+    router.refresh();
+  }
+
+  async function undoCashOut(betId: string) {
+    setError(null);
+    setBusyLeg("undo-cash-out");
+
+    const supabase = createClient();
+    const { error: dbError } = await supabase.rpc("undo_cash_out", {
+      p_bet_id: betId,
+    });
+
+    setBusyLeg(null);
+
+    if (dbError) {
+      setError(dbError.message);
+      return;
+    }
+
+    router.refresh();
+  }
 
   async function deleteBet(betId: string) {
     setError(null);
@@ -102,16 +151,103 @@ export default function LiveBets({ bets }: Props) {
                         Parlay, {bet.legs.length} legs
                       </span>
                     )}
+                    {bet.status === "pending" && (
+                      <button
+                        type="button"
+                        disabled={busyLeg !== null}
+                        onClick={() => {
+                          setConfirmingDelete(null);
+                          setCashOutAmount("");
+                          setCashingOut(bet.id);
+                        }}
+                        className="rounded-lg border border-emerald-600 px-3 py-1.5 text-xs font-medium text-emerald-600 disabled:opacity-50 dark:text-emerald-400"
+                      >
+                        Cash out
+                      </button>
+                    )}
                     <button
                       type="button"
                       disabled={busyLeg !== null}
-                      onClick={() => setConfirmingDelete(bet.id)}
+                      onClick={() => {
+                        setCashingOut(null);
+                        setConfirmingDelete(bet.id);
+                      }}
                       className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-neutral-700"
                     >
                       Delete
                     </button>
                   </div>
                 </div>
+
+                {bet.cashed_out && (
+                  <div className="mt-3 flex items-center justify-between gap-2 rounded-xl bg-neutral-100 p-3 dark:bg-neutral-900">
+                    <p className="text-sm">
+                      Cashed out for{" "}
+                      <span className="font-bold">
+                        {formatMoney(Number(bet.payout ?? 0))}
+                      </span>
+                      . Picks below only count for your records.
+                    </p>
+                    <button
+                      type="button"
+                      disabled={busyLeg !== null}
+                      onClick={() => undoCashOut(bet.id)}
+                      className="shrink-0 rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-neutral-700"
+                    >
+                      Undo
+                    </button>
+                  </div>
+                )}
+
+                {cashingOut === bet.id && (
+                  <div className="mt-3 rounded-xl bg-neutral-100 p-3 dark:bg-neutral-900">
+                    <label
+                      htmlFor={`cashout-${bet.id}`}
+                      className="block text-sm font-medium"
+                    >
+                      Cash out amount (USD)
+                    </label>
+                    <p className="mt-0.5 text-xs text-neutral-500">
+                      The amount your betting app paid you. Above your{" "}
+                      {formatMoney(Number(bet.stake))} stake counts as a win,
+                      below counts as a loss.
+                    </p>
+                    <input
+                      id={`cashout-${bet.id}`}
+                      type="text"
+                      inputMode="decimal"
+                      autoFocus
+                      placeholder="142.03"
+                      value={cashOutAmount}
+                      onChange={(e) => setCashOutAmount(e.target.value)}
+                      className="mt-2 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"
+                    />
+                    <div className="mt-2 flex justify-end gap-2">
+                      <button
+                        type="button"
+                        disabled={busyLeg !== null}
+                        onClick={() => {
+                          setCashingOut(null);
+                          setCashOutAmount("");
+                        }}
+                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium dark:border-neutral-700"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        disabled={
+                          busyLeg !== null ||
+                          parseMoney(cashOutAmount) === null
+                        }
+                        onClick={() => cashOut(bet.id)}
+                        className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
+                      >
+                        Confirm cash out
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 {confirmingDelete === bet.id && (
                   <div className="mt-3 flex items-center justify-between gap-2 rounded-xl bg-red-50 p-3 dark:bg-red-950">

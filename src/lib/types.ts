@@ -75,5 +75,6 @@ export interface BetWithLegs {
   placed_at: string;
   settled_at: string | null;
   payout: number | null;
+  cashed_out: boolean;
   legs: Leg[];
 }

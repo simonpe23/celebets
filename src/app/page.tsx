@@ -21,7 +21,7 @@ export default async function HomePage() {
     supabase
       .from("bets")
       .select(
-        "id, stake, total_odds, status, placed_at, settled_at, payout, legs (id, sport, description, odds, result, subcategory)"
+        "id, stake, total_odds, status, placed_at, settled_at, payout, cashed_out, legs (id, sport, description, odds, result, subcategory)"
       )
       .order("placed_at", { ascending: false }),
   ]);
@@ -36,9 +36,11 @@ export default async function HomePage() {
     .filter((t) => t.type === "withdrawal")
     .reduce((sum, t) => sum + Number(t.amount), 0);
   const totalStaked = allBets.reduce((sum, b) => sum + Number(b.stake), 0);
-  const totalPayouts = allBets
-    .filter((b) => b.status === "won")
-    .reduce((sum, b) => sum + Number(b.payout ?? 0), 0);
+  // Payouts exist on won bets and on cashed out bets (even lost ones).
+  const totalPayouts = allBets.reduce(
+    (sum, b) => sum + Number(b.payout ?? 0),
+    0
+  );
 
   const balance = deposits - withdrawals - totalStaked + totalPayouts;
   const netProfit = balance + withdrawals - deposits;

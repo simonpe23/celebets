@@ -15,10 +15,10 @@ interface Period {
   value: number;
 }
 
+// Payout minus stake covers every case: won bets, plain lost bets
+// (no payout), and cashed out bets which carry a payout even on loss.
 function profitOf(bet: SettledBetSummary): number {
-  return bet.status === "won"
-    ? Number(bet.payout ?? 0) - Number(bet.stake)
-    : -Number(bet.stake);
+  return Number(bet.payout ?? 0) - Number(bet.stake);
 }
 
 export default function StatsRow({ bets }: { bets: SettledBetSummary[] }) {

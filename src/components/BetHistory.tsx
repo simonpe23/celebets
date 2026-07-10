@@ -10,10 +10,10 @@ interface Props {
   bets: BetWithLegs[];
 }
 
+// Payout minus stake covers every case: won bets, plain lost bets
+// (no payout), and cashed out bets which carry a payout even on loss.
 function profitOf(bet: BetWithLegs): number {
-  return bet.status === "won"
-    ? Number(bet.payout ?? 0) - Number(bet.stake)
-    : -Number(bet.stake);
+  return Number(bet.payout ?? 0) - Number(bet.stake);
 }
 
 // Formats a timestamp as yyyy-mm-dd in local time, for the date input.
@@ -131,6 +131,7 @@ export default function BetHistory({ bets }: Props) {
                       {" · "}
                       {formatMoney(Number(bet.stake))} at{" "}
                       {formatOdds(Number(bet.total_odds))}
+                      {bet.cashed_out && " · Cashed out"}
                     </p>
                   </div>
                   <p

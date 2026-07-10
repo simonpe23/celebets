@@ -16,7 +16,7 @@ export default async function RecommendationsPage({ searchParams }: Props) {
   const { data: bets } = await supabase
     .from("bets")
     .select(
-      "id, stake, total_odds, status, placed_at, settled_at, payout, legs (id, sport, description, odds, result, subcategory)"
+      "id, stake, total_odds, status, placed_at, settled_at, payout, cashed_out, legs (id, sport, description, odds, result, subcategory)"
     )
     .order("placed_at", { ascending: false });
 
