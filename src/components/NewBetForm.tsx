@@ -97,10 +97,10 @@ export default function NewBetForm({ lastStake }: Props) {
 
   // Percentages come from betting app market prices, and those apps
   // pay less than the multiplied estimate (fees). So when any leg
-  // uses % mode, the multiplied total is shown as a reference only
-  // and the real total must be typed in.
+  // uses % mode, the money must come from the exact To Collect
+  // amount, and the total odds field is hidden entirely.
   const anyPercent = legs.some((leg) => leg.oddsMode === "percent");
-  const showTotalField = isParlay || anyPercent;
+  const showTotalField = isParlay && !anyPercent;
 
   const oddsBasedTotal =
     showTotalField && totalOverride !== null
@@ -526,17 +526,11 @@ export default function NewBetForm({ lastStake }: Props) {
             id="total-odds"
             type="text"
             inputMode="decimal"
-            placeholder={
-              anyPercent
-                ? "1.66 from your betting app"
-                : autoTotal !== null
-                  ? formatOdds(autoTotal)
-                  : "3.96"
-            }
+            placeholder={autoTotal !== null ? formatOdds(autoTotal) : "3.96"}
             value={
               totalOverride !== null
                 ? totalOverride
-                : autoTotal !== null && !anyPercent
+                : autoTotal !== null
                   ? formatOdds(autoTotal)
                   : ""
             }
@@ -548,20 +542,19 @@ export default function NewBetForm({ lastStake }: Props) {
               ? "Ignored right now: the exact To Collect amount below wins."
               : totalOverride !== null
                 ? "Using your number. To Win and To Collect follow it."
-                : anyPercent
-                  ? autoTotal !== null
-                    ? `The percentages multiply to ${formatOdds(autoTotal)}, but betting apps usually pay less. Type the real total odds here, or the exact To Collect below.`
-                    : "Type the total odds from your betting app here, or the exact To Collect below."
-                  : autoTotal !== null
-                    ? "Calculated from the legs. Type over it if your betting app shows different total odds."
-                    : "Some legs have no odds, so type the total odds from your betting app."}
+                : autoTotal !== null
+                  ? "Calculated from the legs. Type over it if your betting app shows different total odds."
+                  : "Some legs have no odds, so type the total odds from your betting app."}
           </p>
         </div>
       )}
 
       <div className="mt-4">
         <label htmlFor="collect" className="block text-sm font-medium">
-          Exact To Collect (optional)
+          Exact To Collect{" "}
+          <span className="font-normal text-neutral-500">
+            {anyPercent ? "(required with %)" : "(optional)"}
+          </span>
         </label>
         <input
           id="collect"
@@ -574,7 +567,15 @@ export default function NewBetForm({ lastStake }: Props) {
         />
         <p className="mt-1 text-xs text-neutral-500">
           {!collectActive
-            ? "Type the exact payout from your betting app and To Win follows it."
+            ? anyPercent
+              ? `Type the payout your betting app shows (Kalshi calls it Max Payout).${
+                  stakeValue !== null && autoTotal !== null
+                    ? ` The percentages hint at roughly ${formatMoney(
+                        round2(stakeValue * autoTotal)
+                      )}, expect a bit less.`
+                    : ""
+                }`
+              : "Type the exact payout from your betting app and To Win follows it."
             : collectValid
               ? "Using this exact amount. To Win updates from it."
               : stakeValue === null
