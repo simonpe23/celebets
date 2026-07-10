@@ -7,18 +7,23 @@ How this file works:
 - Nothing in this file is approved for building. Building always needs
   an explicit plan and the owner's approval first.
 
+## DONE (July 2026)
+
+1. Recommendations list page, plus per-sport version. Shipped.
+2. Sub-categories per sport, Football first. Shipped.
+3. Tennis, Golf, esports added. Shipped.
+5. Quick logging package: stake chips, optional pick, percent input
+   with exact To Collect. Shipped.
+
 ## NOW (small, fits the current app, high value per effort)
 
-1. Recommendations list: a page or section showing every
-   recommendation statement that is currently true, not just the
-   random mix of 4.
-2. Sub-categories per sport: what kind of pick it was. Football:
-   winner, corners, final result, goal scorer. Baseball: run line,
-   first 5 innings, and so on. Feeds richer stats. Needs product
-   decisions on the exact lists.
-3. Add Tennis as a sport.
 4. Own domain: buy a domain and connect it to Vercel. No code needed,
    click-by-click instructions from Claude.
+12. Screenshot import: paste a bet slip image (Kalshi one-tap copy),
+    AI reads it and pre-fills the whole form for review. Needs an
+    Anthropic API key and a tiny per-slip cost (1 to 3 cents).
+    Answers the number one problem: logging friction. Owner already
+    approves of the concept, needs a plan and the API setup.
 
 ## SOON (after the NOW items)
 

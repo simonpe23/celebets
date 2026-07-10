@@ -58,6 +58,16 @@ The owner has no coding experience. These rules are permanent.
 - To Win = stake x (odds - 1). To Collect = stake x odds.
 - Parlay total odds = product of leg odds, but the owner can type over the
   total (betting apps charge fees). Leg odds are optional on parlays.
+- Each leg has an Odds / % toggle. A percentage (Kalshi style) converts
+  to decimal odds (100 / percent) for stats. With any % leg the money
+  MUST come from the exact To Collect amount: the multiplied estimate
+  overstates the payout (fees), so no total odds field is shown there.
+- The pick description is optional everywhere. Cards fall back to the
+  category, then the sport.
+- The owner has a demo account (celebetsdemo@simonpe.com) holding the
+  old test data, shared with a few testers. Friction of manual logging
+  is the top known product problem, screenshot import is the planned
+  answer (see IDEAS.md).
 - A lost parlay pays nothing. Legs that were right in a lost parlay earn
   zero money. They only count in the per-sport won/lost record.
 - Sports (fixed): Football (soccer), American Football, Basketball,
