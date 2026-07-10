@@ -51,10 +51,12 @@ export default async function HomePage() {
     allBets.length > 0 ? String(Number(allBets[0].stake)) : "";
 
   const now = Date.now();
+  // Cashed out bets are done: they only linger for the short undo
+  // window, never because of unsettled picks.
   const liveBets = allBets.filter(
     (b) =>
       b.status === "pending" ||
-      b.legs.some((leg) => leg.result === "pending") ||
+      (!b.cashed_out && b.legs.some((leg) => leg.result === "pending")) ||
       (b.settled_at &&
         now - new Date(b.settled_at).getTime() < UNDO_WINDOW_MS)
   );

@@ -3,7 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { formatMoney, formatOdds, parseMoney, round2 } from "@/lib/format";
+import {
+  formatMoney,
+  formatOdds,
+  formatSignedMoney,
+  parseMoney,
+  round2,
+} from "@/lib/format";
 import { SPORT_EMOJI, type BetWithLegs, type LegResult } from "@/lib/types";
 
 interface Props {
@@ -186,7 +192,7 @@ export default function LiveBets({ bets }: Props) {
                       <span className="font-bold">
                         {formatMoney(Number(bet.payout ?? 0))}
                       </span>
-                      . Picks below only count for your records.
+                      . Done, moves to history in a few minutes.
                     </p>
                     <button
                       type="button"
@@ -296,6 +302,7 @@ export default function LiveBets({ bets }: Props) {
                         )}
                       </div>
 
+                      {!bet.cashed_out && (
                       <div className="mt-1.5 flex items-center gap-2">
                         {leg.result === "pending" ? (
                           <>
@@ -338,30 +345,62 @@ export default function LiveBets({ bets }: Props) {
                           </>
                         )}
                       </div>
+                      )}
                     </div>
                   ))}
                 </div>
 
-                <div className="mt-3 grid grid-cols-3 gap-2 border-t border-neutral-100 pt-3 text-center dark:border-neutral-800">
-                  <div>
-                    <p className="text-xs text-neutral-500">Ticket cost</p>
-                    <p className="mt-0.5 text-sm font-bold">
-                      {formatMoney(stake)}
-                    </p>
+                {bet.cashed_out ? (
+                  <div className="mt-3 grid grid-cols-3 gap-2 border-t border-neutral-100 pt-3 text-center dark:border-neutral-800">
+                    <div>
+                      <p className="text-xs text-neutral-500">Ticket cost</p>
+                      <p className="mt-0.5 text-sm font-bold">
+                        {formatMoney(stake)}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-neutral-500">Cashed out</p>
+                      <p className="mt-0.5 text-sm font-bold">
+                        {formatMoney(Number(bet.payout ?? 0))}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-neutral-500">Result</p>
+                      <p
+                        className={`mt-0.5 text-sm font-bold ${
+                          Number(bet.payout ?? 0) - stake >= 0
+                            ? "text-emerald-600 dark:text-emerald-400"
+                            : "text-red-600 dark:text-red-400"
+                        }`}
+                      >
+                        {formatSignedMoney(
+                          round2(Number(bet.payout ?? 0) - stake)
+                        )}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-xs text-neutral-500">To Win</p>
-                    <p className="mt-0.5 text-sm font-bold">
-                      {formatMoney(round2(stake * (totalOdds - 1)))}
-                    </p>
+                ) : (
+                  <div className="mt-3 grid grid-cols-3 gap-2 border-t border-neutral-100 pt-3 text-center dark:border-neutral-800">
+                    <div>
+                      <p className="text-xs text-neutral-500">Ticket cost</p>
+                      <p className="mt-0.5 text-sm font-bold">
+                        {formatMoney(stake)}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-neutral-500">To Win</p>
+                      <p className="mt-0.5 text-sm font-bold">
+                        {formatMoney(round2(stake * (totalOdds - 1)))}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-neutral-500">To Collect</p>
+                      <p className="mt-0.5 text-sm font-bold">
+                        {formatMoney(round2(stake * totalOdds))}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-xs text-neutral-500">To Collect</p>
-                    <p className="mt-0.5 text-sm font-bold">
-                      {formatMoney(round2(stake * totalOdds))}
-                    </p>
-                  </div>
-                </div>
+                )}
               </div>
             );
           })}
