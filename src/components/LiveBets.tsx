@@ -191,11 +191,46 @@ export default function LiveBets({ bets }: Props) {
                   >
                     {bet.status}
                   </span>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
                     {bet.legs.length > 1 && (
                       <span className="text-xs font-medium text-neutral-500">
                         Parlay, {bet.legs.length} legs
                       </span>
+                    )}
+                    {bet.status === "pending" && (
+                      <>
+                        <button
+                          type="button"
+                          disabled={busyLeg !== null}
+                          onClick={() => {
+                            setCashingOut(null);
+                            setConfirmingDelete(null);
+                            setAddAmount("");
+                            setAddPayout("");
+                            setAddingMoney(
+                              addingMoney === bet.id ? null : bet.id
+                            );
+                          }}
+                          className="rounded-lg border border-emerald-600 px-3 py-1.5 text-xs font-medium text-emerald-600 disabled:opacity-50 dark:text-emerald-400"
+                        >
+                          Add money
+                        </button>
+                        <button
+                          type="button"
+                          disabled={busyLeg !== null}
+                          onClick={() => {
+                            setAddingMoney(null);
+                            setConfirmingDelete(null);
+                            setCashOutAmount("");
+                            setCashingOut(
+                              cashingOut === bet.id ? null : bet.id
+                            );
+                          }}
+                          className="rounded-lg border border-emerald-600 px-3 py-1.5 text-xs font-medium text-emerald-600 disabled:opacity-50 dark:text-emerald-400"
+                        >
+                          Cash out
+                        </button>
+                      </>
                     )}
                     <button
                       type="button"
@@ -211,38 +246,6 @@ export default function LiveBets({ bets }: Props) {
                     </button>
                   </div>
                 </div>
-
-                {bet.status === "pending" && (
-                  <div className="mt-3 grid grid-cols-2 gap-2">
-                    <button
-                      type="button"
-                      disabled={busyLeg !== null}
-                      onClick={() => {
-                        setCashingOut(null);
-                        setConfirmingDelete(null);
-                        setAddAmount("");
-                        setAddPayout("");
-                        setAddingMoney(addingMoney === bet.id ? null : bet.id);
-                      }}
-                      className="h-9 rounded-lg border border-emerald-600 text-sm font-semibold text-emerald-600 disabled:opacity-50 dark:text-emerald-400"
-                    >
-                      Add money
-                    </button>
-                    <button
-                      type="button"
-                      disabled={busyLeg !== null}
-                      onClick={() => {
-                        setAddingMoney(null);
-                        setConfirmingDelete(null);
-                        setCashOutAmount("");
-                        setCashingOut(cashingOut === bet.id ? null : bet.id);
-                      }}
-                      className="h-9 rounded-lg border border-emerald-600 text-sm font-semibold text-emerald-600 disabled:opacity-50 dark:text-emerald-400"
-                    >
-                      Cash out
-                    </button>
-                  </div>
-                )}
 
                 {addingMoney === bet.id && (
                   <div className="mt-3 rounded-xl bg-neutral-100 p-3 dark:bg-neutral-900">
