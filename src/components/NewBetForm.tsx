@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import {
@@ -65,6 +65,9 @@ export default function NewBetForm({ lastStake }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [placed, setPlaced] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [importing, setImporting] = useState(false);
+  const [importError, setImportError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const isParlay = legs.length > 1;
   const stakeValue = parseMoney(stake);
@@ -154,6 +157,113 @@ export default function NewBetForm({ lastStake }: Props) {
     router.refresh();
   }
 
+  // Turns an AI reading of a bet slip into pre-filled form fields.
+  // Nothing is saved: the user reviews and taps Place Bet as always.
+  function applyParsedSlip(data: {
+    stake?: unknown;
+    to_collect?: unknown;
+    legs?: unknown;
+  }) {
+    if (typeof data.stake === "number" && data.stake > 0) {
+      setStake(String(round2(data.stake)));
+    }
+    if (typeof data.to_collect === "number" && data.to_collect > 0) {
+      setCollect(String(round2(data.to_collect)));
+    }
+    if (Array.isArray(data.legs) && data.legs.length > 0) {
+      setLegs(
+        data.legs.map(
+          (raw: {
+            sport?: unknown;
+            category?: unknown;
+            pick?: unknown;
+            percent?: unknown;
+          }) => ({
+            sport: (SPORTS as readonly string[]).includes(
+              typeof raw.sport === "string" ? raw.sport : ""
+            )
+              ? (raw.sport as Sport)
+              : null,
+            description: typeof raw.pick === "string" ? raw.pick : "",
+            percent:
+              typeof raw.percent === "number" &&
+              raw.percent > 0 &&
+              raw.percent < 100
+                ? String(raw.percent)
+                : "",
+            subcategory:
+              typeof raw.category === "string" && raw.category.trim() !== ""
+                ? raw.category.trim()
+                : null,
+            openGroup: null,
+            categoriesOpen: false,
+          })
+        )
+      );
+    }
+  }
+
+  async function importFromImage(file: Blob) {
+    setImportError(null);
+    setImporting(true);
+
+    const dataUrl = await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+    let response: Response;
+    try {
+      response = await fetch("/api/parse-slip", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ image: dataUrl }),
+      });
+    } catch {
+      setImporting(false);
+      setImportError("No connection. Try again.");
+      return;
+    }
+
+    const data = await response.json().catch(() => ({}));
+    setImporting(false);
+
+    if (!response.ok) {
+      setImportError(
+        typeof data.error === "string"
+          ? data.error
+          : "Could not read the image."
+      );
+      return;
+    }
+
+    applyParsedSlip(data);
+  }
+
+  async function pasteSlip() {
+    setImportError(null);
+    try {
+      const items = await navigator.clipboard.read();
+      for (const item of items) {
+        const type = item.types.find((t) => t.startsWith("image/"));
+        if (type) {
+          const blob = await item.getType(type);
+          await importFromImage(blob);
+          return;
+        }
+      }
+      setImportError(
+        "No image on the clipboard. Copy the bet slip image first, or use Upload."
+      );
+    } catch {
+      setImportError(
+        "Could not read the clipboard. Use the Upload button instead."
+      );
+    }
+  }
+
   function updateLeg(index: number, patch: Partial<LegDraft>) {
     setLegs((prev) =>
       prev.map((leg, i) => (i === index ? { ...leg, ...patch } : leg))
@@ -174,6 +284,46 @@ export default function NewBetForm({ lastStake }: Props) {
   return (
     <section className="rounded-2xl border border-neutral-200 p-5 dark:border-neutral-800">
       <h2 className="text-lg font-bold">New Bet</h2>
+
+      <div className="mt-3 grid grid-cols-2 gap-2">
+        <button
+          type="button"
+          disabled={importing}
+          onClick={pasteSlip}
+          className="h-11 rounded-xl border border-emerald-600 text-sm font-semibold text-emerald-600 disabled:opacity-50 dark:text-emerald-400"
+        >
+          Paste bet slip
+        </button>
+        <button
+          type="button"
+          disabled={importing}
+          onClick={() => fileInputRef.current?.click()}
+          className="h-11 rounded-xl border border-neutral-300 text-sm font-semibold text-neutral-600 disabled:opacity-50 dark:border-neutral-700 dark:text-neutral-300"
+        >
+          Upload image
+        </button>
+      </div>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) importFromImage(file);
+          e.target.value = "";
+        }}
+      />
+      {importing && (
+        <p className="mt-2 rounded-lg bg-neutral-100 px-4 py-3 text-sm dark:bg-neutral-900">
+          Reading the slip...
+        </p>
+      )}
+      {importError && (
+        <p className="mt-2 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
+          {importError}
+        </p>
+      )}
 
       <label htmlFor="stake" className="mt-4 block text-sm font-medium">
         Stake (USD)
@@ -265,6 +415,20 @@ export default function NewBetForm({ lastStake }: Props) {
             leg.subcategory !== null && (
               <p className="mt-2 text-xs text-neutral-500">
                 Category: {leg.subcategory} (tap {leg.sport} to change)
+              </p>
+            )}
+
+          {(leg.sport === null || SUBCATEGORIES[leg.sport] === undefined) &&
+            leg.subcategory !== null && (
+              <p className="mt-2 text-xs text-neutral-500">
+                Category: {leg.subcategory}{" "}
+                <button
+                  type="button"
+                  onClick={() => updateLeg(index, { subcategory: null })}
+                  className="font-medium underline underline-offset-2"
+                >
+                  clear
+                </button>
               </p>
             )}
 
