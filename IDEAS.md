@@ -14,6 +14,11 @@ How this file works:
 3. Tennis, Golf, esports added. Shipped.
 5. Quick logging package: stake chips, optional pick, percent input
    with exact To Collect. Shipped.
+12. Screenshot import: paste a bet slip, AI pre-fills the form.
+    Shipped and verified July 2026.
+- Also shipped unnumbered: cash out, add money with per-buy
+  tracking, and the money-first bet flow (stake + To Collect,
+  no odds inputs anywhere).
 
 ## NOW (small, fits the current app, high value per effort)
 

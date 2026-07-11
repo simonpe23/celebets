@@ -46,6 +46,13 @@ The owner has no coding experience. These rules are permanent.
 - Picks still open at cash out inherit the cash out outcome in the
   records: profit = won picks, loss = lost picks (rule changed by the
   owner in phase 7, replacing the old "cashed out picks do not count").
+- Screenshot import (verified July 2026): Paste bet slip / Upload
+  image on the New Bet form. A server route (src/app/api/parse-slip)
+  sends the image to the Claude API (Haiku) and pre-fills the form.
+  The user always reviews and places manually. Needs the
+  ANTHROPIC_API_KEY environment variable in Vercel (set by the owner,
+  key never in the repo or chat). Unknown sports come back empty,
+  categories may be free text with a clear link.
 - Add money (phase7.sql, run and verified July 2026): a pending bet
   can absorb more buys, each with its own amount and payout (bet_buys
   table). The bet's stake and To Collect grow to the merged totals,
