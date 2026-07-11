@@ -27,6 +27,16 @@ How this file works:
 
 ## SOON (after the NOW items)
 
+13. Kalshi / Polymarket auto-sync: bets placed there appear in
+    Celebets automatically via their APIs (Kalshi personal API key,
+    Polymarket public wallet data). Buys map to our buys, sells to
+    cash outs, settlements to wins and losses. Big build: secure key
+    storage, background sync, market-name-to-sport mapping, duplicate
+    protection. Wants the settings page first. Screenshot import
+    (idea 12) builds the mapping brain this will reuse. Long term the
+    owner wants BOTH: sync for Kalshi/Polymarket, screenshots for
+    every other betting site.
+
 7. Personal touch: "Welcome Simon" on login. Needs a settings page
    with name, favorite team, favorite sport.
 6. First 10 real users: open the app to a small test group and learn
