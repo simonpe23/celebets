@@ -71,12 +71,19 @@ The owner has no coding experience. These rules are permanent.
 - Wallet balance = deposits - withdrawals - all stakes + payouts of won bets.
 - Net profit = wallet balance + withdrawals - deposits.
 - To Win = stake x (odds - 1). To Collect = stake x odds.
-- Parlay total odds = product of leg odds, but the owner can type over the
-  total (betting apps charge fees). Leg odds are optional on parlays.
-- Each leg has an Odds / % toggle. A percentage (Kalshi style) converts
-  to decimal odds (100 / percent) for stats. With any % leg the money
-  MUST come from the exact To Collect amount: the multiplied estimate
-  overstates the payout (fees), so no total odds field is shown there.
+- Bet flow (redesigned and verified July 2026): money in, money out.
+  The owner types the stake and the exact To Collect (required on
+  every bet). There are NO odds inputs anywhere in the form. Total
+  odds are always derived: To Collect / stake, stored with 4 decimals.
+- Parlays: each leg has one optional Chance (%) field (Kalshi style).
+  Leg odds derive from the percentages and are scaled by one shared
+  factor so they multiply exactly to the real total odds (the fee gap
+  is spread across the picks). If any leg's % is missing, the known
+  legs keep the straight 100 / percent conversion, unscaled. Money is
+  never touched by percentages.
+- On singles the leg's odds = the bet's derived odds.
+- The stats row (Today, week, month, year) sits under the wallet card
+  and at the top of the stats page.
 - The pick description is optional everywhere. Cards fall back to the
   category, then the sport.
 - The owner has a demo account (celebetsdemo@simonpe.com) holding the
