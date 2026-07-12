@@ -1,7 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import WalletCard from "@/components/WalletCard";
 import NewBetForm from "@/components/NewBetForm";
-import Recommendations from "@/components/Recommendations";
 import LiveBets from "@/components/LiveBets";
 import StatsRow from "@/components/StatsRow";
 import BetHistory from "@/components/BetHistory";
@@ -87,13 +86,12 @@ export default async function HomePage() {
           balance={balance}
           netProfit={netProfit}
           userId={user!.id}
+          settledBets={settledBets}
         />
 
         <StatsRow bets={settledBets} />
 
         <NewBetForm lastStake={lastStake} />
-
-        <Recommendations bets={settledBets} />
 
         <LiveBets bets={liveBets} />
 

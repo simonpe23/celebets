@@ -406,14 +406,18 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
               </section>
             )}
 
-            {sport !== null && (
-              <Link
-                href={`/recommendations?sport=${encodeURIComponent(sport)}`}
-                className="block h-12 w-full rounded-xl border border-emerald-600 text-center text-base font-semibold leading-[3rem] text-emerald-600 dark:text-emerald-400"
-              >
-                All {sport} recommendations
-              </Link>
-            )}
+            <Link
+              href={
+                sport !== null
+                  ? `/recommendations?sport=${encodeURIComponent(sport)}`
+                  : "/recommendations"
+              }
+              className="block h-12 w-full rounded-xl border border-emerald-600 text-center text-base font-semibold leading-[3rem] text-emerald-600 dark:text-emerald-400"
+            >
+              {sport !== null
+                ? `All ${sport} recommendations`
+                : "All recommendations"}
+            </Link>
 
             <BetHistory bets={historyBets} />
           </>

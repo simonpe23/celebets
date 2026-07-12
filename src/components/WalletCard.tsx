@@ -5,14 +5,22 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { formatMoney, formatSignedMoney, parseMoney } from "@/lib/format";
+import Recommendations from "@/components/Recommendations";
+import type { BetWithLegs } from "@/lib/types";
 
 interface Props {
   balance: number;
   netProfit: number;
   userId: string;
+  settledBets: BetWithLegs[];
 }
 
-export default function WalletCard({ balance, netProfit, userId }: Props) {
+export default function WalletCard({
+  balance,
+  netProfit,
+  userId,
+  settledBets,
+}: Props) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [amount, setAmount] = useState("");
@@ -92,6 +100,7 @@ export default function WalletCard({ balance, netProfit, userId }: Props) {
           >
             Stats
           </Link>
+          <Recommendations bets={settledBets} />
         </div>
       </div>
 
