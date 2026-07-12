@@ -412,7 +412,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
                   ? `/recommendations?sport=${encodeURIComponent(sport)}`
                   : "/recommendations"
               }
-              className="block h-12 w-full rounded-xl border border-emerald-600 text-center text-base font-semibold leading-[3rem] text-emerald-600 dark:text-emerald-400"
+              className="block h-12 w-full rounded-xl bg-violet-600 text-center text-base font-semibold leading-[3rem] text-white active:bg-violet-700"
             >
               {sport !== null
                 ? `All ${sport} recommendations`

@@ -83,20 +83,20 @@ export default function WalletCard({
             Transactions
           </Link>
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="flex shrink-0 flex-col gap-2">
           <button
             type="button"
             onClick={() => {
               setError(null);
               setOpen(true);
             }}
-            className="rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white active:bg-emerald-700"
+            className="rounded-xl bg-emerald-600 px-3 py-2.5 text-xs font-semibold text-white active:bg-emerald-700"
           >
             Deposit
           </button>
           <Link
             href="/stats"
-            className="rounded-xl border border-neutral-300 px-4 py-2.5 text-center text-sm font-semibold dark:border-neutral-700"
+            className="rounded-xl border border-neutral-300 px-3 py-2.5 text-center text-xs font-semibold dark:border-neutral-700"
           >
             Stats
           </Link>
