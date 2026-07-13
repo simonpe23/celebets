@@ -19,8 +19,13 @@ The owner has no coding experience. These rules are permanent.
 - Build in phases. The owner verifies each phase before the next starts.
 - Ask questions on any ambiguity. Make no assumptions on product decisions.
 - This is a v1: prefer simple and working over clever.
-- The owner runs SQL pastes in the Supabase SQL Editor themselves.
-  Give exact click-by-click instructions and the expected success message.
+- Database changes: the owner has a Supabase connector installed in
+  Claude (project id wqhitxtowfhylzpfxkpw, named Celebets). Claude can
+  apply SQL directly via apply_migration after the owner approves the
+  change. Keep saving each change as a supabase/*.sql file in the repo
+  for the record. If the connector is ever unavailable, fall back to
+  the old way: the owner pastes the SQL in the Supabase SQL Editor
+  with click-by-click instructions.
 
 ## Status
 
@@ -106,5 +111,6 @@ The owner has no coding experience. These rules are permanent.
   live in SUBCATEGORIES in src/lib/types.ts, Football only so far.
   Adding sub-categories is a code change, never a database change.
   Nested choices are stored as "Group: Choice" (Player Props: Assists).
-- All SQL files through supabase/phase7.sql have been run and
-  confirmed by the owner (July 2026). Transaction dates are editable.
+- All SQL files through supabase/phase8.sql have been run (July 2026).
+  phase8 (Crypto) was applied by Claude via the Supabase connector.
+  Transaction dates are editable.
