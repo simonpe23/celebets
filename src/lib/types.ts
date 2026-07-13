@@ -7,6 +7,7 @@ export const SPORTS = [
   "Tennis",
   "Golf",
   "esports",
+  "Crypto",
 ] as const;
 
 export type Sport = (typeof SPORTS)[number];
@@ -20,6 +21,7 @@ export const SPORT_EMOJI: Record<Sport, string> = {
   Tennis: "\u{1F3BE}",
   Golf: "⛳",
   esports: "\u{1F3AE}",
+  Crypto: "\u{1FA99}",
 };
 
 // A sub-category is either a plain label or a group that opens a

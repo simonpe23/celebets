@@ -26,7 +26,7 @@ Rules:
 - stake: the total amount wagered (Kalshi calls it Cost). USD number, no symbols.
 - to_collect: the total payout if the bet wins (Max Payout / Payout if right). USD number.
 - One leg per pick shown on the slip. A single bet has exactly one leg.
-- sport must be exactly one of: "${SPORTS.join('", "')}". Soccer, FIFA and World Cup football are "Football". Use null when unsure.
+- sport must be exactly one of: "${SPORTS.join('", "')}". Soccer, FIFA and World Cup football are "Football". Bitcoin, Ethereum and other crypto price markets are "Crypto". Use null when unsure.
 - category: for Football prefer exactly one of: "${FOOTBALL_CATEGORIES}". For other sports or unusual bets write a short fitting category yourself, or null.
 - pick: a short human name for the pick, like "France advances" or "Mbappe 1+ goals".
 - percent: the chance percentage shown next to the pick (like 44 for 44%), else null.

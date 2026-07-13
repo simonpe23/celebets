@@ -100,7 +100,8 @@ The owner has no coding experience. These rules are permanent.
 - A lost parlay pays nothing. Legs that were right in a lost parlay earn
   zero money. They only count in the per-sport won/lost record.
 - Sports (fixed): Football (soccer), American Football, Basketball,
-  Baseball, Ice Hockey, Tennis, Golf, esports (lowercase).
+  Baseball, Ice Hockey, Tennis, Golf, esports (lowercase), Crypto
+  (phase8.sql, for crypto price markets).
 - Picks have an optional sub-category (Corners, BTTS, ...). The lists
   live in SUBCATEGORIES in src/lib/types.ts, Football only so far.
   Adding sub-categories is a code change, never a database change.
