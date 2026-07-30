@@ -20,7 +20,7 @@ The owner has no coding experience. These rules are permanent.
 - Ask questions on any ambiguity. Make no assumptions on product decisions.
 - This is a v1: prefer simple and working over clever.
 - Database changes: the owner has a Supabase connector installed in
-  Claude (project id wqhitxtowfhylzpfxkpw, named Celebets). Claude can
+  Claude (project id wqhitxtowfhylzpfxkpw, named Celebet). Claude can
   apply SQL directly via apply_migration after the owner approves the
   change. Keep saving each change as a supabase/*.sql file in the repo
   for the record. If the connector is ever unavailable, fall back to
@@ -76,7 +76,7 @@ The owner has no coding experience. These rules are permanent.
 
 ## Product facts
 
-- App: Celebets, a mobile-first manual sports bet tracker. Single user.
+- App: Celebet, a mobile-first manual sports bet tracker. Single user.
 - Stack: Next.js App Router, TypeScript, Tailwind, Supabase with RLS,
   deployed on Vercel from branch claude/celebets-v1-build-fhio4a.
 - Currency: USD with 2 decimals. Decimal odds with 2 decimals.

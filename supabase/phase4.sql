@@ -1,4 +1,4 @@
--- Celebets Phase 4: delete permissions
+-- Celebet Phase 4: delete permissions
 -- Paste this whole file into a new Supabase SQL Editor tab and click Run.
 --
 -- Why this exists: the app now has delete buttons for bets and for

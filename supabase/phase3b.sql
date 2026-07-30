@@ -1,4 +1,4 @@
--- Celebets Phase 3b: leg odds become optional
+-- Celebet Phase 3b: leg odds become optional
 -- Paste this whole file into a new Supabase SQL Editor tab and click Run.
 --
 -- Why this exists: on parlays the betting app sometimes only shows the

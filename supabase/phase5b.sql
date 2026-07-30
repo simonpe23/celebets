@@ -1,4 +1,4 @@
--- Celebets Phase 5b: allow editing your own transactions
+-- Celebet Phase 5b: allow editing your own transactions
 -- Paste this whole file into a new Supabase SQL Editor tab and click Run.
 --
 -- Why this exists: the app now lets you change the date of a deposit

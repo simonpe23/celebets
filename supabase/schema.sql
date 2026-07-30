@@ -1,4 +1,4 @@
--- Celebets v1 database schema
+-- Celebet v1 database schema
 -- Paste this whole file into the Supabase SQL Editor and click Run.
 -- It is safe to run once on a fresh project.
 

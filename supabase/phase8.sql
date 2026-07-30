@@ -1,4 +1,4 @@
--- Celebets Phase 8: Crypto as a new top-level option
+-- Celebet Phase 8: Crypto as a new top-level option
 -- Paste this whole file into a new Supabase SQL Editor tab and click Run.
 --
 -- Allows picks with Crypto alongside the sports, for betting on

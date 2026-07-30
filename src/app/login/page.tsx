@@ -37,7 +37,7 @@ export default function LoginPage() {
     <main className="flex min-h-dvh flex-col justify-center px-6 py-12">
       <div className="mx-auto w-full max-w-sm">
         <h1 className="text-center text-3xl font-bold tracking-tight">
-          Celebets
+          Celebet
         </h1>
         <p className="mt-2 text-center text-sm text-neutral-500">
           Log in to your account

@@ -13,10 +13,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Celebets",
+  title: "Celebet",
   description: "Track your sports bets and see exactly how you perform",
   appleWebApp: {
-    title: "Celebets",
+    title: "Celebet",
     statusBarStyle: "default",
   },
 };

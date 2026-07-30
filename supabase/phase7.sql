@@ -1,4 +1,4 @@
--- Celebets Phase 7: add money to a pending bet
+-- Celebet Phase 7: add money to a pending bet
 -- Paste this whole file into a new Supabase SQL Editor tab and click Run.
 --
 -- What it does:

@@ -1,4 +1,4 @@
--- Celebets Phase 4b: exact payouts
+-- Celebet Phase 4b: exact payouts
 -- Paste this whole file into a new Supabase SQL Editor tab and click Run.
 --
 -- Why this exists: you can now type the exact To Collect amount from

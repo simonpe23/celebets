@@ -1,4 +1,4 @@
--- Celebets Phase 6: cash out
+-- Celebet Phase 6: cash out
 -- Paste this whole file into a new Supabase SQL Editor tab and click Run.
 --
 -- What it does:

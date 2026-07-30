@@ -1,4 +1,4 @@
-# Celebets idea backlog
+# Celebet idea backlog
 
 How this file works:
 - The owner says "I have a new idea" and tells Claude to store it.
@@ -32,8 +32,19 @@ How this file works:
 
 ## SOON (after the NOW items)
 
+15. Full visual redesign. The owner wants a fresher, more modern look
+    with more imagery, inspired by the competitor Pikkit
+    (https://www.pikkit.com): dark theme, big bold headlines, product
+    shots, charts as hero visuals, strong accent color on a near-black
+    background. Celebet today is deliberately plain (white cards,
+    green accents). Worth doing before inviting users from Instagram.
+    Keep every number and rule exactly as they are, this is looks
+    only. Decisions needed first: dark by default or a theme toggle,
+    which charts to feature, and whether a public landing page comes
+    with it (today the app opens straight to the login screen).
+
 13. Kalshi / Polymarket auto-sync: bets placed there appear in
-    Celebets automatically via their APIs (Kalshi personal API key,
+    Celebet automatically via their APIs (Kalshi personal API key,
     Polymarket public wallet data). Buys map to our buys, sells to
     cash outs, settlements to wins and losses. Big build: secure key
     storage, background sync, market-name-to-sport mapping, duplicate

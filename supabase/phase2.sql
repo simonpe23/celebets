@@ -1,4 +1,4 @@
--- Celebets Phase 2: place_bet function
+-- Celebet Phase 2: place_bet function
 -- Paste this whole file into the Supabase SQL Editor and click Run.
 --
 -- Why this exists: placing a bet writes two things, the bet and its legs.

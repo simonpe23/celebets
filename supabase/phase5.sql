@@ -1,4 +1,4 @@
--- Celebets Phase 5 features: new sports and sub-categories
+-- Celebet Phase 5 features: new sports and sub-categories
 -- Paste this whole file into a new Supabase SQL Editor tab and click Run.
 --
 -- What it does:

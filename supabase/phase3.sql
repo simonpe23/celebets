@@ -1,4 +1,4 @@
--- Celebets Phase 3: set_leg_result function
+-- Celebet Phase 3: set_leg_result function
 -- Paste this whole file into a new Supabase SQL Editor tab and click Run.
 --
 -- Why this exists: settling a leg must also update the parent bet

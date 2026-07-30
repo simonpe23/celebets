@@ -1,4 +1,4 @@
--- Celebets Phase 5c: the pick text becomes optional
+-- Celebet Phase 5c: the pick text becomes optional
 -- Paste this whole file into a new Supabase SQL Editor tab and click Run.
 --
 -- Why this exists: the pick description is for your own eyes only,
