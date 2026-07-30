@@ -51,12 +51,23 @@ How this file works:
 
 ## THE BIG ONE (own bucket, needs its own project)
 
-14. Prediction market analysis chatbot ("celebets-llm"). The owner
-    describes a bet in chat ("124 parlay Dodgers, Mets, Cubs, payout
-    990, rate it") and gets a sharp breakdown: implied probability
-    from the payout, an independent probability estimate per leg,
-    the gap between the two (the edge), expected value, a rating,
-    leg ranking, and what to check before first pitch.
+14. CeleBOT, a prediction market research assistant. DISCOVERY is
+    the main feature, rating is secondary. The user arrives with
+    nothing and asks about today's games: who is pitching, who is
+    injured, which lines look mispriced, where the math points.
+    CeleBOT must therefore know the whole board for a day, not just
+    the games in one bet. Secondary feature: paste or describe your
+    current thinking and get it rated (implied probability from the
+    payout, an estimate per leg, the gap, expected value, a rating,
+    leg ranking, what to check before start).
+    Ordering note: rating alone is too late in the flow to be
+    useful, the bet is already placed by then. Discovery comes first.
+    Suggested first version: one sport (baseball has the richest
+    data and matches the owner's examples), a "today's board" view,
+    and a chat grounded in that day's fetched data. Rating then
+    comes nearly free from the same data.
+    CeleBOT should log its own predictions and show its track
+    record, so its opinions can be judged instead of trusted.
     Hard requirement from the owner: it can NEVER hallucinate.
     Every claim must come from real fetched data about the actual
     event (schedules, confirmed starting pitchers, team records,
