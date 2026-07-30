@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import Disclaimer from "@/components/Disclaimer";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -53,6 +54,7 @@ export default function SignUpPage() {
           >
             Go to log in
           </Link>
+          <Disclaimer />
         </div>
       </main>
     );
@@ -125,6 +127,8 @@ export default function SignUpPage() {
             Log in
           </Link>
         </p>
+
+        <Disclaimer />
       </div>
     </main>
   );

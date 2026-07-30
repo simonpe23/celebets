@@ -32,10 +32,17 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const pathname = request.nextUrl.pathname;
+  // Pages reachable without being logged in.
   const isAuthPage =
-    pathname.startsWith("/login") || pathname.startsWith("/signup");
+    pathname.startsWith("/login") ||
+    pathname.startsWith("/signup") ||
+    pathname.startsWith("/forgot-password");
 
-  if (!user && !isAuthPage) {
+  // The reset page needs the temporary session from the emailed link,
+  // so it is never redirected in either direction.
+  const isResetPage = pathname.startsWith("/reset-password");
+
+  if (!user && !isAuthPage && !isResetPage) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);

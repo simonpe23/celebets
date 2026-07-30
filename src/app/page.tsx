@@ -4,6 +4,7 @@ import NewBetForm from "@/components/NewBetForm";
 import LiveBets from "@/components/LiveBets";
 import StatsRow from "@/components/StatsRow";
 import BetHistory from "@/components/BetHistory";
+import Disclaimer from "@/components/Disclaimer";
 import type { BetWithLegs } from "@/lib/types";
 
 // Settled bets stay on a Live now card with Undo for this long.
@@ -96,6 +97,8 @@ export default async function HomePage() {
         <LiveBets bets={liveBets} />
 
         <BetHistory bets={settledBets} />
+
+        <Disclaimer />
       </div>
     </main>
   );

@@ -1,15 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import Disclaimer from "@/components/Disclaimer";
 
-export default function LoginPage() {
-  const router = useRouter();
+export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -19,19 +17,39 @@ export default function LoginPage() {
     setLoading(true);
 
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
     });
+
+    setLoading(false);
 
     if (error) {
       setError(error.message);
-      setLoading(false);
       return;
     }
 
-    router.push("/");
-    router.refresh();
+    setSent(true);
+  }
+
+  if (sent) {
+    return (
+      <main className="flex min-h-dvh flex-col justify-center px-6 py-12">
+        <div className="mx-auto w-full max-w-sm text-center">
+          <h1 className="text-2xl font-bold">Check your email</h1>
+          <p className="mt-3 text-sm text-neutral-500">
+            If an account exists for {email}, we sent a reset link. Open it on
+            this phone and you can pick a new password.
+          </p>
+          <Link
+            href="/login"
+            className="mt-6 inline-block font-semibold text-emerald-600"
+          >
+            Back to log in
+          </Link>
+          <Disclaimer />
+        </div>
+      </main>
+    );
   }
 
   return (
@@ -41,7 +59,7 @@ export default function LoginPage() {
           Celebet
         </h1>
         <p className="mt-2 text-center text-sm text-neutral-500">
-          Log in to your account
+          Reset your password
         </p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-4">
@@ -61,29 +79,6 @@ export default function LoginPage() {
             />
           </div>
 
-          <div>
-            <div className="flex items-baseline justify-between">
-              <label htmlFor="password" className="block text-sm font-medium">
-                Password
-              </label>
-              <Link
-                href="/forgot-password"
-                className="text-sm font-medium text-emerald-600"
-              >
-                Forgot password?
-              </Link>
-            </div>
-            <input
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
-            />
-          </div>
-
           {error && (
             <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
               {error}
@@ -95,14 +90,14 @@ export default function LoginPage() {
             disabled={loading}
             className="h-12 w-full rounded-xl bg-emerald-600 text-base font-semibold text-white active:bg-emerald-700 disabled:opacity-60"
           >
-            {loading ? "Logging in..." : "Log in"}
+            {loading ? "Sending..." : "Send reset link"}
           </button>
         </form>
 
         <p className="mt-6 text-center text-sm text-neutral-500">
-          No account yet?{" "}
-          <Link href="/signup" className="font-semibold text-emerald-600">
-            Sign up
+          Remembered it?{" "}
+          <Link href="/login" className="font-semibold text-emerald-600">
+            Log in
           </Link>
         </p>
 
