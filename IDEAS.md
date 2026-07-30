@@ -53,10 +53,10 @@ How this file works:
 
 7. Personal touch: "Welcome Simon" on login. Needs a settings page
    with name, favorite team, favorite sport.
-6. First 10 real users: open the app to a small test group and learn
-   from them. The database is already built for multiple users with
-   row level security. Needs before launch: email confirmation back
-   on, a simple disclaimer, and a feedback channel.
+6. First 10 real users: the technical readiness is DONE (password
+   recovery, Resend email from the domain, disclaimer, own accounts).
+   What remains is the human part: invite people, watch what they
+   do, talk to them. A feedback channel would help.
 
 ## THE BIG ONE (own bucket, needs its own project)
 

@@ -66,6 +66,27 @@ The owner has no coding experience. These rules are permanent.
   and odds groups. On parlays picks stay = legs. A "N buys" button on
   cards expands the individual buys.
 
+## Tester readiness (July 2026)
+
+- Password recovery works: Forgot password link, /forgot-password,
+  and /reset-password. The reset page accepts every link shape
+  Supabase sends (code exchange, tokens in the address bar, token
+  hash) and /auth/confirm handles token-hash links. Both are exempt
+  from the login gate in middleware.
+- Emails are sent through Resend from no-reply@gocelebet.com, wired
+  into Supabase custom SMTP (host smtp.resend.com, username resend,
+  password = a Resend API key scoped to gocelebet.com). DNS records
+  for DKIM, SPF, MX, and DMARC live at Hostinger.
+- Supabase URL configuration: Site URL https://gocelebet.com, and
+  redirect URLs for gocelebet.com, www.gocelebet.com, and the
+  vercel.app address, all with /** wildcards. New domains must be
+  added here or reset links silently fall back to the home page.
+- Disclaimer component shows on login, signup, reset, and home:
+  entertainment only, 1-800 GAMBLER, adults only, plus the
+  Celebet trademark line for Peak Street 6 LLC.
+- Testers each create their own account. The old demo account is
+  only for people who want a quick peek.
+
 ## Idea backlog
 
 - New ideas go into IDEAS.md, in a NOW, SOON, or FUTURE bucket.
