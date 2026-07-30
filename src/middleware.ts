@@ -39,8 +39,9 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/forgot-password");
 
   // The reset page needs the temporary session from the emailed link,
-  // so it is never redirected in either direction.
-  const isResetPage = pathname.startsWith("/reset-password");
+  // and /auth routes handle those links, so neither is ever redirected.
+  const isResetPage =
+    pathname.startsWith("/reset-password") || pathname.startsWith("/auth/");
 
   if (!user && !isAuthPage && !isResetPage) {
     const url = request.nextUrl.clone();

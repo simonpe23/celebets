@@ -9,17 +9,64 @@ import Disclaimer from "@/components/Disclaimer";
 export default function ResetPasswordPage() {
   const router = useRouter();
   const [password, setPassword] = useState("");
+  const [checking, setChecking] = useState(true);
   const [ready, setReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Opening the emailed link signs the user in temporarily, which is
-  // what allows setting a new password here.
+  // The emailed link can arrive in several shapes depending on the
+  // Supabase settings: a code to exchange, tokens in the address bar,
+  // or a token hash. Accept all of them, then fall back to an
+  // existing session.
   useEffect(() => {
     const supabase = createClient();
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setReady(session !== null);
-    });
+
+    async function prepare() {
+      const url = new URL(window.location.href);
+      const hash = new URLSearchParams(url.hash.replace(/^#/, ""));
+
+      const accessToken = hash.get("access_token");
+      const refreshToken = hash.get("refresh_token");
+      if (accessToken && refreshToken) {
+        const { error } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken,
+        });
+        if (!error) return true;
+      }
+
+      const code = url.searchParams.get("code");
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        if (!error) return true;
+      }
+
+      const tokenHash = url.searchParams.get("token_hash");
+      if (tokenHash) {
+        const { error } = await supabase.auth.verifyOtp({
+          type: "recovery",
+          token_hash: tokenHash,
+        });
+        if (!error) return true;
+      }
+
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      return session !== null;
+    }
+
+    prepare()
+      .then((ok) => {
+        setReady(ok);
+        setChecking(false);
+        // Clean the one-time values out of the address bar.
+        window.history.replaceState({}, "", "/reset-password");
+      })
+      .catch(() => {
+        setReady(false);
+        setChecking(false);
+      });
   }, []);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -51,11 +98,16 @@ export default function ResetPasswordPage() {
           Pick a new password
         </p>
 
-        {!ready ? (
+        {checking ? (
+          <p className="mt-8 text-center text-sm text-neutral-500">
+            Checking your link...
+          </p>
+        ) : !ready ? (
           <div className="mt-8 text-center">
             <p className="text-sm text-neutral-500">
               This page only works when opened from the reset link in your
-              email. The link may also have expired.
+              email. The link may also have expired, or it was opened in a
+              different browser than the one that asked for it.
             </p>
             <Link
               href="/forgot-password"
