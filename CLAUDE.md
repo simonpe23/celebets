@@ -66,7 +66,13 @@ The owner has no coding experience. These rules are permanent.
   and odds groups. On parlays picks stay = legs. A "N buys" button on
   cards expands the individual buys.
 
-## Tester readiness (July 2026)
+## Tester readiness (July 2026, complete and verified)
+
+- Email confirmation is ON: new signups must click a link before they
+  can log in. Accounts created before this stay valid. The setting
+  lives on the Supabase Sign In / Providers page, not inside the
+  Email provider popup (use the dashboard search for "confirm email").
+- Minimum password length is 8, matched in the signup and reset pages.
 
 - Password recovery works: Forgot password link, /forgot-password,
   and /reset-password. The reset page accepts every link shape
