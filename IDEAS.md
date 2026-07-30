@@ -49,6 +49,33 @@ How this file works:
    row level security. Needs before launch: email confirmation back
    on, a simple disclaimer, and a feedback channel.
 
+## THE BIG ONE (own bucket, needs its own project)
+
+14. Prediction market analysis chatbot ("celebets-llm"). The owner
+    describes a bet in chat ("124 parlay Dodgers, Mets, Cubs, payout
+    990, rate it") and gets a sharp breakdown: implied probability
+    from the payout, an independent probability estimate per leg,
+    the gap between the two (the edge), expected value, a rating,
+    leg ranking, and what to check before first pitch.
+    Hard requirement from the owner: it can NEVER hallucinate.
+    Every claim must come from real fetched data about the actual
+    event (schedules, confirmed starting pitchers, team records,
+    run rates, injuries, live odds), never from model memory.
+    Design consequence: the model does the reasoning and the
+    writing, tools do the facts. No data on hand = say so, never
+    invent. Show sources and timestamps.
+    Data sources to evaluate: a sports data API for schedules,
+    lineups, and stats; an odds API for market prices across books;
+    Capology (https://www.capology.com/pricing) for player salaries,
+    which per Soccernomics predict long-run football results better
+    than almost anything else. All are paid subscriptions.
+    Phasing (see chat for full plan): 1) math-only rater, free and
+    no hallucination risk. 2) live odds comparison. 3) event data
+    (pitchers, records, injuries). 4) salary and long-run models.
+    Also needs: rate limits and a cost ceiling per user, a clear
+    "not financial advice, entertainment only" disclaimer, and
+    responsible gambling wording.
+
 ## FUTURE (big builds, new infrastructure, or business decisions)
 
 5. Native app in the App Store. Interim step available much earlier:
