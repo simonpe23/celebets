@@ -16,19 +16,17 @@ How this file works:
    with exact To Collect. Shipped.
 12. Screenshot import: paste a bet slip, AI pre-fills the form.
     Shipped and verified July 2026.
+4. Own domain: gocelebet.com, bought at Hostinger, live on Vercel
+   July 2026. Hostinger keeps DNS (A record @ to Vercel, CNAME www),
+   so Hostinger email like support@gocelebet.com stays easy to add.
 - Also shipped unnumbered: cash out, add money with per-buy
   tracking, and the money-first bet flow (stake + To Collect,
   no odds inputs anywhere).
 
 ## NOW (small, fits the current app, high value per effort)
 
-4. Own domain: buy a domain and connect it to Vercel. No code needed,
-   click-by-click instructions from Claude.
-12. Screenshot import: paste a bet slip image (Kalshi one-tap copy),
-    AI reads it and pre-fills the whole form for review. Needs an
-    Anthropic API key and a tiny per-slip cost (1 to 3 cents).
-    Answers the number one problem: logging friction. Owner already
-    approves of the concept, needs a plan and the API setup.
+- Nothing pending. Next candidates are idea 6 (tester readiness) and
+  idea 15 (redesign), both listed under SOON.
 
 ## SOON (after the NOW items)
 

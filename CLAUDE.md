@@ -76,7 +76,10 @@ The owner has no coding experience. These rules are permanent.
 
 ## Product facts
 
-- App: Celebet, a mobile-first manual sports bet tracker. Single user.
+- App: Celebet, a mobile-first manual sports bet tracker.
+- Live at gocelebet.com (Hostinger domain, Hostinger keeps DNS,
+  pointed at Vercel). The vercel.app address still works too.
+- The owner has an Instagram account for finding test users.
 - Stack: Next.js App Router, TypeScript, Tailwind, Supabase with RLS,
   deployed on Vercel from branch claude/celebets-v1-build-fhio4a.
 - Currency: USD with 2 decimals. Decimal odds with 2 decimals.
