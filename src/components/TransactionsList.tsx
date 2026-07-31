@@ -103,7 +103,7 @@ export default function TransactionsList({
             {transactions.map((tx) => (
               <div
                 key={tx.id}
-                className="rounded-2xl border border-neutral-200 bg-white dark:bg-neutral-950 p-4 dark:border-neutral-800"
+                className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-neutral-950 p-4 dark:border-neutral-800"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div>

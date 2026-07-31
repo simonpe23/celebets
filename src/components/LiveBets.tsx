@@ -183,7 +183,7 @@ export default function LiveBets({ bets }: Props) {
             return (
               <div
                 key={bet.id}
-                className="rounded-2xl border border-neutral-200 bg-white dark:bg-neutral-950 p-4 dark:border-neutral-800"
+                className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-neutral-950 p-4 dark:border-neutral-800"
               >
                 <div className="flex items-center justify-between">
                   <span

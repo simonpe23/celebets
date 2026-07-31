@@ -62,7 +62,7 @@ export default function WalletCard({
   }
 
   return (
-    <section className="rounded-2xl border border-neutral-200 bg-white dark:bg-neutral-950 p-5 dark:border-neutral-800">
+    <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-neutral-950 p-5 dark:border-neutral-800">
       <div className="flex items-start justify-between">
         <div>
           <h2 className="text-sm font-medium text-neutral-500">My Wallet</h2>
