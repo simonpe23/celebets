@@ -106,7 +106,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
     `shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
       active
         ? "border-[#72AFCC] bg-[#72AFCC] text-[#F5EDCE]"
-        : "border-neutral-300 text-[#72AFCC] dark:border-neutral-700"
+        : "border-neutral-300 dark:border-neutral-700"
     }`;
 
   const inputClass =
