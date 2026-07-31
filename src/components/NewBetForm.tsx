@@ -158,7 +158,7 @@ export default function NewBetForm({ lastStake }: Props) {
   }
 
   // Turns an AI reading of a bet slip into pre-filled form fields.
-  // Nothing is saved: the user reviews and taps Place Bet as always.
+  // Nothing is saved: the user reviews and taps Track Bet as always.
   function applyParsedSlip(data: {
     stake?: unknown;
     to_collect?: unknown;
@@ -641,7 +641,7 @@ export default function NewBetForm({ lastStake }: Props) {
 
       {placed && (
         <p className="mt-3 rounded-lg bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
-          Bet placed
+          Bet tracked
         </p>
       )}
 
@@ -651,7 +651,7 @@ export default function NewBetForm({ lastStake }: Props) {
         onClick={placeBet}
         className="mt-4 h-14 w-full rounded-xl bg-[#72AFCC] text-lg font-bold text-[#F5EDCE] active:bg-[#5B96B3] disabled:opacity-40"
       >
-        {saving ? "Placing..." : "Place Bet"}
+        {saving ? "Tracking..." : "Track Bet"}
       </button>
     </section>
   );
