@@ -20,6 +20,8 @@ for (const { name, width, height, scale } of sizes) {
     deviceScaleFactor: scale,
   });
   await page.goto(URL, { waitUntil: "networkidle" });
+  // The stats row fills in after mount, so give hydration a moment.
+  await page.waitForTimeout(1500);
   await page.screenshot({ path: `${OUT}/${name}.png` });
   await page.close();
 }

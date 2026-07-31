@@ -90,7 +90,7 @@ export default function WalletCard({
               setError(null);
               setOpen(true);
             }}
-            className="rounded-xl bg-[#3E5F44] px-3 py-2.5 text-xs font-bold text-white active:bg-[#2F4A34]"
+            className="rounded-xl bg-[#4F7A57] px-3 py-2.5 text-xs font-bold text-white active:bg-[#3F6446]"
           >
             Start here
           </button>
@@ -129,7 +129,7 @@ export default function WalletCard({
               placeholder="0.00"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#3E5F44] focus:ring-2 focus:ring-[#3E5F44]/30 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"
+              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#4F7A57] focus:ring-2 focus:ring-[#4F7A57]/30 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"
             />
 
             {error && (
@@ -151,7 +151,7 @@ export default function WalletCard({
                 type="button"
                 disabled={saving}
                 onClick={() => submit("deposit")}
-                className="h-12 rounded-xl bg-[#3E5F44] text-base font-bold text-white active:bg-[#2F4A34] disabled:opacity-60"
+                className="h-12 rounded-xl bg-[#4F7A57] text-base font-bold text-white active:bg-[#3F6446] disabled:opacity-60"
               >
                 Deposit
               </button>
