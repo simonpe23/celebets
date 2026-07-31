@@ -90,7 +90,7 @@ export default function WalletCard({
               setError(null);
               setOpen(true);
             }}
-            className="rounded-xl bg-[#4F7A57] px-3 py-2.5 text-xs font-bold text-white active:bg-[#3F6446]"
+            className="rounded-xl bg-[#4F7A57] px-3 py-2.5 text-xs font-semibold text-white active:bg-[#3F6446]"
           >
             Start here
           </button>
@@ -151,7 +151,7 @@ export default function WalletCard({
                 type="button"
                 disabled={saving}
                 onClick={() => submit("deposit")}
-                className="h-12 rounded-xl bg-[#4F7A57] text-base font-bold text-white active:bg-[#3F6446] disabled:opacity-60"
+                className="h-12 rounded-xl bg-[#4F7A57] text-base font-semibold text-white active:bg-[#3F6446] disabled:opacity-60"
               >
                 Deposit
               </button>

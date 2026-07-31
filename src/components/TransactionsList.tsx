@@ -186,7 +186,7 @@ export default function TransactionsList({
                       type="button"
                       disabled={busy || !dateValue}
                       onClick={() => saveDate(tx.id)}
-                      className="h-10 rounded-lg bg-[#4F7A57] px-3 text-xs font-bold text-white disabled:opacity-50"
+                      className="h-10 rounded-lg bg-[#4F7A57] px-3 text-xs font-semibold text-white disabled:opacity-50"
                     >
                       Save
                     </button>

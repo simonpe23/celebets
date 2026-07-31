@@ -119,7 +119,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
           <h1 className="text-2xl font-bold tracking-tight">Stats</h1>
           <Link
             href="/app"
-            className="rounded-lg bg-[#4F7A57] px-4 py-2 text-sm font-bold text-white active:bg-[#3F6446]"
+            className="rounded-lg bg-[#4F7A57] px-4 py-2 text-sm font-semibold text-white active:bg-[#3F6446]"
           >
             Home
           </Link>
@@ -412,7 +412,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
                   ? `/recommendations?sport=${encodeURIComponent(sport)}`
                   : "/recommendations"
               }
-              className="block h-12 w-full rounded-xl bg-[#58287F] text-center text-base font-bold leading-[3rem] text-white active:bg-[#431E63]"
+              className="block h-12 w-full rounded-xl bg-[#58287F] text-center text-base font-semibold leading-[3rem] text-white active:bg-[#431E63]"
             >
               {sport !== null
                 ? `All ${sport} recommendations`
