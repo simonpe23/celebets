@@ -32,6 +32,18 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const pathname = request.nextUrl.pathname;
+
+  // The landing page at "/" is public. Logged-in users skip it and go
+  // straight to the app.
+  if (pathname === "/") {
+    if (user) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/app";
+      return NextResponse.redirect(url);
+    }
+    return supabaseResponse;
+  }
+
   // Pages reachable without being logged in.
   const isAuthPage =
     pathname.startsWith("/login") ||
@@ -51,7 +63,7 @@ export async function middleware(request: NextRequest) {
 
   if (user && isAuthPage) {
     const url = request.nextUrl.clone();
-    url.pathname = "/";
+    url.pathname = "/app";
     return NextResponse.redirect(url);
   }
 

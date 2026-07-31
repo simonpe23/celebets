@@ -118,7 +118,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
         <header className="flex items-center justify-between">
           <h1 className="text-2xl font-bold tracking-tight">Stats</h1>
           <Link
-            href="/"
+            href="/app"
             className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium dark:border-neutral-700"
           >
             Home

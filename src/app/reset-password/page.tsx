@@ -84,7 +84,7 @@ export default function ResetPasswordPage() {
       return;
     }
 
-    router.push("/");
+    router.push("/app");
     router.refresh();
   }
 
