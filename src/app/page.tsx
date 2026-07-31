@@ -1,82 +1,76 @@
 import Link from "next/link";
 import GoogleButton from "@/components/GoogleButton";
-import Disclaimer from "@/components/Disclaimer";
 
+// Short labels only. The owner writes the real copy.
 const FEATURES = [
-  {
-    title: "Track",
-    body: "Log every bet you place, on any app. Stake, payout, picks, and the exact amount when you cash out early. Your wallet and profit update themselves.",
-  },
-  {
-    title: "Analyze",
-    body: "See profit and record per sport, singles against parlays, favorites against long shots, and which kinds of picks actually pay. Filter by any period you like.",
-  },
-  {
-    title: "Improve",
-    body: "Read plain observations pulled from your own history, like how your singles compare to your parlays. No tipsters, no guesswork, just your numbers.",
-  },
+  { title: "Track", body: "Every bet, any app." },
+  { title: "Analyze", body: "What pays, what leaks." },
+  { title: "Improve", body: "Patterns from your own numbers." },
 ];
 
 // A small copy of the real app, drawn in code so it stays sharp.
 function PhoneMockup() {
   return (
-    <div className="mx-auto w-full max-w-[280px] rounded-[2.5rem] border-[10px] border-neutral-900 bg-white shadow-2xl">
-      <div className="space-y-3 p-4">
-        <div className="rounded-2xl border border-neutral-200 p-4">
-          <p className="text-[11px] text-neutral-500">My Wallet</p>
-          <p className="mt-0.5 text-2xl font-bold tracking-tight text-neutral-900">
-            $2,657.39
-          </p>
-          <p className="mt-0.5 text-xs font-semibold text-emerald-600">
-            Net profit +$1,361.39
-          </p>
-        </div>
-
-        <div className="grid grid-cols-2 gap-2">
-          {[
-            ["Today", "+$142.03", "text-emerald-600"],
-            ["This week", "+$318.50", "text-emerald-600"],
-            ["This month", "-$64.00", "text-red-600"],
-            ["This year", "+$1,361.39", "text-emerald-600"],
-          ].map(([label, value, color]) => (
-            <div
-              key={label}
-              className="rounded-xl border border-neutral-200 p-2 text-center"
-            >
-              <p className="text-[10px] text-neutral-500">{label}</p>
-              <p className={`mt-0.5 text-[11px] font-bold ${color}`}>{value}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="rounded-2xl border border-neutral-200 p-3">
-          <div className="flex items-center justify-between">
-            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-800">
-              Pending
-            </span>
-            <span className="text-[10px] font-medium text-neutral-500">
-              Parlay, 2 legs
-            </span>
+    <div className="relative mx-auto w-full max-w-[260px]">
+      <div className="absolute -inset-8 -z-10 rounded-full bg-emerald-200/40 blur-3xl" />
+      <div className="rounded-[2.25rem] border-[9px] border-neutral-900 bg-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.35)]">
+        <div className="space-y-2.5 p-3.5">
+          <div className="rounded-2xl bg-neutral-900 p-3.5 text-white">
+            <p className="text-[10px] text-neutral-400">My Wallet</p>
+            <p className="mt-0.5 text-[26px] font-bold leading-none tracking-tight">
+              $2,657
+            </p>
+            <p className="mt-1.5 text-[11px] font-semibold text-emerald-400">
+              Net profit +$1,361
+            </p>
           </div>
-          <p className="mt-2 text-[11px] font-medium text-neutral-900">
-            ⚽ France advances
-          </p>
-          <p className="mt-1 text-[11px] font-medium text-neutral-900">
-            ⚽ Mbappe 1+ goals
-          </p>
-          <div className="mt-2 grid grid-cols-3 gap-1 border-t border-neutral-100 pt-2 text-center">
+
+          <div className="grid grid-cols-2 gap-1.5">
             {[
-              ["Cost", "$100.00"],
-              ["To Win", "$66.00"],
-              ["To Collect", "$166.00"],
-            ].map(([label, value]) => (
-              <div key={label}>
+              ["Today", "+$142", "text-emerald-600"],
+              ["Week", "+$318", "text-emerald-600"],
+              ["Month", "-$64", "text-red-500"],
+              ["Year", "+$1,361", "text-emerald-600"],
+            ].map(([label, value, color]) => (
+              <div
+                key={label}
+                className="rounded-xl bg-neutral-100 px-2 py-1.5 text-center"
+              >
                 <p className="text-[9px] text-neutral-500">{label}</p>
-                <p className="mt-0.5 text-[10px] font-bold text-neutral-900">
-                  {value}
-                </p>
+                <p className={`text-[11px] font-bold ${color}`}>{value}</p>
               </div>
             ))}
+          </div>
+
+          <div className="rounded-2xl border border-neutral-200 p-3">
+            <div className="flex items-center justify-between">
+              <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-semibold text-amber-800">
+                Pending
+              </span>
+              <span className="text-[9px] font-medium text-neutral-400">
+                Parlay
+              </span>
+            </div>
+            <p className="mt-2 text-[11px] font-medium text-neutral-900">
+              ⚽ France advances
+            </p>
+            <p className="mt-1 text-[11px] font-medium text-neutral-900">
+              ⚽ Mbappe 1+ goals
+            </p>
+            <div className="mt-2.5 grid grid-cols-3 gap-1 border-t border-neutral-100 pt-2 text-center">
+              {[
+                ["Cost", "$100"],
+                ["To Win", "$66"],
+                ["Collect", "$166"],
+              ].map(([label, value]) => (
+                <div key={label}>
+                  <p className="text-[8px] text-neutral-400">{label}</p>
+                  <p className="text-[10px] font-bold text-neutral-900">
+                    {value}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -86,77 +80,74 @@ function PhoneMockup() {
 
 export default function LandingPage() {
   return (
-    <main className="min-h-dvh bg-white text-neutral-900">
-      <div className="mx-auto w-full max-w-5xl px-6 py-6">
+    <main className="relative min-h-dvh overflow-hidden bg-white text-neutral-900">
+      {/* Soft color wash so the page is not a flat white sheet. */}
+      <div className="pointer-events-none absolute -right-40 -top-40 h-[32rem] w-[32rem] rounded-full bg-emerald-100/70 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-40 -left-40 h-[28rem] w-[28rem] rounded-full bg-sky-100/60 blur-3xl" />
+
+      <div className="relative mx-auto flex min-h-dvh w-full max-w-6xl flex-col px-6 py-5">
         <header className="flex items-center justify-between">
-          <span className="text-lg font-bold tracking-tight">Celebet</span>
+          <span className="text-xl font-bold tracking-tight">Celebet</span>
           <Link
             href="/login"
-            className="rounded-xl px-4 py-2 text-sm font-semibold text-neutral-600"
+            className="rounded-xl border border-neutral-300 bg-white px-5 py-2.5 text-sm font-bold shadow-sm active:bg-neutral-50"
           >
             Log in
           </Link>
         </header>
 
-        <section className="mt-12 grid items-center gap-12 sm:mt-20 sm:grid-cols-2 sm:gap-8">
-          <div>
-            <h1 className="text-5xl font-bold leading-[1.05] tracking-tight sm:text-6xl">
-              Understand
-              <br />
-              Your Game.
-            </h1>
-            <p className="mt-5 text-lg leading-relaxed text-neutral-600">
-              Track Every Bet. Discover Patterns. Find Your Edge.
-            </p>
-
-            <div className="mt-8 space-y-3 sm:max-w-sm">
-              <GoogleButton large />
-              <Link
-                href="/signup"
-                className="flex h-14 w-full items-center justify-center rounded-xl bg-emerald-600 text-base font-bold text-white active:bg-emerald-700"
-              >
-                Create free account
-              </Link>
-              <p className="text-center text-xs text-neutral-500">
-                Free. Works in your browser, nothing to install.
+        <section className="flex flex-1 items-center py-10">
+          <div className="grid w-full items-center gap-12 lg:grid-cols-2">
+            <div className="order-2 lg:order-1">
+              <h1 className="text-[3.25rem] font-bold leading-[0.95] tracking-tight sm:text-7xl">
+                Understand
+                <br />
+                Your Game.
+              </h1>
+              <p className="mt-5 text-lg font-medium text-neutral-500 sm:text-xl">
+                Track Every Bet. Discover Patterns. Find Your Edge.
               </p>
-            </div>
-          </div>
 
-          <div className="order-first sm:order-last">
-            <PhoneMockup />
+              <div className="mt-8 max-w-sm space-y-3">
+                <GoogleButton large />
+                <Link
+                  href="/signup"
+                  className="flex h-14 w-full items-center justify-center rounded-xl bg-emerald-600 text-base font-bold text-white shadow-lg shadow-emerald-600/25 active:bg-emerald-700"
+                >
+                  Create free account
+                </Link>
+                <p className="text-center text-xs text-neutral-400">
+                  Free. Nothing to install.
+                </p>
+              </div>
+
+              <div className="mt-10 grid grid-cols-3 gap-4 border-t border-neutral-200 pt-6">
+                {FEATURES.map(({ title, body }) => (
+                  <div key={title}>
+                    <p className="text-sm font-bold">{title}</p>
+                    <p className="mt-1 text-xs leading-snug text-neutral-500">
+                      {body}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="order-1 lg:order-2">
+              <PhoneMockup />
+            </div>
           </div>
         </section>
 
-        <section className="mt-20 grid gap-10 sm:mt-28 sm:grid-cols-3 sm:gap-8">
-          {FEATURES.map(({ title, body }) => (
-            <div key={title}>
-              <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
-              <p className="mt-2 leading-relaxed text-neutral-600">{body}</p>
-            </div>
-          ))}
-        </section>
-
-        <section className="mt-20 rounded-3xl bg-neutral-50 px-6 py-12 text-center sm:mt-28">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Know where you really stand.
-          </h2>
-          <p className="mx-auto mt-3 max-w-md text-neutral-600">
-            Your betting apps show a balance. Celebet shows the whole
-            picture, across all of them.
+        <footer className="pb-2 text-center text-[10px] leading-relaxed text-neutral-400">
+          <p>
+            Entertainment purposes only. If you or someone you know has a
+            gambling problem and wants help, call 1-800 GAMBLER. Adults only.
           </p>
-          <div className="mx-auto mt-8 max-w-sm space-y-3">
-            <GoogleButton large />
-            <Link
-              href="/signup"
-              className="flex h-14 w-full items-center justify-center rounded-xl bg-emerald-600 text-base font-bold text-white active:bg-emerald-700"
-            >
-              Create free account
-            </Link>
-          </div>
-        </section>
-
-        <Disclaimer />
+          <p className="mt-1">
+            Celebet&trade; is a trademark of Peak Street 6 LLC.
+          </p>
+        </footer>
       </div>
     </main>
   );
