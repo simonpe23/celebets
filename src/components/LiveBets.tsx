@@ -172,7 +172,7 @@ export default function LiveBets({ bets }: Props) {
       )}
 
       {bets.length === 0 ? (
-        <p className="mt-3 rounded-2xl border border-dashed border-neutral-300 bg-white/60 dark:bg-neutral-950/60 p-5 text-center text-sm text-neutral-500 dark:border-neutral-700">
+        <p className="mt-3 rounded-2xl border-2 border-dashed border-neutral-900/15 dark:border-neutral-100/15 p-5 text-center text-sm text-neutral-500 dark:border-neutral-700">
           No pending bets. Place one above.
         </p>
       ) : (
@@ -183,7 +183,7 @@ export default function LiveBets({ bets }: Props) {
             return (
               <div
                 key={bet.id}
-                className="rounded-2xl border border-neutral-200 bg-white dark:bg-neutral-950 p-4 dark:border-neutral-800"
+                className="rounded-2xl border-2 border-neutral-900/15 dark:border-neutral-100/15 p-4 dark:border-neutral-800"
               >
                 <div className="flex items-center justify-between">
                   <span

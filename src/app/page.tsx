@@ -42,7 +42,7 @@ function PhoneMockup() {
             ))}
           </div>
 
-          <div className="rounded-2xl border border-neutral-200 bg-white dark:bg-neutral-950 p-3">
+          <div className="rounded-2xl border-2 border-neutral-900/15 dark:border-neutral-100/15 p-3">
             <div className="flex items-center justify-between">
               <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-semibold text-amber-800">
                 Pending
