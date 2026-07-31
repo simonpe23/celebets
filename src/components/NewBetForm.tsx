@@ -282,7 +282,7 @@ export default function NewBetForm({ lastStake }: Props) {
     "mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#72AFCC] focus:ring-2 focus:ring-[#72AFCC]/40 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100";
 
   return (
-    <section className="rounded-2xl border-2 border-neutral-900/15 dark:border-neutral-100/15 p-5 dark:border-neutral-800">
+    <section className="rounded-2xl border border-neutral-200 bg-white dark:bg-neutral-950 p-5 dark:border-neutral-800">
       <h2 className="text-lg font-bold">New Bet</h2>
 
       <div className="mt-3 grid grid-cols-2 gap-2">

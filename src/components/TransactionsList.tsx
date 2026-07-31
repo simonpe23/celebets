@@ -95,7 +95,7 @@ export default function TransactionsList({
         )}
 
         {transactions.length === 0 ? (
-          <p className="rounded-2xl border-2 border-dashed border-neutral-900/15 dark:border-neutral-100/15 p-5 text-center text-sm text-neutral-500 dark:border-neutral-700">
+          <p className="rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:border-neutral-700">
             No deposits or withdrawals yet.
           </p>
         ) : (
@@ -103,7 +103,7 @@ export default function TransactionsList({
             {transactions.map((tx) => (
               <div
                 key={tx.id}
-                className="rounded-2xl border-2 border-neutral-900/15 dark:border-neutral-100/15 p-4 dark:border-neutral-800"
+                className="rounded-2xl border border-neutral-200 bg-white dark:bg-neutral-950 p-4 dark:border-neutral-800"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div>
