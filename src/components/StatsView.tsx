@@ -105,12 +105,12 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
   const chipClass = (active: boolean) =>
     `shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
       active
-        ? "border-[#72AFCC] bg-[#72AFCC] text-[#F5EDCE]"
+        ? "border-[#E5D283] bg-[#E5D283] text-[#213555]"
         : "border-neutral-300 dark:border-neutral-700"
     }`;
 
   const inputClass =
-    "mt-1 block h-11 w-full rounded-xl border border-neutral-300 bg-white px-3 text-base text-neutral-900 outline-none focus:border-[#72AFCC] dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100";
+    "mt-1 block h-11 w-full rounded-xl border border-neutral-300 bg-white px-3 text-base text-neutral-900 outline-none focus:border-[#E5D283] dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100";
 
   return (
     <main className="min-h-dvh px-4 py-6 sm:px-6">
@@ -119,7 +119,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
           <h1 className="text-2xl font-bold tracking-tight">Stats</h1>
           <Link
             href="/app"
-            className="rounded-lg bg-[#72AFCC] px-4 py-2 text-sm font-semibold text-[#F5EDCE] active:bg-[#5B96B3]"
+            className="rounded-lg bg-[#E5D283] px-4 py-2 text-sm font-semibold text-[#213555] active:bg-[#D6C070]"
           >
             Home
           </Link>
