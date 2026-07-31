@@ -25,8 +25,16 @@ How this file works:
 
 ## NOW (small, fits the current app, high value per effort)
 
-- Nothing pending. Next candidates are idea 6 (tester readiness) and
-  idea 15 (redesign), both listed under SOON.
+16. Login and sign up as drop-down panels on the landing page, instead
+    of their own pages. Tapping Login or Sign up opens a panel over
+    the landing page holding the email and password fields, the
+    Google button, and the Forgot password link. Tap outside or press
+    Escape to close. Decided by the owner: both login and sign up get
+    a panel, the panel may cover most of a phone screen, the /login
+    and /signup pages stay alive behind the scenes so emailed links
+    and bookmarks keep working, and logging out lands on the landing
+    page instead of the login page. Build it together with the
+    landing page rebuild so the panel matches that design, not twice.
 
 ## SOON (after the NOW items)
 
