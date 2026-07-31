@@ -57,6 +57,44 @@ interface Props {
 
 const QUICK_STAKES = ["20", "50", "100"];
 
+// Small line icons for the two slip import buttons. They take their
+// color from the button's own text color.
+function ClipboardIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-3.5 w-3.5 shrink-0"
+      aria-hidden="true"
+    >
+      <rect x="8" y="2" width="8" height="4" rx="1" />
+      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+    </svg>
+  );
+}
+
+function CameraIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-3.5 w-3.5 shrink-0"
+      aria-hidden="true"
+    >
+      <path d="M14.5 4h-5L8 6H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-4l-1.5-2Z" />
+      <circle cx="12" cy="13" r="3.5" />
+    </svg>
+  );
+}
+
 export default function NewBetForm({ lastStake }: Props) {
   const router = useRouter();
   const [stake, setStake] = useState("");
@@ -290,16 +328,18 @@ export default function NewBetForm({ lastStake }: Props) {
           type="button"
           disabled={importing}
           onClick={pasteSlip}
-          className="h-11 rounded-xl border border-[#4F7A57] bg-[#4F7A57]/10 text-xs font-semibold text-[#4F7A57] active:bg-[#4F7A57]/20 disabled:opacity-50"
+          className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-[#4F7A57] bg-white text-xs font-semibold text-[#4F7A57] active:bg-[#4F7A57]/10 disabled:opacity-50 dark:bg-transparent"
         >
+          <ClipboardIcon />
           Paste bet slip
         </button>
         <button
           type="button"
           disabled={importing}
           onClick={() => fileInputRef.current?.click()}
-          className="h-11 rounded-xl border border-[#4F7A57] bg-white text-xs font-semibold text-[#4F7A57] active:bg-[#4F7A57]/10 disabled:opacity-50 dark:bg-transparent"
+          className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-neutral-300 bg-white text-xs font-semibold text-neutral-500 active:bg-neutral-100 disabled:opacity-50 dark:border-neutral-700 dark:bg-transparent dark:text-neutral-400"
         >
+          <CameraIcon />
           Upload image
         </button>
       </div>
