@@ -5,6 +5,7 @@ import LiveBets from "@/components/LiveBets";
 import StatsRow from "@/components/StatsRow";
 import BetHistory from "@/components/BetHistory";
 import Disclaimer from "@/components/Disclaimer";
+import Wordmark from "@/components/Wordmark";
 import type { BetWithLegs } from "@/lib/types";
 
 // Settled bets stay on a Live now card with Undo for this long.
@@ -72,7 +73,9 @@ export default async function HomePage() {
     <main className="min-h-dvh px-4 py-6 sm:px-6">
       <div className="mx-auto w-full max-w-md space-y-5">
         <header className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold tracking-tight">Celebet</h1>
+          <h1>
+            <Wordmark className="text-2xl" />
+          </h1>
           <form action="/auth/signout" method="post">
             <button
               type="submit"
