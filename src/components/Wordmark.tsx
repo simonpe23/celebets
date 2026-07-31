@@ -1,6 +1,6 @@
 // The Celebet wordmark: "cele" in the text color, "bet" in the brand
-// purple. Uses Poppins, standing in for Circular Std until a licence
-// for that font is bought.
+// purple with a soft gradient through it for depth. Uses Poppins,
+// standing in for Circular Std until a licence for that font is bought.
 export default function Wordmark({
   className = "text-2xl",
 }: {
@@ -8,10 +8,12 @@ export default function Wordmark({
 }) {
   return (
     <span
-      className={`font-brand font-medium lowercase tracking-tight ${className}`}
+      className={`font-brand font-semibold lowercase tracking-tight ${className}`}
     >
       <span className="text-neutral-900 dark:text-white">cele</span>
-      <span className="text-[#6C4CE0]">bet</span>
+      <span className="bg-gradient-to-br from-[#8B6BFF] via-[#6C4CE0] to-[#4B2FB8] bg-clip-text text-transparent">
+        bet
+      </span>
     </span>
   );
 }
