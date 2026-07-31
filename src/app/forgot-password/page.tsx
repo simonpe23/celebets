@@ -42,7 +42,7 @@ export default function ForgotPasswordPage() {
           </p>
           <Link
             href="/login"
-            className="mt-6 inline-block font-semibold text-[#213555]"
+            className="mt-6 inline-block font-semibold text-[#3E5F44]"
           >
             Back to log in
           </Link>
@@ -75,7 +75,7 @@ export default function ForgotPasswordPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#E5D283] focus:ring-2 focus:ring-[#E5D283]/50 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
+              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#3E5F44] focus:ring-2 focus:ring-[#3E5F44]/30 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
             />
           </div>
 
@@ -88,7 +88,7 @@ export default function ForgotPasswordPage() {
           <button
             type="submit"
             disabled={loading}
-            className="h-12 w-full rounded-xl bg-[#E5D283] text-base font-bold text-[#213555] active:bg-[#D6C070] disabled:opacity-60"
+            className="h-12 w-full rounded-xl bg-[#3E5F44] text-base font-bold text-white active:bg-[#2F4A34] disabled:opacity-60"
           >
             {loading ? "Sending..." : "Send reset link"}
           </button>
@@ -96,7 +96,7 @@ export default function ForgotPasswordPage() {
 
         <p className="mt-6 text-center text-sm text-neutral-500">
           Remembered it?{" "}
-          <Link href="/login" className="font-semibold text-[#213555]">
+          <Link href="/login" className="font-semibold text-[#3E5F44]">
             Log in
           </Link>
         </p>

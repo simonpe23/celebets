@@ -18,7 +18,7 @@ export default function Recommendations({ bets }: { bets: BetWithLegs[] }) {
       <button
         type="button"
         onClick={roll}
-        className="rounded-xl bg-[#213555] px-3 py-2.5 text-center text-xs font-bold text-[#E5D283] active:bg-[#16233A]"
+        className="rounded-xl bg-[#58287F] px-3 py-2.5 text-center text-xs font-bold text-white active:bg-[#431E63]"
       >
         Recommendations
       </button>
@@ -31,7 +31,7 @@ export default function Recommendations({ bets }: { bets: BetWithLegs[] }) {
               <button
                 type="button"
                 onClick={() => setRecs(null)}
-                className="rounded-lg bg-[#213555] px-4 py-2 text-sm font-bold text-[#E5D283] active:bg-[#16233A]"
+                className="rounded-lg bg-[#58287F] px-4 py-2 text-sm font-bold text-white active:bg-[#431E63]"
               >
                 Hide
               </button>
@@ -55,13 +55,13 @@ export default function Recommendations({ bets }: { bets: BetWithLegs[] }) {
               <button
                 type="button"
                 onClick={roll}
-                className="rounded-lg border border-[#213555] px-4 py-2 text-sm font-bold text-[#213555] dark:text-[#E5D283]"
+                className="rounded-lg border border-[#58287F] px-4 py-2 text-sm font-bold text-[#58287F] dark:text-[#A97FD0]"
               >
                 New mix
               </button>
               <Link
                 href="/recommendations"
-                className="text-sm font-bold text-[#213555] underline underline-offset-2 dark:text-[#E5D283]"
+                className="text-sm font-bold text-[#58287F] underline underline-offset-2 dark:text-[#A97FD0]"
               >
                 Show all
               </Link>

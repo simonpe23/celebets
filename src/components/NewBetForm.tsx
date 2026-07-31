@@ -279,7 +279,7 @@ export default function NewBetForm({ lastStake }: Props) {
   }
 
   const inputClass =
-    "mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#E5D283] focus:ring-2 focus:ring-[#E5D283]/50 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100";
+    "mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#3E5F44] focus:ring-2 focus:ring-[#3E5F44]/30 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100";
 
   return (
     <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-neutral-950 p-5 dark:border-neutral-800">
@@ -290,7 +290,7 @@ export default function NewBetForm({ lastStake }: Props) {
           type="button"
           disabled={importing}
           onClick={pasteSlip}
-          className="h-11 rounded-xl bg-[#E5D283] text-sm font-bold text-[#213555] active:bg-[#D6C070] disabled:opacity-50"
+          className="h-11 rounded-xl border-2 border-[#3E5F44] bg-white text-sm font-bold text-[#3E5F44] active:bg-[#3E5F44]/10 disabled:opacity-50 dark:bg-transparent"
         >
           Paste bet slip
         </button>
@@ -298,7 +298,7 @@ export default function NewBetForm({ lastStake }: Props) {
           type="button"
           disabled={importing}
           onClick={() => fileInputRef.current?.click()}
-          className="h-11 rounded-xl border border-neutral-300 text-sm font-semibold text-neutral-600 disabled:opacity-50 dark:border-neutral-700 dark:text-neutral-300"
+          className="h-11 rounded-xl border-2 border-[#3E5F44] bg-white text-sm font-bold text-[#3E5F44] active:bg-[#3E5F44]/10 disabled:opacity-50 dark:bg-transparent"
         >
           Upload image
         </button>
@@ -348,7 +348,7 @@ export default function NewBetForm({ lastStake }: Props) {
             onClick={() => setStake(amount)}
             className={`shrink-0 whitespace-nowrap rounded-lg border px-3 py-1.5 text-xs font-semibold ${
               stake === amount
-                ? "border-[#E5D283] text-emerald-600 dark:text-emerald-400"
+                ? "border-[#3E5F44] text-emerald-600 dark:text-emerald-400"
                 : "border-neutral-300 text-neutral-500 dark:border-neutral-700"
             }`}
           >
@@ -400,7 +400,7 @@ export default function NewBetForm({ lastStake }: Props) {
                 }
                 className={`shrink-0 whitespace-nowrap rounded-xl border px-4 py-2.5 text-sm font-semibold ${
                   leg.sport === s
-                    ? "border-[#E5D283] bg-[#E5D283] text-[#213555]"
+                    ? "border-[#3E5F44] bg-[#3E5F44] text-white"
                     : "border-neutral-300 dark:border-neutral-700"
                 }`}
               >
@@ -458,7 +458,7 @@ export default function NewBetForm({ lastStake }: Props) {
                           }
                           className={`shrink-0 whitespace-nowrap rounded-xl border px-3.5 py-2 text-sm font-semibold ${
                             selected
-                              ? "border-[#E5D283] bg-[#E5D283] text-[#213555]"
+                              ? "border-[#3E5F44] bg-[#3E5F44] text-white"
                               : "border-neutral-300 dark:border-neutral-700"
                           }`}
                         >
@@ -484,9 +484,9 @@ export default function NewBetForm({ lastStake }: Props) {
                         }
                         className={`shrink-0 whitespace-nowrap rounded-xl border px-3.5 py-2 text-sm font-semibold ${
                           groupSelected
-                            ? "border-[#E5D283] bg-[#E5D283] text-[#213555]"
+                            ? "border-[#3E5F44] bg-[#3E5F44] text-white"
                             : groupOpen
-                              ? "border-[#E5D283] text-emerald-600 dark:text-emerald-400"
+                              ? "border-[#3E5F44] text-emerald-600 dark:text-emerald-400"
                               : "border-neutral-300 dark:border-neutral-700"
                         }`}
                       >
@@ -522,7 +522,7 @@ export default function NewBetForm({ lastStake }: Props) {
                             }
                             className={`shrink-0 whitespace-nowrap rounded-xl border px-3.5 py-2 text-sm font-semibold ${
                               selected
-                                ? "border-[#E5D283] bg-[#E5D283] text-[#213555]"
+                                ? "border-[#3E5F44] bg-[#3E5F44] text-white"
                                 : "border-neutral-300 bg-white dark:border-neutral-700 dark:bg-neutral-950"
                             }`}
                           >
@@ -649,7 +649,7 @@ export default function NewBetForm({ lastStake }: Props) {
         type="button"
         disabled={!canPlace}
         onClick={placeBet}
-        className="mt-4 h-14 w-full rounded-xl bg-[#E5D283] text-lg font-bold text-[#213555] active:bg-[#D6C070] disabled:opacity-40"
+        className="mt-4 h-14 w-full rounded-xl bg-[#3E5F44] text-lg font-bold text-white active:bg-[#2F4A34] disabled:opacity-40"
       >
         {saving ? "Tracking..." : "Track Bet"}
       </button>
