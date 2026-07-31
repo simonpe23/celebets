@@ -238,7 +238,7 @@ export default function BetHistory({ bets }: Props) {
                       type="button"
                       disabled={busy || !dateValue}
                       onClick={() => saveDate(bet.id)}
-                      className="h-10 rounded-lg bg-[#E5D283] px-3 text-xs font-semibold text-[#213555] disabled:opacity-50"
+                      className="h-10 rounded-lg bg-[#213555] px-3 text-xs font-semibold text-[#E5D283] disabled:opacity-50"
                     >
                       Save
                     </button>

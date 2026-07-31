@@ -211,7 +211,7 @@ export default function LiveBets({ bets }: Props) {
                               addingMoney === bet.id ? null : bet.id
                             );
                           }}
-                          className="rounded-lg border border-[#E5D283] px-3 py-1.5 text-xs font-medium text-[#213555] disabled:opacity-50 dark:text-[#213555]"
+                          className="rounded-lg border border-[#213555] px-3 py-1.5 text-xs font-medium text-[#213555] disabled:opacity-50 dark:text-[#213555]"
                         >
                           Add money
                         </button>
@@ -226,7 +226,7 @@ export default function LiveBets({ bets }: Props) {
                               cashingOut === bet.id ? null : bet.id
                             );
                           }}
-                          className="rounded-lg border border-[#E5D283] px-3 py-1.5 text-xs font-medium text-[#213555] disabled:opacity-50 dark:text-[#213555]"
+                          className="rounded-lg border border-[#213555] px-3 py-1.5 text-xs font-medium text-[#213555] disabled:opacity-50 dark:text-[#213555]"
                         >
                           Cash out
                         </button>
@@ -321,7 +321,7 @@ export default function LiveBets({ bets }: Props) {
                           parseMoney(addPayout) === null
                         }
                         onClick={() => addMoney(bet.id, stake, totalOdds)}
-                        className="rounded-lg bg-[#E5D283] px-3 py-1.5 text-xs font-semibold text-[#213555] disabled:opacity-50"
+                        className="rounded-lg bg-[#213555] px-3 py-1.5 text-xs font-semibold text-[#E5D283] disabled:opacity-50"
                       >
                         Confirm add
                       </button>
@@ -391,7 +391,7 @@ export default function LiveBets({ bets }: Props) {
                           parseMoney(cashOutAmount) === null
                         }
                         onClick={() => cashOut(bet.id)}
-                        className="rounded-lg bg-[#E5D283] px-3 py-1.5 text-xs font-semibold text-[#213555] disabled:opacity-50"
+                        className="rounded-lg bg-[#213555] px-3 py-1.5 text-xs font-semibold text-[#E5D283] disabled:opacity-50"
                       >
                         Confirm cash out
                       </button>
@@ -454,7 +454,7 @@ export default function LiveBets({ bets }: Props) {
                               type="button"
                               disabled={busyLeg !== null}
                               onClick={() => setResult(leg.id, "won")}
-                              className="h-9 flex-1 rounded-lg bg-[#E5D283] text-sm font-semibold text-[#213555] active:bg-[#D6C070] disabled:opacity-50"
+                              className="h-9 flex-1 rounded-lg bg-[#213555] text-sm font-semibold text-[#E5D283] active:bg-[#16233A] disabled:opacity-50"
                             >
                               Won
                             </button>
