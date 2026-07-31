@@ -62,7 +62,7 @@ export default function LoginPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
+              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#72AFCC] focus:ring-2 focus:ring-[#72AFCC]/40 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
             />
           </div>
 
@@ -73,7 +73,7 @@ export default function LoginPage() {
               </label>
               <Link
                 href="/forgot-password"
-                className="text-sm font-medium text-emerald-600"
+                className="text-sm font-medium text-[#72AFCC]"
               >
                 Forgot password?
               </Link>
@@ -85,7 +85,7 @@ export default function LoginPage() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
+              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#72AFCC] focus:ring-2 focus:ring-[#72AFCC]/40 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
             />
           </div>
 
@@ -98,7 +98,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="h-12 w-full rounded-xl bg-emerald-600 text-base font-semibold text-white active:bg-emerald-700 disabled:opacity-60"
+            className="h-12 w-full rounded-xl bg-[#72AFCC] text-base font-semibold text-[#F5EDCE] active:bg-[#5B96B3] disabled:opacity-60"
           >
             {loading ? "Logging in..." : "Log in"}
           </button>
@@ -106,7 +106,7 @@ export default function LoginPage() {
 
         <p className="mt-6 text-center text-sm text-neutral-500">
           No account yet?{" "}
-          <Link href="/signup" className="font-semibold text-emerald-600">
+          <Link href="/signup" className="font-semibold text-[#72AFCC]">
             Sign up
           </Link>
         </p>

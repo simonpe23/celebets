@@ -70,7 +70,7 @@ export default function StatsRow({ bets }: { bets: SettledBetSummary[] }) {
         return (
           <div
             key={label}
-            className="rounded-2xl border border-neutral-200 p-3 text-center dark:border-neutral-800"
+            className="rounded-2xl border border-neutral-200 bg-white dark:bg-neutral-950 p-3 text-center dark:border-neutral-800"
           >
             <p className="text-xs text-neutral-500">{label}</p>
             <p className={`mt-0.5 text-sm font-bold ${color}`}>

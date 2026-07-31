@@ -58,11 +58,11 @@ export default function AllRecommendations({ bets, sport }: Props) {
         </p>
 
         {insights === null ? (
-          <p className="rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:border-neutral-700">
+          <p className="rounded-2xl border border-dashed border-neutral-300 bg-white/60 dark:bg-neutral-950/60 p-5 text-center text-sm text-neutral-500 dark:border-neutral-700">
             Loading...
           </p>
         ) : insights.length === 0 ? (
-          <p className="rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:border-neutral-700">
+          <p className="rounded-2xl border border-dashed border-neutral-300 bg-white/60 dark:bg-neutral-950/60 p-5 text-center text-sm text-neutral-500 dark:border-neutral-700">
             Nothing to say yet. Settle a few bets and come back.
           </p>
         ) : (
@@ -70,7 +70,7 @@ export default function AllRecommendations({ bets, sport }: Props) {
             {insights.map((text, i) => (
               <div
                 key={i}
-                className="rounded-2xl border border-neutral-200 p-4 dark:border-neutral-800"
+                className="rounded-2xl border border-neutral-200 bg-white dark:bg-neutral-950 p-4 dark:border-neutral-800"
               >
                 <p className="text-sm leading-relaxed">{text}</p>
               </div>

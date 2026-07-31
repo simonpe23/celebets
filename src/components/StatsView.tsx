@@ -105,12 +105,12 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
   const chipClass = (active: boolean) =>
     `shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
       active
-        ? "border-emerald-600 bg-emerald-600 text-white"
+        ? "border-[#72AFCC] bg-[#72AFCC] text-[#F5EDCE]"
         : "border-neutral-300 dark:border-neutral-700"
     }`;
 
   const inputClass =
-    "mt-1 block h-11 w-full rounded-xl border border-neutral-300 bg-white px-3 text-base text-neutral-900 outline-none focus:border-emerald-500 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100";
+    "mt-1 block h-11 w-full rounded-xl border border-neutral-300 bg-white px-3 text-base text-neutral-900 outline-none focus:border-[#72AFCC] dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100";
 
   return (
     <main className="min-h-dvh px-4 py-6 sm:px-6">
@@ -194,26 +194,26 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
         </section>
 
         {filtered.length === 0 ? (
-          <p className="rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:border-neutral-700">
+          <p className="rounded-2xl border border-dashed border-neutral-300 bg-white/60 dark:bg-neutral-950/60 p-5 text-center text-sm text-neutral-500 dark:border-neutral-700">
             No settled bets in this selection.
           </p>
         ) : (
           <>
             {sportTotals === null ? (
               <section className="grid grid-cols-3 gap-2">
-                <div className="rounded-2xl border border-neutral-200 p-3 text-center dark:border-neutral-800">
+                <div className="rounded-2xl border border-neutral-200 bg-white dark:bg-neutral-950 p-3 text-center dark:border-neutral-800">
                   <p className="text-xs text-neutral-500">Staked</p>
                   <p className="mt-0.5 text-sm font-bold">
                     {formatMoney(round2(t.staked))}
                   </p>
                 </div>
-                <div className="rounded-2xl border border-neutral-200 p-3 text-center dark:border-neutral-800">
+                <div className="rounded-2xl border border-neutral-200 bg-white dark:bg-neutral-950 p-3 text-center dark:border-neutral-800">
                   <p className="text-xs text-neutral-500">Returned</p>
                   <p className="mt-0.5 text-sm font-bold">
                     {formatMoney(round2(t.returned))}
                   </p>
                 </div>
-                <div className="rounded-2xl border border-neutral-200 p-3 text-center dark:border-neutral-800">
+                <div className="rounded-2xl border border-neutral-200 bg-white dark:bg-neutral-950 p-3 text-center dark:border-neutral-800">
                   <p className="text-xs text-neutral-500">ROI</p>
                   <p
                     className={`mt-0.5 text-sm font-bold ${profitColor(
@@ -226,19 +226,19 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
               </section>
             ) : (
               <section className="grid grid-cols-3 gap-2">
-                <div className="rounded-2xl border border-neutral-200 p-3 text-center dark:border-neutral-800">
+                <div className="rounded-2xl border border-neutral-200 bg-white dark:bg-neutral-950 p-3 text-center dark:border-neutral-800">
                   <p className="text-xs text-neutral-500">Picks</p>
                   <p className="mt-0.5 text-sm font-bold">
                     {sportTotals.wins + sportTotals.losses}
                   </p>
                 </div>
-                <div className="rounded-2xl border border-neutral-200 p-3 text-center dark:border-neutral-800">
+                <div className="rounded-2xl border border-neutral-200 bg-white dark:bg-neutral-950 p-3 text-center dark:border-neutral-800">
                   <p className="text-xs text-neutral-500">Record</p>
                   <p className="mt-0.5 text-sm font-bold">
                     {sportTotals.wins}-{sportTotals.losses}
                   </p>
                 </div>
-                <div className="rounded-2xl border border-neutral-200 p-3 text-center dark:border-neutral-800">
+                <div className="rounded-2xl border border-neutral-200 bg-white dark:bg-neutral-950 p-3 text-center dark:border-neutral-800">
                   <p className="text-xs text-neutral-500">Profit</p>
                   <p
                     className={`mt-0.5 text-sm font-bold ${profitColor(
@@ -251,7 +251,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
               </section>
             )}
 
-            <section className="rounded-2xl border border-neutral-200 p-4 dark:border-neutral-800">
+            <section className="rounded-2xl border border-neutral-200 bg-white dark:bg-neutral-950 p-4 dark:border-neutral-800">
               <h2 className="text-base font-bold">Per sport</h2>
               <p className="mt-1 text-xs text-neutral-500">
                 Record counts every settled pick. Money follows the split
@@ -284,7 +284,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
               </div>
             </section>
 
-            <section className="rounded-2xl border border-neutral-200 p-4 dark:border-neutral-800">
+            <section className="rounded-2xl border border-neutral-200 bg-white dark:bg-neutral-950 p-4 dark:border-neutral-800">
               <h2 className="text-base font-bold">Singles vs parlays</h2>
               {bySportType !== null && (
                 <p className="mt-1 text-xs text-neutral-500">
@@ -349,7 +349,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
               </div>
             </section>
 
-            <section className="rounded-2xl border border-neutral-200 p-4 dark:border-neutral-800">
+            <section className="rounded-2xl border border-neutral-200 bg-white dark:bg-neutral-950 p-4 dark:border-neutral-800">
               <h2 className="text-base font-bold">Odds groups</h2>
               <p className="mt-1 text-xs text-neutral-500">
                 Your settled picks grouped by how risky they were. Picks
@@ -373,7 +373,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
             </section>
 
             {sport !== null && byCategory.length > 0 && (
-              <section className="rounded-2xl border border-neutral-200 p-4 dark:border-neutral-800">
+              <section className="rounded-2xl border border-neutral-200 bg-white dark:bg-neutral-950 p-4 dark:border-neutral-800">
                 <h2 className="text-base font-bold">Per category</h2>
                 <p className="mt-1 text-xs text-neutral-500">
                   Your {sport} picks grouped by what you bet on. Same money
@@ -412,7 +412,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
                   ? `/recommendations?sport=${encodeURIComponent(sport)}`
                   : "/recommendations"
               }
-              className="block h-12 w-full rounded-xl bg-violet-600 text-center text-base font-semibold leading-[3rem] text-white active:bg-violet-700"
+              className="block h-12 w-full rounded-xl bg-[#58287F] text-center text-base font-semibold leading-[3rem] text-white active:bg-[#431E63]"
             >
               {sport !== null
                 ? `All ${sport} recommendations`

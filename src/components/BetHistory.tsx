@@ -125,7 +125,7 @@ export default function BetHistory({ bets }: Props) {
       )}
 
       {bets.length === 0 ? (
-        <p className="mt-3 rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:border-neutral-700">
+        <p className="mt-3 rounded-2xl border border-dashed border-neutral-300 bg-white/60 dark:bg-neutral-950/60 p-5 text-center text-sm text-neutral-500 dark:border-neutral-700">
           Settled bets will show up here.
         </p>
       ) : (
@@ -135,7 +135,7 @@ export default function BetHistory({ bets }: Props) {
             return (
               <div
                 key={bet.id}
-                className="rounded-2xl border border-neutral-200 p-4 dark:border-neutral-800"
+                className="rounded-2xl border border-neutral-200 bg-white dark:bg-neutral-950 p-4 dark:border-neutral-800"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
@@ -238,7 +238,7 @@ export default function BetHistory({ bets }: Props) {
                       type="button"
                       disabled={busy || !dateValue}
                       onClick={() => saveDate(bet.id)}
-                      className="h-10 rounded-lg bg-emerald-600 px-3 text-xs font-semibold text-white disabled:opacity-50"
+                      className="h-10 rounded-lg bg-[#72AFCC] px-3 text-xs font-semibold text-[#F5EDCE] disabled:opacity-50"
                     >
                       Save
                     </button>

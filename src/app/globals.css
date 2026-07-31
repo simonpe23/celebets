@@ -1,8 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  /* Brand palette. Cream page, white cards, blue for actions,
+     purple for the wordmark and recommendations. Profit stays green
+     and loss stays red, because those colors carry meaning. */
+  --background: #f5edce;
   --foreground: #171717;
+  --brand-cream: #f5edce;
+  --brand-blue: #72afcc;
+  --brand-blue-dark: #5b96b3;
+  --brand-purple: #58287f;
 }
 
 @theme inline {
@@ -11,6 +18,10 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-brand: var(--font-brand);
+  --color-cream: var(--brand-cream);
+  --color-brand: var(--brand-blue);
+  --color-brand-dark: var(--brand-blue-dark);
+  --color-plum: var(--brand-purple);
 }
 
 @media (prefers-color-scheme: dark) {

@@ -42,7 +42,7 @@ function PhoneMockup() {
             ))}
           </div>
 
-          <div className="rounded-2xl border border-neutral-200 p-3">
+          <div className="rounded-2xl border border-neutral-200 bg-white dark:bg-neutral-950 p-3">
             <div className="flex items-center justify-between">
               <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-semibold text-amber-800">
                 Pending
@@ -112,7 +112,7 @@ export default function LandingPage() {
                 <GoogleButton large />
                 <Link
                   href="/signup"
-                  className="flex h-14 w-full items-center justify-center rounded-xl bg-emerald-600 text-base font-bold text-white shadow-lg shadow-emerald-600/25 active:bg-emerald-700"
+                  className="flex h-14 w-full items-center justify-center rounded-xl bg-[#72AFCC] text-base font-bold text-[#F5EDCE] shadow-lg shadow-[#72AFCC]/30 active:bg-[#5B96B3]"
                 >
                   Create free account
                 </Link>

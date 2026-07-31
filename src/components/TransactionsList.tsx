@@ -95,7 +95,7 @@ export default function TransactionsList({
         )}
 
         {transactions.length === 0 ? (
-          <p className="rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:border-neutral-700">
+          <p className="rounded-2xl border border-dashed border-neutral-300 bg-white/60 dark:bg-neutral-950/60 p-5 text-center text-sm text-neutral-500 dark:border-neutral-700">
             No deposits or withdrawals yet.
           </p>
         ) : (
@@ -103,7 +103,7 @@ export default function TransactionsList({
             {transactions.map((tx) => (
               <div
                 key={tx.id}
-                className="rounded-2xl border border-neutral-200 p-4 dark:border-neutral-800"
+                className="rounded-2xl border border-neutral-200 bg-white dark:bg-neutral-950 p-4 dark:border-neutral-800"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div>
@@ -186,7 +186,7 @@ export default function TransactionsList({
                       type="button"
                       disabled={busy || !dateValue}
                       onClick={() => saveDate(tx.id)}
-                      className="h-10 rounded-lg bg-emerald-600 px-3 text-xs font-semibold text-white disabled:opacity-50"
+                      className="h-10 rounded-lg bg-[#72AFCC] px-3 text-xs font-semibold text-[#F5EDCE] disabled:opacity-50"
                     >
                       Save
                     </button>
