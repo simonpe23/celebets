@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Hides the floating dev badge so local design screenshots are clean.
+  devIndicators: false,
 };
 
 export default nextConfig;

@@ -48,7 +48,10 @@ export async function middleware(request: NextRequest) {
   const isAuthPage =
     pathname.startsWith("/login") ||
     pathname.startsWith("/signup") ||
-    pathname.startsWith("/forgot-password");
+    pathname.startsWith("/forgot-password") ||
+    // Local design previews only. Never reachable in production.
+    (process.env.NODE_ENV === "development" &&
+      pathname.startsWith("/preview"));
 
   // The reset page needs the temporary session from the emailed link,
   // and /auth routes handle those links, so neither is ever redirected.
