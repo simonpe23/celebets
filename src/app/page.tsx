@@ -11,7 +11,7 @@ const FEATURES = [
 // A small copy of the real app, drawn in code so it stays sharp.
 function PhoneMockup() {
   return (
-    <div className="relative mx-auto w-full max-w-[260px]">
+    <div className="relative mx-auto w-full max-w-[220px] sm:max-w-[260px]">
       <div className="absolute -inset-8 -z-10 rounded-full bg-emerald-200/40 blur-3xl" />
       <div className="rounded-[2.25rem] border-[9px] border-neutral-900 bg-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.35)]">
         <div className="space-y-2.5 p-3.5">
@@ -96,19 +96,19 @@ export default function LandingPage() {
           </Link>
         </header>
 
-        <section className="flex flex-1 items-center py-10">
-          <div className="grid w-full items-center gap-12 lg:grid-cols-2">
-            <div className="order-2 lg:order-1">
-              <h1 className="text-[3.25rem] font-bold leading-[0.95] tracking-tight sm:text-7xl">
+        <section className="flex flex-1 items-center py-6 lg:py-10">
+          <div className="grid w-full items-center gap-8 lg:grid-cols-2 lg:gap-12">
+            <div>
+              <h1 className="text-[2.75rem] font-bold leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl">
                 Understand
                 <br />
                 Your Game.
               </h1>
-              <p className="mt-5 text-lg font-medium text-neutral-500 sm:text-xl">
+              <p className="mt-4 text-base font-medium text-neutral-500 sm:text-xl">
                 Track Every Bet. Discover Patterns. Find Your Edge.
               </p>
 
-              <div className="mt-8 max-w-sm space-y-3">
+              <div className="mt-6 max-w-sm space-y-3">
                 <GoogleButton large />
                 <Link
                   href="/signup"
@@ -121,7 +121,7 @@ export default function LandingPage() {
                 </p>
               </div>
 
-              <div className="mt-10 grid grid-cols-3 gap-4 border-t border-neutral-200 pt-6">
+              <div className="mt-7 grid grid-cols-3 gap-4 border-t border-neutral-200 pt-5">
                 {FEATURES.map(({ title, body }) => (
                   <div key={title}>
                     <p className="text-sm font-bold">{title}</p>
@@ -133,7 +133,7 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div className="order-1 lg:order-2">
+            <div className="mt-2 lg:mt-0">
               <PhoneMockup />
             </div>
           </div>
