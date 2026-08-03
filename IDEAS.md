@@ -49,6 +49,19 @@ How this file works:
     which charts to feature, and whether a public landing page comes
     with it (today the app opens straight to the login screen).
 
+17. Budget periods with a start and an end date. Today the wallet runs
+    forever with no time frame. The owner wants a budget tied to a
+    window: a Vegas weekend, leave Friday, back Sunday, set the amount
+    up front and see winnings and losses for that trip only. It would
+    sit alongside the always-on wallet, not replace it.
+    Open questions for the owner, none decided yet:
+    - Does the budget just label and report, or does it warn or block
+      when you go over?
+    - Separate pot of money, or a slice of the main wallet?
+    - Can several periods run at once (a trip and a tournament)?
+    - After the end date, does it lock, keep counting, or just close?
+    - Does it need a name, like "Vegas August"?
+
 13. Kalshi / Polymarket auto-sync: bets placed there appear in
     Celebet automatically via their APIs (Kalshi personal API key,
     Polymarket public wallet data). Buys map to our buys, sells to
