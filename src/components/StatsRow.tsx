@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { formatSignedMoney } from "@/lib/format";
+import StatTile from "@/components/StatTile";
 
 export interface SettledBetSummary {
   status: string;
@@ -68,15 +69,12 @@ export default function StatsRow({ bets }: { bets: SettledBetSummary[] }) {
               ? "text-emerald-600 dark:text-emerald-400"
               : "text-red-600 dark:text-red-400";
         return (
-          <div
+          <StatTile
             key={label}
-            className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-3 text-center dark:border-white/10"
-          >
-            <p className="text-xs text-neutral-500 dark:text-neutral-400">{label}</p>
-            <p className={`mt-0.5 text-sm font-bold ${color}`}>
-              {value === null ? "-" : formatSignedMoney(value)}
-            </p>
-          </div>
+            label={label}
+            value={value === null ? "-" : formatSignedMoney(value)}
+            tone={color}
+          />
         );
       })}
     </section>

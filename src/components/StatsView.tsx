@@ -5,6 +5,7 @@ import Link from "next/link";
 import { formatMoney, formatSignedMoney, round2 } from "@/lib/format";
 import BetHistory from "@/components/BetHistory";
 import HeadlineProfit from "@/components/HeadlineProfit";
+import StatTile from "@/components/StatTile";
 import ProfitPanel, { type Period } from "@/components/ProfitPanel";
 import Recommendations from "@/components/Recommendations";
 import {
@@ -45,28 +46,6 @@ function profitColor(value: number): string {
   if (value > 0) return "text-emerald-600 dark:text-emerald-400";
   if (value < 0) return "text-red-600 dark:text-red-400";
   return "text-neutral-500";
-}
-
-// One small number in the grid under the chart.
-function Tile({
-  label,
-  value,
-  tone,
-}: {
-  label: string;
-  value: string;
-  tone?: string;
-}) {
-  return (
-    <div className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] p-3 dark:border-white/10 dark:bg-[#151A28]">
-      <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-        {label}
-      </p>
-      <p className={`mt-1 text-base font-bold tabular-nums ${tone ?? ""}`}>
-        {value}
-      </p>
-    </div>
-  );
 }
 
 function pctLabel(wins: number, total: number): string {
@@ -255,9 +234,9 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
                 picks, because a parlay's stake covers several sports
                 and cannot be split. */}
             <section className="grid grid-cols-3 gap-2">
-              <Tile label="Staked" value={formatMoney(round2(t.staked))} />
-              <Tile label="Returned" value={formatMoney(round2(t.returned))} />
-              <Tile
+              <StatTile label="Staked" value={formatMoney(round2(t.staked))} />
+              <StatTile label="Returned" value={formatMoney(round2(t.returned))} />
+              <StatTile
                 label="ROI"
                 value={heroRoi === null ? "-" : `${heroRoi.toFixed(1)}%`}
                 tone={profitColor(heroRoi ?? 0)}
@@ -265,7 +244,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
             </section>
 
             <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] p-4 dark:border-white/10 dark:bg-[#151A28]">
-              <h2 className="text-base font-bold">Sports breakdown</h2>
+              <h2 className="text-lg font-bold">Sports breakdown</h2>
               <div className="mt-3 divide-y divide-neutral-300/60 dark:divide-neutral-800">
                 {breakdown.map((row) => (
                   <div
@@ -297,7 +276,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
             </section>
 
             <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-4 dark:border-white/10">
-              <h2 className="text-base font-bold">Singles vs parlays</h2>
+              <h2 className="text-lg font-bold">Singles vs parlays</h2>
               {bySportType !== null && (
                 <p className="mt-1 text-xs text-neutral-500">
                   Only {sport} picks, and only {sport}&apos;s share of the
@@ -362,7 +341,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
             </section>
 
             <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-4 dark:border-white/10">
-              <h2 className="text-base font-bold">Odds groups</h2>
+              <h2 className="text-lg font-bold">Odds groups</h2>
               <p className="mt-1 text-xs text-neutral-500">
                 Your settled picks grouped by how risky they were. Picks
                 without odds are not shown here.
@@ -386,7 +365,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
 
             {sport !== null && byCategory.length > 0 && (
               <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-4 dark:border-white/10">
-                <h2 className="text-base font-bold">Per category</h2>
+                <h2 className="text-lg font-bold">Per category</h2>
                 <p className="mt-1 text-xs text-neutral-500">
                   Your {sport} picks grouped by what you bet on. Same money
                   rules as everywhere else.
