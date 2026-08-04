@@ -117,6 +117,31 @@ import the component or reuse the exact class string.
   and odds groups. On parlays picks stay = legs. A "N buys" button on
   cards expands the individual buys.
 
+## Analytics centre (August 2026, shipped and verified on phone and laptop)
+
+- The stats page is now the analytics centre. No database change was
+  needed, this is presentation only.
+- Profit over time chart: running profit from a settled bet's date,
+  always starting at zero for the chosen period. Green above zero,
+  red below. Drawn by hand as SVG, no chart library.
+- The chart sits on a dark panel even in light mode, because a glow
+  needs darkness. That was the change that made it stop looking thin.
+- The period control (ALL, 1D, 1W, 1M, 1Y, plus a calendar button for
+  a custom range) lives on the panel, because it changes the panel.
+- Page order: header, headline profit with ROI pill, bare Bets /
+  Record / Hit rate row, chart panel, sport filter, three tiles
+  (Staked, Returned, ROI), sports breakdown, the older tables,
+  betting history.
+- Recommendations moved to the top of the page, next to Home. The
+  buried "All recommendations" link is gone, Show all lives in the
+  popup.
+- Per-sport money uses betProfitFor in src/lib/stats.ts, the same
+  split rules as the Per sport table. Per-sport ROI is NOT possible
+  yet: a parlay's stake covers several sports and there is no agreed
+  rule for splitting it. That needs an owner decision.
+- Dark mode is designed, not default. It follows the phone's setting.
+  A real toggle needs a settings page, which does not exist yet.
+
 ## Tester readiness (July 2026, complete and verified)
 
 - Email confirmation is ON: new signups must click a link before they
