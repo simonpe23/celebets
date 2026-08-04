@@ -6,7 +6,9 @@ import { round2 } from "@/lib/format";
 //   1  one size, one weight, no split at all
 //   2  smaller prefix, aligned to the top of the digits
 //   3  smaller prefix, aligned to the baseline
-export type NumberStyle = "1" | "2" | "3";
+//   4  small prefix, vertically centered, mid gray
+//   5  same as 4 in a darker gray
+export type NumberStyle = "1" | "2" | "3" | "4" | "5";
 
 interface Props {
   label: string;
@@ -39,7 +41,24 @@ export default function HeadlineProfit({ label, profit, roi, style }: Props) {
         {label}
       </p>
 
-      {style === "1" ? (
+      {style === "4" || style === "5" ? (
+        <p className="mt-1.5 flex items-center justify-center gap-1">
+          {/* Small enough that the dollar sign's stroke stays inside
+              the height of the digits, then centered against them. */}
+          <span
+            className={`text-2xl font-bold leading-none ${
+              style === "4" ? "text-neutral-500" : "text-neutral-600"
+            }`}
+          >
+            {prefix}
+          </span>
+          <span
+            className={`text-5xl font-bold leading-none tracking-tight tabular-nums ${ink}`}
+          >
+            {digits}
+          </span>
+        </p>
+      ) : style === "1" ? (
         <p
           className={`mt-1.5 text-5xl font-bold tracking-tight tabular-nums ${ink}`}
         >

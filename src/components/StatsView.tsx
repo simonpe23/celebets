@@ -18,7 +18,7 @@ import {
 import { SPORTS, SPORT_EMOJI, type BetWithLegs, type Sport } from "@/lib/types";
 
 // Swap to compare the three headline treatments.
-const NUMBER_STYLE: NumberStyle = "2";
+const NUMBER_STYLE: NumberStyle = "4";
 
 const PERIOD_LABELS: { key: Period; label: string }[] = [
   { key: "all", label: "All time" },
@@ -149,7 +149,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
     .sort((a, b) => b.profit - a.profit);
 
   const pillClass = (active: boolean) =>
-    `flex h-11 shrink-0 items-center whitespace-nowrap rounded-full border px-4 text-sm font-semibold ${
+    `flex h-11 shrink-0 items-center whitespace-nowrap rounded-xl border px-4 text-sm font-semibold ${
       active
         ? "border-[#4F7A57] bg-[#4F7A57] text-white"
         : "border-neutral-300 bg-white text-neutral-600 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300"
