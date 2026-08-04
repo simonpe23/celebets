@@ -79,7 +79,7 @@ export default async function HomePage() {
           <form action="/auth/signout" method="post">
             <button
               type="submit"
-              className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium dark:border-white/15"
+              className="rounded-xl border border-neutral-300 px-3 py-2.5 text-sm font-bold dark:border-white/15"
             >
               Log out
             </button>

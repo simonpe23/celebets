@@ -17,7 +17,7 @@ export default function StatTile({
   tone?: string;
 }) {
   return (
-    <div className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] p-3 dark:border-white/10 dark:bg-[#151A28]">
+    <div className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] p-3 text-center dark:border-white/10 dark:bg-[#151A28]">
       <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
         {label}
       </p>

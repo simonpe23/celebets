@@ -140,7 +140,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
             <Recommendations bets={allSettled} />
             <Link
               href="/app"
-              className="rounded-xl border border-neutral-300 px-3 py-2.5 text-xs font-semibold text-neutral-600 dark:border-white/15 dark:text-neutral-300"
+              className="rounded-xl border border-neutral-300 px-3 py-2.5 text-sm font-bold text-neutral-600 dark:border-white/15 dark:text-neutral-300"
             >
               Home
             </Link>

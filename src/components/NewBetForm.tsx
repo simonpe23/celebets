@@ -328,7 +328,7 @@ export default function NewBetForm({ lastStake }: Props) {
           type="button"
           disabled={importing}
           onClick={pasteSlip}
-          className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-[#4F7A57] bg-white text-xs font-semibold text-[#4F7A57] active:bg-[#4F7A57]/10 disabled:opacity-50 dark:bg-transparent"
+          className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-[#4F7A57] bg-white text-sm font-bold text-[#4F7A57] active:bg-[#4F7A57]/10 disabled:opacity-50 dark:border-emerald-500/50 dark:bg-transparent dark:text-emerald-400"
         >
           <ClipboardIcon />
           Paste bet slip
@@ -337,7 +337,7 @@ export default function NewBetForm({ lastStake }: Props) {
           type="button"
           disabled={importing}
           onClick={() => fileInputRef.current?.click()}
-          className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-neutral-300 bg-white text-xs font-semibold text-neutral-500 dark:text-neutral-400 active:bg-neutral-100 disabled:opacity-50 dark:border-white/15 dark:bg-transparent dark:text-neutral-400"
+          className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-neutral-300 bg-white text-sm font-bold text-neutral-500 active:bg-neutral-100 disabled:opacity-50 dark:border-white/15 dark:bg-transparent dark:text-neutral-400"
         >
           <CameraIcon />
           Upload image
@@ -386,7 +386,7 @@ export default function NewBetForm({ lastStake }: Props) {
             key={amount}
             type="button"
             onClick={() => setStake(amount)}
-            className={`shrink-0 whitespace-nowrap rounded-lg border px-3 py-1.5 text-xs font-semibold ${
+            className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
               stake === amount
                 ? "border-[#4F7A57] text-emerald-600 dark:text-emerald-400"
                 : "border-neutral-300 text-neutral-500 dark:text-neutral-400 dark:border-white/15"
@@ -438,7 +438,7 @@ export default function NewBetForm({ lastStake }: Props) {
                         }
                   )
                 }
-                className={`shrink-0 whitespace-nowrap rounded-xl border px-4 py-2.5 text-sm font-semibold ${
+                className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
                   leg.sport === s
                     ? "border-[#4F7A57] bg-[#4F7A57] text-white"
                     : "border-neutral-300 dark:border-white/15"
@@ -496,7 +496,7 @@ export default function NewBetForm({ lastStake }: Props) {
                               openGroup: null,
                             })
                           }
-                          className={`shrink-0 whitespace-nowrap rounded-xl border px-3.5 py-2 text-sm font-semibold ${
+                          className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
                             selected
                               ? "border-[#4F7A57] bg-[#4F7A57] text-white"
                               : "border-neutral-300 dark:border-white/15"
@@ -522,7 +522,7 @@ export default function NewBetForm({ lastStake }: Props) {
                                 : item.label,
                           })
                         }
-                        className={`shrink-0 whitespace-nowrap rounded-xl border px-3.5 py-2 text-sm font-semibold ${
+                        className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
                           groupSelected
                             ? "border-[#4F7A57] bg-[#4F7A57] text-white"
                             : groupOpen
@@ -560,7 +560,7 @@ export default function NewBetForm({ lastStake }: Props) {
                                 subcategory: selected ? null : value,
                               })
                             }
-                            className={`shrink-0 whitespace-nowrap rounded-xl border px-3.5 py-2 text-sm font-semibold ${
+                            className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
                               selected
                                 ? "border-[#4F7A57] bg-[#4F7A57] text-white"
                                 : "border-neutral-300 bg-white dark:border-white/15 dark:bg-[#151A28]"
@@ -625,7 +625,7 @@ export default function NewBetForm({ lastStake }: Props) {
       <button
         type="button"
         onClick={addLeg}
-        className="mt-4 h-11 w-full rounded-xl border border-dashed border-neutral-300 text-sm font-semibold text-neutral-600 dark:border-white/15 dark:text-neutral-300"
+        className="mt-4 h-11 w-full rounded-xl border border-dashed border-neutral-300 text-sm font-bold text-neutral-600 dark:border-white/15 dark:text-neutral-300"
       >
         + Add leg (makes it a parlay)
       </button>

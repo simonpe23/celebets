@@ -90,13 +90,13 @@ export default function WalletCard({
               setError(null);
               setOpen(true);
             }}
-            className="rounded-xl bg-[#4F7A57] px-3 py-2.5 text-xs font-semibold text-white active:bg-[#3F6446]"
+            className="rounded-xl bg-[#4F7A57] px-3 py-2.5 text-sm font-bold text-white active:bg-[#3F6446]"
           >
             Start here
           </button>
           <Link
             href="/stats"
-            className="rounded-xl border border-neutral-300 px-3 py-2.5 text-center text-xs font-semibold dark:border-white/15"
+            className="rounded-xl border border-neutral-300 px-3 py-2.5 text-center text-sm font-bold dark:border-white/15"
           >
             Stats
           </Link>
