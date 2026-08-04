@@ -45,7 +45,10 @@ How this file works:
     background. Celebet today is deliberately plain (white cards,
     green accents). Worth doing before inviting users from Instagram.
     Keep every number and rule exactly as they are, this is looks
-    only. Decisions needed first: dark by default or a theme toggle,
+    only. Decided by the owner (August 2026): the app stays light by
+    default, and dark mode becomes a switch in app settings later.
+    The landing page can still be dark on its own.
+    Decisions needed first: dark by default or a theme toggle,
     which charts to feature, and whether a public landing page comes
     with it (today the app opens straight to the login screen).
 
