@@ -58,7 +58,7 @@ function Tile({
   tone?: string;
 }) {
   return (
-    <div className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] p-3 dark:border-neutral-800 dark:bg-neutral-950">
+    <div className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] p-3 dark:border-white/10 dark:bg-[#151A28]">
       <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
         {label}
       </p>
@@ -149,7 +149,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
     `shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
       active
         ? "border-[#4F7A57] bg-[#4F7A57] text-white"
-        : "border-neutral-300 bg-white text-neutral-600 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300"
+        : "border-neutral-300 bg-white text-neutral-600 dark:border-white/15 dark:bg-[#1A2032] dark:text-neutral-300"
     }`;
 
   return (
@@ -161,7 +161,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
             <Recommendations bets={allSettled} />
             <Link
               href="/app"
-              className="rounded-xl border border-neutral-300 px-3 py-2.5 text-xs font-semibold text-neutral-600 dark:border-neutral-700 dark:text-neutral-300"
+              className="rounded-xl border border-neutral-300 px-3 py-2.5 text-xs font-semibold text-neutral-600 dark:border-white/15 dark:text-neutral-300"
             >
               Home
             </Link>
@@ -245,7 +245,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
         </section>
 
         {filtered.length === 0 ? (
-          <p className="rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:border-neutral-700">
+          <p className="rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:border-white/15">
             No settled bets in this selection.
           </p>
         ) : (
@@ -264,7 +264,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
               />
             </section>
 
-            <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] p-4 dark:border-neutral-800 dark:bg-neutral-950">
+            <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] p-4 dark:border-white/10 dark:bg-[#151A28]">
               <h2 className="text-base font-bold">Sports breakdown</h2>
               <div className="mt-3 divide-y divide-neutral-300/60 dark:divide-neutral-800">
                 {breakdown.map((row) => (
@@ -296,7 +296,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
               </p>
             </section>
 
-            <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-neutral-950 p-4 dark:border-neutral-800">
+            <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-4 dark:border-white/10">
               <h2 className="text-base font-bold">Singles vs parlays</h2>
               {bySportType !== null && (
                 <p className="mt-1 text-xs text-neutral-500">
@@ -361,7 +361,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
               </div>
             </section>
 
-            <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-neutral-950 p-4 dark:border-neutral-800">
+            <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-4 dark:border-white/10">
               <h2 className="text-base font-bold">Odds groups</h2>
               <p className="mt-1 text-xs text-neutral-500">
                 Your settled picks grouped by how risky they were. Picks
@@ -385,7 +385,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
             </section>
 
             {sport !== null && byCategory.length > 0 && (
-              <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-neutral-950 p-4 dark:border-neutral-800">
+              <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-4 dark:border-white/10">
                 <h2 className="text-base font-bold">Per category</h2>
                 <p className="mt-1 text-xs text-neutral-500">
                   Your {sport} picks grouped by what you bet on. Same money

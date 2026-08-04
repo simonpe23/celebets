@@ -38,13 +38,13 @@ export default function AllRecommendations({ bets, sport }: Props) {
           <div className="flex shrink-0 gap-2">
             <Link
               href="/stats"
-              className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium dark:border-neutral-700"
+              className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium dark:border-white/15"
             >
               Stats
             </Link>
             <Link
               href="/app"
-              className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium dark:border-neutral-700"
+              className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium dark:border-white/15"
             >
               Home
             </Link>
@@ -58,11 +58,11 @@ export default function AllRecommendations({ bets, sport }: Props) {
         </p>
 
         {insights === null ? (
-          <p className="rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:border-neutral-700">
+          <p className="rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:border-white/15">
             Loading...
           </p>
         ) : insights.length === 0 ? (
-          <p className="rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:border-neutral-700">
+          <p className="rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:border-white/15">
             Nothing to say yet. Settle a few bets and come back.
           </p>
         ) : (
@@ -70,7 +70,7 @@ export default function AllRecommendations({ bets, sport }: Props) {
             {insights.map((text, i) => (
               <div
                 key={i}
-                className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-neutral-950 p-4 dark:border-neutral-800"
+                className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-4 dark:border-white/10"
               >
                 <p className="text-sm leading-relaxed">{text}</p>
               </div>

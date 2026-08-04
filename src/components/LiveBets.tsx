@@ -172,7 +172,7 @@ export default function LiveBets({ bets }: Props) {
       )}
 
       {bets.length === 0 ? (
-        <p className="mt-3 rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:border-neutral-700">
+        <p className="mt-3 rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:border-white/15">
           No pending bets. Place one above.
         </p>
       ) : (
@@ -183,7 +183,7 @@ export default function LiveBets({ bets }: Props) {
             return (
               <div
                 key={bet.id}
-                className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-neutral-950 p-4 dark:border-neutral-800"
+                className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-4 dark:border-white/10"
               >
                 <div className="flex items-center justify-between">
                   <span
@@ -240,7 +240,7 @@ export default function LiveBets({ bets }: Props) {
                         setAddingMoney(null);
                         setConfirmingDelete(bet.id);
                       }}
-                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-neutral-700"
+                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-white/15"
                     >
                       Delete
                     </button>
@@ -248,7 +248,7 @@ export default function LiveBets({ bets }: Props) {
                 </div>
 
                 {addingMoney === bet.id && (
-                  <div className="mt-3 rounded-xl bg-neutral-100 p-3 dark:bg-neutral-900">
+                  <div className="mt-3 rounded-xl bg-neutral-100 p-3 dark:bg-[#1A2032]">
                     <label
                       htmlFor={`add-amount-${bet.id}`}
                       className="block text-sm font-medium"
@@ -263,7 +263,7 @@ export default function LiveBets({ bets }: Props) {
                       placeholder="0.00"
                       value={addAmount}
                       onChange={(e) => setAddAmount(e.target.value)}
-                      className="mt-1 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"
+                      className="mt-1 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-white/15 dark:bg-[#151A28] dark:text-neutral-100"
                     />
                     <label
                       htmlFor={`add-payout-${bet.id}`}
@@ -282,7 +282,7 @@ export default function LiveBets({ bets }: Props) {
                       placeholder="0.00"
                       value={addPayout}
                       onChange={(e) => setAddPayout(e.target.value)}
-                      className="mt-1 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"
+                      className="mt-1 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-white/15 dark:bg-[#151A28] dark:text-neutral-100"
                     />
                     {parseMoney(addAmount) !== null &&
                       parseMoney(addPayout) !== null && (
@@ -309,7 +309,7 @@ export default function LiveBets({ bets }: Props) {
                           setAddAmount("");
                           setAddPayout("");
                         }}
-                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium dark:border-neutral-700"
+                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium dark:border-white/15"
                       >
                         Cancel
                       </button>
@@ -330,7 +330,7 @@ export default function LiveBets({ bets }: Props) {
                 )}
 
                 {bet.cashed_out && (
-                  <div className="mt-3 flex items-center justify-between gap-2 rounded-xl bg-neutral-100 p-3 dark:bg-neutral-900">
+                  <div className="mt-3 flex items-center justify-between gap-2 rounded-xl bg-neutral-100 p-3 dark:bg-[#1A2032]">
                     <p className="text-sm">
                       Cashed out for{" "}
                       <span className="font-bold">
@@ -342,7 +342,7 @@ export default function LiveBets({ bets }: Props) {
                       type="button"
                       disabled={busyLeg !== null}
                       onClick={() => undoCashOut(bet.id)}
-                      className="shrink-0 rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-neutral-700"
+                      className="shrink-0 rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-white/15"
                     >
                       Undo
                     </button>
@@ -350,7 +350,7 @@ export default function LiveBets({ bets }: Props) {
                 )}
 
                 {cashingOut === bet.id && (
-                  <div className="mt-3 rounded-xl bg-neutral-100 p-3 dark:bg-neutral-900">
+                  <div className="mt-3 rounded-xl bg-neutral-100 p-3 dark:bg-[#1A2032]">
                     <label
                       htmlFor={`cashout-${bet.id}`}
                       className="block text-sm font-medium"
@@ -370,7 +370,7 @@ export default function LiveBets({ bets }: Props) {
                       placeholder="0.00"
                       value={cashOutAmount}
                       onChange={(e) => setCashOutAmount(e.target.value)}
-                      className="mt-2 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"
+                      className="mt-2 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-white/15 dark:bg-[#151A28] dark:text-neutral-100"
                     />
                     <div className="mt-2 flex justify-end gap-2">
                       <button
@@ -380,7 +380,7 @@ export default function LiveBets({ bets }: Props) {
                           setCashingOut(null);
                           setCashOutAmount("");
                         }}
-                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium dark:border-neutral-700"
+                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium dark:border-white/15"
                       >
                         Cancel
                       </button>
@@ -409,7 +409,7 @@ export default function LiveBets({ bets }: Props) {
                         type="button"
                         disabled={busyLeg !== null}
                         onClick={() => setConfirmingDelete(null)}
-                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium dark:border-neutral-700"
+                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium dark:border-white/15"
                       >
                         Cancel
                       </button>
@@ -482,7 +482,7 @@ export default function LiveBets({ bets }: Props) {
                               type="button"
                               disabled={busyLeg !== null}
                               onClick={() => setResult(leg.id, "pending")}
-                              className="rounded-lg border border-neutral-300 px-3.5 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-neutral-700"
+                              className="rounded-lg border border-neutral-300 px-3.5 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-white/15"
                             >
                               Undo
                             </button>
@@ -503,14 +503,14 @@ export default function LiveBets({ bets }: Props) {
                           expandedBuys === bet.id ? null : bet.id
                         )
                       }
-                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-semibold text-neutral-500 dark:border-neutral-700"
+                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-semibold text-neutral-500 dark:border-white/15"
                     >
                       {expandedBuys === bet.id
                         ? "Hide buys"
                         : `${bet.bet_buys.length} buys`}
                     </button>
                     {expandedBuys === bet.id && (
-                      <div className="mt-2 space-y-1 rounded-xl bg-neutral-100 p-3 dark:bg-neutral-900">
+                      <div className="mt-2 space-y-1 rounded-xl bg-neutral-100 p-3 dark:bg-[#1A2032]">
                         {[...bet.bet_buys]
                           .sort(
                             (a, b) =>
@@ -533,7 +533,7 @@ export default function LiveBets({ bets }: Props) {
                 )}
 
                 {bet.cashed_out ? (
-                  <div className="mt-3 grid grid-cols-3 gap-2 border-t border-neutral-100 pt-3 text-center dark:border-neutral-800">
+                  <div className="mt-3 grid grid-cols-3 gap-2 border-t border-neutral-100 pt-3 text-center dark:border-white/10">
                     <div>
                       <p className="text-xs text-neutral-500">Ticket cost</p>
                       <p className="mt-0.5 text-sm font-bold">
@@ -562,7 +562,7 @@ export default function LiveBets({ bets }: Props) {
                     </div>
                   </div>
                 ) : (
-                  <div className="mt-3 grid grid-cols-3 gap-2 border-t border-neutral-100 pt-3 text-center dark:border-neutral-800">
+                  <div className="mt-3 grid grid-cols-3 gap-2 border-t border-neutral-100 pt-3 text-center dark:border-white/10">
                     <div>
                       <p className="text-xs text-neutral-500">Ticket cost</p>
                       <p className="mt-0.5 text-sm font-bold">

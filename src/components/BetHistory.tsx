@@ -14,12 +14,12 @@ function BuysList({ bet }: { bet: BetWithLegs }) {
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}
-        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 dark:border-neutral-700"
+        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 dark:border-white/15"
       >
         {expanded ? "Hide buys" : `${bet.bet_buys.length} buys`}
       </button>
       {expanded && (
-        <div className="mt-2 space-y-1 rounded-xl bg-neutral-100 p-3 dark:bg-neutral-900">
+        <div className="mt-2 space-y-1 rounded-xl bg-neutral-100 p-3 dark:bg-[#1A2032]">
           {[...bet.bet_buys]
             .sort(
               (a, b) =>
@@ -125,7 +125,7 @@ export default function BetHistory({ bets }: Props) {
       )}
 
       {bets.length === 0 ? (
-        <p className="mt-3 rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:border-neutral-700">
+        <p className="mt-3 rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:border-white/15">
           Settled bets will show up here.
         </p>
       ) : (
@@ -135,7 +135,7 @@ export default function BetHistory({ bets }: Props) {
             return (
               <div
                 key={bet.id}
-                className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-neutral-950 p-4 dark:border-neutral-800"
+                className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-4 dark:border-white/10"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
@@ -192,7 +192,7 @@ export default function BetHistory({ bets }: Props) {
                         bet.settled_at ? toDateInputValue(bet.settled_at) : ""
                       );
                     }}
-                    className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-neutral-700"
+                    className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-white/15"
                   >
                     Edit date
                   </button>
@@ -203,14 +203,14 @@ export default function BetHistory({ bets }: Props) {
                       setEditing(null);
                       setConfirming(bet.id);
                     }}
-                    className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-neutral-700"
+                    className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-white/15"
                   >
                     Delete
                   </button>
                 </div>
 
                 {editing === bet.id && (
-                  <div className="mt-3 flex items-end gap-2 rounded-xl bg-neutral-100 p-3 dark:bg-neutral-900">
+                  <div className="mt-3 flex items-end gap-2 rounded-xl bg-neutral-100 p-3 dark:bg-[#1A2032]">
                     <div className="grow">
                       <label
                         htmlFor={`date-${bet.id}`}
@@ -223,14 +223,14 @@ export default function BetHistory({ bets }: Props) {
                         type="date"
                         value={dateValue}
                         onChange={(e) => setDateValue(e.target.value)}
-                        className="mt-1 block h-10 w-full rounded-lg border border-neutral-300 bg-white px-3 text-sm text-neutral-900 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"
+                        className="mt-1 block h-10 w-full rounded-lg border border-neutral-300 bg-white px-3 text-sm text-neutral-900 dark:border-white/15 dark:bg-[#151A28] dark:text-neutral-100"
                       />
                     </div>
                     <button
                       type="button"
                       disabled={busy}
                       onClick={() => setEditing(null)}
-                      className="h-10 rounded-lg border border-neutral-300 px-3 text-xs font-medium dark:border-neutral-700"
+                      className="h-10 rounded-lg border border-neutral-300 px-3 text-xs font-medium dark:border-white/15"
                     >
                       Cancel
                     </button>
@@ -256,7 +256,7 @@ export default function BetHistory({ bets }: Props) {
                         type="button"
                         disabled={busy}
                         onClick={() => setConfirming(null)}
-                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium dark:border-neutral-700"
+                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium dark:border-white/15"
                       >
                         Cancel
                       </button>

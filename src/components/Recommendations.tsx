@@ -25,7 +25,7 @@ export default function Recommendations({ bets }: { bets: BetWithLegs[] }) {
 
       {recs !== null && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center">
-          <div className="w-full max-w-sm rounded-t-2xl bg-white p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:rounded-2xl sm:pb-6 dark:bg-neutral-900">
+          <div className="w-full max-w-sm rounded-t-2xl bg-white p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:rounded-2xl sm:pb-6 dark:bg-[#1A2032]">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-bold">Recommendations</h3>
               <button

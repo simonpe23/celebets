@@ -26,7 +26,9 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    /* Not pure black. A hair of blue matches the chart panel, so the
+       whole app reads as one surface family instead of two. */
+    --background: #0B0D14;
     --foreground: #ededed;
   }
 }

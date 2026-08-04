@@ -82,7 +82,7 @@ export default function TransactionsList({
           <h1 className="text-2xl font-bold tracking-tight">Transactions</h1>
           <Link
             href="/app"
-            className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium dark:border-neutral-700"
+            className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium dark:border-white/15"
           >
             Home
           </Link>
@@ -95,7 +95,7 @@ export default function TransactionsList({
         )}
 
         {transactions.length === 0 ? (
-          <p className="rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:border-neutral-700">
+          <p className="rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:border-white/15">
             No deposits or withdrawals yet.
           </p>
         ) : (
@@ -103,7 +103,7 @@ export default function TransactionsList({
             {transactions.map((tx) => (
               <div
                 key={tx.id}
-                className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-neutral-950 p-4 dark:border-neutral-800"
+                className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-4 dark:border-white/10"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div>
@@ -139,7 +139,7 @@ export default function TransactionsList({
                         setEditing(tx.id);
                         setDateValue(toDateInputValue(tx.created_at));
                       }}
-                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-neutral-700"
+                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-white/15"
                     >
                       Edit date
                     </button>
@@ -150,7 +150,7 @@ export default function TransactionsList({
                         setEditing(null);
                         setConfirming(tx.id);
                       }}
-                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-neutral-700"
+                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-white/15"
                     >
                       Delete
                     </button>
@@ -158,7 +158,7 @@ export default function TransactionsList({
                 </div>
 
                 {editing === tx.id && (
-                  <div className="mt-3 flex items-end gap-2 rounded-xl bg-neutral-100 p-3 dark:bg-neutral-900">
+                  <div className="mt-3 flex items-end gap-2 rounded-xl bg-neutral-100 p-3 dark:bg-[#1A2032]">
                     <div className="grow">
                       <label
                         htmlFor={`date-${tx.id}`}
@@ -171,14 +171,14 @@ export default function TransactionsList({
                         type="date"
                         value={dateValue}
                         onChange={(e) => setDateValue(e.target.value)}
-                        className="mt-1 block h-10 w-full rounded-lg border border-neutral-300 bg-white px-3 text-sm text-neutral-900 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"
+                        className="mt-1 block h-10 w-full rounded-lg border border-neutral-300 bg-white px-3 text-sm text-neutral-900 dark:border-white/15 dark:bg-[#151A28] dark:text-neutral-100"
                       />
                     </div>
                     <button
                       type="button"
                       disabled={busy}
                       onClick={() => setEditing(null)}
-                      className="h-10 rounded-lg border border-neutral-300 px-3 text-xs font-medium dark:border-neutral-700"
+                      className="h-10 rounded-lg border border-neutral-300 px-3 text-xs font-medium dark:border-white/15"
                     >
                       Cancel
                     </button>
@@ -194,14 +194,14 @@ export default function TransactionsList({
                 )}
 
                 {confirming === tx.id && (
-                  <div className="mt-3 flex items-center justify-between gap-2 border-t border-neutral-100 pt-3 dark:border-neutral-800">
+                  <div className="mt-3 flex items-center justify-between gap-2 border-t border-neutral-100 pt-3 dark:border-white/10">
                     <p className="text-sm">Delete this {tx.type}?</p>
                     <div className="flex gap-2">
                       <button
                         type="button"
                         disabled={busy}
                         onClick={() => setConfirming(null)}
-                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium dark:border-neutral-700"
+                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium dark:border-white/15"
                       >
                         Cancel
                       </button>

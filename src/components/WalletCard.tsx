@@ -62,7 +62,7 @@ export default function WalletCard({
   }
 
   return (
-    <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-neutral-950 p-5 dark:border-neutral-800">
+    <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-5 dark:border-white/10">
       <div className="flex items-start justify-between">
         <div>
           <h2 className="text-sm font-medium text-neutral-500">My Wallet</h2>
@@ -96,7 +96,7 @@ export default function WalletCard({
           </button>
           <Link
             href="/stats"
-            className="rounded-xl border border-neutral-300 px-3 py-2.5 text-center text-xs font-semibold dark:border-neutral-700"
+            className="rounded-xl border border-neutral-300 px-3 py-2.5 text-center text-xs font-semibold dark:border-white/15"
           >
             Stats
           </Link>
@@ -106,7 +106,7 @@ export default function WalletCard({
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center">
-          <div className="w-full max-w-sm rounded-t-2xl bg-white p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:rounded-2xl sm:pb-6 dark:bg-neutral-900">
+          <div className="w-full max-w-sm rounded-t-2xl bg-white p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:rounded-2xl sm:pb-6 dark:bg-[#1A2032]">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-bold">Move money</h3>
               <button
@@ -129,7 +129,7 @@ export default function WalletCard({
               placeholder="0.00"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#4F7A57] focus:ring-2 focus:ring-[#4F7A57]/30 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"
+              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#4F7A57] focus:ring-2 focus:ring-[#4F7A57]/30 dark:border-white/15 dark:bg-[#151A28] dark:text-neutral-100"
             />
 
             {error && (
@@ -143,7 +143,7 @@ export default function WalletCard({
                 type="button"
                 disabled={saving}
                 onClick={() => submit("withdrawal")}
-                className="h-12 rounded-xl border border-neutral-300 text-base font-semibold disabled:opacity-60 dark:border-neutral-700"
+                className="h-12 rounded-xl border border-neutral-300 text-base font-semibold disabled:opacity-60 dark:border-white/15"
               >
                 Withdraw
               </button>

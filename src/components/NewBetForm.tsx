@@ -317,10 +317,10 @@ export default function NewBetForm({ lastStake }: Props) {
   }
 
   const inputClass =
-    "mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#4F7A57] focus:ring-2 focus:ring-[#4F7A57]/30 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100";
+    "mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#4F7A57] focus:ring-2 focus:ring-[#4F7A57]/30 dark:border-white/15 dark:bg-[#151A28] dark:text-neutral-100";
 
   return (
-    <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-neutral-950 p-5 dark:border-neutral-800">
+    <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-5 dark:border-white/10">
       <h2 className="text-lg font-bold">New Bet</h2>
 
       <div className="mt-3 grid grid-cols-2 gap-2">
@@ -337,7 +337,7 @@ export default function NewBetForm({ lastStake }: Props) {
           type="button"
           disabled={importing}
           onClick={() => fileInputRef.current?.click()}
-          className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-neutral-300 bg-white text-xs font-semibold text-neutral-500 active:bg-neutral-100 disabled:opacity-50 dark:border-neutral-700 dark:bg-transparent dark:text-neutral-400"
+          className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-neutral-300 bg-white text-xs font-semibold text-neutral-500 active:bg-neutral-100 disabled:opacity-50 dark:border-white/15 dark:bg-transparent dark:text-neutral-400"
         >
           <CameraIcon />
           Upload image
@@ -355,7 +355,7 @@ export default function NewBetForm({ lastStake }: Props) {
         }}
       />
       {importing && (
-        <p className="mt-2 rounded-lg bg-neutral-100 px-4 py-3 text-sm dark:bg-neutral-900">
+        <p className="mt-2 rounded-lg bg-neutral-100 px-4 py-3 text-sm dark:bg-[#1A2032]">
           Reading the slip...
         </p>
       )}
@@ -389,7 +389,7 @@ export default function NewBetForm({ lastStake }: Props) {
             className={`shrink-0 whitespace-nowrap rounded-lg border px-3 py-1.5 text-xs font-semibold ${
               stake === amount
                 ? "border-[#4F7A57] text-emerald-600 dark:text-emerald-400"
-                : "border-neutral-300 text-neutral-500 dark:border-neutral-700"
+                : "border-neutral-300 text-neutral-500 dark:border-white/15"
             }`}
           >
             ${amount}
@@ -402,7 +402,7 @@ export default function NewBetForm({ lastStake }: Props) {
           key={index}
           className={
             isParlay
-              ? "mt-4 rounded-xl border border-neutral-200 p-3 dark:border-neutral-800"
+              ? "mt-4 rounded-xl border border-neutral-200 p-3 dark:border-white/10"
               : ""
           }
         >
@@ -441,7 +441,7 @@ export default function NewBetForm({ lastStake }: Props) {
                 className={`shrink-0 whitespace-nowrap rounded-xl border px-4 py-2.5 text-sm font-semibold ${
                   leg.sport === s
                     ? "border-[#4F7A57] bg-[#4F7A57] text-white"
-                    : "border-neutral-300 dark:border-neutral-700"
+                    : "border-neutral-300 dark:border-white/15"
                 }`}
               >
                 {SPORT_EMOJI[s]} {s}
@@ -499,7 +499,7 @@ export default function NewBetForm({ lastStake }: Props) {
                           className={`shrink-0 whitespace-nowrap rounded-xl border px-3.5 py-2 text-sm font-semibold ${
                             selected
                               ? "border-[#4F7A57] bg-[#4F7A57] text-white"
-                              : "border-neutral-300 dark:border-neutral-700"
+                              : "border-neutral-300 dark:border-white/15"
                           }`}
                         >
                           {item}
@@ -527,7 +527,7 @@ export default function NewBetForm({ lastStake }: Props) {
                             ? "border-[#4F7A57] bg-[#4F7A57] text-white"
                             : groupOpen
                               ? "border-[#4F7A57] text-emerald-600 dark:text-emerald-400"
-                              : "border-neutral-300 dark:border-neutral-700"
+                              : "border-neutral-300 dark:border-white/15"
                         }`}
                       >
                         {item.label}
@@ -546,7 +546,7 @@ export default function NewBetForm({ lastStake }: Props) {
                   return (
                     <div
                       key={item.label}
-                      className="mt-2 flex gap-2 overflow-x-auto rounded-xl bg-neutral-100 p-2 dark:bg-neutral-900"
+                      className="mt-2 flex gap-2 overflow-x-auto rounded-xl bg-neutral-100 p-2 dark:bg-[#1A2032]"
                     >
                       {item.children.map((child) => {
                         const value = `${item.label}: ${child}`;
@@ -563,7 +563,7 @@ export default function NewBetForm({ lastStake }: Props) {
                             className={`shrink-0 whitespace-nowrap rounded-xl border px-3.5 py-2 text-sm font-semibold ${
                               selected
                                 ? "border-[#4F7A57] bg-[#4F7A57] text-white"
-                                : "border-neutral-300 bg-white dark:border-neutral-700 dark:bg-neutral-950"
+                                : "border-neutral-300 bg-white dark:border-white/15 dark:bg-[#151A28]"
                             }`}
                           >
                             {child}
@@ -625,7 +625,7 @@ export default function NewBetForm({ lastStake }: Props) {
       <button
         type="button"
         onClick={addLeg}
-        className="mt-4 h-11 w-full rounded-xl border border-dashed border-neutral-300 text-sm font-semibold text-neutral-600 dark:border-neutral-700 dark:text-neutral-300"
+        className="mt-4 h-11 w-full rounded-xl border border-dashed border-neutral-300 text-sm font-semibold text-neutral-600 dark:border-white/15 dark:text-neutral-300"
       >
         + Add leg (makes it a parlay)
       </button>
@@ -652,7 +652,7 @@ export default function NewBetForm({ lastStake }: Props) {
         </p>
       </div>
 
-      <div className="mt-5 grid grid-cols-3 gap-2 rounded-xl bg-neutral-100 p-3 text-center dark:bg-neutral-900">
+      <div className="mt-5 grid grid-cols-3 gap-2 rounded-xl bg-neutral-100 p-3 text-center dark:bg-[#1A2032]">
         <div>
           <p className="text-xs text-neutral-500">Total odds</p>
           <p className="mt-0.5 text-sm font-bold">
