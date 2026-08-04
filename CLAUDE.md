@@ -27,6 +27,53 @@ The owner has no coding experience. These rules are permanent.
   the old way: the owner pastes the SQL in the Supabase SQL Editor
   with click-by-click instructions.
 
+## UI rules (permanent, added August 2026 after wasting the owner's time)
+
+The owner should never have to catch a typography or spacing
+inconsistency. Finding one is a failure, not feedback.
+
+Before showing any UI change:
+
+1. Change shared values in the shared file, never in one page.
+   If a value lives in two places, that is the bug. Fix that first.
+2. Sweep the whole app for the thing being changed. Grep for the class
+   or color across src/ and confirm every hit. A design change is never
+   finished in one file.
+3. Change nothing the owner did not ask for. Alignment, casing, size
+   and color are product decisions. Propose them, do not apply them.
+   Reverting an unrequested change costs the owner a full round trip.
+4. Compare the two pages side by side before showing anything. The
+   home page and the stats page must look like one product.
+5. Show options when the owner is judging looks. Two or three named
+   variants beat one guess.
+
+### The design system
+
+Everything below lives in code. Do not restate these values inline,
+import the component or reuse the exact class string.
+
+- Shared tile: src/components/StatTile.tsx. Used by StatsRow and by
+  StatsView. Never copy it into a page.
+- Buttons, tier one: text-sm font-bold, px-3 py-2.5, rounded-xl.
+  Log out, Home, Start here, Stats, Recommendations, Paste bet slip,
+  Upload image, Add leg.
+- Chips, tier two: text-sm font-semibold, px-3 py-2, rounded-xl.
+  Sport, money, category, period filters. 38 pixels tall.
+- Compact actions, tier three: text-xs font-semibold. Only inside a
+  bet card row (Won, Lost, Cash out, Delete, Add money).
+- Tile label: 10px bold uppercase, wide tracking, neutral 400.
+- Tile value: 16px bold, tabular figures, centered.
+- Hero row value: 18px bold. One tier above a tile, used under a
+  headline only.
+- Card heading: 18px bold (text-lg).
+- Two greens with two jobs. #4F7A57 is a button you press.
+  emerald-600 in light and emerald-400 in dark means money went up.
+  Never mix them.
+- Purple #58287F is recommendations and the wordmark. Nothing else.
+- Dark mode surfaces: page #0B0D14, cards #151A28, popups #1A2032,
+  borders white/10 and white/15. Muted text is neutral-400 in dark
+  and neutral-500 in light, everywhere.
+
 ## Status
 
 - v1 is complete and verified by the owner (July 2026). All five build
