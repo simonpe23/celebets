@@ -231,7 +231,7 @@ export default function ProfitChart({
 
   return (
     <div>
-      <div className="relative -mx-1 mt-4 h-48 select-none">
+      <div className="relative -mx-1 mt-4 h-[200px] select-none">
         <div
           ref={plotRef}
           className="absolute inset-0"
