@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { betProfitFor } from "@/lib/stats";
 import type { BetWithLegs, Sport } from "@/lib/types";
 
@@ -39,6 +39,81 @@ export default function ProfitChart({
 }: Props) {
   const plotRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  // Touch is handled by hand rather than through React, because the
+  // browser only lets you cancel a scroll from a non-passive listener.
+  //
+  // The rule, the same one Robinhood uses:
+  //   swipe        the page scrolls, the chart ignores you
+  //   hold still   the chart locks after a moment, then you drag
+  const scrubRef = useRef<(clientX: number) => void>(() => {});
+  const endRef = useRef<() => void>(() => {});
+  const lockedRef = useRef(false);
+
+  useEffect(() => {
+    const el = plotRef.current;
+    if (!el) return;
+
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    let start: { x: number; y: number } | null = null;
+    const clear = () => {
+      if (timer) clearTimeout(timer);
+      timer = null;
+    };
+
+    const onStart = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (!touch) return;
+      const x = touch.clientX;
+      start = { x, y: touch.clientY };
+      clear();
+      timer = setTimeout(() => {
+        lockedRef.current = true;
+        scrubRef.current(x);
+      }, 260);
+    };
+
+    const onMove = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (!touch) return;
+      if (lockedRef.current) {
+        // Locked in, so the page must not move underneath.
+        e.preventDefault();
+        scrubRef.current(touch.clientX);
+        return;
+      }
+      // Moved before the hold completed, so this is a swipe. Hand it
+      // back to the page.
+      if (
+        start &&
+        (Math.abs(touch.clientX - start.x) > 8 ||
+          Math.abs(touch.clientY - start.y) > 8)
+      ) {
+        clear();
+      }
+    };
+
+    const onEnd = () => {
+      clear();
+      start = null;
+      if (lockedRef.current) {
+        lockedRef.current = false;
+        endRef.current();
+      }
+    };
+
+    el.addEventListener("touchstart", onStart, { passive: true });
+    el.addEventListener("touchmove", onMove, { passive: false });
+    el.addEventListener("touchend", onEnd);
+    el.addEventListener("touchcancel", onEnd);
+    return () => {
+      clear();
+      el.removeEventListener("touchstart", onStart);
+      el.removeEventListener("touchmove", onMove);
+      el.removeEventListener("touchend", onEnd);
+      el.removeEventListener("touchcancel", onEnd);
+    };
+  }, []);
 
   const settled = bets
     .filter((b) => b.settled_at !== null)
@@ -150,43 +225,44 @@ export default function ProfitChart({
     onScrub?.(null);
   }
 
+  // Keep the touch listeners pointed at the current data.
+  scrubRef.current = scrubTo;
+  endRef.current = endScrub;
+
   return (
     <div>
-      {/* The chart owns every touch inside it, the way Robinhood's does.
-          You scroll the page from anywhere outside this box. Sharing the
-          gesture with the browser meant a thumb drag almost always lost
-          to the page. */}
-      <div className="relative -mx-1 mt-4 h-64 select-none">
+      <div className="relative -mx-1 mt-4 h-48 select-none">
         <div
           ref={plotRef}
-          className="absolute inset-0 touch-none"
+          className="absolute inset-0"
           style={{
+            // A vertical swipe still scrolls the page. Once the hold
+            // locks, the touch handler cancels the scroll itself.
+            touchAction: "pan-y",
             WebkitUserSelect: "none",
             userSelect: "none",
             WebkitTouchCallout: "none",
-            overscrollBehavior: "contain",
           }}
           onContextMenu={(e) => e.preventDefault()}
+          // Mouse only. Touch is handled by the listeners above, which
+          // need the hold before they take over.
           onPointerDown={(e) => {
+            if (e.pointerType !== "mouse") return;
             e.preventDefault();
             e.currentTarget.setPointerCapture(e.pointerId);
             scrubTo(e.clientX);
           }}
           onPointerMove={(e) => {
+            if (e.pointerType !== "mouse") return;
             if (activeIndex !== null) scrubTo(e.clientX);
           }}
-          onPointerUp={endScrub}
-          onPointerCancel={endScrub}
-          onPointerLeave={endScrub}
+          onPointerUp={(e) => {
+            if (e.pointerType === "mouse") endScrub();
+          }}
+          onPointerLeave={(e) => {
+            if (e.pointerType === "mouse") endScrub();
+          }}
         >
-          {/* Break even, marked on the line rather than in a label
-              column. That column was 56 pixels of dead target. */}
-          <span
-            className="pointer-events-none absolute right-0 -translate-y-1/2 rounded bg-white/10 px-1 text-[10px] font-bold text-white/50"
-            style={{ top: `${zeroFraction * 100}%` }}
-          >
-            $0
-          </span>
 
           <svg
             viewBox={`0 0 ${W} ${H}`}
@@ -249,21 +325,6 @@ export default function ProfitChart({
                 <feGaussianBlur stdDeviation="2.5" />
               </filter>
             </defs>
-
-            {/* Faint rules so the panel reads as a chart, not a poster. */}
-            {[0.25, 0.5, 0.75].map((f) => (
-              <line
-                key={f}
-                x1="0"
-                y1={H * f}
-                x2={W}
-                y2={H * f}
-                stroke="#ffffff"
-                strokeOpacity="0.05"
-                strokeWidth="1"
-                vectorEffect="non-scaling-stroke"
-              />
-            ))}
 
             <path d={area} fill="url(#celebet-area)" />
 
@@ -345,8 +406,11 @@ export default function ProfitChart({
       </div>
 
       <div className="mt-3 flex justify-between text-[10px] font-medium text-white/35">
-        <span>{shortDate(startX)}</span>
-        <span>{shortDate(endX)}</span>
+        {[0, 0.25, 0.5, 0.75, 1].map((f) => (
+          <span key={f}>
+            {shortDate(new Date(startX.getTime() + spanMs * f))}
+          </span>
+        ))}
       </div>
     </div>
   );
