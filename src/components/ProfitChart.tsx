@@ -43,9 +43,10 @@ export default function ProfitChart({
   // Touch is handled by hand rather than through React, because the
   // browser only lets you cancel a scroll from a non-passive listener.
   //
-  // The rule, the same one Robinhood uses:
-  //   swipe        the page scrolls, the chart ignores you
-  //   hold still   the chart locks after a moment, then you drag
+  // The chart owns every touch inside it. Nothing scrolls here, so a
+  // finger down starts scrubbing at once. You scroll the page from
+  // anywhere outside the chart.
+  //
   // iPhone has no vibration API. Toggling a switch style checkbox is
   // the only thing that makes iOS play a haptic tap, so one is parked
   // off screen purely for that. Apple never promised this, so it may
@@ -59,23 +60,9 @@ export default function ProfitChart({
     const el = plotRef.current;
     if (!el) return;
 
-    // A thumb is never still. Small wobble must not cancel the hold,
-    // and a clearly sideways drag should lock straight away without
-    // waiting, which is what made the old version feel flimsy.
-    const HOLD_MS = 150;
-    const JITTER = 14;
-
-    let timer: ReturnType<typeof setTimeout> | null = null;
-    let start: { x: number; y: number } | null = null;
-    const clear = () => {
-      if (timer) clearTimeout(timer);
-      timer = null;
-    };
-
     const lock = (x: number) => {
       if (lockedRef.current) return;
       lockedRef.current = true;
-      clear();
       // A short buzz to say the chart has taken over. Android only,
       // iPhone Safari has no vibration API.
       navigator.vibrate?.(12);
@@ -87,10 +74,7 @@ export default function ProfitChart({
     const onStart = (e: TouchEvent) => {
       const touch = e.touches[0];
       if (!touch) return;
-      const x = touch.clientX;
-      start = { x, y: touch.clientY };
-      clear();
-      timer = setTimeout(() => lock(x), HOLD_MS);
+      lock(touch.clientX);
     };
 
     const onMove = (e: TouchEvent) => {
@@ -104,24 +88,11 @@ export default function ProfitChart({
         return;
       }
 
-      if (!start) return;
-      const dx = touch.clientX - start.x;
-      const dy = touch.clientY - start.y;
-      if (Math.abs(dx) < JITTER && Math.abs(dy) < JITTER) return;
-
-      if (Math.abs(dx) > Math.abs(dy)) {
-        // Clearly sideways. Take over now, no waiting.
-        e.preventDefault();
-        lock(touch.clientX);
-      } else {
-        // Clearly up or down. This is a scroll, hand it to the page.
-        clear();
-      }
+      e.preventDefault();
+      lock(touch.clientX);
     };
 
     const onEnd = () => {
-      clear();
-      start = null;
       if (lockedRef.current) {
         lockedRef.current = false;
         endRef.current();
@@ -133,7 +104,6 @@ export default function ProfitChart({
     el.addEventListener("touchend", onEnd);
     el.addEventListener("touchcancel", onEnd);
     return () => {
-      clear();
       el.removeEventListener("touchstart", onStart);
       el.removeEventListener("touchmove", onMove);
       el.removeEventListener("touchend", onEnd);
@@ -273,9 +243,9 @@ export default function ProfitChart({
           ref={plotRef}
           className="absolute inset-0"
           style={{
-            // A vertical swipe still scrolls the page. Once the hold
-            // locks, the touch handler cancels the scroll itself.
-            touchAction: "pan-y",
+            // Nothing scrolls inside the chart. Every touch here is
+            // a scrub.
+            touchAction: "none",
             WebkitUserSelect: "none",
             userSelect: "none",
             WebkitTouchCallout: "none",
