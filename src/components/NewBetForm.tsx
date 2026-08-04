@@ -337,7 +337,7 @@ export default function NewBetForm({ lastStake }: Props) {
           type="button"
           disabled={importing}
           onClick={() => fileInputRef.current?.click()}
-          className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-neutral-300 bg-white text-xs font-semibold text-neutral-500 active:bg-neutral-100 disabled:opacity-50 dark:border-white/15 dark:bg-transparent dark:text-neutral-400"
+          className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-neutral-300 bg-white text-xs font-semibold text-neutral-500 dark:text-neutral-400 active:bg-neutral-100 disabled:opacity-50 dark:border-white/15 dark:bg-transparent dark:text-neutral-400"
         >
           <CameraIcon />
           Upload image
@@ -389,7 +389,7 @@ export default function NewBetForm({ lastStake }: Props) {
             className={`shrink-0 whitespace-nowrap rounded-lg border px-3 py-1.5 text-xs font-semibold ${
               stake === amount
                 ? "border-[#4F7A57] text-emerald-600 dark:text-emerald-400"
-                : "border-neutral-300 text-neutral-500 dark:border-white/15"
+                : "border-neutral-300 text-neutral-500 dark:text-neutral-400 dark:border-white/15"
             }`}
           >
             ${amount}
@@ -453,14 +453,14 @@ export default function NewBetForm({ lastStake }: Props) {
             SUBCATEGORIES[leg.sport] !== undefined &&
             !leg.categoriesOpen &&
             leg.subcategory !== null && (
-              <p className="mt-2 text-xs text-neutral-500">
+              <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
                 Category: {leg.subcategory} (tap {leg.sport} to change)
               </p>
             )}
 
           {(leg.sport === null || SUBCATEGORIES[leg.sport] === undefined) &&
             leg.subcategory !== null && (
-              <p className="mt-2 text-xs text-neutral-500">
+              <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
                 Category: {leg.subcategory}{" "}
                 <button
                   type="button"
@@ -478,7 +478,7 @@ export default function NewBetForm({ lastStake }: Props) {
               <>
                 <p className="mt-4 text-sm font-medium">
                   Category
-                  <span className="font-normal text-neutral-500">
+                  <span className="font-normal text-neutral-500 dark:text-neutral-400">
                     , optional. Scroll for more, tap {leg.sport} to hide.
                   </span>
                 </p>
@@ -581,7 +581,7 @@ export default function NewBetForm({ lastStake }: Props) {
             className="mt-4 block text-sm font-medium"
           >
             Pick{" "}
-            <span className="font-normal text-neutral-500">(optional)</span>
+            <span className="font-normal text-neutral-500 dark:text-neutral-400">(optional)</span>
           </label>
           <input
             id={`description-${index}`}
@@ -599,7 +599,7 @@ export default function NewBetForm({ lastStake }: Props) {
                 className="mt-4 block text-sm font-medium"
               >
                 Chance (%){" "}
-                <span className="font-normal text-neutral-500">
+                <span className="font-normal text-neutral-500 dark:text-neutral-400">
                   (optional)
                 </span>
               </label>
@@ -613,7 +613,7 @@ export default function NewBetForm({ lastStake }: Props) {
                 className={inputClass}
               />
               {percentStates[index].kind === "invalid" && (
-                <p className="mt-1 text-xs text-neutral-500">
+                <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
                   Enter a percentage above 0 and below 100.
                 </p>
               )}
@@ -643,7 +643,7 @@ export default function NewBetForm({ lastStake }: Props) {
           onChange={(e) => setCollect(e.target.value)}
           className={inputClass}
         />
-        <p className="mt-1 text-xs text-neutral-500">
+        <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
           {collectValid
             ? "The odds are calculated from this and the stake."
             : collectValue !== null && stakeValue !== null
@@ -654,19 +654,19 @@ export default function NewBetForm({ lastStake }: Props) {
 
       <div className="mt-5 grid grid-cols-3 gap-2 rounded-xl bg-neutral-100 p-3 text-center dark:bg-[#1A2032]">
         <div>
-          <p className="text-xs text-neutral-500">Total odds</p>
+          <p className="text-xs text-neutral-500 dark:text-neutral-400">Total odds</p>
           <p className="mt-0.5 text-sm font-bold">
             {totalOdds !== null ? formatOdds(totalOdds) : "-"}
           </p>
         </div>
         <div>
-          <p className="text-xs text-neutral-500">To Win</p>
+          <p className="text-xs text-neutral-500 dark:text-neutral-400">To Win</p>
           <p className="mt-0.5 text-sm font-bold">
             {toWin !== null ? formatMoney(toWin) : "-"}
           </p>
         </div>
         <div>
-          <p className="text-xs text-neutral-500">To Collect</p>
+          <p className="text-xs text-neutral-500 dark:text-neutral-400">To Collect</p>
           <p className="mt-0.5 text-sm font-bold">
             {collectValid ? formatMoney(collectValue as number) : "-"}
           </p>

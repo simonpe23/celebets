@@ -172,7 +172,7 @@ export default function LiveBets({ bets }: Props) {
       )}
 
       {bets.length === 0 ? (
-        <p className="mt-3 rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:border-white/15">
+        <p className="mt-3 rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:text-neutral-400 dark:border-white/15">
           No pending bets. Place one above.
         </p>
       ) : (
@@ -193,7 +193,7 @@ export default function LiveBets({ bets }: Props) {
                   </span>
                   <div className="flex items-center gap-2">
                     {bet.legs.length > 1 && (
-                      <span className="text-xs font-medium text-neutral-500">
+                      <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
                         Parlay, {bet.legs.length} legs
                       </span>
                     )}
@@ -240,7 +240,7 @@ export default function LiveBets({ bets }: Props) {
                         setAddingMoney(null);
                         setConfirmingDelete(bet.id);
                       }}
-                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-white/15"
+                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400 disabled:opacity-50 dark:border-white/15"
                     >
                       Delete
                     </button>
@@ -271,7 +271,7 @@ export default function LiveBets({ bets }: Props) {
                     >
                       That buy&apos;s own payout (USD)
                     </label>
-                    <p className="mt-0.5 text-xs text-neutral-500">
+                    <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
                       The payout if right for this buy alone, from your
                       betting app&apos;s order history.
                     </p>
@@ -342,7 +342,7 @@ export default function LiveBets({ bets }: Props) {
                       type="button"
                       disabled={busyLeg !== null}
                       onClick={() => undoCashOut(bet.id)}
-                      className="shrink-0 rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-white/15"
+                      className="shrink-0 rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400 disabled:opacity-50 dark:border-white/15"
                     >
                       Undo
                     </button>
@@ -357,7 +357,7 @@ export default function LiveBets({ bets }: Props) {
                     >
                       Cash out amount (USD)
                     </label>
-                    <p className="mt-0.5 text-xs text-neutral-500">
+                    <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
                       The amount your betting app paid you. Above your{" "}
                       {formatMoney(Number(bet.stake))} stake counts as a win,
                       below counts as a loss.
@@ -434,13 +434,13 @@ export default function LiveBets({ bets }: Props) {
                           {leg.description ?? leg.subcategory ?? leg.sport}
                           {leg.description !== null &&
                             leg.subcategory !== null && (
-                              <span className="ml-1.5 text-xs font-normal text-neutral-500">
+                              <span className="ml-1.5 text-xs font-normal text-neutral-500 dark:text-neutral-400">
                                 {leg.subcategory}
                               </span>
                             )}
                         </p>
                         {leg.odds !== null && (
-                          <p className="text-sm font-semibold text-neutral-500">
+                          <p className="text-sm font-semibold text-neutral-500 dark:text-neutral-400">
                             {formatOdds(Number(leg.odds))}
                           </p>
                         )}
@@ -482,7 +482,7 @@ export default function LiveBets({ bets }: Props) {
                               type="button"
                               disabled={busyLeg !== null}
                               onClick={() => setResult(leg.id, "pending")}
-                              className="rounded-lg border border-neutral-300 px-3.5 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-white/15"
+                              className="rounded-lg border border-neutral-300 px-3.5 py-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400 disabled:opacity-50 dark:border-white/15"
                             >
                               Undo
                             </button>
@@ -503,7 +503,7 @@ export default function LiveBets({ bets }: Props) {
                           expandedBuys === bet.id ? null : bet.id
                         )
                       }
-                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-semibold text-neutral-500 dark:border-white/15"
+                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-semibold text-neutral-500 dark:text-neutral-400 dark:border-white/15"
                     >
                       {expandedBuys === bet.id
                         ? "Hide buys"
@@ -535,19 +535,19 @@ export default function LiveBets({ bets }: Props) {
                 {bet.cashed_out ? (
                   <div className="mt-3 grid grid-cols-3 gap-2 border-t border-neutral-100 pt-3 text-center dark:border-white/10">
                     <div>
-                      <p className="text-xs text-neutral-500">Ticket cost</p>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">Ticket cost</p>
                       <p className="mt-0.5 text-sm font-bold">
                         {formatMoney(stake)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs text-neutral-500">Cashed out</p>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">Cashed out</p>
                       <p className="mt-0.5 text-sm font-bold">
                         {formatMoney(Number(bet.payout ?? 0))}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs text-neutral-500">Result</p>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">Result</p>
                       <p
                         className={`mt-0.5 text-sm font-bold ${
                           Number(bet.payout ?? 0) - stake >= 0
@@ -564,19 +564,19 @@ export default function LiveBets({ bets }: Props) {
                 ) : (
                   <div className="mt-3 grid grid-cols-3 gap-2 border-t border-neutral-100 pt-3 text-center dark:border-white/10">
                     <div>
-                      <p className="text-xs text-neutral-500">Ticket cost</p>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">Ticket cost</p>
                       <p className="mt-0.5 text-sm font-bold">
                         {formatMoney(stake)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs text-neutral-500">To Win</p>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">To Win</p>
                       <p className="mt-0.5 text-sm font-bold">
                         {formatMoney(round2(stake * (totalOdds - 1)))}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs text-neutral-500">To Collect</p>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">To Collect</p>
                       <p className="mt-0.5 text-sm font-bold">
                         {formatMoney(round2(stake * totalOdds))}
                       </p>

@@ -14,7 +14,7 @@ function BuysList({ bet }: { bet: BetWithLegs }) {
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}
-        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 dark:border-white/15"
+        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400 dark:border-white/15"
       >
         {expanded ? "Hide buys" : `${bet.bet_buys.length} buys`}
       </button>
@@ -125,7 +125,7 @@ export default function BetHistory({ bets }: Props) {
       )}
 
       {bets.length === 0 ? (
-        <p className="mt-3 rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:border-white/15">
+        <p className="mt-3 rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:text-neutral-400 dark:border-white/15">
           Settled bets will show up here.
         </p>
       ) : (
@@ -145,13 +145,13 @@ export default function BetHistory({ bets }: Props) {
                         {leg.description ?? leg.subcategory ?? leg.sport}
                         {leg.description !== null &&
                           leg.subcategory !== null && (
-                            <span className="ml-1.5 text-xs font-normal text-neutral-500">
+                            <span className="ml-1.5 text-xs font-normal text-neutral-500 dark:text-neutral-400">
                               {leg.subcategory}
                             </span>
                           )}
                       </p>
                     ))}
-                    <p className="mt-1 text-xs text-neutral-500">
+                    <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
                       {mounted && bet.settled_at
                         ? new Date(bet.settled_at).toLocaleDateString(
                             "en-US",
@@ -192,7 +192,7 @@ export default function BetHistory({ bets }: Props) {
                         bet.settled_at ? toDateInputValue(bet.settled_at) : ""
                       );
                     }}
-                    className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-white/15"
+                    className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400 disabled:opacity-50 dark:border-white/15"
                   >
                     Edit date
                   </button>
@@ -203,7 +203,7 @@ export default function BetHistory({ bets }: Props) {
                       setEditing(null);
                       setConfirming(bet.id);
                     }}
-                    className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-white/15"
+                    className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400 disabled:opacity-50 dark:border-white/15"
                   >
                     Delete
                   </button>
@@ -214,7 +214,7 @@ export default function BetHistory({ bets }: Props) {
                     <div className="grow">
                       <label
                         htmlFor={`date-${bet.id}`}
-                        className="block text-xs text-neutral-500"
+                        className="block text-xs text-neutral-500 dark:text-neutral-400"
                       >
                         Settled on
                       </label>

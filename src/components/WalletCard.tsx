@@ -32,7 +32,7 @@ export default function WalletCard({
       ? "text-emerald-600 dark:text-emerald-400"
       : netProfit < 0
         ? "text-red-600 dark:text-red-400"
-        : "text-neutral-500";
+        : "text-neutral-500 dark:text-neutral-400";
 
   async function submit(type: "deposit" | "withdrawal") {
     const value = parseMoney(amount);
@@ -65,7 +65,7 @@ export default function WalletCard({
     <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-5 dark:border-white/10">
       <div className="flex items-start justify-between">
         <div>
-          <h2 className="text-sm font-medium text-neutral-500">My Wallet</h2>
+          <h2 className="text-sm font-medium text-neutral-500 dark:text-neutral-400">My Wallet</h2>
           <p
             className={`mt-1 break-words text-4xl font-bold tracking-tight ${
               balance < 0 ? "text-red-600 dark:text-red-400" : ""
@@ -78,7 +78,7 @@ export default function WalletCard({
           </p>
           <Link
             href="/transactions"
-            className="mt-2 inline-block text-sm font-medium text-neutral-500 underline underline-offset-2"
+            className="mt-2 inline-block text-sm font-medium text-neutral-500 dark:text-neutral-400 underline underline-offset-2"
           >
             Transactions
           </Link>
@@ -112,7 +112,7 @@ export default function WalletCard({
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="rounded-lg px-3 py-1 text-sm text-neutral-500"
+                className="rounded-lg px-3 py-1 text-sm text-neutral-500 dark:text-neutral-400"
               >
                 Cancel
               </button>
