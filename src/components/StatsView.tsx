@@ -4,7 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { formatMoney, formatSignedMoney, round2 } from "@/lib/format";
 import BetHistory from "@/components/BetHistory";
-import ProfitChart from "@/components/ProfitChart";
+import HeadlineProfit, { type NumberStyle } from "@/components/HeadlineProfit";
+import ProfitPanel, { type Period } from "@/components/ProfitPanel";
+import Recommendations from "@/components/Recommendations";
 import {
   bucketRows,
   categoryRows,
@@ -15,7 +17,8 @@ import {
 } from "@/lib/stats";
 import { SPORTS, SPORT_EMOJI, type BetWithLegs, type Sport } from "@/lib/types";
 
-type Period = "today" | "week" | "month" | "year" | "all" | "custom";
+// Swap to compare the three headline treatments.
+const NUMBER_STYLE: NumberStyle = "A";
 
 const PERIOD_LABELS: { key: Period; label: string }[] = [
   { key: "all", label: "All time" },
@@ -145,11 +148,11 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
     .filter((row) => row.wins + row.losses > 0)
     .sort((a, b) => b.profit - a.profit);
 
-  const switchClass = (active: boolean) =>
-    `shrink-0 whitespace-nowrap pb-1 text-xs font-bold uppercase tracking-wider ${
+  const pillClass = (active: boolean) =>
+    `flex h-11 shrink-0 items-center whitespace-nowrap rounded-full border px-4 text-sm font-semibold ${
       active
-        ? "border-b-2 border-[#4F7A57] text-[#4F7A57]"
-        : "border-b-2 border-transparent text-neutral-400"
+        ? "border-[#4F7A57] bg-[#4F7A57] text-white"
+        : "border-neutral-300 bg-white text-neutral-600 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300"
     }`;
 
   const inputClass =
@@ -158,30 +161,28 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
   return (
     <main className="min-h-dvh px-4 py-6 sm:px-6">
       <div className="mx-auto w-full max-w-md space-y-5">
-        <header className="flex items-center justify-between">
+        <header className="flex items-center justify-between gap-2">
           <h1 className="text-2xl font-bold tracking-tight">Stats</h1>
-          <Link
-            href="/app"
-            className="rounded-lg bg-[#4F7A57] px-4 py-2 text-sm font-semibold text-white active:bg-[#3F6446]"
-          >
-            Home
-          </Link>
+          <div className="flex shrink-0 items-center gap-2">
+            <Recommendations bets={allSettled} />
+            <Link
+              href="/app"
+              className="rounded-xl border border-neutral-300 px-3 py-2.5 text-xs font-semibold text-neutral-600 dark:border-neutral-700 dark:text-neutral-300"
+            >
+              Home
+            </Link>
+          </div>
         </header>
 
         {/* The headline and the chart sit straight on the page. No card,
             so the top of the screen reads as one open area. */}
         <section>
-          <p className="text-center text-[11px] font-bold uppercase tracking-[0.2em] text-neutral-400">
-            {periodLabel}
-            {sport === null ? "" : ` / ${sport}`}
-          </p>
-          <p
-            className={`mt-1 text-center text-4xl font-bold tracking-tight ${profitColor(
-              heroProfit
-            )}`}
-          >
-            {formatSignedMoney(round2(heroProfit))}
-          </p>
+          <HeadlineProfit
+            label={`${periodLabel}${sport === null ? "" : ` / ${sport}`}`}
+            profit={heroProfit}
+            roi={heroRoi}
+            style={NUMBER_STYLE}
+          />
 
           {/* The record, bare on the page. No cards, so it reads as one
               line of facts under the headline. */}
@@ -241,32 +242,23 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
             </div>
           )}
 
-          {filtered.length > 0 && (
-            <div className="mt-4">
-              <ProfitChart bets={filtered} sport={sport} from={from} to={to} />
-            </div>
-          )}
-
-          {/* Filters live under the chart, as plain text. Cards here
-              made the page feel stacked. */}
-          <div className="-mx-1 mt-4 flex gap-4 overflow-x-auto px-1 pb-1">
-            {PERIOD_LABELS.map(({ key, label }) => (
-              <button
-                key={key}
-                type="button"
-                onClick={() => setPeriod(key)}
-                className={switchClass(period === key)}
-              >
-                {label}
-              </button>
-            ))}
+          <div className="mt-5">
+            <ProfitPanel
+              bets={filtered}
+              sport={sport}
+              from={from}
+              to={to}
+              period={period}
+              onPeriodChange={setPeriod}
+            />
           </div>
 
-          <div className="-mx-1 mt-2 flex gap-4 overflow-x-auto px-1 pb-1">
+          {/* One filter row on the light page, as pressable pills. */}
+          <div className="-mx-4 mt-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:-mx-6 sm:px-6">
             <button
               type="button"
               onClick={() => setSport(null)}
-              className={switchClass(sport === null)}
+              className={pillClass(sport === null)}
             >
               All sports
             </button>
@@ -275,7 +267,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
                 key={s}
                 type="button"
                 onClick={() => setSport(s)}
-                className={switchClass(sport === s)}
+                className={pillClass(sport === s)}
               >
                 {SPORT_EMOJI[s]} {s}
               </button>
@@ -304,9 +296,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
             </section>
 
             <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] p-4 dark:border-neutral-800 dark:bg-neutral-950">
-              <h2 className="text-[11px] font-bold uppercase tracking-[0.18em] text-neutral-400">
-                Sports breakdown
-              </h2>
+              <h2 className="text-base font-bold">Sports breakdown</h2>
               <div className="mt-3 divide-y divide-neutral-300/60 dark:divide-neutral-800">
                 {breakdown.map((row) => (
                   <div
@@ -458,19 +448,6 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
                 </div>
               </section>
             )}
-
-            <Link
-              href={
-                sport !== null
-                  ? `/recommendations?sport=${encodeURIComponent(sport)}`
-                  : "/recommendations"
-              }
-              className="block h-12 w-full rounded-xl bg-[#58287F] text-center text-base font-semibold leading-[3rem] text-white active:bg-[#431E63]"
-            >
-              {sport !== null
-                ? `All ${sport} recommendations`
-                : "All recommendations"}
-            </Link>
 
             <BetHistory bets={historyBets} />
           </>

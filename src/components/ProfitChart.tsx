@@ -98,20 +98,8 @@ export default function ProfitChart({ bets, sport, from, to }: Props) {
   const endColor = running >= 0 ? GREEN : RED;
 
   return (
-    <section className="overflow-hidden rounded-3xl bg-[#101322] p-4 shadow-[0_18px_40px_-20px_rgba(16,19,34,0.9)] ring-1 ring-white/5">
-      <div className="flex items-baseline justify-between">
-        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">
-          Profit over time
-        </p>
-        <p
-          className="text-sm font-bold tabular-nums"
-          style={{ color: endColor }}
-        >
-          {formatSignedMoney(round2(running))}
-        </p>
-      </div>
-
-      <div className="relative mt-3 h-44">
+    <div>
+      <div className="relative mt-4 h-44">
         <div className="absolute inset-y-0 left-0 w-14 text-[10px] font-medium tabular-nums text-white/35">
           {rawMax > 0 && (
             <span className="absolute left-0 top-0">
@@ -275,6 +263,6 @@ export default function ProfitChart({ bets, sport, from, to }: Props) {
         <span>{shortDate(startX)}</span>
         <span>{shortDate(endX)}</span>
       </div>
-    </section>
+    </div>
   );
 }
