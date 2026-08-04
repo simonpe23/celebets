@@ -32,6 +32,10 @@ The owner has no coding experience. These rules are permanent.
 The owner should never have to catch a typography or spacing
 inconsistency. Finding one is a failure, not feedback.
 
+Run `node design-check.mjs` before every screenshot. It reads the
+system below and fails on drift. Never show the owner a screenshot
+while it is failing.
+
 Before showing any UI change:
 
 1. Change shared values in the shared file, never in one page.

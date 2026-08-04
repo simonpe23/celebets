@@ -38,31 +38,31 @@ export default function AllRecommendations({ bets, sport }: Props) {
           <div className="flex shrink-0 gap-2">
             <Link
               href="/stats"
-              className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium dark:border-white/15"
+              className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-bold dark:border-white/15"
             >
               Stats
             </Link>
             <Link
               href="/app"
-              className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium dark:border-white/15"
+              className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-bold dark:border-white/15"
             >
               Home
             </Link>
           </div>
         </header>
 
-        <p className="text-sm text-neutral-500">
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">
           {sport === null
             ? "Every statement that is currently true about your settled bets."
             : `Every statement that is currently true about your ${sport} picks.`}
         </p>
 
         {insights === null ? (
-          <p className="rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:border-white/15">
+          <p className="rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:text-neutral-400 dark:border-white/15">
             Loading...
           </p>
         ) : insights.length === 0 ? (
-          <p className="rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:border-white/15">
+          <p className="rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:text-neutral-400 dark:border-white/15">
             Nothing to say yet. Settle a few bets and come back.
           </p>
         ) : (

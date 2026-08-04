@@ -45,7 +45,7 @@ export default function SignUpPage() {
       <main className="flex min-h-dvh flex-col justify-center px-6 py-12">
         <div className="mx-auto w-full max-w-sm text-center">
           <h1 className="text-2xl font-bold">Check your email</h1>
-          <p className="mt-3 text-sm text-neutral-500">
+          <p className="mt-3 text-sm text-neutral-500 dark:text-neutral-400">
             We sent a confirmation link to {email}. Click it, then come back
             and log in.
           </p>
@@ -67,7 +67,7 @@ export default function SignUpPage() {
         <h1 className="text-center text-3xl font-bold tracking-tight">
           Celebet
         </h1>
-        <p className="mt-2 text-center text-sm text-neutral-500">
+        <p className="mt-2 text-center text-sm text-neutral-500 dark:text-neutral-400">
           Create your account
         </p>
 
@@ -106,7 +106,7 @@ export default function SignUpPage() {
               onChange={(e) => setPassword(e.target.value)}
               className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#4F7A57] focus:ring-2 focus:ring-[#4F7A57]/30 dark:border-white/15 dark:bg-[#1A2032] dark:text-neutral-100"
             />
-            <p className="mt-1 text-xs text-neutral-500">
+            <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
               At least 8 characters
             </p>
           </div>
@@ -126,7 +126,7 @@ export default function SignUpPage() {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-neutral-500">
+        <p className="mt-6 text-center text-sm text-neutral-500 dark:text-neutral-400">
           Already have an account?{" "}
           <Link href="/login" className="font-semibold text-[#4F7A57]">
             Log in

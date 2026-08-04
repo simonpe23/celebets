@@ -45,7 +45,7 @@ function periodStart(period: Period): Date | null {
 function profitColor(value: number): string {
   if (value > 0) return "text-emerald-600 dark:text-emerald-400";
   if (value < 0) return "text-red-600 dark:text-red-400";
-  return "text-neutral-500";
+  return "text-neutral-500 dark:text-neutral-400";
 }
 
 function pctLabel(wins: number, total: number): string {
@@ -224,7 +224,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
         </section>
 
         {filtered.length === 0 ? (
-          <p className="rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:border-white/15">
+          <p className="rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:text-neutral-400 dark:border-white/15">
             No settled bets in this selection.
           </p>
         ) : (
@@ -278,7 +278,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
             <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-4 dark:border-white/10">
               <h2 className="text-lg font-bold">Singles vs parlays</h2>
               {bySportType !== null && (
-                <p className="mt-1 text-xs text-neutral-500">
+                <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
                   Only {sport} picks, and only {sport}&apos;s share of the
                   money.
                 </p>
@@ -295,7 +295,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
                         >
                           <p className="text-sm font-medium">{label}</p>
                           <div className="flex items-center gap-3">
-                            <p className="text-sm text-neutral-500">
+                            <p className="text-sm text-neutral-500 dark:text-neutral-400">
                               {picks === 0
                                 ? "no picks"
                                 : `${pctLabel(row.wins, picks)} right (${row.wins} of ${picks})`}
@@ -320,7 +320,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
                       >
                         <p className="text-sm font-medium">{row.label}</p>
                         <div className="flex items-center gap-3">
-                          <p className="text-sm text-neutral-500">
+                          <p className="text-sm text-neutral-500 dark:text-neutral-400">
                             {row.betsTotal === 0
                               ? "no bets"
                               : `${pctLabel(row.betsWon, row.betsTotal)} (${row.betsWon} of ${row.betsTotal})`}
@@ -342,7 +342,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
 
             <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-4 dark:border-white/10">
               <h2 className="text-lg font-bold">Odds groups</h2>
-              <p className="mt-1 text-xs text-neutral-500">
+              <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
                 Your settled picks grouped by how risky they were. Picks
                 without odds are not shown here.
               </p>
@@ -353,7 +353,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
                     className="flex items-center justify-between gap-2"
                   >
                     <p className="text-sm font-medium">{row.label}</p>
-                    <p className="text-sm text-neutral-500">
+                    <p className="text-sm text-neutral-500 dark:text-neutral-400">
                       {row.total === 0
                         ? "no picks"
                         : `${pctLabel(row.wins, row.total)} right (${row.wins} of ${row.total})`}
@@ -366,7 +366,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
             {sport !== null && byCategory.length > 0 && (
               <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-4 dark:border-white/10">
                 <h2 className="text-lg font-bold">Per category</h2>
-                <p className="mt-1 text-xs text-neutral-500">
+                <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
                   Your {sport} picks grouped by what you bet on. Same money
                   rules as everywhere else.
                 </p>
@@ -380,7 +380,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
                         {row.label}
                       </p>
                       <div className="flex shrink-0 items-center gap-3">
-                        <p className="text-sm text-neutral-500">
+                        <p className="text-sm text-neutral-500 dark:text-neutral-400">
                           {row.wins}-{row.losses}
                         </p>
                         <p

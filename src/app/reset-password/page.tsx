@@ -94,17 +94,17 @@ export default function ResetPasswordPage() {
         <h1 className="text-center text-3xl font-bold tracking-tight">
           Celebet
         </h1>
-        <p className="mt-2 text-center text-sm text-neutral-500">
+        <p className="mt-2 text-center text-sm text-neutral-500 dark:text-neutral-400">
           Pick a new password
         </p>
 
         {checking ? (
-          <p className="mt-8 text-center text-sm text-neutral-500">
+          <p className="mt-8 text-center text-sm text-neutral-500 dark:text-neutral-400">
             Checking your link...
           </p>
         ) : !ready ? (
           <div className="mt-8 text-center">
-            <p className="text-sm text-neutral-500">
+            <p className="text-sm text-neutral-500 dark:text-neutral-400">
               This page only works when opened from the reset link in your
               email. The link may also have expired, or it was opened in a
               different browser than the one that asked for it.
@@ -132,7 +132,7 @@ export default function ResetPasswordPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#4F7A57] focus:ring-2 focus:ring-[#4F7A57]/30 dark:border-white/15 dark:bg-[#1A2032] dark:text-neutral-100"
               />
-              <p className="mt-1 text-xs text-neutral-500">
+              <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
                 At least 8 characters
               </p>
             </div>

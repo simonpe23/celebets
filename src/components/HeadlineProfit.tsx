@@ -26,7 +26,7 @@ export default function HeadlineProfit({ label, profit, roi }: Props) {
 
   return (
     <div className="text-center">
-      <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-500">
+      <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-500 dark:text-neutral-400">
         {label}
       </p>
 

@@ -337,7 +337,7 @@ export default function NewBetForm({ lastStake }: Props) {
           type="button"
           disabled={importing}
           onClick={() => fileInputRef.current?.click()}
-          className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-neutral-300 bg-white text-sm font-bold text-neutral-500 active:bg-neutral-100 disabled:opacity-50 dark:border-white/15 dark:bg-transparent dark:text-neutral-400"
+          className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-neutral-300 bg-white text-sm font-bold text-neutral-500 dark:text-neutral-400 active:bg-neutral-100 disabled:opacity-50 dark:border-white/15 dark:bg-transparent dark:text-neutral-400"
         >
           <CameraIcon />
           Upload image

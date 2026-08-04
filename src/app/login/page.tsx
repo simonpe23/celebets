@@ -41,7 +41,7 @@ export default function LoginPage() {
         <h1 className="text-center text-3xl font-bold tracking-tight">
           Celebet
         </h1>
-        <p className="mt-2 text-center text-sm text-neutral-500">
+        <p className="mt-2 text-center text-sm text-neutral-500 dark:text-neutral-400">
           Log in to your account
         </p>
 
@@ -104,7 +104,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-neutral-500">
+        <p className="mt-6 text-center text-sm text-neutral-500 dark:text-neutral-400">
           No account yet?{" "}
           <Link href="/signup" className="font-semibold text-[#4F7A57]">
             Sign up

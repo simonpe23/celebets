@@ -82,7 +82,7 @@ export default function TransactionsList({
           <h1 className="text-2xl font-bold tracking-tight">Transactions</h1>
           <Link
             href="/app"
-            className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium dark:border-white/15"
+            className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-bold dark:border-white/15"
           >
             Home
           </Link>
@@ -95,7 +95,7 @@ export default function TransactionsList({
         )}
 
         {transactions.length === 0 ? (
-          <p className="rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:border-white/15">
+          <p className="rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:text-neutral-400 dark:border-white/15">
             No deposits or withdrawals yet.
           </p>
         ) : (
@@ -110,7 +110,7 @@ export default function TransactionsList({
                     <p className="text-sm font-semibold capitalize">
                       {tx.type}
                     </p>
-                    <p className="mt-0.5 text-xs text-neutral-500">
+                    <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
                       {mounted
                         ? new Date(tx.created_at).toLocaleDateString("en-US", {
                             month: "short",
@@ -139,7 +139,7 @@ export default function TransactionsList({
                         setEditing(tx.id);
                         setDateValue(toDateInputValue(tx.created_at));
                       }}
-                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-white/15"
+                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400 disabled:opacity-50 dark:border-white/15"
                     >
                       Edit date
                     </button>
@@ -150,7 +150,7 @@ export default function TransactionsList({
                         setEditing(null);
                         setConfirming(tx.id);
                       }}
-                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 disabled:opacity-50 dark:border-white/15"
+                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400 disabled:opacity-50 dark:border-white/15"
                     >
                       Delete
                     </button>
@@ -162,7 +162,7 @@ export default function TransactionsList({
                     <div className="grow">
                       <label
                         htmlFor={`date-${tx.id}`}
-                        className="block text-xs text-neutral-500"
+                        className="block text-xs text-neutral-500 dark:text-neutral-400"
                       >
                         Date
                       </label>

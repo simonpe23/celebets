@@ -36,7 +36,7 @@ export default function ForgotPasswordPage() {
       <main className="flex min-h-dvh flex-col justify-center px-6 py-12">
         <div className="mx-auto w-full max-w-sm text-center">
           <h1 className="text-2xl font-bold">Check your email</h1>
-          <p className="mt-3 text-sm text-neutral-500">
+          <p className="mt-3 text-sm text-neutral-500 dark:text-neutral-400">
             If an account exists for {email}, we sent a reset link. Open it on
             this phone and you can pick a new password.
           </p>
@@ -58,7 +58,7 @@ export default function ForgotPasswordPage() {
         <h1 className="text-center text-3xl font-bold tracking-tight">
           Celebet
         </h1>
-        <p className="mt-2 text-center text-sm text-neutral-500">
+        <p className="mt-2 text-center text-sm text-neutral-500 dark:text-neutral-400">
           Reset your password
         </p>
 
@@ -94,7 +94,7 @@ export default function ForgotPasswordPage() {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-neutral-500">
+        <p className="mt-6 text-center text-sm text-neutral-500 dark:text-neutral-400">
           Remembered it?{" "}
           <Link href="/login" className="font-semibold text-[#4F7A57]">
             Log in

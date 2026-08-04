@@ -36,7 +36,7 @@ function PhoneMockup() {
                 key={label}
                 className="rounded-xl bg-neutral-100 px-2 py-1.5 text-center"
               >
-                <p className="text-[9px] text-neutral-500">{label}</p>
+                <p className="text-[9px] text-neutral-500 dark:text-neutral-400">{label}</p>
                 <p className={`text-[11px] font-bold ${color}`}>{value}</p>
               </div>
             ))}
@@ -104,7 +104,7 @@ export default function LandingPage() {
                 <br />
                 Your Game.
               </h1>
-              <p className="mt-4 text-base font-medium text-neutral-500 sm:text-xl">
+              <p className="mt-4 text-base font-medium text-neutral-500 dark:text-neutral-400 sm:text-xl">
                 Track Every Bet. Discover Patterns. Find Your Edge.
               </p>
 
@@ -112,7 +112,7 @@ export default function LandingPage() {
                 <GoogleButton large />
                 <Link
                   href="/signup"
-                  className="flex h-14 w-full items-center justify-center rounded-xl bg-[#4F7A57] text-base font-semibold text-white shadow-lg shadow-[#72AFCC]/30 active:bg-[#3F6446]"
+                  className="flex h-14 w-full items-center justify-center rounded-xl bg-[#4F7A57] text-base font-semibold text-white shadow-lg shadow-[#4F7A57]/30 active:bg-[#3F6446]"
                 >
                   Create free account
                 </Link>
@@ -125,7 +125,7 @@ export default function LandingPage() {
                 {FEATURES.map(({ title, body }) => (
                   <div key={title}>
                     <p className="text-sm font-bold">{title}</p>
-                    <p className="mt-1 text-xs leading-snug text-neutral-500">
+                    <p className="mt-1 text-xs leading-snug text-neutral-500 dark:text-neutral-400">
                       {body}
                     </p>
                   </div>
