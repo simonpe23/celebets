@@ -54,11 +54,27 @@ export default function ProfitChart({
     const el = plotRef.current;
     if (!el) return;
 
+    // A thumb is never still. Small wobble must not cancel the hold,
+    // and a clearly sideways drag should lock straight away without
+    // waiting, which is what made the old version feel flimsy.
+    const HOLD_MS = 150;
+    const JITTER = 14;
+
     let timer: ReturnType<typeof setTimeout> | null = null;
     let start: { x: number; y: number } | null = null;
     const clear = () => {
       if (timer) clearTimeout(timer);
       timer = null;
+    };
+
+    const lock = (x: number) => {
+      if (lockedRef.current) return;
+      lockedRef.current = true;
+      clear();
+      // A short buzz to say the chart has taken over. Android only,
+      // iPhone Safari has no vibration API.
+      navigator.vibrate?.(12);
+      scrubRef.current(x);
     };
 
     const onStart = (e: TouchEvent) => {
@@ -67,28 +83,31 @@ export default function ProfitChart({
       const x = touch.clientX;
       start = { x, y: touch.clientY };
       clear();
-      timer = setTimeout(() => {
-        lockedRef.current = true;
-        scrubRef.current(x);
-      }, 260);
+      timer = setTimeout(() => lock(x), HOLD_MS);
     };
 
     const onMove = (e: TouchEvent) => {
       const touch = e.touches[0];
       if (!touch) return;
+
       if (lockedRef.current) {
         // Locked in, so the page must not move underneath.
         e.preventDefault();
         scrubRef.current(touch.clientX);
         return;
       }
-      // Moved before the hold completed, so this is a swipe. Hand it
-      // back to the page.
-      if (
-        start &&
-        (Math.abs(touch.clientX - start.x) > 8 ||
-          Math.abs(touch.clientY - start.y) > 8)
-      ) {
+
+      if (!start) return;
+      const dx = touch.clientX - start.x;
+      const dy = touch.clientY - start.y;
+      if (Math.abs(dx) < JITTER && Math.abs(dy) < JITTER) return;
+
+      if (Math.abs(dx) > Math.abs(dy)) {
+        // Clearly sideways. Take over now, no waiting.
+        e.preventDefault();
+        lock(touch.clientX);
+      } else {
+        // Clearly up or down. This is a scroll, hand it to the page.
         clear();
       }
     };
