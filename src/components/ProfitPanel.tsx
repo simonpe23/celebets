@@ -26,6 +26,7 @@ interface Props {
   customTo: string;
   onCustomFrom: (value: string) => void;
   onCustomTo: (value: string) => void;
+  onScrub: (point: { value: number; date: Date } | null) => void;
 }
 
 function CalendarIcon() {
@@ -57,6 +58,7 @@ export default function ProfitPanel({
   customTo,
   onCustomFrom,
   onCustomTo,
+  onScrub,
 }: Props) {
   const custom = period === "custom";
 
@@ -142,7 +144,13 @@ export default function ProfitPanel({
             : "No settled bets in this range."}
         </p>
       ) : (
-        <ProfitChart bets={bets} sport={sport} from={from} to={to} />
+        <ProfitChart
+          bets={bets}
+          sport={sport}
+          from={from}
+          to={to}
+          onScrub={onScrub}
+        />
       )}
     </section>
   );

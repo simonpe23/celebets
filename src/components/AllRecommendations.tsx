@@ -40,7 +40,7 @@ export default function AllRecommendations({ bets, sport }: Props) {
               href="/stats"
               className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-bold dark:border-white/15"
             >
-              Stats
+              Analytics
             </Link>
             <Link
               href="/app"

@@ -58,6 +58,9 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
   const [period, setPeriod] = useState<Period>("all");
   const [customFrom, setCustomFrom] = useState("");
   const [customTo, setCustomTo] = useState("");
+  const [scrub, setScrub] = useState<{ value: number; date: Date } | null>(
+    null
+  );
 
   const allSettled = bets.filter(
     (b) => b.status !== "pending" && b.settled_at !== null
@@ -135,7 +138,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
     <main className="min-h-dvh px-4 py-6 sm:px-6">
       <div className="mx-auto w-full max-w-md space-y-5">
         <header className="flex items-center justify-between gap-2">
-          <h1 className="text-2xl font-bold tracking-tight">Stats</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Analytics</h1>
           <div className="flex shrink-0 items-center gap-2">
             <Recommendations bets={allSettled} />
             <Link
@@ -154,6 +157,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
             label={`${periodLabel}${sport === null ? "" : ` / ${sport}`}`}
             profit={heroProfit}
             roi={heroRoi}
+            scrub={scrub}
           />
 
           {/* The record, bare on the page. No cards, so it reads as one
@@ -198,6 +202,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
               customTo={customTo}
               onCustomFrom={setCustomFrom}
               onCustomTo={setCustomTo}
+              onScrub={setScrub}
             />
           </div>
 

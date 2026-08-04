@@ -98,7 +98,7 @@ export default function WalletCard({
             href="/stats"
             className="rounded-xl border border-neutral-300 px-3 py-2.5 text-center text-sm font-bold dark:border-white/15"
           >
-            Stats
+            Analytics
           </Link>
           <Recommendations bets={settledBets} />
         </div>

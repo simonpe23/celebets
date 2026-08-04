@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef, useState } from "react";
 import { formatSignedMoney, round2 } from "@/lib/format";
 import { betProfitFor } from "@/lib/stats";
 import type { BetWithLegs, Sport } from "@/lib/types";
@@ -11,6 +12,9 @@ interface Props {
   // Start and end of the chosen period. Null means open ended.
   from: Date | null;
   to: Date | null;
+  // Fires while a finger or the mouse is held on the chart, so the
+  // headline above can show that moment instead of today.
+  onScrub?: (point: { value: number; date: Date } | null) => void;
 }
 
 // The drawing grid. The chart stretches to the panel's width, so these
@@ -27,7 +31,16 @@ function shortDate(date: Date): string {
   return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
 }
 
-export default function ProfitChart({ bets, sport, from, to }: Props) {
+export default function ProfitChart({
+  bets,
+  sport,
+  from,
+  to,
+  onScrub,
+}: Props) {
+  const plotRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
   const settled = bets
     .filter((b) => b.settled_at !== null)
     .sort(
@@ -52,17 +65,22 @@ export default function ProfitChart({ bets, sport, from, to }: Props) {
 
   // Running profit, one step per settled bet.
   let running = 0;
-  const points: { t: number; value: number }[] = [{ t: 0, value: 0 }];
+  const points: { t: number; value: number; date: Date }[] = [
+    { t: 0, value: 0, date: startX },
+  ];
   for (const bet of settled) {
     running += betProfitFor(bet, sport);
-    const t =
-      (new Date(bet.settled_at as string).getTime() - startX.getTime()) /
-      spanMs;
-    points.push({ t: Math.min(Math.max(t, 0), 1), value: running });
+    const when = new Date(bet.settled_at as string);
+    const t = (when.getTime() - startX.getTime()) / spanMs;
+    points.push({
+      t: Math.min(Math.max(t, 0), 1),
+      value: running,
+      date: when,
+    });
   }
   // Hold the last value flat up to the end of the period.
   if (points[points.length - 1].t < 1) {
-    points.push({ t: 1, value: running });
+    points.push({ t: 1, value: running, date: endX });
   }
 
   const values = points.map((p) => p.value);
@@ -95,7 +113,43 @@ export default function ProfitChart({ bets, sport, from, to }: Props) {
     ` L${x(points[points.length - 1].t).toFixed(2)},${zeroY.toFixed(2)} Z`;
 
   const last = points[points.length - 1];
-  const endColor = running >= 0 ? GREEN : RED;
+
+  const active = activeIndex === null ? null : points[activeIndex];
+  // The dot follows the value under your finger, so it turns red the
+  // moment you scrub into a losing stretch.
+  const dotColor = (active ?? last).value >= 0 ? GREEN : RED;
+
+  // Snaps a finger or cursor position to the nearest settled bet.
+  function pointAt(clientX: number) {
+    const box = plotRef.current?.getBoundingClientRect();
+    if (!box || box.width === 0) return null;
+    const fraction = Math.min(
+      Math.max((clientX - box.left) / box.width, 0),
+      1
+    );
+    let best = 0;
+    let bestGap = Infinity;
+    points.forEach((p, i) => {
+      const gap = Math.abs(p.t - fraction);
+      if (gap < bestGap) {
+        bestGap = gap;
+        best = i;
+      }
+    });
+    return best;
+  }
+
+  function scrubTo(clientX: number) {
+    const index = pointAt(clientX);
+    if (index === null) return;
+    setActiveIndex(index);
+    onScrub?.({ value: points[index].value, date: points[index].date });
+  }
+
+  function endScrub() {
+    setActiveIndex(null);
+    onScrub?.(null);
+  }
 
   return (
     <div>
@@ -119,7 +173,23 @@ export default function ProfitChart({ bets, sport, from, to }: Props) {
           )}
         </div>
 
-        <div className="absolute inset-y-0 left-14 right-1">
+        <div
+          ref={plotRef}
+          className="absolute inset-y-0 left-14 right-1"
+          // pan-y keeps the page scrolling on a vertical swipe, while a
+          // sideways drag scrubs the chart.
+          style={{ touchAction: "pan-y" }}
+          onPointerDown={(e) => {
+            e.currentTarget.setPointerCapture(e.pointerId);
+            scrubTo(e.clientX);
+          }}
+          onPointerMove={(e) => {
+            if (activeIndex !== null) scrubTo(e.clientX);
+          }}
+          onPointerUp={endScrub}
+          onPointerCancel={endScrub}
+          onPointerLeave={endScrub}
+        >
           <svg
             viewBox={`0 0 ${W} ${H}`}
             preserveAspectRatio="none"
@@ -242,18 +312,32 @@ export default function ProfitChart({ bets, sport, from, to }: Props) {
               strokeLinejoin="round"
               vectorEffect="non-scaling-stroke"
             />
+
+            {/* The line that follows your finger. */}
+            {active !== null && (
+              <line
+                x1={x(active.t)}
+                y1="0"
+                x2={x(active.t)}
+                y2={H}
+                stroke="#ffffff"
+                strokeOpacity="0.45"
+                strokeWidth="1"
+                vectorEffect="non-scaling-stroke"
+              />
+            )}
           </svg>
 
-          {/* The dot that marks where you stand today. */}
+          {/* The dot marks today, or the moment you are holding. */}
           <span
             className="pointer-events-none absolute block h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full ring-4"
             style={{
-              left: `${last.t * 100}%`,
-              top: `${(y(last.value) / H) * 100}%`,
-              backgroundColor: endColor,
-              boxShadow: `0 0 14px 2px ${endColor}`,
+              left: `${(active ?? last).t * 100}%`,
+              top: `${(y((active ?? last).value) / H) * 100}%`,
+              backgroundColor: dotColor,
+              boxShadow: `0 0 14px 2px ${dotColor}`,
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              ["--tw-ring-color" as any]: `${endColor}40`,
+              ["--tw-ring-color" as any]: `${dotColor}40`,
             }}
           />
         </div>
