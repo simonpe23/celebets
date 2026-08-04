@@ -46,6 +46,11 @@ export default function ProfitChart({
   // The rule, the same one Robinhood uses:
   //   swipe        the page scrolls, the chart ignores you
   //   hold still   the chart locks after a moment, then you drag
+  // iPhone has no vibration API. Toggling a switch style checkbox is
+  // the only thing that makes iOS play a haptic tap, so one is parked
+  // off screen purely for that. Apple never promised this, so it may
+  // stop working one day. Nothing else breaks if it does.
+  const buzzRef = useRef<HTMLInputElement>(null);
   const scrubRef = useRef<(clientX: number) => void>(() => {});
   const endRef = useRef<() => void>(() => {});
   const lockedRef = useRef(false);
@@ -74,6 +79,8 @@ export default function ProfitChart({
       // A short buzz to say the chart has taken over. Android only,
       // iPhone Safari has no vibration API.
       navigator.vibrate?.(12);
+      const buzz = buzzRef.current;
+      if (buzz) buzz.checked = !buzz.checked;
       scrubRef.current(x);
     };
 
@@ -250,6 +257,17 @@ export default function ProfitChart({
 
   return (
     <div>
+      <input
+        ref={buzzRef}
+        type="checkbox"
+        // @ts-expect-error the switch attribute is iOS only and not in
+        // the React types yet.
+        switch=""
+        tabIndex={-1}
+        aria-hidden="true"
+        className="pointer-events-none absolute h-0 w-0 opacity-0"
+      />
+
       <div className="relative -mx-1 mt-4 h-[200px] select-none">
         <div
           ref={plotRef}
