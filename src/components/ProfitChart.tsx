@@ -11,6 +11,9 @@ interface Props {
   // Start and end of the chosen period. Null means open ended.
   from: Date | null;
   to: Date | null;
+  // "money" paints gains green and losses red. "brand" paints the
+  // whole line in Celebet purple.
+  tone?: "money" | "brand";
 }
 
 // The drawing grid. The chart stretches to the card's width, so these
@@ -20,12 +23,20 @@ const H = 130;
 
 const GREEN = "#059669";
 const RED = "#DC2626";
+const PURPLE_LIGHT = "#8B4FC0";
+const PURPLE_DEEP = "#58287F";
 
 function shortDate(date: Date): string {
   return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
 }
 
-export default function ProfitChart({ bets, sport, from, to }: Props) {
+export default function ProfitChart({
+  bets,
+  sport,
+  from,
+  to,
+  tone = "money",
+}: Props) {
   const settled = bets
     .filter((b) => b.settled_at !== null)
     .sort(
@@ -78,7 +89,10 @@ export default function ProfitChart({ bets, sport, from, to }: Props) {
   const zeroFraction = zeroY / H;
 
   const line = points
-    .map((p, i) => `${i === 0 ? "M" : "L"}${x(p.t).toFixed(2)},${y(p.value).toFixed(2)}`)
+    .map(
+      (p, i) =>
+        `${i === 0 ? "M" : "L"}${x(p.t).toFixed(2)},${y(p.value).toFixed(2)}`
+    )
     .join(" ");
 
   // The shaded band sits between the line and the zero line, so gains
@@ -90,25 +104,16 @@ export default function ProfitChart({ bets, sport, from, to }: Props) {
       .join(" ") +
     ` L${x(points[points.length - 1].t).toFixed(2)},${zeroY.toFixed(2)} Z`;
 
-  const total = round2(running);
-  const totalColor =
-    total > 0
-      ? "text-emerald-600 dark:text-emerald-400"
-      : total < 0
-        ? "text-red-600 dark:text-red-400"
-        : "text-neutral-500";
+  const last = points[points.length - 1];
+  const endDotX = x(last.t);
+  const endDotY = y(last.value);
+  const brand = tone === "brand";
+  const endColor = brand ? PURPLE_DEEP : running >= 0 ? GREEN : RED;
 
   return (
-    <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] p-4 dark:border-neutral-800 dark:bg-neutral-950">
-      <div className="flex items-baseline justify-between">
-        <h2 className="text-base font-bold">Profit over time</h2>
-        <p className={`text-base font-bold ${totalColor}`}>
-          {formatSignedMoney(total)}
-        </p>
-      </div>
-
-      <div className="relative mt-3 h-40">
-        <div className="absolute inset-y-0 left-0 w-11 text-[10px] text-neutral-400">
+    <div>
+      <div className="relative h-44">
+        <div className="absolute inset-y-0 left-0 w-12 text-[10px] font-medium text-neutral-400">
           {rawMax > 0 && (
             <span className="absolute left-0 top-0">
               {formatSignedMoney(round2(rawMax))}
@@ -127,7 +132,7 @@ export default function ProfitChart({ bets, sport, from, to }: Props) {
           )}
         </div>
 
-        <div className="absolute inset-y-0 left-12 right-0">
+        <div className="absolute inset-y-0 left-12 right-1">
           <svg
             viewBox={`0 0 ${W} ${H}`}
             preserveAspectRatio="none"
@@ -144,11 +149,21 @@ export default function ProfitChart({ bets, sport, from, to }: Props) {
                 x2="0"
                 y2={H}
               >
-                <stop offset="0" stopColor={GREEN} />
-                <stop offset={zeroFraction} stopColor={GREEN} />
-                <stop offset={zeroFraction} stopColor={RED} />
-                <stop offset="1" stopColor={RED} />
+                {brand ? (
+                  <>
+                    <stop offset="0" stopColor={PURPLE_LIGHT} />
+                    <stop offset="1" stopColor={PURPLE_DEEP} />
+                  </>
+                ) : (
+                  <>
+                    <stop offset="0" stopColor={GREEN} />
+                    <stop offset={zeroFraction} stopColor={GREEN} />
+                    <stop offset={zeroFraction} stopColor={RED} />
+                    <stop offset="1" stopColor={RED} />
+                  </>
+                )}
               </linearGradient>
+
               <linearGradient
                 id="celebet-area"
                 gradientUnits="userSpaceOnUse"
@@ -157,14 +172,57 @@ export default function ProfitChart({ bets, sport, from, to }: Props) {
                 x2="0"
                 y2={H}
               >
-                <stop offset="0" stopColor={GREEN} stopOpacity="0.28" />
-                <stop offset={zeroFraction} stopColor={GREEN} stopOpacity="0" />
-                <stop offset={zeroFraction} stopColor={RED} stopOpacity="0" />
-                <stop offset="1" stopColor={RED} stopOpacity="0.28" />
+                {brand ? (
+                  <>
+                    <stop
+                      offset="0"
+                      stopColor={PURPLE_LIGHT}
+                      stopOpacity="0.42"
+                    />
+                    <stop
+                      offset={zeroFraction}
+                      stopColor={PURPLE_DEEP}
+                      stopOpacity="0.04"
+                    />
+                    <stop
+                      offset={zeroFraction}
+                      stopColor={PURPLE_DEEP}
+                      stopOpacity="0.04"
+                    />
+                    <stop offset="1" stopColor={PURPLE_DEEP} stopOpacity="0.4" />
+                  </>
+                ) : (
+                  <>
+                    <stop offset="0" stopColor={GREEN} stopOpacity="0.45" />
+                    <stop
+                      offset={zeroFraction}
+                      stopColor={GREEN}
+                      stopOpacity="0.02"
+                    />
+                    <stop
+                      offset={zeroFraction}
+                      stopColor={RED}
+                      stopOpacity="0.02"
+                    />
+                    <stop offset="1" stopColor={RED} stopOpacity="0.42" />
+                  </>
+                )}
               </linearGradient>
+
+              {/* The soft halo that gives the line its depth. */}
+              <filter
+                id="celebet-glow"
+                x="-20%"
+                y="-40%"
+                width="140%"
+                height="180%"
+              >
+                <feGaussianBlur stdDeviation="3" />
+              </filter>
             </defs>
 
             <path d={area} fill="url(#celebet-area)" />
+
             <line
               x1="0"
               y1={zeroY}
@@ -172,27 +230,51 @@ export default function ProfitChart({ bets, sport, from, to }: Props) {
               y2={zeroY}
               stroke="currentColor"
               strokeWidth="1"
-              strokeDasharray="3 4"
+              strokeDasharray="2 5"
               vectorEffect="non-scaling-stroke"
-              className="text-neutral-300 dark:text-neutral-700"
+              className="text-neutral-400/60 dark:text-neutral-600"
+            />
+
+            <path
+              d={line}
+              fill="none"
+              stroke="url(#celebet-line)"
+              strokeWidth="6"
+              strokeOpacity="0.35"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              vectorEffect="non-scaling-stroke"
+              filter="url(#celebet-glow)"
             />
             <path
               d={line}
               fill="none"
               stroke="url(#celebet-line)"
-              strokeWidth="2"
+              strokeWidth="3"
               strokeLinecap="round"
               strokeLinejoin="round"
               vectorEffect="non-scaling-stroke"
             />
           </svg>
+
+          {/* The dot that marks where you stand today. */}
+          <span
+            className="pointer-events-none absolute block h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full ring-4"
+            style={{
+              left: `${(endDotX / W) * 100}%`,
+              top: `${(endDotY / H) * 100}%`,
+              backgroundColor: endColor,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              ["--tw-ring-color" as any]: `${endColor}33`,
+            }}
+          />
         </div>
       </div>
 
-      <div className="mt-2 flex justify-between pl-12 text-[10px] text-neutral-400">
+      <div className="mt-2 flex justify-between pl-12 text-[10px] font-medium text-neutral-400">
         <span>{shortDate(startX)}</span>
         <span>{shortDate(endX)}</span>
       </div>
-    </section>
+    </div>
   );
 }

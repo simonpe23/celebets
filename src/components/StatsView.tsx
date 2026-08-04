@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { formatMoney, formatSignedMoney, round2 } from "@/lib/format";
 import BetHistory from "@/components/BetHistory";
-import ProfitChart from "@/components/ProfitChart";
+import AnalyticsHero from "@/components/AnalyticsHero";
 import StatsRow from "@/components/StatsRow";
 import {
   bucketRows,
@@ -15,6 +15,9 @@ import {
   typeRows,
 } from "@/lib/stats";
 import { SPORTS, SPORT_EMOJI, type BetWithLegs, type Sport } from "@/lib/types";
+
+// Flip to "brand" to paint the profit line in Celebet purple.
+const CHART_TONE: "money" | "brand" = "money";
 
 type Period = "today" | "week" | "month" | "year" | "all" | "custom";
 
@@ -102,6 +105,22 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
       new Date(b.settled_at ?? 0).getTime() -
       new Date(a.settled_at ?? 0).getTime()
   );
+
+  // The hero speaks in bets with no sport chosen, and in that sport's
+  // picks and money share once one is.
+  const periodLabel =
+    PERIOD_LABELS.find((p) => p.key === period)?.label ?? "All time";
+  const heroProfit =
+    sportTotals === null ? t.returned - t.staked : sportTotals.profit;
+  const heroRoi = sportTotals === null ? t.roi : null;
+  const heroWins =
+    sportTotals === null
+      ? filtered.filter((b) => b.status === "won").length
+      : sportTotals.wins;
+  const heroLosses =
+    sportTotals === null
+      ? filtered.filter((b) => b.status === "lost").length
+      : sportTotals.losses;
 
   const chipClass = (active: boolean) =>
     `shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
@@ -200,59 +219,38 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
           </p>
         ) : (
           <>
-            <ProfitChart bets={filtered} sport={sport} from={from} to={to} />
+            <AnalyticsHero
+              bets={filtered}
+              sport={sport}
+              from={from}
+              to={to}
+              periodLabel={periodLabel}
+              profit={heroProfit}
+              roi={heroRoi}
+              wins={heroWins}
+              losses={heroLosses}
+              unit={sport === null ? "bets" : "picks"}
+              tone={CHART_TONE}
+            />
 
-            {sportTotals === null ? (
-              <section className="grid grid-cols-3 gap-2">
-                <div className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-neutral-950 p-3 text-center dark:border-neutral-800">
-                  <p className="text-xs text-neutral-500">Staked</p>
-                  <p className="mt-0.5 text-sm font-bold">
-                    {formatMoney(round2(t.staked))}
-                  </p>
-                </div>
-                <div className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-neutral-950 p-3 text-center dark:border-neutral-800">
-                  <p className="text-xs text-neutral-500">Returned</p>
-                  <p className="mt-0.5 text-sm font-bold">
-                    {formatMoney(round2(t.returned))}
-                  </p>
-                </div>
-                <div className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-neutral-950 p-3 text-center dark:border-neutral-800">
-                  <p className="text-xs text-neutral-500">ROI</p>
-                  <p
-                    className={`mt-0.5 text-sm font-bold ${profitColor(
-                      t.roi ?? 0
-                    )}`}
-                  >
-                    {t.roi === null ? "-" : `${t.roi.toFixed(1)}%`}
-                  </p>
-                </div>
-              </section>
-            ) : (
-              <section className="grid grid-cols-3 gap-2">
-                <div className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-neutral-950 p-3 text-center dark:border-neutral-800">
-                  <p className="text-xs text-neutral-500">Picks</p>
-                  <p className="mt-0.5 text-sm font-bold">
-                    {sportTotals.wins + sportTotals.losses}
-                  </p>
-                </div>
-                <div className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-neutral-950 p-3 text-center dark:border-neutral-800">
-                  <p className="text-xs text-neutral-500">Record</p>
-                  <p className="mt-0.5 text-sm font-bold">
-                    {sportTotals.wins}-{sportTotals.losses}
-                  </p>
-                </div>
-                <div className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-neutral-950 p-3 text-center dark:border-neutral-800">
-                  <p className="text-xs text-neutral-500">Profit</p>
-                  <p
-                    className={`mt-0.5 text-sm font-bold ${profitColor(
-                      sportTotals.profit
-                    )}`}
-                  >
-                    {formatSignedMoney(round2(sportTotals.profit))}
-                  </p>
-                </div>
-              </section>
-            )}
+            <section className="grid grid-cols-3 gap-2">
+              <div className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] p-3 text-center dark:border-neutral-800 dark:bg-neutral-950">
+                <p className="text-xs text-neutral-500">Staked</p>
+                <p className="mt-0.5 text-sm font-bold">
+                  {formatMoney(round2(t.staked))}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] p-3 text-center dark:border-neutral-800 dark:bg-neutral-950">
+                <p className="text-xs text-neutral-500">Returned</p>
+                <p className="mt-0.5 text-sm font-bold">
+                  {formatMoney(round2(t.returned))}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] p-3 text-center dark:border-neutral-800 dark:bg-neutral-950">
+                <p className="text-xs text-neutral-500">Bets</p>
+                <p className="mt-0.5 text-sm font-bold">{filtered.length}</p>
+              </div>
+            </section>
 
             <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-neutral-950 p-4 dark:border-neutral-800">
               <h2 className="text-base font-bold">Per sport</h2>
