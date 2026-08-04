@@ -2,19 +2,10 @@
 
 import { round2 } from "@/lib/format";
 
-// Three ways to set the prefix. The digits are always black.
-//   1  one size, one weight, no split at all
-//   2  smaller prefix, aligned to the top of the digits
-//   3  smaller prefix, aligned to the baseline
-//   4  small prefix, vertically centered, mid gray
-//   5  same as 4 in a darker gray
-export type NumberStyle = "1" | "2" | "3" | "4" | "5";
-
 interface Props {
   label: string;
   profit: number;
   roi: number | null;
-  style: NumberStyle;
 }
 
 // Splits money into prefix and digits so the sign and the dollar sign
@@ -29,11 +20,9 @@ function parts(value: number): { prefix: string; digits: string } {
   return { prefix: `${sign}$`, digits };
 }
 
-export default function HeadlineProfit({ label, profit, roi, style }: Props) {
+export default function HeadlineProfit({ label, profit, roi }: Props) {
   const { prefix, digits } = parts(profit);
   const up = round2(profit) >= 0;
-
-  const ink = "text-neutral-900 dark:text-white";
 
   return (
     <div className="text-center">
@@ -41,50 +30,16 @@ export default function HeadlineProfit({ label, profit, roi, style }: Props) {
         {label}
       </p>
 
-      {style === "4" || style === "5" ? (
-        <p className="mt-1.5 flex items-center justify-center gap-1">
-          {/* Small enough that the dollar sign's stroke stays inside
-              the height of the digits, then centered against them. */}
-          <span
-            className={`text-2xl font-bold leading-none ${
-              style === "4" ? "text-neutral-500" : "text-neutral-600"
-            }`}
-          >
-            {prefix}
-          </span>
-          <span
-            className={`text-5xl font-bold leading-none tracking-tight tabular-nums ${ink}`}
-          >
-            {digits}
-          </span>
-        </p>
-      ) : style === "1" ? (
-        <p
-          className={`mt-1.5 text-5xl font-bold tracking-tight tabular-nums ${ink}`}
-        >
+      <p className="mt-1.5 flex items-center justify-center gap-1">
+        {/* Small enough that the dollar sign's stroke stays inside the
+            height of the digits, then centered against them. */}
+        <span className="text-2xl font-bold leading-none text-neutral-600 dark:text-neutral-400">
           {prefix}
+        </span>
+        <span className="text-5xl font-bold leading-none tracking-tight tabular-nums text-neutral-900 dark:text-white">
           {digits}
-        </p>
-      ) : (
-        <p
-          className={`mt-1.5 flex justify-center gap-0.5 ${
-            style === "2" ? "items-start" : "items-baseline"
-          }`}
-        >
-          <span
-            className={`text-3xl font-bold leading-none ${ink} ${
-              style === "2" ? "mt-1" : ""
-            }`}
-          >
-            {prefix}
-          </span>
-          <span
-            className={`text-5xl font-bold leading-none tracking-tight tabular-nums ${ink}`}
-          >
-            {digits}
-          </span>
-        </p>
-      )}
+        </span>
+      </p>
 
       {roi !== null && (
         <p className="mt-3">

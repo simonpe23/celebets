@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { formatMoney, formatSignedMoney, round2 } from "@/lib/format";
 import BetHistory from "@/components/BetHistory";
-import HeadlineProfit, { type NumberStyle } from "@/components/HeadlineProfit";
+import HeadlineProfit from "@/components/HeadlineProfit";
 import ProfitPanel, { type Period } from "@/components/ProfitPanel";
 import Recommendations from "@/components/Recommendations";
 import {
@@ -16,9 +16,6 @@ import {
   typeRows,
 } from "@/lib/stats";
 import { SPORTS, SPORT_EMOJI, type BetWithLegs, type Sport } from "@/lib/types";
-
-// Swap to compare the three headline treatments.
-const NUMBER_STYLE: NumberStyle = "4";
 
 const PERIOD_LABELS: { key: Period; label: string }[] = [
   { key: "all", label: "All time" },
@@ -178,7 +175,6 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
             label={`${periodLabel}${sport === null ? "" : ` / ${sport}`}`}
             profit={heroProfit}
             roi={heroRoi}
-            style={NUMBER_STYLE}
           />
 
           {/* The record, bare on the page. No cards, so it reads as one
