@@ -69,6 +69,19 @@ export function legShares(bet: BetWithLegs): number[] {
   return bet.legs.map(() => 0);
 }
 
+// One settled bet's money as the profit chart counts it. With no
+// sport chosen that is the whole bet. With a sport chosen it is only
+// that sport's share, the same split the Per sport table uses.
+export function betProfitFor(bet: BetWithLegs, sport: Sport | null): number {
+  if (sport === null) return betProfit(bet);
+  const shares = legShares(bet);
+  let sum = 0;
+  bet.legs.forEach((leg, i) => {
+    if (leg.sport === sport) sum += shares[i] ?? 0;
+  });
+  return sum;
+}
+
 export interface SportRow {
   sport: Sport;
   wins: number;

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { formatMoney, formatSignedMoney, round2 } from "@/lib/format";
 import BetHistory from "@/components/BetHistory";
+import ProfitChart from "@/components/ProfitChart";
 import StatsRow from "@/components/StatsRow";
 import {
   bucketRows,
@@ -199,6 +200,8 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
           </p>
         ) : (
           <>
+            <ProfitChart bets={filtered} sport={sport} from={from} to={to} />
+
             {sportTotals === null ? (
               <section className="grid grid-cols-3 gap-2">
                 <div className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-neutral-950 p-3 text-center dark:border-neutral-800">
