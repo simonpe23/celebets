@@ -18,7 +18,7 @@ import {
 import { SPORTS, SPORT_EMOJI, type BetWithLegs, type Sport } from "@/lib/types";
 
 // Swap to compare the three headline treatments.
-const NUMBER_STYLE: NumberStyle = "A";
+const NUMBER_STYLE: NumberStyle = "2";
 
 const PERIOD_LABELS: { key: Period; label: string }[] = [
   { key: "all", label: "All time" },
@@ -155,9 +155,6 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
         : "border-neutral-300 bg-white text-neutral-600 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300"
     }`;
 
-  const inputClass =
-    "mt-1 block h-11 w-full rounded-xl border border-neutral-300 bg-white px-3 text-base text-neutral-900 outline-none focus:border-[#4F7A57] dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100";
-
   return (
     <main className="min-h-dvh px-4 py-6 sm:px-6">
       <div className="mx-auto w-full max-w-md space-y-5">
@@ -213,34 +210,6 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
             </div>
           </div>
 
-          {period === "custom" && (
-            <div className="mt-3 grid grid-cols-2 gap-3">
-              <div>
-                <label htmlFor="from" className="block text-xs text-neutral-500">
-                  From
-                </label>
-                <input
-                  id="from"
-                  type="date"
-                  value={customFrom}
-                  onChange={(e) => setCustomFrom(e.target.value)}
-                  className={inputClass}
-                />
-              </div>
-              <div>
-                <label htmlFor="to" className="block text-xs text-neutral-500">
-                  To
-                </label>
-                <input
-                  id="to"
-                  type="date"
-                  value={customTo}
-                  onChange={(e) => setCustomTo(e.target.value)}
-                  className={inputClass}
-                />
-              </div>
-            </div>
-          )}
 
           <div className="mt-5">
             <ProfitPanel
@@ -250,6 +219,10 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
               to={to}
               period={period}
               onPeriodChange={setPeriod}
+              customFrom={customFrom}
+              customTo={customTo}
+              onCustomFrom={setCustomFrom}
+              onCustomTo={setCustomTo}
             />
           </div>
 

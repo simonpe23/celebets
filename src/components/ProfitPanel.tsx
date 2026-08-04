@@ -22,6 +22,28 @@ interface Props {
   to: Date | null;
   period: Period;
   onPeriodChange: (period: Period) => void;
+  customFrom: string;
+  customTo: string;
+  onCustomFrom: (value: string) => void;
+  onCustomTo: (value: string) => void;
+}
+
+function CalendarIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-3.5 w-3.5 shrink-0"
+      aria-hidden="true"
+    >
+      <rect x="3" y="5" width="18" height="16" rx="2" />
+      <path d="M3 10h18M8 3v4M16 3v4" />
+    </svg>
+  );
 }
 
 export default function ProfitPanel({
@@ -31,7 +53,16 @@ export default function ProfitPanel({
   to,
   period,
   onPeriodChange,
+  customFrom,
+  customTo,
+  onCustomFrom,
+  onCustomTo,
 }: Props) {
+  const custom = period === "custom";
+
+  const dateClass =
+    "mt-1 block h-10 w-full rounded-lg border border-white/15 bg-white/5 px-3 text-sm text-white outline-none focus:border-white/40 [color-scheme:dark]";
+
   return (
     <section className="overflow-hidden rounded-3xl bg-[#101322] p-4 shadow-[0_18px_40px_-20px_rgba(16,19,34,0.9)] ring-1 ring-white/5">
       <div className="flex items-center justify-between gap-3">
@@ -54,26 +85,65 @@ export default function ProfitPanel({
               {short}
             </button>
           ))}
+          <button
+            type="button"
+            onClick={() => onPeriodChange(custom ? "all" : "custom")}
+            aria-label="Custom date range"
+            className={`flex items-center rounded-full px-2 py-1.5 transition-colors ${
+              custom
+                ? "bg-white text-[#101322]"
+                : "text-white/50 active:text-white/80"
+            }`}
+          >
+            <CalendarIcon />
+          </button>
         </div>
       </div>
 
+      {custom && (
+        <div className="mt-4 grid grid-cols-2 gap-3 rounded-2xl bg-white/5 p-3">
+          <div>
+            <label
+              htmlFor="from"
+              className="block text-[10px] font-bold uppercase tracking-widest text-white/40"
+            >
+              From
+            </label>
+            <input
+              id="from"
+              type="date"
+              value={customFrom}
+              onChange={(e) => onCustomFrom(e.target.value)}
+              className={dateClass}
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="to"
+              className="block text-[10px] font-bold uppercase tracking-widest text-white/40"
+            >
+              To
+            </label>
+            <input
+              id="to"
+              type="date"
+              value={customTo}
+              onChange={(e) => onCustomTo(e.target.value)}
+              className={dateClass}
+            />
+          </div>
+        </div>
+      )}
+
       {bets.length === 0 ? (
         <p className="flex h-52 items-center justify-center text-sm text-white/40">
-          No settled bets in this range.
+          {custom && !customFrom && !customTo
+            ? "Pick a start and an end date."
+            : "No settled bets in this range."}
         </p>
       ) : (
         <ProfitChart bets={bets} sport={sport} from={from} to={to} />
       )}
-
-      <button
-        type="button"
-        onClick={() => onPeriodChange(period === "custom" ? "all" : "custom")}
-        className={`mt-1 text-[11px] font-semibold ${
-          period === "custom" ? "text-white" : "text-white/40"
-        }`}
-      >
-        {period === "custom" ? "Clear custom range" : "Custom range"}
-      </button>
     </section>
   );
 }

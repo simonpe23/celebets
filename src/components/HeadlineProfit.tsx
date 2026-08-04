@@ -2,11 +2,11 @@
 
 import { round2 } from "@/lib/format";
 
-// Three treatments to compare.
-//   A  near black digits, quiet prefix, colored ROI chip
-//   B  colored digits, quiet prefix, colored ROI chip
-//   C  same as A, set in the brand font
-export type NumberStyle = "A" | "B" | "C";
+// Three ways to set the prefix. The digits are always black.
+//   1  one size, one weight, no split at all
+//   2  smaller prefix, aligned to the top of the digits
+//   3  smaller prefix, aligned to the baseline
+export type NumberStyle = "1" | "2" | "3";
 
 interface Props {
   label: string;
@@ -15,8 +15,8 @@ interface Props {
   style: NumberStyle;
 }
 
-// Splits money into a quiet prefix and loud digits, so the sign and
-// the dollar sign never compete with the number itself.
+// Splits money into prefix and digits so the sign and the dollar sign
+// never compete with the number itself.
 function parts(value: number): { prefix: string; digits: string } {
   const rounded = round2(value);
   const sign = rounded < 0 ? "-" : "+";
@@ -31,38 +31,44 @@ export default function HeadlineProfit({ label, profit, roi, style }: Props) {
   const { prefix, digits } = parts(profit);
   const up = round2(profit) >= 0;
 
-  const digitColor =
-    style === "B"
-      ? up
-        ? "text-emerald-700 dark:text-emerald-400"
-        : "text-red-700 dark:text-red-400"
-      : "text-neutral-900 dark:text-white";
-
-  const fontClass = style === "C" ? "font-brand" : "";
+  const ink = "text-neutral-900 dark:text-white";
 
   return (
     <div className="text-center">
-      <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-neutral-400">
+      <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-500">
         {label}
       </p>
 
-      <p className={`mt-1 flex items-baseline justify-center gap-0.5 ${fontClass}`}>
-        <span
-          className={`text-2xl font-semibold ${
-            style === "B" ? digitColor : "text-neutral-400"
-          }`}
+      {style === "1" ? (
+        <p
+          className={`mt-1.5 text-5xl font-bold tracking-tight tabular-nums ${ink}`}
         >
           {prefix}
-        </span>
-        <span
-          className={`text-5xl font-bold tracking-tight tabular-nums ${digitColor}`}
-        >
           {digits}
-        </span>
-      </p>
+        </p>
+      ) : (
+        <p
+          className={`mt-1.5 flex justify-center gap-0.5 ${
+            style === "2" ? "items-start" : "items-baseline"
+          }`}
+        >
+          <span
+            className={`text-3xl font-bold leading-none ${ink} ${
+              style === "2" ? "mt-1" : ""
+            }`}
+          >
+            {prefix}
+          </span>
+          <span
+            className={`text-5xl font-bold leading-none tracking-tight tabular-nums ${ink}`}
+          >
+            {digits}
+          </span>
+        </p>
+      )}
 
       {roi !== null && (
-        <p className="mt-2">
+        <p className="mt-3">
           <span
             className={`inline-block rounded-full px-2.5 py-1 text-xs font-bold tabular-nums ${
               up
