@@ -149,7 +149,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
     .sort((a, b) => b.profit - a.profit);
 
   const pillClass = (active: boolean) =>
-    `flex h-11 shrink-0 items-center whitespace-nowrap rounded-xl border px-4 text-sm font-semibold ${
+    `shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
       active
         ? "border-[#4F7A57] bg-[#4F7A57] text-white"
         : "border-neutral-300 bg-white text-neutral-600 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300"
