@@ -328,7 +328,7 @@ export default function NewBetForm({ lastStake }: Props) {
           type="button"
           disabled={importing}
           onClick={pasteSlip}
-          className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-[#4F7A57] bg-white text-sm font-bold text-[#4F7A57] active:bg-[#4F7A57]/10 disabled:opacity-50 dark:border-emerald-500/50 dark:bg-transparent dark:text-emerald-400"
+          className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-emerald-600/60 bg-white text-sm font-bold text-emerald-600 active:bg-emerald-600/10 disabled:opacity-50 dark:border-emerald-500/50 dark:bg-transparent dark:text-emerald-400"
         >
           <ClipboardIcon />
           Paste bet slip
