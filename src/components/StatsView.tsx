@@ -4,8 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { formatMoney, formatSignedMoney, round2 } from "@/lib/format";
 import BetHistory from "@/components/BetHistory";
-import AnalyticsHero from "@/components/AnalyticsHero";
-import StatsRow from "@/components/StatsRow";
+import ProfitChart from "@/components/ProfitChart";
 import {
   bucketRows,
   categoryRows,
@@ -49,6 +48,28 @@ function profitColor(value: number): string {
   if (value > 0) return "text-emerald-600 dark:text-emerald-400";
   if (value < 0) return "text-red-600 dark:text-red-400";
   return "text-neutral-500";
+}
+
+// One small number in the grid under the chart.
+function Tile({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: string;
+  tone?: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] p-3 dark:border-neutral-800 dark:bg-neutral-950">
+      <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+        {label}
+      </p>
+      <p className={`mt-1 text-base font-bold tabular-nums ${tone ?? ""}`}>
+        {value}
+      </p>
+    </div>
+  );
 }
 
 function pctLabel(wins: number, total: number): string {
@@ -122,11 +143,16 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
       ? filtered.filter((b) => b.status === "lost").length
       : sportTotals.losses;
 
-  const chipClass = (active: boolean) =>
-    `shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
+  // Sports that actually have settled picks in this selection.
+  const breakdown = bySport
+    .filter((row) => row.wins + row.losses > 0)
+    .sort((a, b) => b.profit - a.profit);
+
+  const switchClass = (active: boolean) =>
+    `shrink-0 whitespace-nowrap rounded-lg border px-2.5 py-1.5 text-xs font-semibold ${
       active
         ? "border-[#4F7A57] bg-[#4F7A57] text-white"
-        : "border-neutral-300 dark:border-neutral-700"
+        : "border-neutral-300 text-neutral-500 dark:border-neutral-700"
     }`;
 
   const inputClass =
@@ -145,38 +171,28 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
           </Link>
         </header>
 
-        <StatsRow bets={allSettled} />
-
+        {/* The headline and the chart sit straight on the page. No card,
+            so the top of the screen reads as one open area. */}
         <section>
-          <p className="text-sm font-medium">Sport</p>
-          <div className="-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1">
-            <button
-              type="button"
-              onClick={() => setSport(null)}
-              className={chipClass(sport === null)}
-            >
-              All
-            </button>
-            {SPORTS.map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => setSport(s)}
-                className={chipClass(sport === s)}
-              >
-                {SPORT_EMOJI[s]} {s}
-              </button>
-            ))}
-          </div>
+          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-neutral-400">
+            {periodLabel}
+            {sport === null ? "" : ` / ${sport}`}
+          </p>
+          <p
+            className={`mt-1 text-4xl font-bold tracking-tight ${profitColor(
+              heroProfit
+            )}`}
+          >
+            {formatSignedMoney(round2(heroProfit))}
+          </p>
 
-          <p className="mt-4 text-sm font-medium">Period</p>
-          <div className="-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1">
+          <div className="-mx-1 mt-3 flex gap-1.5 overflow-x-auto px-1 pb-1">
             {PERIOD_LABELS.map(({ key, label }) => (
               <button
                 key={key}
                 type="button"
                 onClick={() => setPeriod(key)}
-                className={chipClass(period === key)}
+                className={switchClass(period === key)}
               >
                 {label}
               </button>
@@ -211,6 +227,18 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
               </div>
             </div>
           )}
+
+          {filtered.length > 0 && (
+            <div className="mt-4">
+              <ProfitChart
+                bets={filtered}
+                sport={sport}
+                from={from}
+                to={to}
+                tone={CHART_TONE}
+              />
+            </div>
+          )}
         </section>
 
         {filtered.length === 0 ? (
@@ -219,61 +247,86 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
           </p>
         ) : (
           <>
-            <AnalyticsHero
-              bets={filtered}
-              sport={sport}
-              from={from}
-              to={to}
-              periodLabel={periodLabel}
-              profit={heroProfit}
-              roi={heroRoi}
-              wins={heroWins}
-              losses={heroLosses}
-              unit={sport === null ? "bets" : "picks"}
-              tone={CHART_TONE}
-            />
+            {/* The tiles. With no sport chosen they speak in money and
+                bets. With a sport chosen they speak in that sport's
+                picks, because a parlay's stake covers several sports
+                and cannot be split. */}
+            {sportTotals === null ? (
+              <section className="grid grid-cols-3 gap-2">
+                <Tile label="Staked" value={formatMoney(round2(t.staked))} />
+                <Tile
+                  label="Returned"
+                  value={formatMoney(round2(t.returned))}
+                />
+                <Tile
+                  label="ROI"
+                  value={heroRoi === null ? "-" : `${heroRoi.toFixed(1)}%`}
+                  tone={profitColor(heroRoi ?? 0)}
+                />
+                <Tile label="Bets" value={String(filtered.length)} />
+                <Tile label="Record" value={`${heroWins}-${heroLosses}`} />
+                <Tile
+                  label="Hit rate"
+                  value={pctLabel(heroWins, heroWins + heroLosses)}
+                />
+              </section>
+            ) : (
+              <section className="grid grid-cols-2 gap-2">
+                <Tile label="Picks" value={String(heroWins + heroLosses)} />
+                <Tile label="Record" value={`${heroWins}-${heroLosses}`} />
+                <Tile
+                  label="Hit rate"
+                  value={pctLabel(heroWins, heroWins + heroLosses)}
+                />
+                <Tile
+                  label="Profit"
+                  value={formatSignedMoney(round2(heroProfit))}
+                  tone={profitColor(heroProfit)}
+                />
+              </section>
+            )}
 
-            <section className="grid grid-cols-3 gap-2">
-              <div className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] p-3 text-center dark:border-neutral-800 dark:bg-neutral-950">
-                <p className="text-xs text-neutral-500">Staked</p>
-                <p className="mt-0.5 text-sm font-bold">
-                  {formatMoney(round2(t.staked))}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] p-3 text-center dark:border-neutral-800 dark:bg-neutral-950">
-                <p className="text-xs text-neutral-500">Returned</p>
-                <p className="mt-0.5 text-sm font-bold">
-                  {formatMoney(round2(t.returned))}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] p-3 text-center dark:border-neutral-800 dark:bg-neutral-950">
-                <p className="text-xs text-neutral-500">Bets</p>
-                <p className="mt-0.5 text-sm font-bold">{filtered.length}</p>
+            <section>
+              <div className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1">
+                <button
+                  type="button"
+                  onClick={() => setSport(null)}
+                  className={switchClass(sport === null)}
+                >
+                  All sports
+                </button>
+                {SPORTS.map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => setSport(s)}
+                    className={switchClass(sport === s)}
+                  >
+                    {SPORT_EMOJI[s]} {s}
+                  </button>
+                ))}
               </div>
             </section>
 
-            <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-neutral-950 p-4 dark:border-neutral-800">
-              <h2 className="text-base font-bold">Per sport</h2>
-              <p className="mt-1 text-xs text-neutral-500">
-                Record counts every settled pick. Money follows the split
-                rules: winnings split by odds, losses charged to the pick
-                that lost the ticket.
-              </p>
-              <div className="mt-3 space-y-2">
-                {bySport.map((row) => (
+            <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] p-4 dark:border-neutral-800 dark:bg-neutral-950">
+              <h2 className="text-[11px] font-bold uppercase tracking-[0.18em] text-neutral-400">
+                Sports breakdown
+              </h2>
+              <div className="mt-3 divide-y divide-neutral-300/60 dark:divide-neutral-800">
+                {breakdown.map((row) => (
                   <div
                     key={row.sport}
-                    className="flex items-center justify-between gap-2"
+                    className="flex items-center justify-between gap-3 py-2.5"
                   >
-                    <p className="text-sm font-medium">
+                    <p className="truncate text-sm font-semibold">
                       {SPORT_EMOJI[row.sport]} {row.sport}
                     </p>
-                    <div className="flex items-center gap-3">
-                      <p className="text-sm text-neutral-500">
+                    <div className="flex shrink-0 items-center gap-4">
+                      <p className="text-xs tabular-nums text-neutral-400">
                         {row.wins}-{row.losses}
                       </p>
                       <p
-                        className={`w-20 text-right text-sm font-bold ${profitColor(
+                        className={`w-24 text-right text-sm font-bold tabular-nums ${profitColor(
                           row.profit
                         )}`}
                       >
@@ -283,6 +336,10 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
                   </div>
                 ))}
               </div>
+              <p className="mt-3 text-[11px] leading-relaxed text-neutral-400">
+                Record counts every settled pick. Winnings split by odds,
+                losses charged to the pick that lost the ticket.
+              </p>
             </section>
 
             <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-neutral-950 p-4 dark:border-neutral-800">
