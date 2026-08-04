@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { formatSignedMoney, round2 } from "@/lib/format";
 import { betProfitFor } from "@/lib/stats";
 import type { BetWithLegs, Sport } from "@/lib/types";
 
@@ -153,33 +152,23 @@ export default function ProfitChart({
 
   return (
     <div>
-      <div className="relative mt-4 h-44">
-        <div className="absolute inset-y-0 left-0 w-14 text-[10px] font-medium tabular-nums text-white/35">
-          {rawMax > 0 && (
-            <span className="absolute left-0 top-0">
-              {formatSignedMoney(round2(rawMax))}
-            </span>
-          )}
-          <span
-            className="absolute left-0 -translate-y-1/2"
-            style={{ top: `${zeroFraction * 100}%` }}
-          >
-            $0
-          </span>
-          {rawMin < 0 && (
-            <span className="absolute bottom-0 left-0">
-              {formatSignedMoney(round2(rawMin))}
-            </span>
-          )}
-        </div>
-
+      {/* The chart owns every touch inside it, the way Robinhood's does.
+          You scroll the page from anywhere outside this box. Sharing the
+          gesture with the browser meant a thumb drag almost always lost
+          to the page. */}
+      <div className="relative -mx-1 mt-4 h-64 select-none">
         <div
           ref={plotRef}
-          className="absolute inset-y-0 left-14 right-1"
-          // pan-y keeps the page scrolling on a vertical swipe, while a
-          // sideways drag scrubs the chart.
-          style={{ touchAction: "pan-y" }}
+          className="absolute inset-0 touch-none"
+          style={{
+            WebkitUserSelect: "none",
+            userSelect: "none",
+            WebkitTouchCallout: "none",
+            overscrollBehavior: "contain",
+          }}
+          onContextMenu={(e) => e.preventDefault()}
           onPointerDown={(e) => {
+            e.preventDefault();
             e.currentTarget.setPointerCapture(e.pointerId);
             scrubTo(e.clientX);
           }}
@@ -190,6 +179,15 @@ export default function ProfitChart({
           onPointerCancel={endScrub}
           onPointerLeave={endScrub}
         >
+          {/* Break even, marked on the line rather than in a label
+              column. That column was 56 pixels of dead target. */}
+          <span
+            className="pointer-events-none absolute right-0 -translate-y-1/2 rounded bg-white/10 px-1 text-[10px] font-bold text-white/50"
+            style={{ top: `${zeroFraction * 100}%` }}
+          >
+            $0
+          </span>
+
           <svg
             viewBox={`0 0 ${W} ${H}`}
             preserveAspectRatio="none"
@@ -328,9 +326,12 @@ export default function ProfitChart({
             )}
           </svg>
 
-          {/* The dot marks today, or the moment you are holding. */}
+          {/* The dot marks today, or the moment you are holding. It
+              grows while you hold so it stays visible under a thumb. */}
           <span
-            className="pointer-events-none absolute block h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full ring-4"
+            className={`pointer-events-none absolute block -translate-x-1/2 -translate-y-1/2 rounded-full ring-4 transition-[height,width] ${
+              active ? "h-3.5 w-3.5" : "h-2.5 w-2.5"
+            }`}
             style={{
               left: `${(active ?? last).t * 100}%`,
               top: `${(y((active ?? last).value) / H) * 100}%`,
@@ -343,7 +344,7 @@ export default function ProfitChart({
         </div>
       </div>
 
-      <div className="mt-3 flex justify-between pl-14 text-[10px] font-medium text-white/35">
+      <div className="mt-3 flex justify-between text-[10px] font-medium text-white/35">
         <span>{shortDate(startX)}</span>
         <span>{shortDate(endX)}</span>
       </div>
