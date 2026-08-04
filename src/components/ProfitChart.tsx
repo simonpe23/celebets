@@ -11,32 +11,23 @@ interface Props {
   // Start and end of the chosen period. Null means open ended.
   from: Date | null;
   to: Date | null;
-  // "money" paints gains green and losses red. "brand" paints the
-  // whole line in Celebet purple.
-  tone?: "money" | "brand";
 }
 
-// The drawing grid. The chart stretches to the card's width, so these
+// The drawing grid. The chart stretches to the panel's width, so these
 // are just internal coordinates, not pixels on screen.
 const W = 300;
-const H = 130;
+const H = 150;
 
-const GREEN = "#059669";
-const RED = "#DC2626";
-const PURPLE_LIGHT = "#8B4FC0";
-const PURPLE_DEEP = "#58287F";
+// Brighter than the page colors on purpose. These have to glow
+// against the dark panel.
+const GREEN = "#34D399";
+const RED = "#FB7185";
 
 function shortDate(date: Date): string {
   return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
 }
 
-export default function ProfitChart({
-  bets,
-  sport,
-  from,
-  to,
-  tone = "money",
-}: Props) {
+export default function ProfitChart({ bets, sport, from, to }: Props) {
   const settled = bets
     .filter((b) => b.settled_at !== null)
     .sort(
@@ -77,8 +68,7 @@ export default function ProfitChart({
   const values = points.map((p) => p.value);
   const rawMax = Math.max(...values, 0);
   const rawMin = Math.min(...values, 0);
-  // A little air above and below so the line never touches the edge.
-  const pad = Math.max((rawMax - rawMin) * 0.15, 1);
+  const pad = Math.max((rawMax - rawMin) * 0.18, 1);
   const max = rawMax + pad;
   const min = rawMin - pad;
 
@@ -105,15 +95,24 @@ export default function ProfitChart({
     ` L${x(points[points.length - 1].t).toFixed(2)},${zeroY.toFixed(2)} Z`;
 
   const last = points[points.length - 1];
-  const endDotX = x(last.t);
-  const endDotY = y(last.value);
-  const brand = tone === "brand";
-  const endColor = brand ? PURPLE_DEEP : running >= 0 ? GREEN : RED;
+  const endColor = running >= 0 ? GREEN : RED;
 
   return (
-    <div>
-      <div className="relative h-44">
-        <div className="absolute inset-y-0 left-0 w-12 text-[10px] font-medium text-neutral-400">
+    <section className="overflow-hidden rounded-3xl bg-[#101322] p-4 shadow-[0_18px_40px_-20px_rgba(16,19,34,0.9)] ring-1 ring-white/5">
+      <div className="flex items-baseline justify-between">
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">
+          Profit over time
+        </p>
+        <p
+          className="text-sm font-bold tabular-nums"
+          style={{ color: endColor }}
+        >
+          {formatSignedMoney(round2(running))}
+        </p>
+      </div>
+
+      <div className="relative mt-3 h-44">
+        <div className="absolute inset-y-0 left-0 w-14 text-[10px] font-medium tabular-nums text-white/35">
           {rawMax > 0 && (
             <span className="absolute left-0 top-0">
               {formatSignedMoney(round2(rawMax))}
@@ -132,7 +131,7 @@ export default function ProfitChart({
           )}
         </div>
 
-        <div className="absolute inset-y-0 left-12 right-1">
+        <div className="absolute inset-y-0 left-14 right-1">
           <svg
             viewBox={`0 0 ${W} ${H}`}
             preserveAspectRatio="none"
@@ -149,19 +148,10 @@ export default function ProfitChart({
                 x2="0"
                 y2={H}
               >
-                {brand ? (
-                  <>
-                    <stop offset="0" stopColor={PURPLE_LIGHT} />
-                    <stop offset="1" stopColor={PURPLE_DEEP} />
-                  </>
-                ) : (
-                  <>
-                    <stop offset="0" stopColor={GREEN} />
-                    <stop offset={zeroFraction} stopColor={GREEN} />
-                    <stop offset={zeroFraction} stopColor={RED} />
-                    <stop offset="1" stopColor={RED} />
-                  </>
-                )}
+                <stop offset="0" stopColor={GREEN} />
+                <stop offset={zeroFraction} stopColor={GREEN} />
+                <stop offset={zeroFraction} stopColor={RED} />
+                <stop offset="1" stopColor={RED} />
               </linearGradient>
 
               <linearGradient
@@ -172,54 +162,52 @@ export default function ProfitChart({
                 x2="0"
                 y2={H}
               >
-                {brand ? (
-                  <>
-                    <stop
-                      offset="0"
-                      stopColor={PURPLE_LIGHT}
-                      stopOpacity="0.42"
-                    />
-                    <stop
-                      offset={zeroFraction}
-                      stopColor={PURPLE_DEEP}
-                      stopOpacity="0.04"
-                    />
-                    <stop
-                      offset={zeroFraction}
-                      stopColor={PURPLE_DEEP}
-                      stopOpacity="0.04"
-                    />
-                    <stop offset="1" stopColor={PURPLE_DEEP} stopOpacity="0.4" />
-                  </>
-                ) : (
-                  <>
-                    <stop offset="0" stopColor={GREEN} stopOpacity="0.45" />
-                    <stop
-                      offset={zeroFraction}
-                      stopColor={GREEN}
-                      stopOpacity="0.02"
-                    />
-                    <stop
-                      offset={zeroFraction}
-                      stopColor={RED}
-                      stopOpacity="0.02"
-                    />
-                    <stop offset="1" stopColor={RED} stopOpacity="0.42" />
-                  </>
-                )}
+                <stop offset="0" stopColor={GREEN} stopOpacity="0.5" />
+                <stop
+                  offset={zeroFraction}
+                  stopColor={GREEN}
+                  stopOpacity="0.02"
+                />
+                <stop offset={zeroFraction} stopColor={RED} stopOpacity="0.02" />
+                <stop offset="1" stopColor={RED} stopOpacity="0.45" />
               </linearGradient>
 
-              {/* The soft halo that gives the line its depth. */}
+              {/* Two blurs: a wide bloom and a tight one, which is what
+                  makes the line read as lit rather than drawn. */}
+              <filter
+                id="celebet-bloom"
+                x="-25%"
+                y="-50%"
+                width="150%"
+                height="200%"
+              >
+                <feGaussianBlur stdDeviation="7" />
+              </filter>
               <filter
                 id="celebet-glow"
-                x="-20%"
-                y="-40%"
-                width="140%"
-                height="180%"
+                x="-25%"
+                y="-50%"
+                width="150%"
+                height="200%"
               >
-                <feGaussianBlur stdDeviation="3" />
+                <feGaussianBlur stdDeviation="2.5" />
               </filter>
             </defs>
+
+            {/* Faint rules so the panel reads as a chart, not a poster. */}
+            {[0.25, 0.5, 0.75].map((f) => (
+              <line
+                key={f}
+                x1="0"
+                y1={H * f}
+                x2={W}
+                y2={H * f}
+                stroke="#ffffff"
+                strokeOpacity="0.05"
+                strokeWidth="1"
+                vectorEffect="non-scaling-stroke"
+              />
+            ))}
 
             <path d={area} fill="url(#celebet-area)" />
 
@@ -228,19 +216,30 @@ export default function ProfitChart({
               y1={zeroY}
               x2={W}
               y2={zeroY}
-              stroke="currentColor"
+              stroke="#ffffff"
+              strokeOpacity="0.22"
               strokeWidth="1"
               strokeDasharray="2 5"
               vectorEffect="non-scaling-stroke"
-              className="text-neutral-400/60 dark:text-neutral-600"
             />
 
             <path
               d={line}
               fill="none"
               stroke="url(#celebet-line)"
-              strokeWidth="6"
-              strokeOpacity="0.35"
+              strokeWidth="8"
+              strokeOpacity="0.45"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              vectorEffect="non-scaling-stroke"
+              filter="url(#celebet-bloom)"
+            />
+            <path
+              d={line}
+              fill="none"
+              stroke="url(#celebet-line)"
+              strokeWidth="4"
+              strokeOpacity="0.6"
               strokeLinecap="round"
               strokeLinejoin="round"
               vectorEffect="non-scaling-stroke"
@@ -250,7 +249,7 @@ export default function ProfitChart({
               d={line}
               fill="none"
               stroke="url(#celebet-line)"
-              strokeWidth="3"
+              strokeWidth="2.5"
               strokeLinecap="round"
               strokeLinejoin="round"
               vectorEffect="non-scaling-stroke"
@@ -261,20 +260,21 @@ export default function ProfitChart({
           <span
             className="pointer-events-none absolute block h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full ring-4"
             style={{
-              left: `${(endDotX / W) * 100}%`,
-              top: `${(endDotY / H) * 100}%`,
+              left: `${last.t * 100}%`,
+              top: `${(y(last.value) / H) * 100}%`,
               backgroundColor: endColor,
+              boxShadow: `0 0 14px 2px ${endColor}`,
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              ["--tw-ring-color" as any]: `${endColor}33`,
+              ["--tw-ring-color" as any]: `${endColor}40`,
             }}
           />
         </div>
       </div>
 
-      <div className="mt-2 flex justify-between pl-12 text-[10px] font-medium text-neutral-400">
+      <div className="mt-3 flex justify-between pl-14 text-[10px] font-medium text-white/35">
         <span>{shortDate(startX)}</span>
         <span>{shortDate(endX)}</span>
       </div>
-    </div>
+    </section>
   );
 }

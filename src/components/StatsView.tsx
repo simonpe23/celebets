@@ -15,9 +15,6 @@ import {
 } from "@/lib/stats";
 import { SPORTS, SPORT_EMOJI, type BetWithLegs, type Sport } from "@/lib/types";
 
-// Flip to "brand" to paint the profit line in Celebet purple.
-const CHART_TONE: "money" | "brand" = "money";
-
 type Period = "today" | "week" | "month" | "year" | "all" | "custom";
 
 const PERIOD_LABELS: { key: Period; label: string }[] = [
@@ -149,10 +146,10 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
     .sort((a, b) => b.profit - a.profit);
 
   const switchClass = (active: boolean) =>
-    `shrink-0 whitespace-nowrap rounded-lg border px-2.5 py-1.5 text-xs font-semibold ${
+    `shrink-0 whitespace-nowrap pb-1 text-xs font-bold uppercase tracking-wider ${
       active
-        ? "border-[#4F7A57] bg-[#4F7A57] text-white"
-        : "border-neutral-300 text-neutral-500 dark:border-neutral-700"
+        ? "border-b-2 border-[#4F7A57] text-[#4F7A57]"
+        : "border-b-2 border-transparent text-neutral-400"
     }`;
 
   const inputClass =
@@ -174,29 +171,45 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
         {/* The headline and the chart sit straight on the page. No card,
             so the top of the screen reads as one open area. */}
         <section>
-          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-neutral-400">
+          <p className="text-center text-[11px] font-bold uppercase tracking-[0.2em] text-neutral-400">
             {periodLabel}
             {sport === null ? "" : ` / ${sport}`}
           </p>
           <p
-            className={`mt-1 text-4xl font-bold tracking-tight ${profitColor(
+            className={`mt-1 text-center text-4xl font-bold tracking-tight ${profitColor(
               heroProfit
             )}`}
           >
             {formatSignedMoney(round2(heroProfit))}
           </p>
 
-          <div className="-mx-1 mt-3 flex gap-1.5 overflow-x-auto px-1 pb-1">
-            {PERIOD_LABELS.map(({ key, label }) => (
-              <button
-                key={key}
-                type="button"
-                onClick={() => setPeriod(key)}
-                className={switchClass(period === key)}
-              >
-                {label}
-              </button>
-            ))}
+          {/* The record, bare on the page. No cards, so it reads as one
+              line of facts under the headline. */}
+          <div className="mt-4 grid grid-cols-3 divide-x divide-neutral-300/70 dark:divide-neutral-800">
+            <div className="text-center">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+                {sport === null ? "Bets" : "Picks"}
+              </p>
+              <p className="mt-0.5 text-lg font-bold tabular-nums">
+                {heroWins + heroLosses}
+              </p>
+            </div>
+            <div className="text-center">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+                Record
+              </p>
+              <p className="mt-0.5 text-lg font-bold tabular-nums">
+                {heroWins}-{heroLosses}
+              </p>
+            </div>
+            <div className="text-center">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+                Hit rate
+              </p>
+              <p className="mt-0.5 text-lg font-bold tabular-nums">
+                {pctLabel(heroWins, heroWins + heroLosses)}
+              </p>
+            </div>
           </div>
 
           {period === "custom" && (
@@ -230,15 +243,44 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
 
           {filtered.length > 0 && (
             <div className="mt-4">
-              <ProfitChart
-                bets={filtered}
-                sport={sport}
-                from={from}
-                to={to}
-                tone={CHART_TONE}
-              />
+              <ProfitChart bets={filtered} sport={sport} from={from} to={to} />
             </div>
           )}
+
+          {/* Filters live under the chart, as plain text. Cards here
+              made the page feel stacked. */}
+          <div className="-mx-1 mt-4 flex gap-4 overflow-x-auto px-1 pb-1">
+            {PERIOD_LABELS.map(({ key, label }) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setPeriod(key)}
+                className={switchClass(period === key)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
+          <div className="-mx-1 mt-2 flex gap-4 overflow-x-auto px-1 pb-1">
+            <button
+              type="button"
+              onClick={() => setSport(null)}
+              className={switchClass(sport === null)}
+            >
+              All sports
+            </button>
+            {SPORTS.map((s) => (
+              <button
+                key={s}
+                type="button"
+                onClick={() => setSport(s)}
+                className={switchClass(sport === s)}
+              >
+                {SPORT_EMOJI[s]} {s}
+              </button>
+            ))}
+          </div>
         </section>
 
         {filtered.length === 0 ? (
@@ -251,61 +293,14 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
                 bets. With a sport chosen they speak in that sport's
                 picks, because a parlay's stake covers several sports
                 and cannot be split. */}
-            {sportTotals === null ? (
-              <section className="grid grid-cols-3 gap-2">
-                <Tile label="Staked" value={formatMoney(round2(t.staked))} />
-                <Tile
-                  label="Returned"
-                  value={formatMoney(round2(t.returned))}
-                />
-                <Tile
-                  label="ROI"
-                  value={heroRoi === null ? "-" : `${heroRoi.toFixed(1)}%`}
-                  tone={profitColor(heroRoi ?? 0)}
-                />
-                <Tile label="Bets" value={String(filtered.length)} />
-                <Tile label="Record" value={`${heroWins}-${heroLosses}`} />
-                <Tile
-                  label="Hit rate"
-                  value={pctLabel(heroWins, heroWins + heroLosses)}
-                />
-              </section>
-            ) : (
-              <section className="grid grid-cols-2 gap-2">
-                <Tile label="Picks" value={String(heroWins + heroLosses)} />
-                <Tile label="Record" value={`${heroWins}-${heroLosses}`} />
-                <Tile
-                  label="Hit rate"
-                  value={pctLabel(heroWins, heroWins + heroLosses)}
-                />
-                <Tile
-                  label="Profit"
-                  value={formatSignedMoney(round2(heroProfit))}
-                  tone={profitColor(heroProfit)}
-                />
-              </section>
-            )}
-
-            <section>
-              <div className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1">
-                <button
-                  type="button"
-                  onClick={() => setSport(null)}
-                  className={switchClass(sport === null)}
-                >
-                  All sports
-                </button>
-                {SPORTS.map((s) => (
-                  <button
-                    key={s}
-                    type="button"
-                    onClick={() => setSport(s)}
-                    className={switchClass(sport === s)}
-                  >
-                    {SPORT_EMOJI[s]} {s}
-                  </button>
-                ))}
-              </div>
+            <section className="grid grid-cols-3 gap-2">
+              <Tile label="Staked" value={formatMoney(round2(t.staked))} />
+              <Tile label="Returned" value={formatMoney(round2(t.returned))} />
+              <Tile
+                label="ROI"
+                value={heroRoi === null ? "-" : `${heroRoi.toFixed(1)}%`}
+                tone={profitColor(heroRoi ?? 0)}
+              />
             </section>
 
             <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] p-4 dark:border-neutral-800 dark:bg-neutral-950">
