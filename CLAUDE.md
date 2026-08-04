@@ -5,7 +5,10 @@ The owner has no coding experience. These rules are permanent.
 ## Communication rules
 
 - Speak plainly. Short sentences. Explain at a level a non-coder can grasp.
-- Use more words when needed for clarity, but no essays. Find the balance.
+- Be brief. Default to a handful of bullets, not a report. The owner
+  said answers are too long (August 2026). Cut the reasoning unless it
+  changes a decision. Do not list every test that passed, just say it
+  works. Do not restate what was asked.
 - Never compress several ideas into one long sentence.
 - Write in short bullets, not long text blocks.
 - Never bury an important note or a task in the middle of a text block.
