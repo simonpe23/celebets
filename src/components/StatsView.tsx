@@ -1,5 +1,6 @@
 "use client";
 
+import MicroLabel from "@/components/MicroLabel";
 import { useState } from "react";
 import Link from "next/link";
 import { formatMoney, formatSignedMoney, round2 } from "@/lib/format";
@@ -164,26 +165,20 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
               line of facts under the headline. */}
           <div className="mt-4 grid grid-cols-3 divide-x divide-neutral-300/70 dark:divide-neutral-800">
             <div className="text-center">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-                {sport === null ? "Bets" : "Picks"}
-              </p>
-              <p className="mt-0.5 font-money text-lg font-bold tabular-nums">
+              <MicroLabel>{sport === null ? "Bets" : "Picks"}</MicroLabel>
+              <p className="mt-0.5 font-money text-lg font-semibold tabular-nums">
                 {heroWins + heroLosses}
               </p>
             </div>
             <div className="text-center">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-                Record
-              </p>
-              <p className="mt-0.5 font-money text-lg font-bold tabular-nums">
+              <MicroLabel>Record</MicroLabel>
+              <p className="mt-0.5 font-money text-lg font-semibold tabular-nums">
                 {heroWins}-{heroLosses}
               </p>
             </div>
             <div className="text-center">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-                Hit rate
-              </p>
-              <p className="mt-0.5 font-money text-lg font-bold tabular-nums">
+              <MicroLabel>Hit rate</MicroLabel>
+              <p className="mt-0.5 font-money text-lg font-semibold tabular-nums">
                 {pctLabel(heroWins, heroWins + heroLosses)}
               </p>
             </div>
@@ -274,7 +269,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
                   </div>
                 ))}
               </div>
-              <p className="mt-3 text-[11px] leading-relaxed text-neutral-400">
+              <p className="mt-3 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
                 Record counts every settled pick. Winnings split by odds,
                 losses charged to the pick that lost the ticket.
               </p>
@@ -298,7 +293,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
                           key={label}
                           className="flex items-center justify-between gap-2"
                         >
-                          <p className="text-sm font-medium">{label}</p>
+                          <p className="text-sm font-semibold">{label}</p>
                           <div className="flex items-center gap-3">
                             <p className="text-sm text-neutral-500 dark:text-neutral-400">
                               {picks === 0
@@ -323,7 +318,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
                         key={row.label}
                         className="flex items-center justify-between gap-2"
                       >
-                        <p className="text-sm font-medium">{row.label}</p>
+                        <p className="text-sm font-semibold">{row.label}</p>
                         <div className="flex items-center gap-3">
                           <p className="text-sm text-neutral-500 dark:text-neutral-400">
                             {row.betsTotal === 0
@@ -357,7 +352,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
                     key={row.label}
                     className="flex items-center justify-between gap-2"
                   >
-                    <p className="text-sm font-medium">{row.label}</p>
+                    <p className="text-sm font-semibold">{row.label}</p>
                     <p className="text-sm text-neutral-500 dark:text-neutral-400">
                       {row.total === 0
                         ? "no picks"
@@ -381,7 +376,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
                       key={row.label}
                       className="flex items-center justify-between gap-2"
                     >
-                      <p className="min-w-0 truncate text-sm font-medium">
+                      <p className="min-w-0 truncate text-sm font-semibold">
                         {row.label}
                       </p>
                       <div className="flex shrink-0 items-center gap-3">

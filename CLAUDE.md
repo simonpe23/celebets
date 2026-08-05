@@ -87,32 +87,58 @@ Before showing any UI change:
 Everything below lives in code. Do not restate these values inline,
 import the component or reuse the exact class string.
 
-- Shared tile: src/components/StatTile.tsx. Used by StatsRow and by
-  StatsView. Never copy it into a page.
-- Buttons, tier one: text-sm font-bold, px-3 py-2.5, rounded-xl.
-  Log out, Home, Start here, Stats, Recommendations, Paste bet slip,
-  Upload image, Add leg.
-- Chips, tier two: text-sm font-semibold, px-3 py-2, rounded-xl.
-  Sport, money, category, period filters. 38 pixels tall.
-- Compact actions, tier three: text-xs font-semibold. Only inside a
-  bet card row (Won, Lost, Cash out, Delete, Add money).
-- Tile label: 10px bold uppercase, wide tracking, neutral 400.
-- Tile value: 16px bold, tabular figures, centered.
-- Hero row value: 18px bold. One tier above a tile, used under a
-  headline only.
-- Card heading: 18px bold (text-lg).
-- Hero money: src/components/HeroMoney.tsx. Inter Tight, weight 500,
-  flat (one size, one weight, one color, cents included). Only for
-  money above 30px: the analytics headline and the wallet balance.
-  Everything smaller stays Geist, because Inter Tight is a display
-  cut and gets cramped at 14px.
+SHARED COMPONENTS. Never copy their markup into a page.
+- src/components/MicroLabel.tsx  the small uppercase label
+- src/components/StatTile.tsx    the labelled number in a card
+- src/components/HeroMoney.tsx   the big money number
+
+TWO TYPEFACES, ONE RULE.
+- Numbers are Inter Tight, applied with the `font-money` class.
+- Words are Geist.
+- Money inside a sentence stays Geist. Changing face mid sentence
+  reads as a bug. design-check.mjs enforces both halves.
+
+THREE WEIGHTS. font-medium does not exist in this app.
+- normal    body text, captions, inputs
+- semibold  field labels, row labels, chips, tile and row numbers
+- bold      buttons, card headings, money inside bet cards
+
+TYPE SCALE.
+- Micro label   MicroLabel: 10px bold uppercase, wide tracking,
+                neutral 400, or white/40 on the dark chart panel
+- Caption       text-xs, neutral 500 light / neutral 400 dark
+- Body          text-sm
+- Label         text-sm font-semibold
+- Card heading  text-lg font-bold
+- Page title    text-2xl font-bold
+
+NUMBER LADDER. Bigger means lighter, so the optical weight stays even.
+- 14px  bold      money inside a bet card row
+- 16px  semibold  StatTile value
+- 18px  semibold  the row under a headline
+- 32px  weight 500  wallet balance
+- 42px  weight 500  analytics headline
+
+BUTTONS, THREE TIERS.
+- Tier one    text-sm font-bold, px-3 py-2.5, rounded-xl.
+              Log out, Home, Start here, Analytics, Recommendations,
+              Paste bet slip, Upload image, Add leg. The two popup
+              buttons use text-base font-bold because they are taller.
+- Tier two    chips: text-sm font-semibold, px-3 py-2, rounded-xl,
+              38 pixels tall. Sport, money, category, filters.
+- Tier three  text-xs font-semibold. Only inside a dense card row
+              (Won, Lost, Cash out, Delete, Add money, Remove).
+
+COLOR.
+- Ink is the default. Muted is neutral 500 light, neutral 400 dark,
+  everywhere, with no exceptions.
 - Two greens with two jobs. #4F7A57 is a button you press.
-  emerald-600 in light and emerald-400 in dark means money went up.
+  emerald-600 light and emerald-400 dark means money went up.
   Never mix them.
+- Red: red-600 light, red-400 dark, means money went down.
 - Purple #58287F is recommendations and the wordmark. Nothing else.
 - Dark mode surfaces: page #0B0D14, cards #151A28, popups #1A2032,
-  borders white/10 and white/15. Muted text is neutral-400 in dark
-  and neutral-500 in light, everywhere.
+  borders white/10 and white/15.
 
 ## Status
 

@@ -337,7 +337,7 @@ export default function NewBetForm({ lastStake }: Props) {
           type="button"
           disabled={importing}
           onClick={() => fileInputRef.current?.click()}
-          className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-neutral-300 bg-white text-sm font-bold text-neutral-500 dark:text-neutral-400 active:bg-neutral-100 disabled:opacity-50 dark:border-white/15 dark:bg-transparent dark:text-neutral-400"
+          className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-neutral-300 bg-white text-sm font-bold text-neutral-600 active:bg-neutral-100 disabled:opacity-50 dark:border-white/15 dark:bg-transparent dark:text-neutral-400"
         >
           <CameraIcon />
           Upload image
@@ -365,7 +365,7 @@ export default function NewBetForm({ lastStake }: Props) {
         </p>
       )}
 
-      <label htmlFor="stake" className="mt-4 block text-sm font-medium">
+      <label htmlFor="stake" className="mt-4 block text-sm font-semibold">
         Stake (USD)
       </label>
       <input
@@ -412,14 +412,14 @@ export default function NewBetForm({ lastStake }: Props) {
               <button
                 type="button"
                 onClick={() => removeLeg(index)}
-                className="rounded-lg px-2 py-1 text-xs font-medium text-red-600 dark:text-red-400"
+                className="rounded-lg px-2 py-1 text-xs font-semibold text-red-600 dark:text-red-400"
               >
                 Remove
               </button>
             </div>
           )}
 
-          <p className="mt-3 text-sm font-medium">Sport</p>
+          <p className="mt-3 text-sm font-semibold">Sport</p>
           <div className="-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1">
             {SPORTS.map((s) => (
               <button
@@ -465,7 +465,7 @@ export default function NewBetForm({ lastStake }: Props) {
                 <button
                   type="button"
                   onClick={() => updateLeg(index, { subcategory: null })}
-                  className="font-medium underline underline-offset-2"
+                  className="font-semibold underline underline-offset-2"
                 >
                   clear
                 </button>
@@ -476,7 +476,7 @@ export default function NewBetForm({ lastStake }: Props) {
             SUBCATEGORIES[leg.sport] !== undefined &&
             leg.categoriesOpen && (
               <>
-                <p className="mt-4 text-sm font-medium">
+                <p className="mt-4 text-sm font-semibold">
                   Category
                   <span className="font-normal text-neutral-500 dark:text-neutral-400">
                     , optional. Scroll for more, tap {leg.sport} to hide.
@@ -578,7 +578,7 @@ export default function NewBetForm({ lastStake }: Props) {
 
           <label
             htmlFor={`description-${index}`}
-            className="mt-4 block text-sm font-medium"
+            className="mt-4 block text-sm font-semibold"
           >
             Pick{" "}
             <span className="font-normal text-neutral-500 dark:text-neutral-400">(optional)</span>
@@ -596,7 +596,7 @@ export default function NewBetForm({ lastStake }: Props) {
             <>
               <label
                 htmlFor={`percent-${index}`}
-                className="mt-4 block text-sm font-medium"
+                className="mt-4 block text-sm font-semibold"
               >
                 Chance (%){" "}
                 <span className="font-normal text-neutral-500 dark:text-neutral-400">
@@ -631,7 +631,7 @@ export default function NewBetForm({ lastStake }: Props) {
       </button>
 
       <div className="mt-4">
-        <label htmlFor="collect" className="block text-sm font-medium">
+        <label htmlFor="collect" className="block text-sm font-semibold">
           To Collect (USD)
         </label>
         <input

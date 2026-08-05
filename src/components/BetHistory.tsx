@@ -14,7 +14,7 @@ function BuysList({ bet }: { bet: BetWithLegs }) {
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}
-        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400 dark:border-white/15"
+        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs text-neutral-500 dark:text-neutral-400 dark:border-white/15"
       >
         {expanded ? "Hide buys" : `${bet.bet_buys.length} buys`}
       </button>
@@ -140,7 +140,7 @@ export default function BetHistory({ bets }: Props) {
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     {bet.legs.map((leg) => (
-                      <p key={leg.id} className="truncate text-sm font-medium">
+                      <p key={leg.id} className="truncate text-sm font-semibold">
                         {SPORT_EMOJI[leg.sport]}{" "}
                         {leg.description ?? leg.subcategory ?? leg.sport}
                         {leg.description !== null &&
@@ -192,7 +192,7 @@ export default function BetHistory({ bets }: Props) {
                         bet.settled_at ? toDateInputValue(bet.settled_at) : ""
                       );
                     }}
-                    className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400 disabled:opacity-50 dark:border-white/15"
+                    className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs text-neutral-500 dark:text-neutral-400 disabled:opacity-50 dark:border-white/15"
                   >
                     Edit date
                   </button>
@@ -203,7 +203,7 @@ export default function BetHistory({ bets }: Props) {
                       setEditing(null);
                       setConfirming(bet.id);
                     }}
-                    className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400 disabled:opacity-50 dark:border-white/15"
+                    className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs text-neutral-500 dark:text-neutral-400 disabled:opacity-50 dark:border-white/15"
                   >
                     Delete
                   </button>
@@ -230,7 +230,7 @@ export default function BetHistory({ bets }: Props) {
                       type="button"
                       disabled={busy}
                       onClick={() => setEditing(null)}
-                      className="h-10 rounded-lg border border-neutral-300 px-3 text-xs font-medium dark:border-white/15"
+                      className="h-10 rounded-lg border border-neutral-300 px-3 text-xs font-semibold dark:border-white/15"
                     >
                       Cancel
                     </button>
@@ -256,7 +256,7 @@ export default function BetHistory({ bets }: Props) {
                         type="button"
                         disabled={busy}
                         onClick={() => setConfirming(null)}
-                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium dark:border-white/15"
+                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-semibold dark:border-white/15"
                       >
                         Cancel
                       </button>

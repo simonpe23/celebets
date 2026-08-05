@@ -1,5 +1,6 @@
 "use client";
 
+import MicroLabel from "@/components/MicroLabel";
 import HeroMoney from "@/components/HeroMoney";
 import { round2 } from "@/lib/format";
 
@@ -30,9 +31,7 @@ export default function HeadlineProfit({
 
   return (
     <div className="text-center">
-      <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-neutral-500 dark:text-neutral-400">
-        {shownLabel}
-      </p>
+      <MicroLabel>{shownLabel}</MicroLabel>
 
       <p className="mt-2 text-neutral-900 dark:text-white">
         <HeroMoney value={shown} />

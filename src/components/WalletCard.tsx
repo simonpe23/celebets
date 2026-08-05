@@ -66,7 +66,7 @@ export default function WalletCard({
     <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-5 dark:border-white/10">
       <div className="flex items-start justify-between">
         <div>
-          <h2 className="text-sm font-medium text-neutral-500 dark:text-neutral-400">My Wallet</h2>
+          <h2 className="text-sm font-semibold text-neutral-500 dark:text-neutral-400">My Wallet</h2>
           <p
             className={`mt-1 break-words ${
               balance < 0 ? "text-red-600 dark:text-red-400" : ""
@@ -82,7 +82,7 @@ export default function WalletCard({
           </p>
           <Link
             href="/transactions"
-            className="mt-2 inline-block text-sm font-medium text-neutral-500 dark:text-neutral-400 underline underline-offset-2"
+            className="mt-2 inline-block text-sm font-semibold text-neutral-500 dark:text-neutral-400 underline underline-offset-2"
           >
             Transactions
           </Link>
@@ -122,7 +122,7 @@ export default function WalletCard({
               </button>
             </div>
 
-            <label htmlFor="amount" className="mt-4 block text-sm font-medium">
+            <label htmlFor="amount" className="mt-4 block text-sm font-semibold">
               Amount (USD)
             </label>
             <input
@@ -147,7 +147,7 @@ export default function WalletCard({
                 type="button"
                 disabled={saving}
                 onClick={() => submit("withdrawal")}
-                className="h-12 rounded-xl border border-neutral-300 text-base font-semibold disabled:opacity-60 dark:border-white/15"
+                className="h-12 rounded-xl border border-neutral-300 text-base font-bold disabled:opacity-60 dark:border-white/15"
               >
                 Withdraw
               </button>
@@ -155,7 +155,7 @@ export default function WalletCard({
                 type="button"
                 disabled={saving}
                 onClick={() => submit("deposit")}
-                className="h-12 rounded-xl bg-[#4F7A57] text-base font-semibold text-white active:bg-[#3F6446] disabled:opacity-60"
+                className="h-12 rounded-xl bg-[#4F7A57] text-base font-bold text-white active:bg-[#3F6446] disabled:opacity-60"
               >
                 Deposit
               </button>

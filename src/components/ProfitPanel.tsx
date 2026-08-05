@@ -1,5 +1,6 @@
 "use client";
 
+import MicroLabel from "@/components/MicroLabel";
 import ProfitChart from "@/components/ProfitChart";
 import type { BetWithLegs, Sport } from "@/lib/types";
 
@@ -68,9 +69,7 @@ export default function ProfitPanel({
   return (
     <section className="overflow-hidden rounded-3xl bg-[#101322] p-4 dark:bg-[#151A28] shadow-[0_18px_40px_-20px_rgba(16,19,34,0.9)] ring-1 ring-white/5">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">
-          Profit
-        </p>
+        <MicroLabel onDark>Profit</MicroLabel>
 
         <div className="flex items-center gap-0.5 rounded-full bg-white/8 p-0.5">
           {RANGES.map(({ key, short }) => (
@@ -107,9 +106,9 @@ export default function ProfitPanel({
           <div>
             <label
               htmlFor="from"
-              className="block text-[10px] font-bold uppercase tracking-widest text-white/40"
+              className="block"
             >
-              From
+              <MicroLabel onDark>From</MicroLabel>
             </label>
             <input
               id="from"
@@ -122,9 +121,9 @@ export default function ProfitPanel({
           <div>
             <label
               htmlFor="to"
-              className="block text-[10px] font-bold uppercase tracking-widest text-white/40"
+              className="block"
             >
-              To
+              <MicroLabel onDark>To</MicroLabel>
             </label>
             <input
               id="to"

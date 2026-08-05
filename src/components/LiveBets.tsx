@@ -193,7 +193,7 @@ export default function LiveBets({ bets }: Props) {
                   </span>
                   <div className="flex items-center gap-2">
                     {bet.legs.length > 1 && (
-                      <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400">
                         Parlay, {bet.legs.length} legs
                       </span>
                     )}
@@ -211,7 +211,7 @@ export default function LiveBets({ bets }: Props) {
                               addingMoney === bet.id ? null : bet.id
                             );
                           }}
-                          className="rounded-lg border border-[#4F7A57] px-3 py-1.5 text-xs font-medium text-[#4F7A57] disabled:opacity-50 dark:text-[#4F7A57]"
+                          className="rounded-lg border border-[#4F7A57] px-3 py-1.5 text-xs font-semibold text-[#4F7A57] disabled:opacity-50 dark:text-[#4F7A57]"
                         >
                           Add money
                         </button>
@@ -226,7 +226,7 @@ export default function LiveBets({ bets }: Props) {
                               cashingOut === bet.id ? null : bet.id
                             );
                           }}
-                          className="rounded-lg border border-[#4F7A57] px-3 py-1.5 text-xs font-medium text-[#4F7A57] disabled:opacity-50 dark:text-[#4F7A57]"
+                          className="rounded-lg border border-[#4F7A57] px-3 py-1.5 text-xs font-semibold text-[#4F7A57] disabled:opacity-50 dark:text-[#4F7A57]"
                         >
                           Cash out
                         </button>
@@ -240,7 +240,7 @@ export default function LiveBets({ bets }: Props) {
                         setAddingMoney(null);
                         setConfirmingDelete(bet.id);
                       }}
-                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400 disabled:opacity-50 dark:border-white/15"
+                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs text-neutral-500 dark:text-neutral-400 disabled:opacity-50 dark:border-white/15"
                     >
                       Delete
                     </button>
@@ -251,7 +251,7 @@ export default function LiveBets({ bets }: Props) {
                   <div className="mt-3 rounded-xl bg-neutral-100 p-3 dark:bg-[#1A2032]">
                     <label
                       htmlFor={`add-amount-${bet.id}`}
-                      className="block text-sm font-medium"
+                      className="block text-sm font-semibold"
                     >
                       Amount added (USD)
                     </label>
@@ -267,7 +267,7 @@ export default function LiveBets({ bets }: Props) {
                     />
                     <label
                       htmlFor={`add-payout-${bet.id}`}
-                      className="mt-3 block text-sm font-medium"
+                      className="mt-3 block text-sm font-semibold"
                     >
                       That buy&apos;s own payout (USD)
                     </label>
@@ -286,7 +286,7 @@ export default function LiveBets({ bets }: Props) {
                     />
                     {parseMoney(addAmount) !== null &&
                       parseMoney(addPayout) !== null && (
-                        <p className="mt-2 text-xs font-medium">
+                        <p className="mt-2 text-xs">
                           New totals: stake{" "}
                           {formatMoney(
                             round2(stake + (parseMoney(addAmount) as number))
@@ -309,7 +309,7 @@ export default function LiveBets({ bets }: Props) {
                           setAddAmount("");
                           setAddPayout("");
                         }}
-                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium dark:border-white/15"
+                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-semibold dark:border-white/15"
                       >
                         Cancel
                       </button>
@@ -342,7 +342,7 @@ export default function LiveBets({ bets }: Props) {
                       type="button"
                       disabled={busyLeg !== null}
                       onClick={() => undoCashOut(bet.id)}
-                      className="shrink-0 rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400 disabled:opacity-50 dark:border-white/15"
+                      className="shrink-0 rounded-lg border border-neutral-300 px-3 py-1.5 text-xs text-neutral-500 dark:text-neutral-400 disabled:opacity-50 dark:border-white/15"
                     >
                       Undo
                     </button>
@@ -353,7 +353,7 @@ export default function LiveBets({ bets }: Props) {
                   <div className="mt-3 rounded-xl bg-neutral-100 p-3 dark:bg-[#1A2032]">
                     <label
                       htmlFor={`cashout-${bet.id}`}
-                      className="block text-sm font-medium"
+                      className="block text-sm font-semibold"
                     >
                       Cash out amount (USD)
                     </label>
@@ -380,7 +380,7 @@ export default function LiveBets({ bets }: Props) {
                           setCashingOut(null);
                           setCashOutAmount("");
                         }}
-                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium dark:border-white/15"
+                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-semibold dark:border-white/15"
                       >
                         Cancel
                       </button>
@@ -409,7 +409,7 @@ export default function LiveBets({ bets }: Props) {
                         type="button"
                         disabled={busyLeg !== null}
                         onClick={() => setConfirmingDelete(null)}
-                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium dark:border-white/15"
+                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-semibold dark:border-white/15"
                       >
                         Cancel
                       </button>
@@ -429,7 +429,7 @@ export default function LiveBets({ bets }: Props) {
                   {bet.legs.map((leg) => (
                     <div key={leg.id}>
                       <div className="flex items-center justify-between gap-3">
-                        <p className="text-sm font-medium">
+                        <p className="text-sm font-semibold">
                           {SPORT_EMOJI[leg.sport]}{" "}
                           {leg.description ?? leg.subcategory ?? leg.sport}
                           {leg.description !== null &&
@@ -482,7 +482,7 @@ export default function LiveBets({ bets }: Props) {
                               type="button"
                               disabled={busyLeg !== null}
                               onClick={() => setResult(leg.id, "pending")}
-                              className="rounded-lg border border-neutral-300 px-3.5 py-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400 disabled:opacity-50 dark:border-white/15"
+                              className="rounded-lg border border-neutral-300 px-3.5 py-1.5 text-xs text-neutral-500 dark:text-neutral-400 disabled:opacity-50 dark:border-white/15"
                             >
                               Undo
                             </button>
@@ -503,7 +503,7 @@ export default function LiveBets({ bets }: Props) {
                           expandedBuys === bet.id ? null : bet.id
                         )
                       }
-                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-semibold text-neutral-500 dark:text-neutral-400 dark:border-white/15"
+                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs text-neutral-500 dark:text-neutral-400 dark:border-white/15"
                     >
                       {expandedBuys === bet.id
                         ? "Hide buys"

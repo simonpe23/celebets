@@ -393,7 +393,7 @@ export default function ProfitChart({
         </div>
       </div>
 
-      <div className="mt-3 flex justify-between text-[10px] font-medium text-white/35">
+      <div className="mt-3 flex justify-between text-[10px] text-white/35">
         {[0, 0.25, 0.5, 0.75, 1].map((f) => (
           <span key={f}>
             {shortDate(new Date(startX.getTime() + spanMs * f))}

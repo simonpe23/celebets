@@ -51,7 +51,7 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="mt-4 space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium">
+            <label htmlFor="email" className="block text-sm font-semibold">
               Email
             </label>
             <input
@@ -68,12 +68,12 @@ export default function LoginPage() {
 
           <div>
             <div className="flex items-baseline justify-between">
-              <label htmlFor="password" className="block text-sm font-medium">
+              <label htmlFor="password" className="block text-sm font-semibold">
                 Password
               </label>
               <Link
                 href="/forgot-password"
-                className="text-sm font-medium text-[#4F7A57]"
+                className="text-sm font-semibold text-[#4F7A57]"
               >
                 Forgot password?
               </Link>

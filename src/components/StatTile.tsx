@@ -3,10 +3,11 @@
 // stops the two pages drifting apart.
 //
 // The type scale that goes with it:
-//   tile label   10px bold uppercase, wide tracking, neutral 400
-//   tile value   16px bold, tabular figures
-//   hero value   18px bold, one tier up, for the row under a headline
+//   tile label   MicroLabel
+//   tile value   16px semibold, tabular figures, numeral face
+//   hero value   18px semibold, one tier up, under a headline only
 //   card heading 18px bold
+import MicroLabel from "@/components/MicroLabel";
 
 export default function StatTile({
   label,
@@ -19,11 +20,9 @@ export default function StatTile({
 }) {
   return (
     <div className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] p-3 text-center dark:border-white/10 dark:bg-[#151A28]">
-      <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-        {label}
-      </p>
+      <MicroLabel>{label}</MicroLabel>
       <p
-        className={`mt-1 font-money text-base font-bold tabular-nums ${tone ?? ""}`}
+        className={`mt-1 font-money text-base font-semibold tabular-nums ${tone ?? ""}`}
       >
         {value}
       </p>

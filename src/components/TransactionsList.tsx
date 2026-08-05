@@ -139,7 +139,7 @@ export default function TransactionsList({
                         setEditing(tx.id);
                         setDateValue(toDateInputValue(tx.created_at));
                       }}
-                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400 disabled:opacity-50 dark:border-white/15"
+                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs text-neutral-500 dark:text-neutral-400 disabled:opacity-50 dark:border-white/15"
                     >
                       Edit date
                     </button>
@@ -150,7 +150,7 @@ export default function TransactionsList({
                         setEditing(null);
                         setConfirming(tx.id);
                       }}
-                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-500 dark:text-neutral-400 disabled:opacity-50 dark:border-white/15"
+                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs text-neutral-500 dark:text-neutral-400 disabled:opacity-50 dark:border-white/15"
                     >
                       Delete
                     </button>
@@ -178,7 +178,7 @@ export default function TransactionsList({
                       type="button"
                       disabled={busy}
                       onClick={() => setEditing(null)}
-                      className="h-10 rounded-lg border border-neutral-300 px-3 text-xs font-medium dark:border-white/15"
+                      className="h-10 rounded-lg border border-neutral-300 px-3 text-xs font-semibold dark:border-white/15"
                     >
                       Cancel
                     </button>
@@ -201,7 +201,7 @@ export default function TransactionsList({
                         type="button"
                         disabled={busy}
                         onClick={() => setConfirming(null)}
-                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-medium dark:border-white/15"
+                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-semibold dark:border-white/15"
                       >
                         Cancel
                       </button>

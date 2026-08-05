@@ -47,14 +47,14 @@ function PhoneMockup() {
               <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-semibold text-amber-800">
                 Pending
               </span>
-              <span className="text-[9px] font-medium text-neutral-400">
+              <span className="text-[9px] font-semibold text-neutral-400">
                 Parlay
               </span>
             </div>
-            <p className="mt-2 text-[11px] font-medium text-neutral-900">
+            <p className="mt-2 text-[11px] font-semibold text-neutral-900">
               ⚽ France advances
             </p>
-            <p className="mt-1 text-[11px] font-medium text-neutral-900">
+            <p className="mt-1 text-[11px] font-semibold text-neutral-900">
               ⚽ Mbappe 1+ goals
             </p>
             <div className="mt-2.5 grid grid-cols-3 gap-1 border-t border-neutral-100 pt-2 text-center">
@@ -104,7 +104,7 @@ export default function LandingPage() {
                 <br />
                 Your Game.
               </h1>
-              <p className="mt-4 text-base font-medium text-neutral-500 dark:text-neutral-400 sm:text-xl">
+              <p className="mt-4 text-base font-semibold text-neutral-500 dark:text-neutral-400 sm:text-xl">
                 Track Every Bet. Discover Patterns. Find Your Edge.
               </p>
 

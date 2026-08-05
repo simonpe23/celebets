@@ -22,7 +22,13 @@ const note = (file, line, message) =>
 
 // Files allowed to use the compact tier, because they hold dense rows
 // of actions inside a bet card.
-const COMPACT_OK = ["LiveBets.tsx", "BetHistory.tsx", "TransactionsList.tsx"];
+const COMPACT_OK = [
+  "LiveBets.tsx",
+  "BetHistory.tsx",
+  "TransactionsList.tsx",
+  // The Remove control on a parlay leg row is the same dense pattern.
+  "NewBetForm.tsx",
+];
 
 // Colors that are allowed to appear as raw hex, and what each is for.
 const ALLOWED_HEX = new Set([
@@ -98,11 +104,9 @@ for (const file of files) {
     // 5. The tile must come from the shared component.
     if (
       line.includes("text-[10px] font-bold uppercase tracking-widest") &&
-      short !== "StatTile.tsx" &&
-      short !== "StatsView.tsx" &&
-      short !== "ProfitPanel.tsx"
+      short !== "MicroLabel.tsx"
     ) {
-      note(file, n, "tile label copied instead of using StatTile");
+      note(file, n, "micro label copied instead of using MicroLabel");
     }
   });
 }
