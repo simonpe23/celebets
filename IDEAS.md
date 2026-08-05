@@ -122,6 +122,21 @@ How this file works:
 
 ## FUTURE (big builds, new infrastructure, or business decisions)
 
+18. Celebet as an MCP server, so Claude or ChatGPT can read a user's
+    own betting data. The user connects Celebet once, then asks in
+    plain language: "how much have I won this year", "which sport is
+    costing me money", "what did that Vegas weekend cost me". The
+    assistant pulls the real numbers from Celebet and answers.
+    Why it fits: every money rule already lives in src/lib/stats.ts,
+    so the same split logic that draws the charts can answer the
+    questions. No new maths, a new door onto the same data.
+    Open questions for the owner, none decided:
+    - Read only, or can the assistant also log a bet?
+    - How does a user connect their account, and how do they revoke it?
+    - Is this a paid tier, or free for everyone?
+    - Does it overlap with CeleBOT (idea 14), or is CeleBOT the one
+      that answers questions and this one only serves the data?
+
 5. Native app in the App Store. Interim step available much earlier:
    the web app can be installed to the home screen (PWA) and feel
    90% like an app for free.
