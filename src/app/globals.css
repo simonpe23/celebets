@@ -19,6 +19,8 @@
   --font-mono: var(--font-geist-mono);
   --font-brand: var(--font-brand);
   --font-inter-tight: var(--font-inter-tight);
+  /* The numeral face. Money and counts, never words. */
+  --font-money: var(--font-inter-tight);
   --font-plex: var(--font-plex);
   --font-instrument: var(--font-instrument);
   --color-cream: var(--brand-cream);

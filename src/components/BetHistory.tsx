@@ -169,7 +169,7 @@ export default function BetHistory({ bets }: Props) {
                     </p>
                   </div>
                   <p
-                    className={`shrink-0 text-sm font-bold ${
+                    className={`shrink-0 font-money text-sm font-bold tabular-nums ${
                       profit > 0
                         ? "text-emerald-600 dark:text-emerald-400"
                         : "text-red-600 dark:text-red-400"

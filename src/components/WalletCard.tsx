@@ -75,7 +75,10 @@ export default function WalletCard({
             <HeroMoney value={balance} signed={false} className="text-[32px]" />
           </p>
           <p className={`mt-1 text-sm font-semibold ${profitColor}`}>
-            Net profit {formatSignedMoney(netProfit)}
+            Net profit{" "}
+            <span className="font-money tabular-nums">
+              {formatSignedMoney(netProfit)}
+            </span>
           </p>
           <Link
             href="/transactions"

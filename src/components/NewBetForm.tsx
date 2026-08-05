@@ -655,19 +655,19 @@ export default function NewBetForm({ lastStake }: Props) {
       <div className="mt-5 grid grid-cols-3 gap-2 rounded-xl bg-neutral-100 p-3 text-center dark:bg-[#1A2032]">
         <div>
           <p className="text-xs text-neutral-500 dark:text-neutral-400">Total odds</p>
-          <p className="mt-0.5 text-sm font-bold">
+          <p className="mt-0.5 font-money text-sm font-bold tabular-nums">
             {totalOdds !== null ? formatOdds(totalOdds) : "-"}
           </p>
         </div>
         <div>
           <p className="text-xs text-neutral-500 dark:text-neutral-400">To Win</p>
-          <p className="mt-0.5 text-sm font-bold">
+          <p className="mt-0.5 font-money text-sm font-bold tabular-nums">
             {toWin !== null ? formatMoney(toWin) : "-"}
           </p>
         </div>
         <div>
           <p className="text-xs text-neutral-500 dark:text-neutral-400">To Collect</p>
-          <p className="mt-0.5 text-sm font-bold">
+          <p className="mt-0.5 font-money text-sm font-bold tabular-nums">
             {collectValid ? formatMoney(collectValue as number) : "-"}
           </p>
         </div>

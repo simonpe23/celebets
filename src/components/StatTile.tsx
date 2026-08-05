@@ -7,7 +7,6 @@
 //   tile value   16px bold, tabular figures
 //   hero value   18px bold, one tier up, for the row under a headline
 //   card heading 18px bold
-import { MONEY_FONT } from "@/lib/money-font";
 
 export default function StatTile({
   label,
@@ -24,8 +23,7 @@ export default function StatTile({
         {label}
       </p>
       <p
-        className={`mt-1 text-base font-bold tabular-nums ${tone ?? ""}`}
-        style={MONEY_FONT}
+        className={`mt-1 font-money text-base font-bold tabular-nums ${tone ?? ""}`}
       >
         {value}
       </p>

@@ -27,12 +27,8 @@ export default function HeroMoney({
 
   return (
     <span
-      className={`leading-none tabular-nums ${className}`}
-      style={{
-        fontFamily: "var(--font-inter-tight)",
-        fontWeight: 500,
-        letterSpacing: "-0.02em",
-      }}
+      className={`font-money leading-none tabular-nums ${className}`}
+      style={{ fontWeight: 500, letterSpacing: "-0.02em" }}
     >
       {sign}${digits}
     </span>

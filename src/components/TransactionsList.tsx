@@ -122,7 +122,7 @@ export default function TransactionsList({
                   </div>
                   <div className="flex items-center gap-3">
                     <p
-                      className={`text-sm font-bold ${
+                      className={`font-money text-sm font-bold tabular-nums ${
                         tx.type === "deposit"
                           ? "text-emerald-600 dark:text-emerald-400"
                           : "text-red-600 dark:text-red-400"

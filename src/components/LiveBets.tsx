@@ -536,20 +536,20 @@ export default function LiveBets({ bets }: Props) {
                   <div className="mt-3 grid grid-cols-3 gap-2 border-t border-neutral-100 pt-3 text-center dark:border-white/10">
                     <div>
                       <p className="text-xs text-neutral-500 dark:text-neutral-400">Ticket cost</p>
-                      <p className="mt-0.5 text-sm font-bold">
+                      <p className="mt-0.5 font-money text-sm font-bold tabular-nums">
                         {formatMoney(stake)}
                       </p>
                     </div>
                     <div>
                       <p className="text-xs text-neutral-500 dark:text-neutral-400">Cashed out</p>
-                      <p className="mt-0.5 text-sm font-bold">
+                      <p className="mt-0.5 font-money text-sm font-bold tabular-nums">
                         {formatMoney(Number(bet.payout ?? 0))}
                       </p>
                     </div>
                     <div>
                       <p className="text-xs text-neutral-500 dark:text-neutral-400">Result</p>
                       <p
-                        className={`mt-0.5 text-sm font-bold ${
+                        className={`mt-0.5 font-money text-sm font-bold tabular-nums ${
                           Number(bet.payout ?? 0) - stake >= 0
                             ? "text-emerald-600 dark:text-emerald-400"
                             : "text-red-600 dark:text-red-400"
@@ -565,19 +565,19 @@ export default function LiveBets({ bets }: Props) {
                   <div className="mt-3 grid grid-cols-3 gap-2 border-t border-neutral-100 pt-3 text-center dark:border-white/10">
                     <div>
                       <p className="text-xs text-neutral-500 dark:text-neutral-400">Ticket cost</p>
-                      <p className="mt-0.5 text-sm font-bold">
+                      <p className="mt-0.5 font-money text-sm font-bold tabular-nums">
                         {formatMoney(stake)}
                       </p>
                     </div>
                     <div>
                       <p className="text-xs text-neutral-500 dark:text-neutral-400">To Win</p>
-                      <p className="mt-0.5 text-sm font-bold">
+                      <p className="mt-0.5 font-money text-sm font-bold tabular-nums">
                         {formatMoney(round2(stake * (totalOdds - 1)))}
                       </p>
                     </div>
                     <div>
                       <p className="text-xs text-neutral-500 dark:text-neutral-400">To Collect</p>
-                      <p className="mt-0.5 text-sm font-bold">
+                      <p className="mt-0.5 font-money text-sm font-bold tabular-nums">
                         {formatMoney(round2(stake * totalOdds))}
                       </p>
                     </div>
