@@ -130,9 +130,21 @@ How this file works:
     Why it fits: every money rule already lives in src/lib/stats.ts,
     so the same split logic that draws the charts can answer the
     questions. No new maths, a new door onto the same data.
+    The owner's framing: instead of navigating menus, the AI becomes
+    the interface.
+    Questions a user should be able to ask, from the owner:
+    - Show my bankroll.
+    - What was my ROI last month?
+    - Which sports am I most profitable in?
+    - Find all bets over $100.
+    - Add a parlay for tonight's MLB games.
+    - Based on my betting history, what mistakes am I repeating?
+    Note: that list includes adding a bet, so this is not read only.
+    Writing needs its own care, since a wrong bet logged by an
+    assistant corrupts every number in the app.
     Open questions for the owner, none decided:
-    - Read only, or can the assistant also log a bet?
     - How does a user connect their account, and how do they revoke it?
+    - Does a written bet need the user to confirm it in the app first?
     - Is this a paid tier, or free for everyone?
     - Does it overlap with CeleBOT (idea 14), or is CeleBOT the one
       that answers questions and this one only serves the data?
