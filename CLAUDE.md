@@ -112,10 +112,13 @@ TYPE SCALE.
 - Card heading  text-lg font-bold
 - Page title    text-2xl font-bold
 
-NUMBER LADDER. Bigger means lighter, so the optical weight stays even.
+NUMBER LADDER. Two things set the weight: size and container.
+Bigger goes lighter, so the optical weight stays even. A number with
+no card around it goes one step heavier, because the container is not
+there to give it presence.
 - 14px  bold      money inside a bet card row
-- 16px  semibold  StatTile value
-- 18px  semibold  the row under a headline
+- 16px  semibold  StatTile value, inside a card
+- 18px  bold      the row under the headline, bare on the page
 - 32px  weight 500  wallet balance
 - 42px  weight 500  analytics headline
 

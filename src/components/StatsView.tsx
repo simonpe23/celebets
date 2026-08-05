@@ -166,19 +166,19 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
           <div className="mt-4 grid grid-cols-3 divide-x divide-neutral-300/70 dark:divide-neutral-800">
             <div className="text-center">
               <MicroLabel>{sport === null ? "Bets" : "Picks"}</MicroLabel>
-              <p className="mt-0.5 font-money text-lg font-semibold tabular-nums">
+              <p className="mt-0.5 font-money text-lg font-bold tabular-nums">
                 {heroWins + heroLosses}
               </p>
             </div>
             <div className="text-center">
               <MicroLabel>Record</MicroLabel>
-              <p className="mt-0.5 font-money text-lg font-semibold tabular-nums">
+              <p className="mt-0.5 font-money text-lg font-bold tabular-nums">
                 {heroWins}-{heroLosses}
               </p>
             </div>
             <div className="text-center">
               <MicroLabel>Hit rate</MicroLabel>
-              <p className="mt-0.5 font-money text-lg font-semibold tabular-nums">
+              <p className="mt-0.5 font-money text-lg font-bold tabular-nums">
                 {pctLabel(heroWins, heroWins + heroLosses)}
               </p>
             </div>
