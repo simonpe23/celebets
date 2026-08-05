@@ -11,7 +11,7 @@ import { round2 } from "@/lib/format";
 export default function HeroMoney({
   value,
   signed = true,
-  className = "text-5xl",
+  className = "text-[42px]",
 }: {
   value: number;
   // Wallet balance shows no plus sign, profit does.
