@@ -4,7 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { formatMoney, formatSignedMoney, parseMoney } from "@/lib/format";
+import HeroMoney from "@/components/HeroMoney";
+import { formatSignedMoney, parseMoney } from "@/lib/format";
 import Recommendations from "@/components/Recommendations";
 import type { BetWithLegs } from "@/lib/types";
 
@@ -67,11 +68,11 @@ export default function WalletCard({
         <div>
           <h2 className="text-sm font-medium text-neutral-500 dark:text-neutral-400">My Wallet</h2>
           <p
-            className={`mt-1 break-words text-4xl font-bold tracking-tight ${
+            className={`mt-1 break-words ${
               balance < 0 ? "text-red-600 dark:text-red-400" : ""
             }`}
           >
-            {formatMoney(balance)}
+            <HeroMoney value={balance} signed={false} className="text-4xl" />
           </p>
           <p className={`mt-1 text-sm font-semibold ${profitColor}`}>
             Net profit {formatSignedMoney(netProfit)}

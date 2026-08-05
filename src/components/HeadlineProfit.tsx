@@ -1,5 +1,6 @@
 "use client";
 
+import HeroMoney from "@/components/HeroMoney";
 import { round2 } from "@/lib/format";
 
 interface Props {
@@ -9,18 +10,6 @@ interface Props {
   // Set while a finger is held on the chart. The headline then shows
   // that moment instead of the whole period.
   scrub?: { value: number; date: Date } | null;
-}
-
-// Splits money into prefix and digits so the sign and the dollar sign
-// never compete with the number itself.
-function parts(value: number): { prefix: string; digits: string } {
-  const rounded = round2(value);
-  const sign = rounded < 0 ? "-" : "+";
-  const digits = Math.abs(rounded).toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-  return { prefix: `${sign}$`, digits };
 }
 
 export default function HeadlineProfit({
@@ -37,7 +26,6 @@ export default function HeadlineProfit({
         year: "numeric",
       })
     : label;
-  const { prefix, digits } = parts(shown);
   const up = round2(shown) >= 0;
 
   return (
@@ -46,15 +34,8 @@ export default function HeadlineProfit({
         {shownLabel}
       </p>
 
-      <p className="mt-1.5 flex items-center justify-center gap-1">
-        {/* Small enough that the dollar sign's stroke stays inside the
-            height of the digits, then centered against them. */}
-        <span className="text-2xl font-bold leading-none text-neutral-600 dark:text-neutral-400">
-          {prefix}
-        </span>
-        <span className="text-5xl font-bold leading-none tracking-tight tabular-nums text-neutral-900 dark:text-white">
-          {digits}
-        </span>
+      <p className="mt-2 text-neutral-900 dark:text-white">
+        <HeroMoney value={shown} />
       </p>
 
       {/* The pill keeps its space while you scrub, so nothing on the

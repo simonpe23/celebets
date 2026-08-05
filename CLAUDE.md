@@ -58,6 +58,12 @@ Before showing any UI change:
    home page and the stats page must look like one product.
 5. Show options when the owner is judging looks. Two or three named
    variants beat one guess.
+6. Before proposing a deploy, say what else in the app the change
+   touches, and show those screens too. The owner asked for this
+   (August 2026). A font change is never one screen.
+7. Coach the owner on focus. He knows he can get stuck on a small
+   detail before shipping. When that happens, say "I will store it,
+   let us finish X first". If he insists, drop it and do as he asks.
 
 ### The design system
 
@@ -78,6 +84,11 @@ import the component or reuse the exact class string.
 - Hero row value: 18px bold. One tier above a tile, used under a
   headline only.
 - Card heading: 18px bold (text-lg).
+- Hero money: src/components/HeroMoney.tsx. Inter Tight, weight 500,
+  flat (one size, one weight, one color, cents included). Only for
+  money above 30px: the analytics headline and the wallet balance.
+  Everything smaller stays Geist, because Inter Tight is a display
+  cut and gets cramped at 14px.
 - Two greens with two jobs. #4F7A57 is a button you press.
   emerald-600 in light and emerald-400 in dark means money went up.
   Never mix them.
