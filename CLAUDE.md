@@ -35,6 +35,11 @@ The owner has no coding experience. These rules are permanent.
 The owner should never have to catch a typography or spacing
 inconsistency. Finding one is a failure, not feedback.
 
+Tailwind v4 skips gitignored files when it generates classes, so the
+local preview pages in src/app/preview never get new utility classes.
+Use inline styles there, or the preview silently falls back and you
+compare two identical things.
+
 Run `node design-check.mjs` before every screenshot. It reads the
 system below and fails on drift. Never show the owner a screenshot
 while it is failing.

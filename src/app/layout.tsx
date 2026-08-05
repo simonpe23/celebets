@@ -1,5 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Poppins } from "next/font/google";
+import {
+  Geist,
+  Geist_Mono,
+  IBM_Plex_Sans,
+  Instrument_Serif,
+  Inter_Tight,
+  Poppins,
+} from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -18,6 +25,25 @@ const brand = Poppins({
   variable: "--font-brand",
   subsets: ["latin"],
   weight: ["500", "600"],
+});
+
+// Candidates for the big money number. Only one will survive.
+const interTight = Inter_Tight({
+  variable: "--font-inter-tight",
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+});
+
+const plex = IBM_Plex_Sans({
+  variable: "--font-plex",
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+});
+
+const instrument = Instrument_Serif({
+  variable: "--font-instrument",
+  subsets: ["latin"],
+  weight: ["400"],
 });
 
 export const metadata: Metadata = {
@@ -46,7 +72,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${brand.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${brand.variable} ${interTight.variable} ${plex.variable} ${instrument.variable} antialiased`}
       >
         {children}
       </body>

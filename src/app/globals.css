@@ -18,6 +18,9 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-brand: var(--font-brand);
+  --font-inter-tight: var(--font-inter-tight);
+  --font-plex: var(--font-plex);
+  --font-instrument: var(--font-instrument);
   --color-cream: var(--brand-cream);
   --color-brand: var(--brand-blue);
   --color-brand-dark: var(--brand-blue-dark);
