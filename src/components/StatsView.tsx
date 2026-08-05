@@ -6,6 +6,7 @@ import { formatMoney, formatSignedMoney, round2 } from "@/lib/format";
 import BetHistory from "@/components/BetHistory";
 import HeadlineProfit from "@/components/HeadlineProfit";
 import StatTile from "@/components/StatTile";
+import { MONEY_FONT } from "@/lib/money-font";
 import ProfitPanel, { type Period } from "@/components/ProfitPanel";
 import Recommendations from "@/components/Recommendations";
 import {
@@ -167,7 +168,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
               <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
                 {sport === null ? "Bets" : "Picks"}
               </p>
-              <p className="mt-0.5 text-lg font-bold tabular-nums">
+              <p className="mt-0.5 text-lg font-bold tabular-nums" style={MONEY_FONT}>
                 {heroWins + heroLosses}
               </p>
             </div>
@@ -175,7 +176,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
               <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
                 Record
               </p>
-              <p className="mt-0.5 text-lg font-bold tabular-nums">
+              <p className="mt-0.5 text-lg font-bold tabular-nums" style={MONEY_FONT}>
                 {heroWins}-{heroLosses}
               </p>
             </div>
@@ -183,7 +184,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
               <p className="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
                 Hit rate
               </p>
-              <p className="mt-0.5 text-lg font-bold tabular-nums">
+              <p className="mt-0.5 text-lg font-bold tabular-nums" style={MONEY_FONT}>
                 {pctLabel(heroWins, heroWins + heroLosses)}
               </p>
             </div>
@@ -264,6 +265,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
                         {row.wins}-{row.losses}
                       </p>
                       <p
+                        style={MONEY_FONT}
                         className={`w-24 text-right text-sm font-bold tabular-nums ${profitColor(
                           row.profit
                         )}`}
