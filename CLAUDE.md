@@ -142,6 +142,13 @@ import the component or reuse the exact class string.
   split rules as the Per sport table. Per-sport ROI is NOT possible
   yet: a parlay's stake covers several sports and there is no agreed
   rule for splitting it. That needs an owner decision.
+- The chart scrubs: touch it anywhere and the headline shows the
+  profit and date at that point. The chart owns every touch inside
+  it, so nothing scrolls there. You scroll from outside it. Android
+  gets a short vibration on touch, iPhone gets none (no browser on
+  iOS has a vibration API, and the switch trick did not fire).
+- The page is called Analytics. The web address stays /stats so old
+  bookmarks keep working.
 - Dark mode is designed, not default. It follows the phone's setting.
   A real toggle needs a settings page, which does not exist yet.
 
