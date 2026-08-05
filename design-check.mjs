@@ -107,6 +107,53 @@ for (const file of files) {
   });
 }
 
+// 6. THE SWEEP CHECK.
+//
+// This exists because the owner had to ask three times whether a font
+// change had been applied everywhere. Showing a preview where place A
+// is updated and place B is not wastes his time and destroys trust in
+// the comparison.
+//
+// Every money value must either carry the numeral face, or be listed
+// below as prose. Nothing may be left undecided.
+const PROSE = [
+  // Money inside a sentence keeps the body font. Switching face mid
+  // sentence reads as a bug, not a design.
+  "stake counts as a win",
+  "pays",
+  'at{" "}',
+  "New totals",
+  "Cashed out for",
+  "Enter a valid amount",
+];
+
+for (const file of files) {
+  if (SKIP.some((dir) => file.includes(`/${dir}/`))) continue;
+  const lines = readFileSync(file, "utf8").split("\n");
+
+  lines.forEach((line, i) => {
+    if (!/formatMoney\(|formatSignedMoney\(/.test(line)) return;
+
+    // Look at the element around this value.
+    const around = lines.slice(Math.max(0, i - 10), i + 3).join(" ");
+    if (
+      around.includes("font-money") ||
+      around.includes("HeroMoney") ||
+      // StatTile takes the value as a prop and carries the face itself.
+      around.includes("StatTile")
+    ) {
+      return;
+    }
+    if (PROSE.some((p) => around.includes(p))) return;
+
+    note(
+      file,
+      i + 1,
+      "money value with no numeral face and not marked as prose"
+    );
+  });
+}
+
 if (problems.length === 0) {
   console.log("Design check passed.");
 } else {

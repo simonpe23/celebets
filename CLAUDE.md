@@ -44,6 +44,23 @@ Run `node design-check.mjs` before every screenshot. It reads the
 system below and fails on drift. Never show the owner a screenshot
 while it is failing.
 
+THE SWEEP RULE (added August 2026, after the owner had to ask three
+times whether a font change had reached the whole app):
+
+A preview is a comparison. If place A is updated and place B is not,
+the comparison is worthless and the owner cannot decide anything. So:
+
+- Never show a preview until the change is applied everywhere it
+  belongs. Not "mostly". Everywhere.
+- Before the screenshot, list every place the thing appears and
+  decide each one, including the ones that should NOT change.
+  Undecided is not allowed.
+- Say in the message which files were swept and what was left out on
+  purpose, with the reason.
+- When a change has a pattern (a color, a font, a size), add a rule
+  to design-check.mjs so the machine catches the next one, not the
+  owner. The money font rule is the worked example.
+
 Before showing any UI change:
 
 1. Change shared values in the shared file, never in one page.

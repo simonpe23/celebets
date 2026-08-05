@@ -306,7 +306,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
                                 : `${pctLabel(row.wins, picks)} right (${row.wins} of ${picks})`}
                             </p>
                             <p
-                              className={`w-20 text-right text-sm font-bold ${profitColor(
+                              className={`w-20 font-money text-right text-sm font-bold tabular-nums ${profitColor(
                                 row.profit
                               )}`}
                             >
@@ -331,7 +331,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
                               : `${pctLabel(row.betsWon, row.betsTotal)} (${row.betsWon} of ${row.betsTotal})`}
                           </p>
                           <p
-                            className={`w-20 text-right text-sm font-bold ${profitColor(
+                            className={`w-20 font-money text-right text-sm font-bold tabular-nums ${profitColor(
                               row.profit
                             )}`}
                           >
@@ -389,7 +389,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
                           {row.wins}-{row.losses}
                         </p>
                         <p
-                          className={`w-20 text-right text-sm font-bold ${profitColor(
+                          className={`w-20 font-money text-right text-sm font-bold tabular-nums ${profitColor(
                             row.profit
                           )}`}
                         >
