@@ -122,6 +122,19 @@ How this file works:
 
 ## FUTURE (big builds, new infrastructure, or business decisions)
 
+19. Insight feed on the home page, a rolling one-liner like a news
+    flash. Two flavors, decided separately:
+    - Personal: built from the user's own settled bets, the same
+      engine as Recommendations. "You are 4-1 on Baseball this
+      month." No new data needed, could ship with a later home
+      page iteration.
+    - Market: "Ohtani pitches tonight, LA wins 5 of 6 when he
+      pitches." Needs paid external sports data and must obey the
+      never-hallucinate rule. That is CeleBOT territory (idea 14)
+      and waits for it.
+    From the owner's home page discussion (August 2026). Not
+    approved for building.
+
 18. Celebet as an MCP server, so Claude or ChatGPT can read a user's
     own betting data. The user connects Celebet once, then asks in
     plain language: "how much have I won this year", "which sport is
