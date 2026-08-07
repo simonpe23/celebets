@@ -111,7 +111,7 @@ export default function ResetPasswordPage() {
             </p>
             <Link
               href="/forgot-password"
-              className="mt-4 inline-block font-semibold text-[#4F7A57]"
+              className="mt-4 inline-block font-semibold text-[#58287F]"
             >
               Send a new link
             </Link>
@@ -130,7 +130,7 @@ export default function ResetPasswordPage() {
                 minLength={8}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#4F7A57] focus:ring-2 focus:ring-[#4F7A57]/30 dark:border-white/15 dark:bg-[#1A2032] dark:text-neutral-100"
+                className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#58287F] focus:ring-2 focus:ring-[#58287F]/30 dark:border-white/15 dark:bg-[#1A2032] dark:text-neutral-100"
               />
               <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
                 At least 8 characters
@@ -146,7 +146,7 @@ export default function ResetPasswordPage() {
             <button
               type="submit"
               disabled={loading}
-              className="h-12 w-full rounded-xl bg-[#4F7A57] text-base font-semibold text-white active:bg-[#3F6446] disabled:opacity-60"
+              className="h-12 w-full rounded-xl bg-[#58287F] text-base font-semibold text-white active:bg-[#431E63] disabled:opacity-60"
             >
               {loading ? "Saving..." : "Save new password"}
             </button>

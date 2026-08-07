@@ -32,8 +32,8 @@ const COMPACT_OK = [
 
 // Colors that are allowed to appear as raw hex, and what each is for.
 const ALLOWED_HEX = new Set([
-  "#4F7A57", // button green
-  "#3F6446", // button green, pressed
+  "#4F7A57", // the Won settle button only, see rule 4b
+  "#3F6446", // Won settle button, pressed
   "#58287F", // purple, recommendations and wordmark
   "#431E63", // purple, pressed
   "#A97FD0", // purple on dark
@@ -111,6 +111,13 @@ for (const file of files) {
         );
         if (!known) note(file, n, `unknown color ${hex}, not in the system`);
       }
+    }
+
+    // 4b. Green stopped being the action color in August 2026. Purple
+    // #58287F is the button you press. The one green button left is
+    // Won on a pending pick, which is an outcome, not an action.
+    if (/#4F7A57|#3F6446/.test(line) && short !== "LiveBets.tsx") {
+      note(file, n, "green #4F7A57 outside the Won button, actions are purple");
     }
 
     // 5. The card surface comes from CARD in src/lib/ui.ts. Thirteen

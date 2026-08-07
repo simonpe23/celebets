@@ -10,7 +10,6 @@ import {
   round2,
   round4,
 } from "@/lib/format";
-import MicroLabel from "@/components/MicroLabel";
 import { SPORTS, SPORT_EMOJI, SUBCATEGORIES, type Sport } from "@/lib/types";
 import { CARD } from "@/lib/ui";
 
@@ -62,8 +61,43 @@ interface Props {
 
 const QUICK_STAKES = ["20", "50", "100"];
 
-// Small line icons for the two slip import buttons. They take their
-// color from the button's own text color.
+// Small line icons for the capture tiles. They take their color from
+// the tile's own text color.
+function PencilIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-5 w-5 shrink-0"
+      aria-hidden="true"
+    >
+      <path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3Z" />
+    </svg>
+  );
+}
+
+function LinkIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-5 w-5 shrink-0"
+      aria-hidden="true"
+    >
+      <path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7" />
+      <path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7" />
+    </svg>
+  );
+}
+
 function ClipboardIcon() {
   return (
     <svg
@@ -325,41 +359,82 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
   }
 
   const inputClass =
-    "mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#4F7A57] focus:ring-2 focus:ring-[#4F7A57]/30 dark:border-white/15 dark:bg-[#151A28] dark:text-neutral-100";
+    "mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#58287F] focus:ring-2 focus:ring-[#58287F]/30 dark:border-white/15 dark:bg-[#151A28] dark:text-neutral-100";
 
   return (
     <section className={`${CARD} p-5`}>
-      {compact ? (
-        <MicroLabel>Track a bet</MicroLabel>
-      ) : (
-        <>
-          <h2 className="text-lg font-bold">Track a bet</h2>
-          <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
-            Paste a screenshot of your bet slip and Celebet fills the rest in.
-          </p>
-        </>
+      <h2 className="text-lg font-bold">Track a bet</h2>
+      {!compact && (
+        <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+          Paste a screenshot of your bet slip and Celebet fills the rest in.
+        </p>
       )}
 
-      <div className="mt-3 grid grid-cols-2 gap-2">
-        <button
-          type="button"
-          disabled={importing}
-          onClick={pasteSlip}
-          className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-emerald-600/60 bg-white text-sm font-bold text-emerald-600 active:bg-emerald-600/10 disabled:opacity-50 dark:border-emerald-500/50 dark:bg-transparent dark:text-emerald-400"
-        >
-          <ClipboardIcon />
-          Paste bet slip
-        </button>
-        <button
-          type="button"
-          disabled={importing}
-          onClick={() => fileInputRef.current?.click()}
-          className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-neutral-300 bg-white text-sm font-bold text-neutral-600 active:bg-neutral-100 disabled:opacity-50 dark:border-white/15 dark:bg-transparent dark:text-neutral-400"
-        >
-          <CameraIcon />
-          Upload image
-        </button>
-      </div>
+      {compact ? (
+        /* The four ways in, side by side, from the owner's mockup.
+           Paste leads because it is the fastest, Connect accounts is a
+           promise (idea 13), so it wears a Soon badge instead of dying
+           silently when tapped. */
+        <div className="mt-3 grid grid-cols-4 gap-2">
+          <button
+            type="button"
+            disabled={importing}
+            onClick={pasteSlip}
+            className="flex flex-col items-center gap-1.5 rounded-xl border border-[#58287F] px-1 py-3 text-xs font-semibold text-[#58287F] active:bg-[#58287F]/10 disabled:opacity-50 dark:border-[#A97FD0]/60 dark:text-[#A97FD0]"
+          >
+            <ClipboardIcon />
+            <span className="text-center leading-tight">Paste bet slip</span>
+            <span className="rounded-full bg-[#58287F]/10 px-2 py-0.5 text-[10px] font-bold dark:bg-[#A97FD0]/15">
+              Recommended
+            </span>
+          </button>
+          <button
+            type="button"
+            disabled={importing}
+            onClick={() => fileInputRef.current?.click()}
+            className="flex flex-col items-center gap-1.5 rounded-xl border border-neutral-300 px-1 py-3 text-xs font-semibold text-neutral-600 active:bg-neutral-100 disabled:opacity-50 dark:border-white/15 dark:text-neutral-300"
+          >
+            <CameraIcon />
+            <span className="text-center leading-tight">Upload screenshot</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setManualOpen(true)}
+            className="flex flex-col items-center gap-1.5 rounded-xl border border-neutral-300 px-1 py-3 text-xs font-semibold text-neutral-600 active:bg-neutral-100 dark:border-white/15 dark:text-neutral-300"
+          >
+            <PencilIcon />
+            <span className="text-center leading-tight">Manual entry</span>
+          </button>
+          <div className="flex flex-col items-center gap-1.5 rounded-xl border border-neutral-300 px-1 py-3 text-xs font-semibold text-neutral-400 dark:border-white/10 dark:text-neutral-600">
+            <LinkIcon />
+            <span className="text-center leading-tight">Connect accounts</span>
+            <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+              Soon
+            </span>
+          </div>
+        </div>
+      ) : (
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            disabled={importing}
+            onClick={pasteSlip}
+            className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-[#58287F] bg-white text-sm font-bold text-[#58287F] active:bg-[#58287F]/10 disabled:opacity-50 dark:border-[#A97FD0]/60 dark:bg-transparent dark:text-[#A97FD0]"
+          >
+            <ClipboardIcon />
+            Paste bet slip
+          </button>
+          <button
+            type="button"
+            disabled={importing}
+            onClick={() => fileInputRef.current?.click()}
+            className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-neutral-300 bg-white text-sm font-bold text-neutral-600 active:bg-neutral-100 disabled:opacity-50 dark:border-white/15 dark:bg-transparent dark:text-neutral-400"
+          >
+            <CameraIcon />
+            Upload image
+          </button>
+        </div>
+      )}
       <input
         ref={fileInputRef}
         type="file"
@@ -382,7 +457,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
         </p>
       )}
 
-      {!manualOpen && (
+      {!manualOpen && !compact && (
         <button
           type="button"
           onClick={() => setManualOpen(true)}
@@ -416,7 +491,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
             onClick={() => setStake(amount)}
             className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
               stake === amount
-                ? "border-[#4F7A57] text-emerald-600 dark:text-emerald-400"
+                ? "border-[#58287F] text-[#58287F] dark:text-[#A97FD0]"
                 : "border-neutral-300 text-neutral-500 dark:text-neutral-400 dark:border-white/15"
             }`}
           >
@@ -468,7 +543,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
                 }
                 className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
                   leg.sport === s
-                    ? "border-[#4F7A57] bg-[#4F7A57] text-white"
+                    ? "border-[#58287F] bg-[#58287F] text-white"
                     : "border-neutral-300 dark:border-white/15"
                 }`}
               >
@@ -526,7 +601,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
                           }
                           className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
                             selected
-                              ? "border-[#4F7A57] bg-[#4F7A57] text-white"
+                              ? "border-[#58287F] bg-[#58287F] text-white"
                               : "border-neutral-300 dark:border-white/15"
                           }`}
                         >
@@ -552,9 +627,9 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
                         }
                         className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
                           groupSelected
-                            ? "border-[#4F7A57] bg-[#4F7A57] text-white"
+                            ? "border-[#58287F] bg-[#58287F] text-white"
                             : groupOpen
-                              ? "border-[#4F7A57] text-emerald-600 dark:text-emerald-400"
+                              ? "border-[#58287F] text-[#58287F] dark:text-[#A97FD0]"
                               : "border-neutral-300 dark:border-white/15"
                         }`}
                       >
@@ -590,7 +665,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
                             }
                             className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
                               selected
-                                ? "border-[#4F7A57] bg-[#4F7A57] text-white"
+                                ? "border-[#58287F] bg-[#58287F] text-white"
                                 : "border-neutral-300 bg-white dark:border-white/15 dark:bg-[#151A28]"
                             }`}
                           >
@@ -717,7 +792,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
         type="button"
         disabled={!canPlace}
         onClick={placeBet}
-        className="mt-4 h-14 w-full rounded-xl bg-[#4F7A57] text-lg font-bold text-white active:bg-[#3F6446] disabled:opacity-40"
+        className="mt-4 h-14 w-full rounded-xl bg-[#58287F] text-lg font-bold text-white active:bg-[#431E63] disabled:opacity-40"
       >
         {saving ? "Tracking..." : "Track Bet"}
       </button>

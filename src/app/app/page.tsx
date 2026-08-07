@@ -1,14 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
-import BalanceCard from "@/components/BalanceCard";
-import NewBetForm from "@/components/NewBetForm";
-import LiveBets from "@/components/LiveBets";
-import StatsRow from "@/components/StatsRow";
-import BetHistory from "@/components/BetHistory";
 import Disclaimer from "@/components/Disclaimer";
+import HomeDashboard from "@/components/HomeDashboard";
+import TabBar from "@/components/TabBar";
 import Wordmark from "@/components/Wordmark";
 import type { BetWithLegs } from "@/lib/types";
 
-// Settled bets stay on a Live now card with Undo for this long.
+// Settled bets stay on a pending card with Undo for this long.
 const UNDO_WINDOW_MS = 15 * 60 * 1000;
 
 export default async function HomePage() {
@@ -45,9 +42,8 @@ export default async function HomePage() {
 
   const balance = deposits - withdrawals - totalStaked + totalPayouts;
   const netProfit = balance + withdrawals - deposits;
-  // What the user put in. These three numbers are one equation:
-  // startedWith + netProfit = balance. Showing the parts is what makes
-  // the balance readable instead of a figure you have to trust.
+  // What the user put in. startedWith + netProfit = balance, and
+  // showing the parts is what makes the balance readable.
   const startedWith = deposits - withdrawals;
 
   // The most recent stake, shown only as a quick chip under the
@@ -65,17 +61,15 @@ export default async function HomePage() {
       (b.settled_at &&
         now - new Date(b.settled_at).getTime() < UNDO_WINDOW_MS)
   );
-  const settledBets = allBets
-    .filter((b) => b.status !== "pending")
-    .sort(
-      (a, b) =>
-        new Date(b.settled_at ?? 0).getTime() -
-        new Date(a.settled_at ?? 0).getTime()
-    );
+
+  // Google sign in provides a full name. Email accounts have none, and
+  // a mangled email prefix is worse than no name, so those greet bare.
+  const fullName = user?.user_metadata?.full_name as string | undefined;
+  const name = fullName ? fullName.split(" ")[0] : null;
 
   return (
-    <main className="min-h-dvh px-4 py-6 sm:px-6">
-      <div className="mx-auto w-full max-w-md space-y-5">
+    <main className="min-h-dvh px-4 pt-6 pb-24 sm:px-6">
+      <div className="mx-auto w-full max-w-md space-y-4">
         <header className="flex items-center justify-between">
           <h1>
             <Wordmark className="text-2xl" />
@@ -90,25 +84,21 @@ export default async function HomePage() {
           </form>
         </header>
 
-        <BalanceCard
+        <HomeDashboard
+          bets={allBets}
+          liveBets={liveBets}
           balance={balance}
           netProfit={netProfit}
           startedWith={startedWith}
           hasBalance={allTransactions.length > 0}
-          betCount={settledBets.length}
+          lastStake={lastStake}
           userId={user!.id}
+          name={name}
         />
-
-        <StatsRow bets={settledBets} />
-
-        <NewBetForm lastStake={lastStake} />
-
-        <LiveBets bets={liveBets} />
-
-        <BetHistory bets={settledBets} />
 
         <Disclaimer />
       </div>
+      <TabBar />
     </main>
   );
 }

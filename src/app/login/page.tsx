@@ -62,7 +62,7 @@ export default function LoginPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#4F7A57] focus:ring-2 focus:ring-[#4F7A57]/30 dark:border-white/15 dark:bg-[#1A2032] dark:text-neutral-100"
+              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#58287F] focus:ring-2 focus:ring-[#58287F]/30 dark:border-white/15 dark:bg-[#1A2032] dark:text-neutral-100"
             />
           </div>
 
@@ -73,7 +73,7 @@ export default function LoginPage() {
               </label>
               <Link
                 href="/forgot-password"
-                className="text-sm font-semibold text-[#4F7A57]"
+                className="text-sm font-semibold text-[#58287F]"
               >
                 Forgot password?
               </Link>
@@ -85,7 +85,7 @@ export default function LoginPage() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#4F7A57] focus:ring-2 focus:ring-[#4F7A57]/30 dark:border-white/15 dark:bg-[#1A2032] dark:text-neutral-100"
+              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#58287F] focus:ring-2 focus:ring-[#58287F]/30 dark:border-white/15 dark:bg-[#1A2032] dark:text-neutral-100"
             />
           </div>
 
@@ -98,7 +98,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="h-12 w-full rounded-xl bg-[#4F7A57] text-base font-semibold text-white active:bg-[#3F6446] disabled:opacity-60"
+            className="h-12 w-full rounded-xl bg-[#58287F] text-base font-semibold text-white active:bg-[#431E63] disabled:opacity-60"
           >
             {loading ? "Logging in..." : "Log in"}
           </button>
@@ -106,7 +106,7 @@ export default function LoginPage() {
 
         <p className="mt-6 text-center text-sm text-neutral-500 dark:text-neutral-400">
           No account yet?{" "}
-          <Link href="/signup" className="font-semibold text-[#4F7A57]">
+          <Link href="/signup" className="font-semibold text-[#58287F]">
             Sign up
           </Link>
         </p>

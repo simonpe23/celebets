@@ -132,14 +132,18 @@ BUTTONS, THREE TIERS.
 - Tier three  text-xs font-semibold. Only inside a dense card row
               (Won, Lost, Cash out, Delete, Add money, Remove).
 
-COLOR.
+COLOR (rewritten August 2026, ruled by the owner from his mockups).
 - Ink is the default. Muted is neutral 500 light, neutral 400 dark,
   everywhere, with no exceptions.
-- Two greens with two jobs. #4F7A57 is a button you press.
-  emerald-600 light and emerald-400 dark means money went up.
-  Never mix them.
-- Red: red-600 light, red-400 dark, means money went down.
-- Purple #58287F is recommendations and the wordmark. Nothing else.
+- Purple #58287F is the action color: every button you press, every
+  selected chip, every focus ring. Pressed state #431E63. On dark
+  surfaces the accent is #A97FD0. Purple also stays the wordmark.
+- Green means money went up, red means money went down, and neither
+  is ever an action color. emerald-600 light, emerald-400 dark.
+  Red: red-600 light, red-400 dark.
+- One green button survives: Won on a pending pick, #4F7A57,
+  because it declares an outcome, not an action. design-check
+  rule 4b enforces that it appears nowhere else.
 - Dark mode surfaces: page #0B0D14, cards #151A28, popups #1A2032,
   borders white/10 and white/15.
 
@@ -265,6 +269,35 @@ THE ONE LINE SUMMARY:
 - Track means capture data.
 - Performance means understand yourself.
 - Research means understand the game before your next bet.
+
+## The Track page (August 2026, built to the owner's mockups, on the
+## wip branch, not deployed)
+
+The owner drew four mockups (mobile and web, light and dark) and they
+are the spec, with the divergences listed in ROADMAP.md. The home page
+is now the Track page: greeting, Tracking Balance card with the purple
+balance sparkline and one Set Tracking Balance button, the four
+capture tiles (Paste bet slip with a Recommended badge, Upload
+screenshot, Manual entry, Connect accounts with a Soon badge), Insight
+of the day linking to Performance, the Performance Snapshot, then
+Pending bets. History and charts live on Performance.
+
+Navigation is the bottom TabBar: Track, Performance, Research. The
+home page carries no navigation buttons of its own anymore.
+
+Decisions locked in during this build:
+- Net profit has ONE definition (balance + removals minus additions)
+  and every surface shows that same number. The snapshot must never
+  compute its own settled-only version, that mismatch was caught and
+  fixed before it shipped.
+- Insight of the day is seeded by the phone's date: steady all day,
+  new overnight.
+- The greeting uses the Google account's first name and greets bare
+  on email accounts. A mangled email prefix is worse than no name.
+- Best Sport in the snapshot shows profit, not ROI, because per sport
+  ROI has no honest formula yet (parlay stakes span sports).
+- Soon badges instead of dead links, ruled by the owner. The pip
+  strip (recent form) was dropped by the owner.
 
 ## Tester readiness (July 2026, complete and verified)
 

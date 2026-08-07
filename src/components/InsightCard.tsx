@@ -1,0 +1,76 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import MicroLabel from "@/components/MicroLabel";
+import { buildInsightPool } from "@/lib/stats";
+import type { BetWithLegs } from "@/lib/types";
+import { CARD } from "@/lib/ui";
+
+// Insight of the day. One thing Celebet noticed in the user's own
+// data, surfaced on its own: the user did not ask, and no AI went
+// researching. It is the only line on the Track page that concludes
+// instead of reporting.
+//
+// "Of the day" is literal: the pick is seeded by the date, so it holds
+// steady all day and changes overnight, instead of rerolling on every
+// visit. Picked after mount because the phone's date is the one that
+// matters, not the server's.
+//
+// It links to Performance, not to a separate insights page. Insights
+// are a layer inside Performance, the way Apple Health keeps insights
+// inside the health data. Ruled by the owner, August 2026.
+export default function InsightCard({ bets }: { bets: BetWithLegs[] }) {
+  const [text, setText] = useState<string | null>(null);
+
+  useEffect(() => {
+    const settled = bets.filter(
+      (b) => b.status !== "pending" && b.settled_at !== null
+    );
+    const pool = buildInsightPool(settled);
+    if (pool.length === 0) return;
+    const now = new Date();
+    const seed =
+      now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
+    setText(pool[seed % pool.length].text);
+  }, [bets]);
+
+  if (!text) return null;
+
+  return (
+    <Link href="/stats" className={`${CARD} flex items-center gap-4 p-4`}>
+      <span className="min-w-0 grow">
+        <span className="flex items-center gap-2">
+          <MicroLabel tone="purple">Insight of the day</MicroLabel>
+          <span className="rounded bg-[#58287F]/10 px-1.5 py-0.5 text-[10px] font-bold text-[#58287F] dark:bg-[#A97FD0]/15 dark:text-[#A97FD0]">
+            AI
+          </span>
+        </span>
+        <span className="mt-1 block text-sm font-semibold">{text}</span>
+        <span className="mt-1.5 block text-sm font-semibold text-[#58287F] dark:text-[#A97FD0]">
+          Open Performance →
+        </span>
+      </span>
+
+      {/* The trophy in its glow, the one purely decorative thing on the
+          page. Drawn in code so it is crisp in both themes. */}
+      <span className="relative shrink-0" aria-hidden="true">
+        <span className="absolute -inset-2 rounded-full bg-[#7C3FAF]/30 blur-lg" />
+        <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-[linear-gradient(135deg,#7C3FAF,#58287F)]">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#FFFFFF"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="h-6 w-6"
+          >
+            <path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4Z" />
+            <path d="M7 6H4a1 1 0 0 0-1 1c0 2 1.5 3.5 4 4M17 6h3a1 1 0 0 1 1 1c0 2-1.5 3.5-4 4" />
+          </svg>
+        </span>
+      </span>
+    </Link>
+  );
+}

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import HeroMoney from "@/components/HeroMoney";
+import Sparkline from "@/components/Sparkline";
 import MicroLabel from "@/components/MicroLabel";
 import { formatMoney, formatSignedMoney, parseMoney } from "@/lib/format";
 import { CARD } from "@/lib/ui";
@@ -20,6 +21,9 @@ interface Props {
   hasBalance: boolean;
   betCount: number;
   userId: string;
+  // The balance over time, oldest first, drawn as the purple line in
+  // the corner of the card. Comes from the page so the card stays dumb.
+  series?: number[];
 }
 
 type Mode = "adjust" | "set";
@@ -31,6 +35,7 @@ export default function BalanceCard({
   hasBalance,
   betCount,
   userId,
+  series,
 }: Props) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -101,14 +106,27 @@ export default function BalanceCard({
     <section className={`${CARD} p-5`}>
       {hasBalance ? (
         <>
-          <MicroLabel>Tracking Balance</MicroLabel>
-          <p
-            className={`mt-1 break-words ${
-              balance < 0 ? "text-red-600 dark:text-red-400" : ""
-            }`}
-          >
-            <HeroMoney value={balance} signed={false} className="text-[32px]" />
-          </p>
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <MicroLabel>Tracking Balance</MicroLabel>
+              <p
+                className={`mt-1 break-words ${
+                  balance < 0 ? "text-red-600 dark:text-red-400" : ""
+                }`}
+              >
+                <HeroMoney
+                  value={balance}
+                  signed={false}
+                  className="text-[32px]"
+                />
+              </p>
+            </div>
+            {series && series.length > 1 && (
+              <div className="w-32 shrink-0 pt-1">
+                <Sparkline points={series} tone="purple" className="h-12" />
+              </div>
+            )}
+          </div>
           {/* Started with plus net profit equals the balance above.
               Showing both parts is what makes the big number readable
               instead of a figure you have to trust. */}
@@ -157,7 +175,7 @@ export default function BalanceCard({
           setMode("set");
           setOpen(true);
         }}
-        className="mt-4 w-full rounded-xl bg-[#4F7A57] px-3 py-2.5 text-sm font-bold text-white active:bg-[#3F6446]"
+        className="mt-4 w-full rounded-xl bg-[#58287F] px-3 py-2.5 text-sm font-bold text-white active:bg-[#431E63]"
       >
         Set Tracking Balance
       </button>
@@ -216,7 +234,7 @@ export default function BalanceCard({
               placeholder="0.00"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#4F7A57] focus:ring-2 focus:ring-[#4F7A57]/30 dark:border-white/15 dark:bg-[#151A28] dark:text-neutral-100"
+              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#58287F] focus:ring-2 focus:ring-[#58287F]/30 dark:border-white/15 dark:bg-[#151A28] dark:text-neutral-100"
             />
 
             {error && (
@@ -230,7 +248,7 @@ export default function BalanceCard({
                 type="button"
                 disabled={saving}
                 onClick={() => save("up")}
-                className="mt-5 h-12 w-full rounded-xl bg-[#4F7A57] text-base font-bold text-white active:bg-[#3F6446] disabled:opacity-60"
+                className="mt-5 h-12 w-full rounded-xl bg-[#58287F] text-base font-bold text-white active:bg-[#431E63] disabled:opacity-60"
               >
                 Save
               </button>
@@ -248,7 +266,7 @@ export default function BalanceCard({
                   type="button"
                   disabled={saving}
                   onClick={() => save("up")}
-                  className="h-12 rounded-xl bg-[#4F7A57] text-base font-bold text-white active:bg-[#3F6446] disabled:opacity-60"
+                  className="h-12 rounded-xl bg-[#58287F] text-base font-bold text-white active:bg-[#431E63] disabled:opacity-60"
                 >
                   Add
                 </button>
