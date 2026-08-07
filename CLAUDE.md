@@ -144,18 +144,22 @@ page: that was invented, not copied).
 - Ink is the default. Muted is neutral 500 light, neutral 400 dark,
   everywhere, with no exceptions.
 - Two purples with two jobs, ruled by the owner (August 2026):
-  #6D28D9 is a surface you press (the primary button, the active tab,
-  the avatar), pressed #5B21B6. #7C3AED is purple as TEXT, an icon or
-  a tint. On dark surfaces purple text is #A78BFA. The owner's note
-  was that the button purple is darker than the accent, and it is.
-- The primary button is #5B21B6, squared (rounded-lg), 14px
-  semibold. It went 52px, then 44px, and the owner still called it
-  too big and too bright each time, because only the size moved.
-  The real answer was that setting a tracking balance happens ONCE,
-  so it does not deserve a full width primary button at all.
-  BalanceCard takes a `control` prop: corner (a small squared button
-  beside the label, the default), link (a quiet text link), or
-  button (full width, kept only for comparison).
+  #4C1D95 is a surface you press (the primary button, the active tab,
+  the avatar), pressed #3B1578. #7C3AED is purple as TEXT, an icon or
+  a tint. On dark surfaces purple text is #A78BFA. The owner called
+  the pressable purple bright and childish four separate times, each
+  time after it had only been nudged. It is now violet-900, much
+  darker than instinct suggests.
+- THE SET BALANCE BUTTON, settled after six rounds. 32px tall, auto
+  width, 13px semibold, a 6px radius, #4C1D95, sitting under Net
+  profit. It went 52px, then 44px, and the owner still called it too
+  big every time because only the size moved. The real answer was
+  that setting a tracking balance happens ONCE, so it never deserved
+  a full width primary button. Its label shortens to "Set balance"
+  once a balance exists. BalanceCard keeps a `control` prop (under,
+  corner, link, button) and /preview/buttons compares them.
+- Buttons are squared, not pills. rounded-md is the primary, and the
+  owner rejected rounded-xl and rounded-lg as too round.
 - Green means money went up, red means money went down, and neither
   is ever an action color. emerald-600 light, emerald-400 dark.
   Red: red-600 light, red-400 dark.

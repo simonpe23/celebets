@@ -27,10 +27,12 @@ interface Props {
   // How the once-ever setup control is drawn. Setting a tracking
   // balance happens once and then almost never, so a full width
   // primary button spends the home page's best real estate on it.
-  //   corner  a small squared button beside the label
-  //   link    a quiet text link under the number
-  //   button  the old full width button, kept for comparison
-  control?: "corner" | "link" | "button";
+  // The owner's ruling: a small squared button, under Net profit.
+  //   under   the ruled shape, and the default
+  //   corner  the same button, up beside the label
+  //   link    a quiet text link, no button
+  //   button  the old full width one, kept for comparison
+  control?: "under" | "corner" | "link" | "button";
 }
 
 type Mode = "adjust" | "set";
@@ -43,7 +45,7 @@ export default function BalanceCard({
   betCount,
   userId,
   series,
-  control = "corner",
+  control = "under",
 }: Props) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -116,12 +118,9 @@ export default function BalanceCard({
     setOpen(true);
   }
 
-  const cornerButton = (
-    <button
-      type="button"
-      onClick={openSheet}
-      className={`${BTN} h-8 shrink-0 px-3 text-[13px]`}
-    >
+  // One button, one size, wherever it is placed.
+  const smallButton = (
+    <button type="button" onClick={openSheet} className={`${BTN} h-8 shrink-0 px-3`}>
       {hasBalance ? "Set balance" : "Set tracking balance"}
     </button>
   );
@@ -146,7 +145,7 @@ export default function BalanceCard({
                   <path d="M12 8h.01M12 11v5" strokeLinecap="round" />
                 </svg>
               </span>
-              {cornerButton}
+              {smallButton}
             </div>
           )}
           <div className="flex items-start justify-between gap-4">
@@ -213,6 +212,8 @@ export default function BalanceCard({
           </p>
         </>
       )}
+
+      {control === "under" && <div className="mt-3">{smallButton}</div>}
 
       {control === "button" && (
         <button type="button" onClick={openSheet} className={`${BTN} mt-4 h-11 w-full`}>

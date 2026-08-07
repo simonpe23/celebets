@@ -37,7 +37,8 @@ const ALLOWED_HEX = new Set([
   "#6D28D9", // action purple, pressed
   "#A78BFA", // purple on dark surfaces, and the wordmark gradient
   "#5B21B6", // primary button, and the wordmark gradient deep end
-  "#4C1D95", // primary button, pressed
+  "#4C1D95", // primary button
+  "#3B1578", // primary button, pressed
   "#16A34A", // the Won settle button only, see rule 4b
   "#15803D", // Won settle button, pressed
   "#3B82F6", // capture tile icon, camera

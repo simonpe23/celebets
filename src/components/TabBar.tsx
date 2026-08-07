@@ -75,7 +75,7 @@ export default function TabBar({ activeHref }: { activeHref?: string }) {
               href={tab.href}
               className={`flex flex-1 flex-col items-center justify-center gap-1 rounded-[18px] py-2.5 text-[12px] font-bold transition-colors ${
                 active
-                  ? "bg-[#5B21B6] text-white"
+                  ? "bg-[#4C1D95] text-white"
                   : "text-neutral-500 dark:text-neutral-400"
               }`}
             >

@@ -11,11 +11,12 @@ export const CARD =
 export const INNER =
   "rounded-xl bg-neutral-50 ring-1 ring-neutral-900/[0.05] dark:bg-white/[0.03] dark:ring-white/[0.06]";
 
-// The primary action. Deep violet, squared corners, no glow. The
-// owner called the brighter purple childish three times and the pill
-// shape wrong: his mockup's button is thinner and more squared.
+// The primary action. Deep violet, nearly square corners, no glow.
+// The owner called the purple bright and childish three separate
+// times and the shape too much of a pill twice, so this is darker and
+// squarer than instinct suggests: #4C1D95 at a 6px radius.
 export const BTN =
-  "rounded-lg bg-[#5B21B6] text-sm font-semibold text-white active:bg-[#4C1D95] disabled:opacity-60";
+  "rounded-md bg-[#4C1D95] text-[13px] font-semibold text-white active:bg-[#3B1578] disabled:opacity-60";
 
 // An outcome control on a pending pick: a quiet tinted pill that names
 // what happened. Never a filled bar, which shouted louder than the bet.
