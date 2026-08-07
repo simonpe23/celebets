@@ -8,17 +8,24 @@
 export default function MicroLabel({
   children,
   onDark = false,
+  tone = "muted",
   className = "",
 }: {
   children: React.ReactNode;
   onDark?: boolean;
+  // Purple names Research, the same as everywhere else in the app.
+  tone?: "muted" | "purple";
   className?: string;
 }) {
+  const color =
+    tone === "purple"
+      ? "text-[#58287F] dark:text-[#A97FD0]"
+      : onDark
+        ? "text-white/40"
+        : "text-neutral-400";
   return (
     <span
-      className={`block text-[10px] font-bold uppercase tracking-widest ${
-        onDark ? "text-white/40" : "text-neutral-400"
-      } ${className}`}
+      className={`block text-[10px] font-bold uppercase tracking-widest ${color} ${className}`}
     >
       {children}
     </span>

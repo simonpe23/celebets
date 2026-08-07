@@ -11,6 +11,7 @@ import {
   round2,
 } from "@/lib/format";
 import { SPORT_EMOJI, type BetWithLegs, type LegResult } from "@/lib/types";
+import { CARD } from "@/lib/ui";
 
 interface Props {
   bets: BetWithLegs[];
@@ -183,7 +184,7 @@ export default function LiveBets({ bets }: Props) {
             return (
               <div
                 key={bet.id}
-                className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-4 dark:border-white/10"
+                className={`${CARD} p-4`}
               >
                 <div className="flex items-center justify-between">
                   <span
@@ -402,7 +403,7 @@ export default function LiveBets({ bets }: Props) {
                 {confirmingDelete === bet.id && (
                   <div className="mt-3 flex items-center justify-between gap-2 rounded-xl bg-red-50 p-3 dark:bg-red-950">
                     <p className="text-sm text-red-700 dark:text-red-300">
-                      Delete this bet? The stake returns to your wallet.
+                      Delete this bet? The stake returns to your balance.
                     </p>
                     <div className="flex shrink-0 gap-2">
                       <button

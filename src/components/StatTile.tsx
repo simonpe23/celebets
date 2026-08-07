@@ -8,6 +8,7 @@
 //   hero value   18px semibold, one tier up, under a headline only
 //   card heading 18px bold
 import MicroLabel from "@/components/MicroLabel";
+import { CARD } from "@/lib/ui";
 
 export default function StatTile({
   label,
@@ -19,7 +20,7 @@ export default function StatTile({
   tone?: string;
 }) {
   return (
-    <div className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] p-3 text-center dark:border-white/10 dark:bg-[#151A28]">
+    <div className={`${CARD} p-3 text-center`}>
       <MicroLabel>{label}</MicroLabel>
       <p
         className={`mt-1 font-money text-base font-semibold tabular-nums ${tone ?? ""}`}

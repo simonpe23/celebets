@@ -42,6 +42,7 @@ const ALLOWED_HEX = new Set([
   "#1A2032", // dark popup
   "#0B0D14", // dark page
   "#101322", // chart panel
+  "#2E1250", // in play panel, deep end of the purple gradient
   "#34D399", // chart green
   "#FB7185", // chart red
   "#7C3FAF", // wordmark gradient
@@ -65,17 +66,28 @@ for (const file of files) {
   lines.forEach((line, i) => {
     const n = i + 1;
 
+    // A pill that states a fact is not a control, so it is not bound by
+    // the button tiers. Both rules below share this test.
+    const isBadge = line.includes("rounded-full") && line.includes("px-2.5");
+
     // 1. The compact tier belongs only inside bet card rows.
-    if (line.includes("text-xs font-semibold") && !COMPACT_OK.includes(short)) {
+    if (
+      line.includes("text-xs font-semibold") &&
+      !COMPACT_OK.includes(short) &&
+      !isBadge
+    ) {
       note(file, n, "compact tier (text-xs font-semibold) outside a bet card");
     }
 
     // 2. Buttons and chips must not invent their own size.
-    const isBadge = line.includes("rounded-full") && line.includes("px-2.5");
+    // A numeral is not a button, and it carries the numeral face, which
+    // no button in the app does.
+    const isNumeral = line.includes("font-money");
     if (
       line.includes("text-xs font-bold") &&
       !line.includes("uppercase") &&
-      !isBadge
+      !isBadge &&
+      !isNumeral
     ) {
       note(file, n, "text-xs font-bold: buttons are text-sm font-bold");
     }
@@ -101,7 +113,13 @@ for (const file of files) {
       }
     }
 
-    // 5. The tile must come from the shared component.
+    // 5. The card surface comes from CARD in src/lib/ui.ts. Thirteen
+    // files once repeated it, and it drifted.
+    if (line.includes("bg-[#F2F4F7]") || line.includes("shadow-[0_6px_20px")) {
+      note(file, n, "card surface hand-rolled, import CARD from @/lib/ui");
+    }
+
+    // 6. The tile must come from the shared component.
     if (
       line.includes("text-[10px] font-bold uppercase tracking-widest") &&
       short !== "MicroLabel.tsx"
@@ -129,6 +147,11 @@ const PROSE = [
   "New totals",
   "Cashed out for",
   "Enter a valid amount",
+  // The hero sub-line reads as a sentence: "+12.4% ROI on $840 staked".
+  "% ROI on",
+  // The in play panel speaks in sentences too.
+  "riding, across",
+  "Paste a slip below",
 ];
 
 for (const file of files) {
@@ -155,6 +178,50 @@ for (const file of files) {
       i + 1,
       "money value with no numeral face and not marked as prose"
     );
+  });
+}
+
+// 7. THE VOCABULARY CHECK.
+//
+// Celebet never holds money, so it never speaks like a bank. The owner
+// ruled out this vocabulary: "No wallet. No deposit. No withdraw.
+// That's finance language. The feature is about tracking performance,
+// not banking." The words are Tracking Balance, Set Tracking Balance,
+// Add and Remove, Balance history.
+//
+// Only text a user reads is checked. The database columns are still
+// named deposit and withdrawal, and renaming those would be a migration
+// with no user-visible gain.
+const BANNED_WORDS = /\b(wallet|deposits?|withdrawals?|withdraw|bankroll)\b/i;
+
+for (const file of files) {
+  if (SKIP.some((dir) => file.includes(`/${dir}/`))) continue;
+  const lines = readFileSync(file, "utf8").split("\n");
+
+  lines.forEach((line, i) => {
+    const trimmed = line.trim();
+    if (trimmed.startsWith("//") || trimmed.startsWith("*")) return;
+    if (/^import\s|from\s+["']/.test(trimmed)) return;
+    if (/\.from\(|type:|"deposit"|"withdrawal"|const |let |interface /.test(line))
+      return;
+
+    // Copy shows up three ways: between JSX tags on one line, as a bare
+    // prose line inside a JSX block, or inside a quoted sentence.
+    const jsxText = line.match(/>([^<>{}]*[A-Za-z][^<>{}]*)</)?.[1] ?? "";
+    const bareProse = /^[^<>{}()=[\]`$]*[A-Za-z][^<>{}()=[\]`$]*$/.test(trimmed)
+      ? trimmed
+      : "";
+    const quoted = (line.match(/"[^"]* [^"]*"/g) ?? []).join(" ");
+    const copy = `${jsxText} ${bareProse} ${quoted}`;
+
+    if (BANNED_WORDS.test(copy)) {
+      const word = copy.match(BANNED_WORDS)[0];
+      note(
+        file,
+        i + 1,
+        `"${word}" is finance language, use the balance vocabulary`
+      );
+    }
   });
 }
 

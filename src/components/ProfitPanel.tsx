@@ -28,6 +28,10 @@ interface Props {
   onCustomFrom: (value: string) => void;
   onCustomTo: (value: string) => void;
   onScrub: (point: { value: number; date: Date } | null) => void;
+  // Optional block drawn on the panel above the chart. The home screen
+  // puts its headline number here so the number and the line it draws
+  // share one surface instead of sitting in two separate cards.
+  header?: React.ReactNode;
 }
 
 function CalendarIcon() {
@@ -60,6 +64,7 @@ export default function ProfitPanel({
   onCustomFrom,
   onCustomTo,
   onScrub,
+  header,
 }: Props) {
   const custom = period === "custom";
 
@@ -135,6 +140,8 @@ export default function ProfitPanel({
           </div>
         </div>
       )}
+
+      {header}
 
       {bets.length === 0 ? (
         <p className="flex h-52 items-center justify-center text-sm text-white/40">

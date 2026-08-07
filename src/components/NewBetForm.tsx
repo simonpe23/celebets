@@ -10,7 +10,9 @@ import {
   round2,
   round4,
 } from "@/lib/format";
+import MicroLabel from "@/components/MicroLabel";
 import { SPORTS, SPORT_EMOJI, SUBCATEGORIES, type Sport } from "@/lib/types";
+import { CARD } from "@/lib/ui";
 
 interface LegDraft {
   sport: Sport | null;
@@ -53,6 +55,9 @@ function parsePercent(input: string): number | null {
 interface Props {
   // The most recent stake, offered as a quick chip only.
   lastStake: string;
+  // The home screen shows this card among several others, so it drops
+  // the heading and the explaining line and leads with the buttons.
+  compact?: boolean;
 }
 
 const QUICK_STAKES = ["20", "50", "100"];
@@ -95,7 +100,7 @@ function CameraIcon() {
   );
 }
 
-export default function NewBetForm({ lastStake }: Props) {
+export default function NewBetForm({ lastStake, compact = false }: Props) {
   const router = useRouter();
   const [stake, setStake] = useState("");
   const [legs, setLegs] = useState<LegDraft[]>([emptyLeg()]);
@@ -104,6 +109,8 @@ export default function NewBetForm({ lastStake }: Props) {
   const [placed, setPlaced] = useState(false);
   const [saving, setSaving] = useState(false);
   const [importing, setImporting] = useState(false);
+  // The manual form is long, so it stays folded until asked for.
+  const [manualOpen, setManualOpen] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -278,6 +285,7 @@ export default function NewBetForm({ lastStake }: Props) {
     }
 
     applyParsedSlip(data);
+    setManualOpen(true);
   }
 
   async function pasteSlip() {
@@ -320,8 +328,17 @@ export default function NewBetForm({ lastStake }: Props) {
     "mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#4F7A57] focus:ring-2 focus:ring-[#4F7A57]/30 dark:border-white/15 dark:bg-[#151A28] dark:text-neutral-100";
 
   return (
-    <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-5 dark:border-white/10">
-      <h2 className="text-lg font-bold">New Bet</h2>
+    <section className={`${CARD} p-5`}>
+      {compact ? (
+        <MicroLabel>Track a bet</MicroLabel>
+      ) : (
+        <>
+          <h2 className="text-lg font-bold">Track a bet</h2>
+          <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+            Paste a screenshot of your bet slip and Celebet fills the rest in.
+          </p>
+        </>
+      )}
 
       <div className="mt-3 grid grid-cols-2 gap-2">
         <button
@@ -365,6 +382,17 @@ export default function NewBetForm({ lastStake }: Props) {
         </p>
       )}
 
+      {!manualOpen && (
+        <button
+          type="button"
+          onClick={() => setManualOpen(true)}
+          className="mt-3 h-11 w-full rounded-xl border border-dashed border-neutral-300 text-sm font-bold text-neutral-600 dark:border-white/15 dark:text-neutral-300"
+        >
+          Add manually
+        </button>
+      )}
+
+      <div className={manualOpen ? "" : "hidden"}>
       <label htmlFor="stake" className="mt-4 block text-sm font-semibold">
         Stake (USD)
       </label>
@@ -693,6 +721,7 @@ export default function NewBetForm({ lastStake }: Props) {
       >
         {saving ? "Tracking..." : "Track Bet"}
       </button>
+      </div>
     </section>
   );
 }

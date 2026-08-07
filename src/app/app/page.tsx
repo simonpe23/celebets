@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import WalletCard from "@/components/WalletCard";
+import BalanceCard from "@/components/BalanceCard";
 import NewBetForm from "@/components/NewBetForm";
 import LiveBets from "@/components/LiveBets";
 import StatsRow from "@/components/StatsRow";
@@ -45,6 +45,10 @@ export default async function HomePage() {
 
   const balance = deposits - withdrawals - totalStaked + totalPayouts;
   const netProfit = balance + withdrawals - deposits;
+  // What the user put in. These three numbers are one equation:
+  // startedWith + netProfit = balance. Showing the parts is what makes
+  // the balance readable instead of a figure you have to trust.
+  const startedWith = deposits - withdrawals;
 
   // The most recent stake, shown only as a quick chip under the
   // stake field. The form itself always opens blank.
@@ -86,11 +90,13 @@ export default async function HomePage() {
           </form>
         </header>
 
-        <WalletCard
+        <BalanceCard
           balance={balance}
           netProfit={netProfit}
+          startedWith={startedWith}
+          hasBalance={allTransactions.length > 0}
+          betCount={settledBets.length}
           userId={user!.id}
-          settledBets={settledBets}
         />
 
         <StatsRow bets={settledBets} />
