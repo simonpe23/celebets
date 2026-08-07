@@ -132,20 +132,28 @@ BUTTONS, THREE TIERS.
 - Tier three  text-xs font-semibold. Only inside a dense card row
               (Won, Lost, Cash out, Delete, Add money, Remove).
 
-COLOR (rewritten August 2026, ruled by the owner from his mockups).
+COLOR (rewritten again August 2026: the first purple was too muted
+and the owner called the result ugly next to his mockups. The mockup
+palette is the law now).
 - Ink is the default. Muted is neutral 500 light, neutral 400 dark,
   everywhere, with no exceptions.
-- Purple #58287F is the action color: every button you press, every
-  selected chip, every focus ring. Pressed state #431E63. On dark
-  surfaces the accent is #A97FD0. Purple also stays the wordmark.
+- Purple #7C3AED is the action color: every button you press, every
+  selected chip, every focus ring. Pressed #6D28D9. On dark surfaces
+  the accent is #A78BFA. The wordmark gradient runs #A78BFA to
+  #7C3AED to #5B21B6.
 - Green means money went up, red means money went down, and neither
   is ever an action color. emerald-600 light, emerald-400 dark.
   Red: red-600 light, red-400 dark.
-- One green button survives: Won on a pending pick, #4F7A57,
-  because it declares an outcome, not an action. design-check
-  rule 4b enforces that it appears nowhere else.
-- Dark mode surfaces: page #0B0D14, cards #151A28, popups #1A2032,
-  borders white/10 and white/15.
+- One green button survives: Won on a pending pick, #16A34A, pressed
+  #15803D, because it declares an outcome, not an action.
+  design-check rule 4b enforces that it appears nowhere else.
+- The capture tiles carry their own icon colors, from the mockup:
+  camera #3B82F6, pencil #F97316, connect #22C55E. Icons only,
+  never buttons.
+- Light surfaces: page #F6F5FA, cards white with the violet-cast
+  shadow in CARD (src/lib/ui.ts).
+- Dark surfaces: page #0B0714, cards #151022, popups #1D1530,
+  tab bar #100A1E, chart panel #17102A, borders white/10.
 
 ## Status
 

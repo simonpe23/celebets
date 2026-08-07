@@ -6,6 +6,7 @@ export default function Sparkline({
   positive,
   tone = "auto",
   className = "h-7",
+  dots = false,
 }: {
   points: number[];
   positive?: boolean;
@@ -14,6 +15,10 @@ export default function Sparkline({
   // the balance line, which the owner's mockups draw in brand purple.
   tone?: "auto" | "purple";
   className?: string;
+  // Dots on every vertex, the mockup's balance chart look. Only for
+  // charts whose container keeps roughly the viewBox's shape, because
+  // the svg stretches and circles stretch with it.
+  dots?: boolean;
 }) {
   if (points.length < 2) return null;
 
@@ -33,7 +38,7 @@ export default function Sparkline({
 
   // The same two colors the big chart uses, plus the wordmark purple.
   const stroke =
-    tone === "purple" ? "#7C3FAF" : positive ? "#34D399" : "#FB7185";
+    tone === "purple" ? "#A78BFA" : positive ? "#34D399" : "#FB7185";
 
   return (
     <svg
@@ -57,6 +62,16 @@ export default function Sparkline({
         strokeLinejoin="round"
         vectorEffect="non-scaling-stroke"
       />
+      {dots &&
+        points.map((value, i) => (
+          <circle
+            key={i}
+            cx={(i / (points.length - 1)) * W}
+            cy={H - ((value - min) / span) * H}
+            r={1.8}
+            fill={stroke}
+          />
+        ))}
     </svg>
   );
 }

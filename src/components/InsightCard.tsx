@@ -42,12 +42,12 @@ export default function InsightCard({ bets }: { bets: BetWithLegs[] }) {
       <span className="min-w-0 grow">
         <span className="flex items-center gap-2">
           <MicroLabel tone="purple">Insight of the day</MicroLabel>
-          <span className="rounded bg-[#58287F]/10 px-1.5 py-0.5 text-[10px] font-bold text-[#58287F] dark:bg-[#A97FD0]/15 dark:text-[#A97FD0]">
+          <span className="rounded bg-[#7C3AED]/10 px-1.5 py-0.5 text-[10px] font-bold text-[#7C3AED] dark:bg-[#A78BFA]/15 dark:text-[#A78BFA]">
             AI
           </span>
         </span>
-        <span className="mt-1 block text-sm font-semibold">{text}</span>
-        <span className="mt-1.5 block text-sm font-semibold text-[#58287F] dark:text-[#A97FD0]">
+        <span className="mt-1.5 block text-base font-semibold leading-snug">{text}</span>
+        <span className="mt-1.5 block text-sm font-semibold text-[#7C3AED] dark:text-[#A78BFA]">
           Open Performance →
         </span>
       </span>
@@ -55,8 +55,8 @@ export default function InsightCard({ bets }: { bets: BetWithLegs[] }) {
       {/* The trophy in its glow, the one purely decorative thing on the
           page. Drawn in code so it is crisp in both themes. */}
       <span className="relative shrink-0" aria-hidden="true">
-        <span className="absolute -inset-2 rounded-full bg-[#7C3FAF]/30 blur-lg" />
-        <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-[linear-gradient(135deg,#7C3FAF,#58287F)]">
+        <span className="absolute -inset-3 rounded-full bg-[#7C3AED]/35 blur-xl" />
+        <span className="relative flex h-16 w-16 items-center justify-center rounded-full bg-[linear-gradient(135deg,#A78BFA,#7C3AED)]">
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -64,7 +64,7 @@ export default function InsightCard({ bets }: { bets: BetWithLegs[] }) {
             strokeWidth={2}
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="h-6 w-6"
+            className="h-7 w-7"
           >
             <path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4Z" />
             <path d="M7 6H4a1 1 0 0 0-1 1c0 2 1.5 3.5 4 4M17 6h3a1 1 0 0 1 1 1c0 2-1.5 3.5-4 4" />

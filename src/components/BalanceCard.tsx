@@ -98,7 +98,7 @@ export default function BalanceCard({
   const tabClass = (active: boolean) =>
     `flex-1 rounded-lg px-3 py-2 text-sm font-semibold ${
       active
-        ? "bg-white text-neutral-900 shadow-sm dark:bg-[#151A28] dark:text-white"
+        ? "bg-white text-neutral-900 shadow-sm dark:bg-[#151022] dark:text-white"
         : "text-neutral-500 dark:text-neutral-400"
     }`;
 
@@ -122,8 +122,13 @@ export default function BalanceCard({
               </p>
             </div>
             {series && series.length > 1 && (
-              <div className="w-32 shrink-0 pt-1">
-                <Sparkline points={series} tone="purple" className="h-12" />
+              <div className="w-32 shrink-0 self-center">
+                <Sparkline
+                  points={series}
+                  tone="purple"
+                  dots
+                  className="h-14"
+                />
               </div>
             )}
           </div>
@@ -175,14 +180,14 @@ export default function BalanceCard({
           setMode("set");
           setOpen(true);
         }}
-        className="mt-4 w-full rounded-xl bg-[#58287F] px-3 py-2.5 text-sm font-bold text-white active:bg-[#431E63]"
+        className="mt-4 w-full rounded-xl bg-[#7C3AED] px-3 py-2.5 text-sm font-bold text-white active:bg-[#6D28D9]"
       >
         Set Tracking Balance
       </button>
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center">
-          <div className="w-full max-w-sm rounded-t-2xl bg-white p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:rounded-2xl sm:pb-6 dark:bg-[#1A2032]">
+          <div className="w-full max-w-sm rounded-t-2xl bg-white p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:rounded-2xl sm:pb-6 dark:bg-[#1D1530]">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-bold">Set Tracking Balance</h3>
               <button
@@ -196,7 +201,7 @@ export default function BalanceCard({
 
             {/* Shown because months later nobody remembers what they set. */}
             {hasBalance && (
-              <div className="mt-4 rounded-xl bg-neutral-100 p-3 dark:bg-[#151A28]">
+              <div className="mt-4 rounded-xl bg-neutral-100 p-3 dark:bg-[#151022]">
                 <MicroLabel>Tracking Balance</MicroLabel>
                 <p className="mt-0.5 font-money text-lg font-bold tabular-nums">
                   {formatMoney(balance)}
@@ -205,7 +210,7 @@ export default function BalanceCard({
             )}
 
             {hasBalance && (
-              <div className="mt-4 flex gap-1 rounded-xl bg-neutral-100 p-1 dark:bg-[#151A28]">
+              <div className="mt-4 flex gap-1 rounded-xl bg-neutral-100 p-1 dark:bg-[#151022]">
                 <button
                   type="button"
                   onClick={() => setMode("adjust")}
@@ -234,7 +239,7 @@ export default function BalanceCard({
               placeholder="0.00"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#58287F] focus:ring-2 focus:ring-[#58287F]/30 dark:border-white/15 dark:bg-[#151A28] dark:text-neutral-100"
+              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#7C3AED] focus:ring-2 focus:ring-[#7C3AED]/30 dark:border-white/15 dark:bg-[#151022] dark:text-neutral-100"
             />
 
             {error && (
@@ -248,7 +253,7 @@ export default function BalanceCard({
                 type="button"
                 disabled={saving}
                 onClick={() => save("up")}
-                className="mt-5 h-12 w-full rounded-xl bg-[#58287F] text-base font-bold text-white active:bg-[#431E63] disabled:opacity-60"
+                className="mt-5 h-12 w-full rounded-xl bg-[#7C3AED] text-base font-bold text-white active:bg-[#6D28D9] disabled:opacity-60"
               >
                 Save
               </button>
@@ -266,7 +271,7 @@ export default function BalanceCard({
                   type="button"
                   disabled={saving}
                   onClick={() => save("up")}
-                  className="h-12 rounded-xl bg-[#58287F] text-base font-bold text-white active:bg-[#431E63] disabled:opacity-60"
+                  className="h-12 rounded-xl bg-[#7C3AED] text-base font-bold text-white active:bg-[#6D28D9] disabled:opacity-60"
                 >
                   Add
                 </button>

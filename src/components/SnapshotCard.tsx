@@ -87,7 +87,7 @@ export default function SnapshotCard({
         <h2 className="text-lg font-bold">Performance Snapshot</h2>
         <Link
           href="/stats"
-          className="shrink-0 text-sm font-semibold text-[#58287F] dark:text-[#A97FD0]"
+          className="shrink-0 text-sm font-semibold text-[#7C3AED] dark:text-[#A78BFA]"
         >
           View all →
         </Link>
@@ -97,7 +97,7 @@ export default function SnapshotCard({
         <div className="pr-2">
           <MicroLabel>Net Profit</MicroLabel>
           <p
-            className={`mt-1 font-money text-sm font-bold tabular-nums ${moneyTone(profit)}`}
+            className={`mt-1 font-money text-base font-bold tabular-nums ${moneyTone(profit)}`}
           >
             {formatSignedMoney(profit)}
           </p>
@@ -113,7 +113,7 @@ export default function SnapshotCard({
         <div className="px-2">
           <MicroLabel>ROI</MicroLabel>
           <p
-            className={`mt-1 font-money text-sm font-bold tabular-nums ${moneyTone(t.roi ?? 0)}`}
+            className={`mt-1 font-money text-base font-bold tabular-nums ${moneyTone(t.roi ?? 0)}`}
           >
             {t.roi === null
               ? "-"
@@ -130,7 +130,7 @@ export default function SnapshotCard({
 
         <div className="px-2">
           <MicroLabel>Win Rate</MicroLabel>
-          <p className="mt-1 font-money text-sm font-bold tabular-nums">
+          <p className="mt-1 font-money text-base font-bold tabular-nums">
             {hitRate === null ? "-" : `${hitRate}%`}
           </p>
           <div className="mt-2">
@@ -146,7 +146,7 @@ export default function SnapshotCard({
           <MicroLabel>Best Sport</MicroLabel>
           {best ? (
             <>
-              <p className="mt-1 truncate text-sm font-bold">
+              <p className="mt-1 truncate text-sm font-bold leading-6">
                 {SPORT_EMOJI[best.sport]} {best.sport}
               </p>
               <p

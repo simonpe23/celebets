@@ -1,13 +1,12 @@
 // The one card surface, in one place.
 //
-// It used to be a flat gray panel separated from the page by a
-// hairline. Thirteen files repeated that class string, and the result
-// was a page where every card weighed exactly the same, so the eye had
-// nowhere to land. The owner's word for it was boring, and he was
-// right: that is a contrast problem, not a content problem.
-//
-// White with a soft shadow lifts each card off the tinted page. Depth
-// is what makes a light screen feel alive, which is the half of the
-// mockup's excitement that never needed darkness.
+// Tuned to the owner's mockups (August 2026): white cards floating on
+// a lavender-white page in light mode, purple-cast near-black cards on
+// a near-black page in dark mode. The shadow carries a hint of violet
+// so depth reads as brand, not as gray.
 export const CARD =
-  "rounded-2xl bg-white shadow-[0_6px_20px_-12px_rgba(16,19,34,0.45)] ring-1 ring-neutral-900/5 dark:bg-[#151A28] dark:ring-white/10 dark:shadow-none";
+  "rounded-2xl bg-white ring-1 ring-neutral-900/5 shadow-[0_10px_30px_-18px_rgba(46,16,80,0.45)] dark:bg-[#151022] dark:ring-white/10 dark:shadow-none";
+
+// The primary action, always purple, always bold.
+export const BTN =
+  "rounded-xl bg-[#7C3AED] font-bold text-white active:bg-[#6D28D9]";

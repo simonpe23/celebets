@@ -132,8 +132,8 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
   const pillClass = (active: boolean) =>
     `shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
       active
-        ? "border-[#58287F] bg-[#58287F] text-white"
-        : "border-neutral-300 bg-white text-neutral-600 dark:border-white/15 dark:bg-[#1A2032] dark:text-neutral-300"
+        ? "border-[#7C3AED] bg-[#7C3AED] text-white"
+        : "border-neutral-300 bg-white text-neutral-600 dark:border-white/15 dark:bg-[#1D1530] dark:text-neutral-300"
     }`;
 
   return (

@@ -32,7 +32,9 @@ const TABS = [
 function TrackIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden="true">
-      <path d="M4 7h16M4 12h16M4 17h10" />
+      <path d="M3 10.5 12 3l9 7.5" />
+      <path d="M5 9.5V21h14V9.5" />
+      <path d="M10 21v-6h4v6" />
     </svg>
   );
 }
@@ -40,8 +42,7 @@ function TrackIcon() {
 function PerformanceIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden="true">
-      <path d="M4 16l5-5 4 4 7-7" />
-      <path d="M20 8v5h-5" />
+      <path d="M5 20v-6M12 20V6M19 20v-10" />
     </svg>
   );
 }
@@ -61,7 +62,7 @@ export default function TabBar() {
   const pathname = usePathname() ?? "";
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-neutral-300/70 bg-white/90 backdrop-blur dark:border-white/10 dark:bg-[#0B0D14]/90">
+    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-neutral-200/80 bg-white/95 backdrop-blur dark:border-white/10 dark:bg-[#100A1E]/95">
       <div className="mx-auto flex w-full max-w-md items-stretch pb-[env(safe-area-inset-bottom)]">
         {TABS.map((tab, i) => {
           const Icon = ICONS[i];
@@ -72,7 +73,7 @@ export default function TabBar() {
               href={tab.href}
               className={`flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] font-bold ${
                 active
-                  ? "text-[#58287F] dark:text-[#A97FD0]"
+                  ? "text-[#7C3AED] dark:text-[#A78BFA]"
                   : "text-neutral-500 dark:text-neutral-400"
               }`}
             >

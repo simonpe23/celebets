@@ -19,7 +19,7 @@ interface Props {
 
 const STATUS_BADGE: Record<string, string> = {
   pending:
-    "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300",
+    "bg-[#7C3AED]/10 text-[#7C3AED] dark:bg-[#A78BFA]/15 dark:text-[#A78BFA]",
   won: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300",
   lost: "bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300",
 };
@@ -167,7 +167,7 @@ export default function LiveBets({ bets }: Props) {
       <h2 className="flex items-center gap-2 text-lg font-bold">
         Pending bets
         {bets.length > 0 && (
-          <span className="rounded-full bg-[#58287F]/10 px-2.5 py-0.5 font-money text-xs font-semibold tabular-nums text-[#58287F] dark:bg-[#A97FD0]/15 dark:text-[#A97FD0]">
+          <span className="rounded-full bg-[#7C3AED]/10 px-2.5 py-0.5 font-money text-xs font-semibold tabular-nums text-[#7C3AED] dark:bg-[#A78BFA]/15 dark:text-[#A78BFA]">
             {bets.length}
           </span>
         )}
@@ -219,7 +219,7 @@ export default function LiveBets({ bets }: Props) {
                               addingMoney === bet.id ? null : bet.id
                             );
                           }}
-                          className="rounded-lg border border-[#58287F] px-3 py-1.5 text-xs font-semibold text-[#58287F] disabled:opacity-50 dark:border-[#A97FD0]/50 dark:text-[#A97FD0]"
+                          className="rounded-lg border border-[#7C3AED] px-3 py-1.5 text-xs font-semibold text-[#7C3AED] disabled:opacity-50 dark:border-[#A78BFA]/50 dark:text-[#A78BFA]"
                         >
                           Add money
                         </button>
@@ -234,7 +234,7 @@ export default function LiveBets({ bets }: Props) {
                               cashingOut === bet.id ? null : bet.id
                             );
                           }}
-                          className="rounded-lg border border-[#58287F] px-3 py-1.5 text-xs font-semibold text-[#58287F] disabled:opacity-50 dark:border-[#A97FD0]/50 dark:text-[#A97FD0]"
+                          className="rounded-lg border border-[#7C3AED] px-3 py-1.5 text-xs font-semibold text-[#7C3AED] disabled:opacity-50 dark:border-[#A78BFA]/50 dark:text-[#A78BFA]"
                         >
                           Cash out
                         </button>
@@ -256,7 +256,7 @@ export default function LiveBets({ bets }: Props) {
                 </div>
 
                 {addingMoney === bet.id && (
-                  <div className="mt-3 rounded-xl bg-neutral-100 p-3 dark:bg-[#1A2032]">
+                  <div className="mt-3 rounded-xl bg-neutral-100 p-3 dark:bg-[#1D1530]">
                     <label
                       htmlFor={`add-amount-${bet.id}`}
                       className="block text-sm font-semibold"
@@ -271,7 +271,7 @@ export default function LiveBets({ bets }: Props) {
                       placeholder="0.00"
                       value={addAmount}
                       onChange={(e) => setAddAmount(e.target.value)}
-                      className="mt-1 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-white/15 dark:bg-[#151A28] dark:text-neutral-100"
+                      className="mt-1 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-white/15 dark:bg-[#151022] dark:text-neutral-100"
                     />
                     <label
                       htmlFor={`add-payout-${bet.id}`}
@@ -290,7 +290,7 @@ export default function LiveBets({ bets }: Props) {
                       placeholder="0.00"
                       value={addPayout}
                       onChange={(e) => setAddPayout(e.target.value)}
-                      className="mt-1 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-white/15 dark:bg-[#151A28] dark:text-neutral-100"
+                      className="mt-1 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-white/15 dark:bg-[#151022] dark:text-neutral-100"
                     />
                     {parseMoney(addAmount) !== null &&
                       parseMoney(addPayout) !== null && (
@@ -329,7 +329,7 @@ export default function LiveBets({ bets }: Props) {
                           parseMoney(addPayout) === null
                         }
                         onClick={() => addMoney(bet.id, stake, totalOdds)}
-                        className="rounded-lg bg-[#58287F] px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
+                        className="rounded-lg bg-[#7C3AED] px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
                       >
                         Confirm add
                       </button>
@@ -338,7 +338,7 @@ export default function LiveBets({ bets }: Props) {
                 )}
 
                 {bet.cashed_out && (
-                  <div className="mt-3 flex items-center justify-between gap-2 rounded-xl bg-neutral-100 p-3 dark:bg-[#1A2032]">
+                  <div className="mt-3 flex items-center justify-between gap-2 rounded-xl bg-neutral-100 p-3 dark:bg-[#1D1530]">
                     <p className="text-sm">
                       Cashed out for{" "}
                       <span className="font-bold">
@@ -358,7 +358,7 @@ export default function LiveBets({ bets }: Props) {
                 )}
 
                 {cashingOut === bet.id && (
-                  <div className="mt-3 rounded-xl bg-neutral-100 p-3 dark:bg-[#1A2032]">
+                  <div className="mt-3 rounded-xl bg-neutral-100 p-3 dark:bg-[#1D1530]">
                     <label
                       htmlFor={`cashout-${bet.id}`}
                       className="block text-sm font-semibold"
@@ -378,7 +378,7 @@ export default function LiveBets({ bets }: Props) {
                       placeholder="0.00"
                       value={cashOutAmount}
                       onChange={(e) => setCashOutAmount(e.target.value)}
-                      className="mt-2 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-white/15 dark:bg-[#151A28] dark:text-neutral-100"
+                      className="mt-2 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-white/15 dark:bg-[#151022] dark:text-neutral-100"
                     />
                     <div className="mt-2 flex justify-end gap-2">
                       <button
@@ -399,7 +399,7 @@ export default function LiveBets({ bets }: Props) {
                           parseMoney(cashOutAmount) === null
                         }
                         onClick={() => cashOut(bet.id)}
-                        className="rounded-lg bg-[#58287F] px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
+                        className="rounded-lg bg-[#7C3AED] px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
                       >
                         Confirm cash out
                       </button>
@@ -462,7 +462,7 @@ export default function LiveBets({ bets }: Props) {
                               type="button"
                               disabled={busyLeg !== null}
                               onClick={() => setResult(leg.id, "won")}
-                              className="h-9 flex-1 rounded-lg bg-[#4F7A57] text-sm font-semibold text-white active:bg-[#3F6446] disabled:opacity-50"
+                              className="h-9 flex-1 rounded-lg bg-[#16A34A] text-sm font-semibold text-white active:bg-[#15803D] disabled:opacity-50"
                             >
                               Won
                             </button>
@@ -518,7 +518,7 @@ export default function LiveBets({ bets }: Props) {
                         : `${bet.bet_buys.length} buys`}
                     </button>
                     {expandedBuys === bet.id && (
-                      <div className="mt-2 space-y-1 rounded-xl bg-neutral-100 p-3 dark:bg-[#1A2032]">
+                      <div className="mt-2 space-y-1 rounded-xl bg-neutral-100 p-3 dark:bg-[#1D1530]">
                         {[...bet.bet_buys]
                           .sort(
                             (a, b) =>

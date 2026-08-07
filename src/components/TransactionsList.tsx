@@ -159,7 +159,7 @@ export default function TransactionsList({
                 </div>
 
                 {editing === tx.id && (
-                  <div className="mt-3 flex items-end gap-2 rounded-xl bg-neutral-100 p-3 dark:bg-[#1A2032]">
+                  <div className="mt-3 flex items-end gap-2 rounded-xl bg-neutral-100 p-3 dark:bg-[#1D1530]">
                     <div className="grow">
                       <label
                         htmlFor={`date-${tx.id}`}
@@ -172,7 +172,7 @@ export default function TransactionsList({
                         type="date"
                         value={dateValue}
                         onChange={(e) => setDateValue(e.target.value)}
-                        className="mt-1 block h-10 w-full rounded-lg border border-neutral-300 bg-white px-3 text-sm text-neutral-900 dark:border-white/15 dark:bg-[#151A28] dark:text-neutral-100"
+                        className="mt-1 block h-10 w-full rounded-lg border border-neutral-300 bg-white px-3 text-sm text-neutral-900 dark:border-white/15 dark:bg-[#151022] dark:text-neutral-100"
                       />
                     </div>
                     <button
@@ -187,7 +187,7 @@ export default function TransactionsList({
                       type="button"
                       disabled={busy || !dateValue}
                       onClick={() => saveDate(tx.id)}
-                      className="h-10 rounded-lg bg-[#58287F] px-3 text-xs font-semibold text-white disabled:opacity-50"
+                      className="h-10 rounded-lg bg-[#7C3AED] px-3 text-xs font-semibold text-white disabled:opacity-50"
                     >
                       Save
                     </button>

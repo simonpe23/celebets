@@ -63,7 +63,7 @@ const QUICK_STAKES = ["20", "50", "100"];
 
 // Small line icons for the capture tiles. They take their color from
 // the tile's own text color.
-function PencilIcon() {
+function PencilIcon({ className = "h-3.5 w-3.5 shrink-0" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -72,7 +72,7 @@ function PencilIcon() {
       strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-5 w-5 shrink-0"
+      className={className}
       aria-hidden="true"
     >
       <path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3Z" />
@@ -80,7 +80,7 @@ function PencilIcon() {
   );
 }
 
-function LinkIcon() {
+function LinkIcon({ className = "h-3.5 w-3.5 shrink-0" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -89,7 +89,7 @@ function LinkIcon() {
       strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-5 w-5 shrink-0"
+      className={className}
       aria-hidden="true"
     >
       <path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7" />
@@ -98,7 +98,7 @@ function LinkIcon() {
   );
 }
 
-function ClipboardIcon() {
+function ClipboardIcon({ className = "h-3.5 w-3.5 shrink-0" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -107,7 +107,7 @@ function ClipboardIcon() {
       strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-3.5 w-3.5 shrink-0"
+      className={className}
       aria-hidden="true"
     >
       <rect x="8" y="2" width="8" height="4" rx="1" />
@@ -116,7 +116,7 @@ function ClipboardIcon() {
   );
 }
 
-function CameraIcon() {
+function CameraIcon({ className = "h-3.5 w-3.5 shrink-0" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -125,7 +125,7 @@ function CameraIcon() {
       strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-3.5 w-3.5 shrink-0"
+      className={className}
       aria-hidden="true"
     >
       <path d="M14.5 4h-5L8 6H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-4l-1.5-2Z" />
@@ -359,7 +359,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
   }
 
   const inputClass =
-    "mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#58287F] focus:ring-2 focus:ring-[#58287F]/30 dark:border-white/15 dark:bg-[#151A28] dark:text-neutral-100";
+    "mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#7C3AED] focus:ring-2 focus:ring-[#7C3AED]/30 dark:border-white/15 dark:bg-[#151022] dark:text-neutral-100";
 
   return (
     <section className={`${CARD} p-5`}>
@@ -380,11 +380,13 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
             type="button"
             disabled={importing}
             onClick={pasteSlip}
-            className="flex flex-col items-center gap-1.5 rounded-xl border border-[#58287F] px-1 py-3 text-xs font-semibold text-[#58287F] active:bg-[#58287F]/10 disabled:opacity-50 dark:border-[#A97FD0]/60 dark:text-[#A97FD0]"
+            className="flex flex-col items-center gap-2 rounded-xl border border-[#7C3AED] bg-[#7C3AED]/5 px-1 py-3 text-xs font-semibold active:bg-[#7C3AED]/15 disabled:opacity-50 dark:bg-[#7C3AED]/15"
           >
-            <ClipboardIcon />
+            <span className="text-[#7C3AED] dark:text-[#A78BFA]">
+              <ClipboardIcon className="h-6 w-6" />
+            </span>
             <span className="text-center leading-tight">Paste bet slip</span>
-            <span className="rounded-full bg-[#58287F]/10 px-2 py-0.5 text-[10px] font-bold dark:bg-[#A97FD0]/15">
+            <span className="rounded-full bg-[#7C3AED]/10 px-2 py-0.5 text-[10px] font-bold text-[#7C3AED] dark:bg-[#A78BFA]/15 dark:text-[#A78BFA]">
               Recommended
             </span>
           </button>
@@ -392,21 +394,27 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
             type="button"
             disabled={importing}
             onClick={() => fileInputRef.current?.click()}
-            className="flex flex-col items-center gap-1.5 rounded-xl border border-neutral-300 px-1 py-3 text-xs font-semibold text-neutral-600 active:bg-neutral-100 disabled:opacity-50 dark:border-white/15 dark:text-neutral-300"
+            className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 bg-white px-1 py-3 text-xs font-semibold active:bg-neutral-50 disabled:opacity-50 dark:border-white/10 dark:bg-transparent"
           >
-            <CameraIcon />
+            <span className="text-[#3B82F6]">
+              <CameraIcon className="h-6 w-6" />
+            </span>
             <span className="text-center leading-tight">Upload screenshot</span>
           </button>
           <button
             type="button"
             onClick={() => setManualOpen(true)}
-            className="flex flex-col items-center gap-1.5 rounded-xl border border-neutral-300 px-1 py-3 text-xs font-semibold text-neutral-600 active:bg-neutral-100 dark:border-white/15 dark:text-neutral-300"
+            className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 bg-white px-1 py-3 text-xs font-semibold active:bg-neutral-50 dark:border-white/10 dark:bg-transparent"
           >
-            <PencilIcon />
+            <span className="text-[#F97316]">
+              <PencilIcon className="h-6 w-6" />
+            </span>
             <span className="text-center leading-tight">Manual entry</span>
           </button>
-          <div className="flex flex-col items-center gap-1.5 rounded-xl border border-neutral-300 px-1 py-3 text-xs font-semibold text-neutral-400 dark:border-white/10 dark:text-neutral-600">
-            <LinkIcon />
+          <div className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 bg-white px-1 py-3 text-xs font-semibold text-neutral-400 dark:border-white/10 dark:bg-transparent dark:text-neutral-600">
+            <span className="text-[#22C55E]">
+              <LinkIcon className="h-6 w-6" />
+            </span>
             <span className="text-center leading-tight">Connect accounts</span>
             <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
               Soon
@@ -419,7 +427,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
             type="button"
             disabled={importing}
             onClick={pasteSlip}
-            className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-[#58287F] bg-white text-sm font-bold text-[#58287F] active:bg-[#58287F]/10 disabled:opacity-50 dark:border-[#A97FD0]/60 dark:bg-transparent dark:text-[#A97FD0]"
+            className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-[#7C3AED] bg-white text-sm font-bold text-[#7C3AED] active:bg-[#7C3AED]/10 disabled:opacity-50 dark:border-[#A78BFA]/60 dark:bg-transparent dark:text-[#A78BFA]"
           >
             <ClipboardIcon />
             Paste bet slip
@@ -447,7 +455,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
         }}
       />
       {importing && (
-        <p className="mt-2 rounded-lg bg-neutral-100 px-4 py-3 text-sm dark:bg-[#1A2032]">
+        <p className="mt-2 rounded-lg bg-neutral-100 px-4 py-3 text-sm dark:bg-[#1D1530]">
           Reading the slip...
         </p>
       )}
@@ -491,7 +499,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
             onClick={() => setStake(amount)}
             className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
               stake === amount
-                ? "border-[#58287F] text-[#58287F] dark:text-[#A97FD0]"
+                ? "border-[#7C3AED] text-[#7C3AED] dark:text-[#A78BFA]"
                 : "border-neutral-300 text-neutral-500 dark:text-neutral-400 dark:border-white/15"
             }`}
           >
@@ -543,7 +551,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
                 }
                 className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
                   leg.sport === s
-                    ? "border-[#58287F] bg-[#58287F] text-white"
+                    ? "border-[#7C3AED] bg-[#7C3AED] text-white"
                     : "border-neutral-300 dark:border-white/15"
                 }`}
               >
@@ -601,7 +609,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
                           }
                           className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
                             selected
-                              ? "border-[#58287F] bg-[#58287F] text-white"
+                              ? "border-[#7C3AED] bg-[#7C3AED] text-white"
                               : "border-neutral-300 dark:border-white/15"
                           }`}
                         >
@@ -627,9 +635,9 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
                         }
                         className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
                           groupSelected
-                            ? "border-[#58287F] bg-[#58287F] text-white"
+                            ? "border-[#7C3AED] bg-[#7C3AED] text-white"
                             : groupOpen
-                              ? "border-[#58287F] text-[#58287F] dark:text-[#A97FD0]"
+                              ? "border-[#7C3AED] text-[#7C3AED] dark:text-[#A78BFA]"
                               : "border-neutral-300 dark:border-white/15"
                         }`}
                       >
@@ -649,7 +657,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
                   return (
                     <div
                       key={item.label}
-                      className="mt-2 flex gap-2 overflow-x-auto rounded-xl bg-neutral-100 p-2 dark:bg-[#1A2032]"
+                      className="mt-2 flex gap-2 overflow-x-auto rounded-xl bg-neutral-100 p-2 dark:bg-[#1D1530]"
                     >
                       {item.children.map((child) => {
                         const value = `${item.label}: ${child}`;
@@ -665,8 +673,8 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
                             }
                             className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
                               selected
-                                ? "border-[#58287F] bg-[#58287F] text-white"
-                                : "border-neutral-300 bg-white dark:border-white/15 dark:bg-[#151A28]"
+                                ? "border-[#7C3AED] bg-[#7C3AED] text-white"
+                                : "border-neutral-300 bg-white dark:border-white/15 dark:bg-[#151022]"
                             }`}
                           >
                             {child}
@@ -755,7 +763,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
         </p>
       </div>
 
-      <div className="mt-5 grid grid-cols-3 gap-2 rounded-xl bg-neutral-100 p-3 text-center dark:bg-[#1A2032]">
+      <div className="mt-5 grid grid-cols-3 gap-2 rounded-xl bg-neutral-100 p-3 text-center dark:bg-[#1D1530]">
         <div>
           <p className="text-xs text-neutral-500 dark:text-neutral-400">Total odds</p>
           <p className="mt-0.5 font-money text-sm font-bold tabular-nums">
@@ -792,7 +800,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
         type="button"
         disabled={!canPlace}
         onClick={placeBet}
-        className="mt-4 h-14 w-full rounded-xl bg-[#58287F] text-lg font-bold text-white active:bg-[#431E63] disabled:opacity-40"
+        className="mt-4 h-14 w-full rounded-xl bg-[#7C3AED] text-lg font-bold text-white active:bg-[#6D28D9] disabled:opacity-40"
       >
         {saving ? "Tracking..." : "Track Bet"}
       </button>

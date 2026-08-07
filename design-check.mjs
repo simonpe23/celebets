@@ -32,21 +32,23 @@ const COMPACT_OK = [
 
 // Colors that are allowed to appear as raw hex, and what each is for.
 const ALLOWED_HEX = new Set([
-  "#4F7A57", // the Won settle button only, see rule 4b
-  "#3F6446", // Won settle button, pressed
-  "#58287F", // purple, recommendations and wordmark
-  "#431E63", // purple, pressed
-  "#A97FD0", // purple on dark
-  "#F2F4F7", // light card
-  "#151A28", // dark card
-  "#1A2032", // dark popup
-  "#0B0D14", // dark page
-  "#101322", // chart panel
-  "#2E1250", // in play panel, deep end of the purple gradient
+  "#7C3AED", // action purple, from the owner's mockups
+  "#6D28D9", // action purple, pressed
+  "#A78BFA", // purple on dark surfaces, and the wordmark gradient
+  "#5B21B6", // wordmark gradient, deep end
+  "#16A34A", // the Won settle button only, see rule 4b
+  "#15803D", // Won settle button, pressed
+  "#3B82F6", // capture tile icon, camera
+  "#F97316", // capture tile icon, pencil
+  "#22C55E", // capture tile icon, connect
+  "#151022", // dark card
+  "#1D1530", // dark popup
+  "#0B0714", // dark page
+  "#100A1E", // dark tab bar
+  "#17102A", // chart panel
+  "#F6F5FA", // light page
   "#34D399", // chart green
   "#FB7185", // chart red
-  "#7C3FAF", // wordmark gradient
-  "#3A1857", // wordmark gradient
   "#FFFFFF", // svg strokes and the theme-color meta tag
   "#0A0A0A", // theme-color meta tag
   "#4285F4", // Google logo, fixed by Google's brand rules
@@ -116,8 +118,8 @@ for (const file of files) {
     // 4b. Green stopped being the action color in August 2026. Purple
     // #58287F is the button you press. The one green button left is
     // Won on a pending pick, which is an outcome, not an action.
-    if (/#4F7A57|#3F6446/.test(line) && short !== "LiveBets.tsx") {
-      note(file, n, "green #4F7A57 outside the Won button, actions are purple");
+    if (/#16A34A|#15803D/.test(line) && short !== "LiveBets.tsx") {
+      note(file, n, "green #16A34A outside the Won button, actions are purple");
     }
 
     // 5. The card surface comes from CARD in src/lib/ui.ts. Thirteen

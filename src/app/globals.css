@@ -4,12 +4,12 @@
   /* Brand palette. Cream page, white cards, blue for actions,
      purple for the wordmark and recommendations. Profit stays green
      and loss stays red, because those colors carry meaning. */
-  --background: #E9ECF0;
+  --background: #F6F5FA;
   --foreground: #171717;
   --brand-cream: #f5edce;
   --brand-blue: #72afcc;
   --brand-blue-dark: #5b96b3;
-  --brand-purple: #58287f;
+  --brand-purple: #7C3AED;
 }
 
 @theme inline {
@@ -33,7 +33,7 @@
   :root {
     /* Not pure black. A hair of blue matches the chart panel, so the
        whole app reads as one surface family instead of two. */
-    --background: #0B0D14;
+    --background: #0B0714;
     --foreground: #ededed;
   }
 }
