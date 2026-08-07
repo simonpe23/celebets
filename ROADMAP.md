@@ -13,8 +13,28 @@ document.
 
 - **Pile 1, already built.** Just needs re-dressing to match the art.
 - **Pile 2, new but cheap.** A few hours each, no database change.
-- **Pile 3, new and structural.** Database migrations, new pages, or a
+- **Pile 3, new and structural.** New pages, a layout rebuild, or a
   product decision from the owner first.
+
+## Two places we deliberately do NOT follow the mockups
+
+Ruled by the owner, August 2026.
+
+**No Push.** The mockups show Won / Lost / Push on every pending leg.
+Push is not wanted. Settling stays exactly as it works today: Won and
+Lost on each pick, plus Add money, Cash out and Delete on the bet. That
+already covers a push in practice, by cashing out at the stake, and the
+calculations are known to be right. This removes the only database
+migration phase 1 would have needed.
+
+**No American odds.** The mockups show +175 and -125. Celebet keeps
+what it has: you enter a chance percentage and the exact payout, and a
+bet reads "Aug 6, 2026, $99.97 at 3.32". American odds may become a
+setting later, once a settings page exists. Not now.
+
+A third, smaller divergence: the mockup's Pending Bets card shows only
+the three outcome buttons. Ours keeps Add money, Cash out and Delete
+too, because those are real features the art simply did not draw.
 
 ## Pile 1: we already have this
 
@@ -36,8 +56,6 @@ Everything below is live today and only needs restyling.
 
 - **Greeting ("Good afternoon, Simon").** Needs a display name. Can be
   derived from the email until a settings page exists.
-- **American odds (+175, -125).** We store decimal odds and can convert
-  both ways with no database change. This is a display setting.
 - **"Recommended" and "Soon" badges.** Pure styling.
 - **Performance Snapshot with four sparklines.** Data exists, the
   component exists.
@@ -55,39 +73,21 @@ green and red strictly for money going up and down. That is a cleaner
 rule than the one we have, but it is a change to every button in the
 app. Mechanical, and `design-check.mjs` will catch anything missed.
 
-### 3b. Push as a bet outcome
-The mockups show Won / Lost / Push on every pending leg. We only have
-won and lost, in three places: the `legs.result` database constraint,
-the `set_leg_result` and `cash_out_bet` functions, and every money rule
-in `src/lib/stats.ts`.
-
-The good news: our per leg odds multiply up to the bet's total odds, so
-a pushed leg can be voided correctly by dividing it out of the total.
-The payout math works.
-
-The caveat: when a parlay was entered without a chance percentage on
-every leg, the legs do not multiply exactly to the total, so the
-recalculated payout would be approximate. That needs an owner ruling.
-
-Note: this is not only cosmetic. Today a push can only be recorded by
-cashing out at exactly the stake, which lands on the right money but
-the wrong label.
-
-### 3c. Web layout
+### 3b. Web layout
 The whole app is `max-w-md`, a phone column, on every page. The web
 mockups are a real two column dashboard with a top nav. Same
 components, new shell. This is layout work, not logic work.
 
-### 3d. A theme toggle
+### 3c. A theme toggle
 Dark mode exists but follows the phone. The owner wants both on demand,
 which needs somewhere to put the switch, which means the settings page.
 
-### 3e. Event start time
+### 3d. Event start time
 The mockups show "Today, 7:00 PM" on pending bets. We store when a bet
 was placed, never when the game starts. One new nullable column, plus a
 field in the form and in the slip parser.
 
-### 3f. Not now
+### 3e. Not now
 - **Connect accounts.** This is idea 13 in IDEAS.md. Correctly marked
   "Soon" in the mockup itself.
 - **Notification bell.** No notification system exists. The dot is
@@ -101,20 +101,23 @@ field in the form and in the slip parser.
    wants, at the highest fidelity we can reach without a migration.
 2. **Settings page.** Name, theme toggle, odds format. Unblocks the
    greeting and the light/dark switch.
-3. **Push.** Migration plus the money rules.
-4. **Web layout.** Two columns, top nav, responsive down to the phone.
-5. **Performance page**, rebuilt per the flow doc in CLAUDE.md, with
+3. **Web layout.** Two columns, top nav, responsive down to the phone.
+4. **Performance page**, rebuilt per the flow doc in CLAUDE.md, with
    Today's Insight first.
-6. **Research tab**, shell only until CeleBOT exists.
+5. **Research tab**, shell only until CeleBOT exists.
+
+No database migration is needed for any of the five phases above. That
+became true the moment Push was ruled out. Event start time (3d) is the
+only remaining item in this document that would touch the database, and
+it is not scheduled.
 
 ## Open questions for the owner
 
 1. Purple as the primary action color everywhere, with green and red
    kept only for money? Recommended.
-2. Push on parlays entered without chance percentages: accept an
-   approximate recalculated payout, or ask the user to confirm the new
-   payout?
-3. American or decimal odds by default, and is it a setting?
-4. Keep or drop the Recent Form pip strip? It is not in the mockups.
-5. Dead links for product shots, or "Soon" badges? Recommended: badges.
-   They photograph the same and never feel broken.
+2. Keep or drop the Recent Form pip strip? It is not in the mockups.
+3. Dead links for product shots, or "Soon" badges? Recommended: badges.
+   They photograph the same and never feel broken. The bell is the one
+   exception: draw it without the dot until notifications exist, since
+   a dot promises something to open.
+4. Mobile shot or web shot first? It decides what phase 1 builds.
