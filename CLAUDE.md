@@ -214,6 +214,58 @@ COLOR.
 - Dark mode is designed, not default. It follows the phone's setting.
   A real toggle needs a settings page, which does not exist yet.
 
+## The flow: Track, Performance, Research (owner, August 2026)
+
+Written down as given. Not built. Mockups are coming next.
+
+THE SPLIT THAT MAKES IT WORK. Insights and Research are opposite
+ends of one timeline:
+- Research happens BEFORE a bet. It is active. The user goes looking.
+- Insights happen AFTER a bet. Celebet surfaced them on its own.
+
+AN INSIGHT is something Celebet discovered. Not something the user
+asked for, not something an AI researched. It comes from the user's
+own data. Examples given by the owner:
+- You have won 63% of bets between 1.01 and 1.80 odds.
+- Parlays account for 72% of your losses.
+- Tennis has become your most profitable sport.
+- You are 9-1 betting Dodgers home games.
+- You perform much better on weekdays.
+
+RESEARCH is the user looking for information before betting:
+who is pitching tonight, is LeBron playing, Dodgers trends, compare
+odds, the weather, what the community thinks, ask CeleBOT.
+
+THREE TABS, AND ONLY THREE. Track, Performance, Research. Insights
+does NOT get a tab. It becomes a layer inside Performance, the way
+Apple Health puts insights inside the health data rather than beside
+it.
+
+PERFORMANCE IS A PERFORMANCE REVIEW, NOT A STATISTICS PAGE. Opening
+it should not land on graphs. Order ruled by the owner:
+1. Today's Insight
+2. Key Insights
+3. Performance Snapshot
+4. Charts
+5. Sports Breakdown
+6. Odds Groups
+7. Singles vs Parlays
+8. History and Trends
+The owner's example of the top of that page: Today's Insight, then
+Biggest Strength (MLB Favorites +$812), Biggest Weakness (Player
+Props -18% ROI), Trending (your ROI has improved three weeks in a
+row).
+
+THE HOME PAGE INSIGHT CARD. Its link must not read "View Insights",
+because that sounds like a separate product. It reads "View
+Performance" or "See Why" or "Open Performance", because tapping it
+enters the Performance area, whose first section is Today's Insight.
+
+THE ONE LINE SUMMARY:
+- Track means capture data.
+- Performance means understand yourself.
+- Research means understand the game before your next bet.
+
 ## Tester readiness (July 2026, complete and verified)
 
 - Email confirmation is ON: new signups must click a link before they
