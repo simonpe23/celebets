@@ -8,7 +8,7 @@ import HeroMoney from "@/components/HeroMoney";
 import Sparkline from "@/components/Sparkline";
 import MicroLabel from "@/components/MicroLabel";
 import { formatMoney, formatSignedMoney, parseMoney } from "@/lib/format";
-import { CARD } from "@/lib/ui";
+import { BTN, CARD } from "@/lib/ui";
 
 interface Props {
   balance: number;
@@ -110,7 +110,7 @@ export default function BalanceCard({
             <div className="min-w-0">
               <MicroLabel>Tracking Balance</MicroLabel>
               <p
-                className={`mt-1 break-words ${
+                className={`mt-1 ${
                   balance < 0 ? "text-red-600 dark:text-red-400" : ""
                 }`}
               >
@@ -120,39 +120,40 @@ export default function BalanceCard({
                   className="text-[32px]"
                 />
               </p>
+              <p className="mt-1 text-sm">
+                <span className="text-neutral-500 dark:text-neutral-400">
+                  Net profit{" "}
+                </span>
+                <span
+                  className={`font-money font-semibold tabular-nums ${profitColor}`}
+                >
+                  {formatSignedMoney(netProfit)}
+                </span>
+              </p>
             </div>
             {series && series.length > 1 && (
-              <div className="w-32 shrink-0 self-center">
+              <div className="w-36 shrink-0 self-center">
                 <Sparkline
                   points={series}
                   tone="purple"
                   dots
-                  className="h-14"
+                  className="h-16"
                 />
               </div>
             )}
           </div>
-          {/* Started with plus net profit equals the balance above.
-              Showing both parts is what makes the big number readable
-              instead of a figure you have to trust. */}
-          <p className="mt-1 text-sm font-semibold text-neutral-500 dark:text-neutral-400">
+          {/* The equation's other half, kept quiet: started with plus
+              net profit equals the number above. */}
+          <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
             Started with{" "}
             <span className="font-money tabular-nums">
               {formatMoney(startedWith)}
             </span>
+            {" · "}
+            <Link href="/transactions" className="underline underline-offset-2">
+              Balance history
+            </Link>
           </p>
-          <p className={`text-sm font-semibold ${profitColor}`}>
-            Net profit{" "}
-            <span className="font-money tabular-nums">
-              {formatSignedMoney(netProfit)}
-            </span>
-          </p>
-          <Link
-            href="/transactions"
-            className="mt-2 inline-block text-sm font-semibold text-neutral-500 underline underline-offset-2 dark:text-neutral-400"
-          >
-            Balance history
-          </Link>
         </>
       ) : (
         /* Nobody has to set a balance. Until someone does, profit is the
@@ -180,7 +181,7 @@ export default function BalanceCard({
           setMode("set");
           setOpen(true);
         }}
-        className="mt-4 w-full rounded-xl bg-[#7C3AED] px-3 py-2.5 text-sm font-bold text-white active:bg-[#6D28D9]"
+        className={`${BTN} mt-4 h-12 w-full text-sm`}
       >
         Set Tracking Balance
       </button>
@@ -253,7 +254,7 @@ export default function BalanceCard({
                 type="button"
                 disabled={saving}
                 onClick={() => save("up")}
-                className="mt-5 h-12 w-full rounded-xl bg-[#7C3AED] text-base font-bold text-white active:bg-[#6D28D9] disabled:opacity-60"
+                className={`${BTN} mt-5 h-12 w-full text-base`}
               >
                 Save
               </button>
@@ -271,7 +272,7 @@ export default function BalanceCard({
                   type="button"
                   disabled={saving}
                   onClick={() => save("up")}
-                  className="h-12 rounded-xl bg-[#7C3AED] text-base font-bold text-white active:bg-[#6D28D9] disabled:opacity-60"
+                  className={`${BTN} h-12 text-base`}
                 >
                   Add
                 </button>

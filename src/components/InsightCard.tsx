@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import MicroLabel from "@/components/MicroLabel";
 import { buildInsightPool } from "@/lib/stats";
 import type { BetWithLegs } from "@/lib/types";
 import { CARD } from "@/lib/ui";
@@ -38,17 +37,27 @@ export default function InsightCard({ bets }: { bets: BetWithLegs[] }) {
   if (!text) return null;
 
   return (
-    <Link href="/stats" className={`${CARD} flex items-center gap-4 p-4`}>
+    <Link href="/stats" className={`${CARD} flex items-center gap-4 p-5`}>
       <span className="min-w-0 grow">
         <span className="flex items-center gap-2">
-          <MicroLabel tone="purple">Insight of the day</MicroLabel>
+          <svg
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="h-4 w-4 shrink-0 text-[#7C3AED] dark:text-[#A78BFA]"
+            aria-hidden="true"
+          >
+            <path d="M12 2l2.2 5.8L20 10l-5.8 2.2L12 18l-2.2-5.8L4 10l5.8-2.2L12 2Z" />
+          </svg>
+          <span className="text-sm font-bold">Insight of the day</span>
           <span className="rounded bg-[#7C3AED]/10 px-1.5 py-0.5 text-[10px] font-bold text-[#7C3AED] dark:bg-[#A78BFA]/15 dark:text-[#A78BFA]">
             AI
           </span>
         </span>
-        <span className="mt-1.5 block text-base font-semibold leading-snug">{text}</span>
-        <span className="mt-1.5 block text-sm font-semibold text-[#7C3AED] dark:text-[#A78BFA]">
-          Open Performance →
+        <span className="mt-2 block text-[17px] font-semibold leading-snug">
+          {text}
+        </span>
+        <span className="mt-2 block text-sm font-bold text-[#7C3AED] dark:text-[#A78BFA]">
+          View Performance →
         </span>
       </span>
 

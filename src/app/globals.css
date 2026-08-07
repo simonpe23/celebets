@@ -39,7 +39,14 @@
 }
 
 body {
-  background: var(--background);
+  /* The mockup's soft violet wash bleeding down from the top. */
+  background:
+    radial-gradient(
+      1000px 520px at 50% -120px,
+      rgba(124, 58, 237, 0.1),
+      transparent 60%
+    ),
+    var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
   /* No gray flash when tapping buttons on mobile. */

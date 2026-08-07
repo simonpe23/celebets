@@ -77,9 +77,11 @@ export default async function HomePage() {
           <form action="/auth/signout" method="post">
             <button
               type="submit"
-              className="rounded-xl border border-neutral-300 px-3 py-2.5 text-sm font-bold dark:border-white/15"
+              title="Log out"
+              aria-label="Log out"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-b from-[#8B5CF6] to-[#7C3AED] text-sm font-bold text-white shadow-[0_6px_16px_-6px_rgba(124,58,237,0.7)]"
             >
-              Log out
+              {(name ?? "C").charAt(0).toUpperCase()}
             </button>
           </form>
         </header>

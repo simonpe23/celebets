@@ -1,7 +1,6 @@
 import Link from "next/link";
-import MicroLabel from "@/components/MicroLabel";
 import Sparkline from "@/components/Sparkline";
-import { formatSignedMoney, round2 } from "@/lib/format";
+import { round2 } from "@/lib/format";
 import { sportRows, totals } from "@/lib/stats";
 import { SPORT_EMOJI, type BetWithLegs } from "@/lib/types";
 import { CARD } from "@/lib/ui";
@@ -46,6 +45,17 @@ function series(
   }
   return out;
 }
+
+// Whole dollars, the mockup's density: "+$418", not "+$418.26". The
+// exact figure lives one tap away on Performance.
+function short(value: number): string {
+  const rounded = Math.round(value);
+  if (rounded === 0) return "$0";
+  const sign = rounded < 0 ? "-" : "+";
+  return `${sign}$${Math.abs(rounded).toLocaleString("en-US")}`;
+}
+
+const LABEL = "text-xs text-neutral-500 dark:text-neutral-400";
 
 const moneyTone = (value: number) =>
   value > 0
@@ -95,11 +105,11 @@ export default function SnapshotCard({
 
       <div className="mt-3 grid grid-cols-4 divide-x divide-neutral-200 dark:divide-white/10">
         <div className="pr-2">
-          <MicroLabel>Net Profit</MicroLabel>
+          <p className={LABEL}>Net Profit</p>
           <p
-            className={`mt-1 font-money text-base font-bold tabular-nums ${moneyTone(profit)}`}
+            className={`mt-1 font-money text-xl font-bold tabular-nums ${moneyTone(profit)}`}
           >
-            {formatSignedMoney(profit)}
+            {short(profit)}
           </p>
           <div className="mt-2">
             <Sparkline
@@ -111,9 +121,9 @@ export default function SnapshotCard({
         </div>
 
         <div className="px-2">
-          <MicroLabel>ROI</MicroLabel>
+          <p className={LABEL}>ROI</p>
           <p
-            className={`mt-1 font-money text-base font-bold tabular-nums ${moneyTone(t.roi ?? 0)}`}
+            className={`mt-1 font-money text-xl font-bold tabular-nums ${moneyTone(t.roi ?? 0)}`}
           >
             {t.roi === null
               ? "-"
@@ -129,8 +139,8 @@ export default function SnapshotCard({
         </div>
 
         <div className="px-2">
-          <MicroLabel>Win Rate</MicroLabel>
-          <p className="mt-1 font-money text-base font-bold tabular-nums">
+          <p className={LABEL}>Win Rate</p>
+          <p className="mt-1 font-money text-xl font-bold tabular-nums">
             {hitRate === null ? "-" : `${hitRate}%`}
           </p>
           <div className="mt-2">
@@ -143,16 +153,16 @@ export default function SnapshotCard({
         </div>
 
         <div className="pl-2">
-          <MicroLabel>Best Sport</MicroLabel>
+          <p className={LABEL}>Best Sport</p>
           {best ? (
             <>
-              <p className="mt-1 truncate text-sm font-bold leading-6">
+              <p className="mt-1 truncate text-sm font-bold leading-7">
                 {SPORT_EMOJI[best.sport]} {best.sport}
               </p>
               <p
                 className={`mt-2 font-money text-xs tabular-nums ${moneyTone(best.profit)}`}
               >
-                {formatSignedMoney(round2(best.profit))}
+                {short(best.profit)}
               </p>
             </>
           ) : (

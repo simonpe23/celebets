@@ -380,10 +380,10 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
             type="button"
             disabled={importing}
             onClick={pasteSlip}
-            className="flex flex-col items-center gap-2 rounded-xl border border-[#7C3AED] bg-[#7C3AED]/5 px-1 py-3 text-xs font-semibold active:bg-[#7C3AED]/15 disabled:opacity-50 dark:bg-[#7C3AED]/15"
+            className="flex flex-col items-center gap-2 rounded-xl border border-[#7C3AED] bg-[#7C3AED]/5 px-1 py-4 text-xs font-semibold active:bg-[#7C3AED]/15 disabled:opacity-50 dark:bg-[#7C3AED]/15"
           >
             <span className="text-[#7C3AED] dark:text-[#A78BFA]">
-              <ClipboardIcon className="h-6 w-6" />
+              <ClipboardIcon className="h-7 w-7" />
             </span>
             <span className="text-center leading-tight">Paste bet slip</span>
             <span className="rounded-full bg-[#7C3AED]/10 px-2 py-0.5 text-[10px] font-bold text-[#7C3AED] dark:bg-[#A78BFA]/15 dark:text-[#A78BFA]">
@@ -394,26 +394,26 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
             type="button"
             disabled={importing}
             onClick={() => fileInputRef.current?.click()}
-            className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 bg-white px-1 py-3 text-xs font-semibold active:bg-neutral-50 disabled:opacity-50 dark:border-white/10 dark:bg-transparent"
+            className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 bg-white px-1 py-4 text-xs font-semibold active:bg-neutral-50 disabled:opacity-50 dark:border-white/10 dark:bg-transparent"
           >
             <span className="text-[#3B82F6]">
-              <CameraIcon className="h-6 w-6" />
+              <CameraIcon className="h-7 w-7" />
             </span>
             <span className="text-center leading-tight">Upload screenshot</span>
           </button>
           <button
             type="button"
             onClick={() => setManualOpen(true)}
-            className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 bg-white px-1 py-3 text-xs font-semibold active:bg-neutral-50 dark:border-white/10 dark:bg-transparent"
+            className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 bg-white px-1 py-4 text-xs font-semibold active:bg-neutral-50 dark:border-white/10 dark:bg-transparent"
           >
             <span className="text-[#F97316]">
-              <PencilIcon className="h-6 w-6" />
+              <PencilIcon className="h-7 w-7" />
             </span>
             <span className="text-center leading-tight">Manual entry</span>
           </button>
-          <div className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 bg-white px-1 py-3 text-xs font-semibold text-neutral-400 dark:border-white/10 dark:bg-transparent dark:text-neutral-600">
+          <div className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 bg-white px-1 py-4 text-xs font-semibold text-neutral-400 dark:border-white/10 dark:bg-transparent dark:text-neutral-600">
             <span className="text-[#22C55E]">
-              <LinkIcon className="h-6 w-6" />
+              <LinkIcon className="h-7 w-7" />
             </span>
             <span className="text-center leading-tight">Connect accounts</span>
             <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">

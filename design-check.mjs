@@ -33,6 +33,7 @@ const COMPACT_OK = [
 // Colors that are allowed to appear as raw hex, and what each is for.
 const ALLOWED_HEX = new Set([
   "#7C3AED", // action purple, from the owner's mockups
+  "#8B5CF6", // the light stop of the primary button gradient
   "#6D28D9", // action purple, pressed
   "#A78BFA", // purple on dark surfaces, and the wordmark gradient
   "#5B21B6", // wordmark gradient, deep end
