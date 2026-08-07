@@ -11,11 +11,11 @@ export const CARD =
 export const INNER =
   "rounded-xl bg-neutral-50 ring-1 ring-neutral-900/[0.05] dark:bg-white/[0.03] dark:ring-white/[0.06]";
 
-// The primary action. A deeper violet than the accent, because the
-// owner's mockup button is darker than the text purple, and a quiet
-// lift rather than a glow.
+// The primary action. Deep violet, squared corners, no glow. The
+// owner called the brighter purple childish three times and the pill
+// shape wrong: his mockup's button is thinner and more squared.
 export const BTN =
-  "rounded-xl bg-[#6D28D9] text-[15px] font-semibold text-white shadow-[0_4px_14px_-6px_rgba(109,40,217,0.8)] active:bg-[#5B21B6] disabled:opacity-60";
+  "rounded-lg bg-[#5B21B6] text-sm font-semibold text-white active:bg-[#4C1D95] disabled:opacity-60";
 
 // An outcome control on a pending pick: a quiet tinted pill that names
 // what happened. Never a filled bar, which shouted louder than the bet.

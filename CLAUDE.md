@@ -148,8 +148,14 @@ page: that was invented, not copied).
   the avatar), pressed #5B21B6. #7C3AED is purple as TEXT, an icon or
   a tint. On dark surfaces purple text is #A78BFA. The owner's note
   was that the button purple is darker than the accent, and it is.
-- The primary button is 44px tall at 15px semibold. It was 52px at
-  16px and the owner called it too big twice.
+- The primary button is #5B21B6, squared (rounded-lg), 14px
+  semibold. It went 52px, then 44px, and the owner still called it
+  too big and too bright each time, because only the size moved.
+  The real answer was that setting a tracking balance happens ONCE,
+  so it does not deserve a full width primary button at all.
+  BalanceCard takes a `control` prop: corner (a small squared button
+  beside the label, the default), link (a quiet text link), or
+  button (full width, kept only for comparison).
 - Green means money went up, red means money went down, and neither
   is ever an action color. emerald-600 light, emerald-400 dark.
   Red: red-600 light, red-400 dark.

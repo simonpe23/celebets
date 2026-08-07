@@ -24,6 +24,13 @@ interface Props {
   // The balance over time, oldest first, drawn as the purple line in
   // the corner of the card. Comes from the page so the card stays dumb.
   series?: number[];
+  // How the once-ever setup control is drawn. Setting a tracking
+  // balance happens once and then almost never, so a full width
+  // primary button spends the home page's best real estate on it.
+  //   corner  a small squared button beside the label
+  //   link    a quiet text link under the number
+  //   button  the old full width button, kept for comparison
+  control?: "corner" | "link" | "button";
 }
 
 type Mode = "adjust" | "set";
@@ -36,6 +43,7 @@ export default function BalanceCard({
   betCount,
   userId,
   series,
+  control = "corner",
 }: Props) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -102,13 +110,52 @@ export default function BalanceCard({
         : "text-neutral-500 dark:text-neutral-400"
     }`;
 
+  function openSheet() {
+    setError(null);
+    setMode("set");
+    setOpen(true);
+  }
+
+  const cornerButton = (
+    <button
+      type="button"
+      onClick={openSheet}
+      className={`${BTN} h-8 shrink-0 px-3 text-[13px]`}
+    >
+      {hasBalance ? "Set balance" : "Set tracking balance"}
+    </button>
+  );
+
   return (
     <section className={`${CARD} p-5`}>
       {hasBalance ? (
         <>
+          {control === "corner" && (
+            <div className="mb-1 flex items-start justify-between gap-3">
+              <span className="flex items-center gap-1.5">
+                <MicroLabel>Tracking Balance</MicroLabel>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  className="h-3.5 w-3.5 text-neutral-400"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M12 8h.01M12 11v5" strokeLinecap="round" />
+                </svg>
+              </span>
+              {cornerButton}
+            </div>
+          )}
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
-              <span className="flex items-center gap-1.5">
+              <span
+                className={`flex items-center gap-1.5 ${
+                  control === "corner" ? "hidden" : ""
+                }`}
+              >
                 <MicroLabel>Tracking Balance</MicroLabel>
                 <svg
                   viewBox="0 0 24 24"
@@ -167,21 +214,21 @@ export default function BalanceCard({
         </>
       )}
 
-      {/* One button, one label, always. "Adjust Balance" was ruled out
-          by the owner: on a home page it does not say what it does, and
-          it never answers a new user's first question, which is where do
-          I set this number. */}
-      <button
-        type="button"
-        onClick={() => {
-          setError(null);
-          setMode("set");
-          setOpen(true);
-        }}
-        className={`${BTN} mt-4 h-11 w-full`}
-      >
-        Set tracking balance
-      </button>
+      {control === "button" && (
+        <button type="button" onClick={openSheet} className={`${BTN} mt-4 h-11 w-full`}>
+          Set tracking balance
+        </button>
+      )}
+
+      {control === "link" && (
+        <button
+          type="button"
+          onClick={openSheet}
+          className="mt-3 text-[13px] font-semibold text-[#7C3AED] dark:text-[#A78BFA]"
+        >
+          Set tracking balance
+        </button>
+      )}
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center">
