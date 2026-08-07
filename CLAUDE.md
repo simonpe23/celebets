@@ -143,16 +143,22 @@ near-black, barely blue, never violet. There is no violet wash on the
 page: that was invented, not copied).
 - Ink is the default. Muted is neutral 500 light, neutral 400 dark,
   everywhere, with no exceptions.
-- Purple #7C3AED is the action color: every button you press, every
-  selected chip, every focus ring. Pressed #6D28D9. On dark surfaces
-  the accent is #A78BFA. The wordmark gradient runs #A78BFA to
-  #7C3AED to #5B21B6.
+- Two purples with two jobs, ruled by the owner (August 2026):
+  #6D28D9 is a surface you press (the primary button, the active tab,
+  the avatar), pressed #5B21B6. #7C3AED is purple as TEXT, an icon or
+  a tint. On dark surfaces purple text is #A78BFA. The owner's note
+  was that the button purple is darker than the accent, and it is.
+- The primary button is 44px tall at 15px semibold. It was 52px at
+  16px and the owner called it too big twice.
 - Green means money went up, red means money went down, and neither
   is ever an action color. emerald-600 light, emerald-400 dark.
   Red: red-600 light, red-400 dark.
 - One green button survives: Won on a pending pick, #16A34A, pressed
   #15803D, because it declares an outcome, not an action.
   design-check rule 4b enforces that it appears nowhere else.
+- The outcome pills use the mockup's own brighter pair, #22C55E and
+  #EF4444, identical in both themes so a settled pick reads the same
+  everywhere. Tailwind's emerald-600 and red-600 were too dull.
 - The capture tiles carry their own icon colors, from the mockup:
   camera #3B82F6, pencil #F97316, connect #22C55E. Icons only,
   never buttons.
@@ -164,6 +170,10 @@ page: that was invented, not copied).
 - src/lib/ui.ts owns CARD, INNER (the row inside a card), BTN, and
   the OUTCOME pills. Won and Lost are quiet tinted pills, never
   filled bars: a filled bar shouted louder than the bet it settled.
+
+CAPTURE TILES. Two big tiles (Paste bet slip, Upload screenshot) over
+two small ones (Manual entry, Connect). Ruled by the owner: four equal
+tiles spent the card's best space on its two least tapped doors.
 
 SIZE. The build ran about a fifth larger than the mockups for weeks,
 which is why the mockup fits Pending Bets on the first screen and the

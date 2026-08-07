@@ -396,52 +396,62 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
            Paste leads because it is the fastest, Connect accounts is a
            promise (idea 13), so it wears a Soon badge instead of dying
            silently when tapped. */
-        <div className="mt-3 grid grid-cols-4 gap-1.5">
-          <button
-            type="button"
-            disabled={importing}
-            onClick={pasteSlip}
-            className="flex flex-col items-center gap-2 rounded-xl border border-[#7C3AED] bg-[#7C3AED]/5 px-1 py-4 text-[13px] font-semibold active:bg-[#7C3AED]/15 disabled:opacity-50 dark:bg-[#7C3AED]/15"
-          >
-            <span className="text-[#7C3AED] dark:text-[#A78BFA]">
-              <ClipboardIcon className="h-7 w-7" />
-            </span>
-            <span className="text-center leading-tight">Paste bet slip</span>
-            <span className="rounded-full bg-[#7C3AED]/12 px-1.5 py-0.5 text-[9px] font-bold text-[#7C3AED] dark:bg-[#A78BFA]/15 dark:text-[#A78BFA]">
-              Recommended
-            </span>
-          </button>
-          <button
-            type="button"
-            disabled={importing}
-            onClick={() => fileInputRef.current?.click()}
-            className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 bg-white px-1 py-4 text-[13px] font-semibold active:bg-neutral-50 disabled:opacity-50 dark:border-white/10 dark:bg-transparent"
-          >
-            <span className="text-[#3B82F6]">
-              <CameraIcon className="h-7 w-7" />
-            </span>
-            <span className="text-center leading-tight">Upload screenshot</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setManualOpen(true)}
-            className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 bg-white px-1 py-4 text-[13px] font-semibold active:bg-neutral-50 dark:border-white/10 dark:bg-transparent"
-          >
-            <span className="text-[#F97316]">
-              <PencilIcon className="h-7 w-7" />
-            </span>
-            <span className="text-center leading-tight">Manual entry</span>
-          </button>
-          <div className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 bg-white px-1 py-4 text-[13px] font-semibold text-neutral-400 dark:border-white/10 dark:bg-transparent dark:text-neutral-600">
-            <span className="text-[#22C55E]">
-              <LinkIcon className="h-7 w-7" />
-            </span>
-            <span className="text-center leading-tight">Connect accounts</span>
-            <span className="rounded-full bg-emerald-500/15 px-1.5 py-0.5 text-[9px] font-bold text-emerald-700 dark:text-emerald-400">
-              Soon
-            </span>
+        <>
+          {/* Two big tiles for the ways people actually capture a bet,
+              and two small ones underneath for the rest. Ruled by the
+              owner: manual entry and connect accounts are barely
+              tapped, so four equal tiles spent the card's best space on
+              its least used doors. */}
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              disabled={importing}
+              onClick={pasteSlip}
+              className="relative flex flex-col items-center gap-2 rounded-xl border border-[#7C3AED] bg-[#7C3AED]/[0.07] px-2 py-5 text-[15px] font-semibold active:bg-[#7C3AED]/15 disabled:opacity-50"
+            >
+              <span className="text-[#7C3AED] dark:text-[#A78BFA]">
+                <ClipboardIcon className="h-7 w-7" />
+              </span>
+              Paste bet slip
+              <span className="rounded-full bg-[#7C3AED]/12 px-2 py-0.5 text-[10px] font-bold text-[#7C3AED] dark:bg-[#A78BFA]/15 dark:text-[#A78BFA]">
+                Recommended
+              </span>
+            </button>
+            <button
+              type="button"
+              disabled={importing}
+              onClick={() => fileInputRef.current?.click()}
+              className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 px-2 py-5 text-[15px] font-semibold active:bg-neutral-50 disabled:opacity-50 dark:border-white/10"
+            >
+              <span className="text-[#3B82F6]">
+                <CameraIcon className="h-7 w-7" />
+              </span>
+              Upload screenshot
+            </button>
           </div>
-        </div>
+
+          <div className="mt-2 grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={() => setManualOpen(true)}
+              className="flex items-center justify-center gap-2 rounded-xl border border-neutral-200 px-2 py-2.5 text-[13px] font-semibold active:bg-neutral-50 dark:border-white/10"
+            >
+              <span className="text-[#F97316]">
+                <PencilIcon className="h-4 w-4" />
+              </span>
+              Manual entry
+            </button>
+            <div className="flex items-center justify-center gap-2 rounded-xl border border-neutral-200 px-2 py-2.5 text-[13px] font-semibold text-neutral-400 dark:border-white/10 dark:text-neutral-600">
+              <span className="text-[#22C55E]">
+                <LinkIcon className="h-4 w-4" />
+              </span>
+              Connect
+              <span className="rounded-full bg-[#22C55E]/15 px-1.5 py-0.5 text-[9px] font-bold text-[#22C55E]">
+                Soon
+              </span>
+            </div>
+          </div>
+        </>
       ) : (
         <div className="mt-3 grid grid-cols-2 gap-2">
           <button

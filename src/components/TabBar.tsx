@@ -31,7 +31,7 @@ const TABS = [
 
 function TrackIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-[22px] w-[22px]" aria-hidden="true">
       <path d="M3 10.5 12 3l9 7.5" />
       <path d="M5 9.5V21h14V9.5" />
       <path d="M10 21v-6h4v6" />
@@ -41,7 +41,7 @@ function TrackIcon() {
 
 function PerformanceIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-[22px] w-[22px]" aria-hidden="true">
       <path d="M5 20v-6M12 20V6M19 20v-10" />
     </svg>
   );
@@ -49,7 +49,7 @@ function PerformanceIcon() {
 
 function ResearchIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-[22px] w-[22px]" aria-hidden="true">
       <circle cx="11" cy="11" r="7" />
       <path d="M20 20l-3.5-3.5" />
     </svg>
@@ -58,12 +58,14 @@ function ResearchIcon() {
 
 const ICONS = [TrackIcon, PerformanceIcon, ResearchIcon];
 
-export default function TabBar() {
-  const pathname = usePathname() ?? "";
+// activeHref exists for the local preview, whose URL is /preview and
+// would otherwise light no tab at all.
+export default function TabBar({ activeHref }: { activeHref?: string }) {
+  const pathname = activeHref ?? usePathname() ?? "";
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
-      <div className="mx-auto flex w-full max-w-md items-stretch rounded-3xl bg-white/95 p-1.5 shadow-[0_8px_28px_-12px_rgba(16,16,26,0.35)] ring-1 ring-neutral-900/[0.06] backdrop-blur dark:bg-[#14141E]/95 dark:ring-white/[0.07]">
+      <div className="mx-auto flex w-full max-w-md items-stretch gap-1 rounded-[26px] bg-white/95 p-2 shadow-[0_10px_34px_-10px_rgba(16,16,26,0.45)] ring-1 ring-neutral-900/[0.07] backdrop-blur-xl dark:bg-[#14141E]/95 dark:ring-white/[0.09]">
         {TABS.map((tab, i) => {
           const Icon = ICONS[i];
           const active = tab.match(pathname);
@@ -71,19 +73,13 @@ export default function TabBar() {
             <Link
               key={tab.href}
               href={tab.href}
-              className={`flex flex-1 flex-col items-center gap-1 rounded-2xl py-2 text-[11px] font-bold ${
+              className={`flex flex-1 flex-col items-center justify-center gap-1 rounded-[18px] py-2.5 text-[12px] font-bold transition-colors ${
                 active
-                  ? "text-[#7C3AED] dark:text-[#A78BFA]"
+                  ? "bg-[#6D28D9] text-white shadow-[0_6px_16px_-6px_rgba(109,40,217,0.8)]"
                   : "text-neutral-500 dark:text-neutral-400"
               }`}
             >
-              <span
-                className={`flex h-9 w-12 items-center justify-center rounded-xl ${
-                  active ? "bg-[#7C3AED]/12 dark:bg-[#A78BFA]/15" : ""
-                }`}
-              >
-                <Icon />
-              </span>
+              <Icon />
               {tab.label}
             </Link>
           );

@@ -97,7 +97,7 @@ export default async function HomePage() {
               type="submit"
               title="Log out"
               aria-label="Log out"
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-b from-[#8B5CF6] to-[#7C3AED] text-sm font-bold text-white shadow-[0_6px_16px_-6px_rgba(124,58,237,0.7)]"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-[#6D28D9] text-sm font-bold text-white"
             >
               {(name ?? "C").charAt(0).toUpperCase()}
             </button>

@@ -33,7 +33,7 @@ const COMPACT_OK = [
 // Colors that are allowed to appear as raw hex, and what each is for.
 const ALLOWED_HEX = new Set([
   "#7C3AED", // action purple, from the owner's mockups
-  "#8B5CF6", // the light stop of the primary button gradient
+  "#EF4444", // outcome pill, Lost
   "#6D28D9", // action purple, pressed
   "#A78BFA", // purple on dark surfaces, and the wordmark gradient
   "#5B21B6", // wordmark gradient, deep end
@@ -41,7 +41,7 @@ const ALLOWED_HEX = new Set([
   "#15803D", // Won settle button, pressed
   "#3B82F6", // capture tile icon, camera
   "#F97316", // capture tile icon, pencil
-  "#22C55E", // capture tile icon, connect
+  "#22C55E", // outcome pill Won, and the connect tile icon
   "#13131C", // dark card
   "#1A1A24", // dark popup
   "#0A0A12", // dark page

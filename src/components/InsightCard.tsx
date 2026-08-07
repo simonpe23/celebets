@@ -60,19 +60,22 @@ export default function InsightCard({ bets }: { bets: BetWithLegs[] }) {
         </span>
       </span>
 
-      {/* The trophy in its glow, the one purely decorative thing on the
-          page. Drawn in code so it is crisp in both themes. */}
+      {/* The trophy in its glow. Three layers, because one flat blur
+          behind a flat circle is what made it look cheap: a wide soft
+          halo, a tighter bright ring, and a lit gradient on the disc
+          itself. */}
       <span className="relative shrink-0" aria-hidden="true">
-        <span className="absolute -inset-3 rounded-full bg-[#7C3AED]/35 blur-xl" />
-        <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-[linear-gradient(135deg,#A78BFA,#7C3AED)]">
+        <span className="absolute -inset-5 rounded-full bg-[#7C3AED]/25 blur-2xl" />
+        <span className="absolute -inset-2 rounded-full bg-[#A78BFA]/30 blur-lg" />
+        <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-[radial-gradient(circle_at_30%_25%,#A78BFA,#7C3AED_55%,#5B21B6)] shadow-[0_0_28px_-4px_rgba(124,58,237,0.85),inset_0_1px_1px_rgba(255,255,255,0.45)]">
           <svg
             viewBox="0 0 24 24"
             fill="none"
             stroke="#FFFFFF"
-            strokeWidth={2}
+            strokeWidth={1.9}
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="h-6 w-6"
+            className="h-7 w-7"
           >
             <path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4Z" />
             <path d="M7 6H4a1 1 0 0 0-1 1c0 2 1.5 3.5 4 4M17 6h3a1 1 0 0 1 1 1c0 2-1.5 3.5-4 4" />

@@ -178,7 +178,7 @@ export default function BalanceCard({
           setMode("set");
           setOpen(true);
         }}
-        className={`${BTN} mt-4 h-[52px] w-full text-base`}
+        className={`${BTN} mt-4 h-11 w-full`}
       >
         Set tracking balance
       </button>
@@ -264,7 +264,7 @@ export default function BalanceCard({
                 type="button"
                 disabled={saving}
                 onClick={() => save("up")}
-                className={`${BTN} mt-4 h-[52px] w-full text-base`}
+                className={`${BTN} mt-4 h-11 w-full`}
               >
                 Save
               </button>
@@ -282,7 +282,7 @@ export default function BalanceCard({
                   type="button"
                   disabled={saving}
                   onClick={() => save("up")}
-                  className={`${BTN} h-[54px] text-[17px]`}
+                  className={`${BTN} h-11`}
                 >
                   Add
                 </button>
