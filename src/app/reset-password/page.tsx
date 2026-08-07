@@ -130,7 +130,7 @@ export default function ResetPasswordPage() {
                 minLength={8}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#7C3AED] focus:ring-2 focus:ring-[#7C3AED]/30 dark:border-white/15 dark:bg-[#1D1530] dark:text-neutral-100"
+                className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#7C3AED] focus:ring-2 focus:ring-[#7C3AED]/30 dark:border-white/15 dark:bg-[#1A1A24] dark:text-neutral-100"
               />
               <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
                 At least 8 characters

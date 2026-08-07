@@ -42,12 +42,12 @@ const ALLOWED_HEX = new Set([
   "#3B82F6", // capture tile icon, camera
   "#F97316", // capture tile icon, pencil
   "#22C55E", // capture tile icon, connect
-  "#151022", // dark card
-  "#1D1530", // dark popup
-  "#0B0714", // dark page
-  "#171226", // dark tab bar, floating
-  "#17102A", // chart panel
-  "#F6F5FA", // light page
+  "#13131C", // dark card
+  "#1A1A24", // dark popup
+  "#0A0A12", // dark page
+  "#14141E", // dark tab bar, floating
+  "#12121C", // chart panel
+  "#F7F7FB", // light page
   "#34D399", // chart green
   "#FB7185", // chart red
   "#FFFFFF", // svg strokes and the theme-color meta tag
@@ -129,7 +129,7 @@ for (const file of files) {
 
     // 5. The card surface comes from CARD in src/lib/ui.ts. Thirteen
     // files once repeated it, and it drifted.
-    if (line.includes("bg-[#F2F4F7]") || line.includes("shadow-[0_6px_20px")) {
+    if (line.includes("bg-[#F2F4F7]") || line.includes("shadow-[0_10px_30px")) {
       note(file, n, "card surface hand-rolled, import CARD from @/lib/ui");
     }
 

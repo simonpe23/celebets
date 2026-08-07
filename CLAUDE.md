@@ -92,11 +92,15 @@ SHARED COMPONENTS. Never copy their markup into a page.
 - src/components/StatTile.tsx    the labelled number in a card
 - src/components/HeroMoney.tsx   the big money number
 
-TWO TYPEFACES, ONE RULE.
-- Numbers are Inter Tight, applied with the `font-money` class.
-- Words are Geist.
-- Money inside a sentence stays Geist. Changing face mid sentence
-  reads as a bug. design-check.mjs enforces both halves.
+ONE TYPEFACE (changed August 2026). Numbers and words are both Geist.
+`font-money` still exists and still marks a figure, but it now points
+at the body face and only carries tabular figures.
+- Inter Tight was the numeral face until the owner put the build next
+  to his mockups. A condensed display cut made every figure read
+  narrow and cheap. The mockup sets its numbers in the same face as
+  its text. That single change fixed more than any card edit did.
+- design-check still enforces that every money value carries
+  `font-money` or is listed as prose.
 
 THREE WEIGHTS. font-medium does not exist in this app.
 - normal    body text, captions, inputs
@@ -132,9 +136,11 @@ BUTTONS, THREE TIERS.
 - Tier three  text-xs font-semibold. Only inside a dense card row
               (Won, Lost, Cash out, Delete, Add money, Remove).
 
-COLOR (rewritten again August 2026: the first purple was too muted
-and the owner called the result ugly next to his mockups. The mockup
-palette is the law now).
+COLOR (rewritten twice in August 2026. First the purple was too
+muted, then the surfaces carried a purple cast that made the app look
+like a filter had been laid over it. The mockup's dark is a COOL
+near-black, barely blue, never violet. There is no violet wash on the
+page: that was invented, not copied).
 - Ink is the default. Muted is neutral 500 light, neutral 400 dark,
   everywhere, with no exceptions.
 - Purple #7C3AED is the action color: every button you press, every
@@ -150,10 +156,19 @@ palette is the law now).
 - The capture tiles carry their own icon colors, from the mockup:
   camera #3B82F6, pencil #F97316, connect #22C55E. Icons only,
   never buttons.
-- Light surfaces: page #F6F5FA, cards white with the violet-cast
-  shadow in CARD (src/lib/ui.ts).
-- Dark surfaces: page #0B0714, cards #151022, popups #1D1530,
-  tab bar #100A1E, chart panel #17102A, borders white/10.
+- Light surfaces: page #F7F7FB, white cards with a hairline ring.
+- Dark surfaces: page #0A0A12, cards #13131C, popups #1A1A24,
+  tab bar #14141E, chart panel #12121C, hairlines white/[0.07].
+- Cards are defined by their EDGE, not by a shadow. The heavy
+  violet-cast shadow was another invention.
+- src/lib/ui.ts owns CARD, INNER (the row inside a card), BTN, and
+  the OUTCOME pills. Won and Lost are quiet tinted pills, never
+  filled bars: a filled bar shouted louder than the bet it settled.
+
+SIZE. The build ran about a fifth larger than the mockups for weeks,
+which is why the mockup fits Pending Bets on the first screen and the
+build did not. Greeting 22px, card headings 17px, hero balance 34px,
+primary button 52px tall at 16px.
 
 ## Status
 

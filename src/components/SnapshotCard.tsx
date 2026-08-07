@@ -94,7 +94,7 @@ export default function SnapshotCard({
   return (
     <section className={`${CARD} p-4`}>
       <div className="flex items-baseline justify-between gap-3">
-        <h2 className="text-lg font-bold">Performance Snapshot</h2>
+        <h2 className="text-[17px] font-bold">Performance Snapshot</h2>
         <Link
           href="/stats"
           className="shrink-0 text-sm font-semibold text-[#7C3AED] dark:text-[#A78BFA]"
@@ -107,7 +107,7 @@ export default function SnapshotCard({
         <div className="pr-2">
           <p className={LABEL}>Net Profit</p>
           <p
-            className={`mt-1 font-money text-xl font-bold tabular-nums ${moneyTone(profit)}`}
+            className={`mt-1 font-money text-lg font-bold tabular-nums ${moneyTone(profit)}`}
           >
             {short(profit)}
           </p>
@@ -124,7 +124,7 @@ export default function SnapshotCard({
         <div className="px-2">
           <p className={LABEL}>ROI</p>
           <p
-            className={`mt-1 font-money text-xl font-bold tabular-nums ${moneyTone(t.roi ?? 0)}`}
+            className={`mt-1 font-money text-lg font-bold tabular-nums ${moneyTone(t.roi ?? 0)}`}
           >
             {t.roi === null
               ? "-"
@@ -142,7 +142,7 @@ export default function SnapshotCard({
 
         <div className="px-2">
           <p className={LABEL}>Win Rate</p>
-          <p className="mt-1 font-money text-xl font-bold tabular-nums">
+          <p className="mt-1 font-money text-lg font-bold tabular-nums">
             {hitRate === null ? "-" : `${hitRate}%`}
           </p>
           <div className="mt-2">

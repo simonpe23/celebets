@@ -63,7 +63,7 @@ export default function TabBar() {
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
-      <div className="mx-auto flex w-full max-w-md items-stretch rounded-3xl bg-white/95 p-1.5 shadow-[0_12px_34px_-14px_rgba(46,16,80,0.5)] ring-1 ring-neutral-900/5 backdrop-blur dark:bg-[#171226]/95 dark:ring-white/10">
+      <div className="mx-auto flex w-full max-w-md items-stretch rounded-3xl bg-white/95 p-1.5 shadow-[0_8px_28px_-12px_rgba(16,16,26,0.35)] ring-1 ring-neutral-900/[0.06] backdrop-blur dark:bg-[#14141E]/95 dark:ring-white/[0.07]">
         {TABS.map((tab, i) => {
           const Icon = ICONS[i];
           const active = tab.match(pathname);

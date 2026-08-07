@@ -36,7 +36,7 @@ export default function GoogleButton({ large = false }: { large?: boolean }) {
         type="button"
         onClick={signIn}
         disabled={loading}
-        className={`flex w-full items-center justify-center gap-3 rounded-xl border border-neutral-300 bg-white font-semibold text-neutral-800 disabled:opacity-60 dark:border-white/15 dark:bg-[#1D1530] dark:text-neutral-100 ${
+        className={`flex w-full items-center justify-center gap-3 rounded-xl border border-neutral-300 bg-white font-semibold text-neutral-800 disabled:opacity-60 dark:border-white/15 dark:bg-[#1A1A24] dark:text-neutral-100 ${
           large ? "h-14 text-base" : "h-12 text-sm"
         }`}
       >

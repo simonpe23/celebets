@@ -4,8 +4,8 @@
   /* Brand palette. Cream page, white cards, blue for actions,
      purple for the wordmark and recommendations. Profit stays green
      and loss stays red, because those colors carry meaning. */
-  --background: #F6F5FA;
-  --foreground: #171717;
+  --background: #F7F7FB;
+  --foreground: #0E0E14;
   --brand-cream: #f5edce;
   --brand-blue: #72afcc;
   --brand-blue-dark: #5b96b3;
@@ -19,8 +19,10 @@
   --font-mono: var(--font-geist-mono);
   --font-brand: var(--font-brand);
   --font-inter-tight: var(--font-inter-tight);
-  /* The numeral face. Money and counts, never words. */
-  --font-money: var(--font-inter-tight);
+  /* Numbers are set in the body face, like the mockup. Inter Tight,
+     a condensed display cut, made every figure read narrow next to
+     the mockup and was the single biggest typographic difference. */
+  --font-money: var(--font-geist-sans);
   --font-plex: var(--font-plex);
   --font-instrument: var(--font-instrument);
   --color-cream: var(--brand-cream);
@@ -31,22 +33,16 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Not pure black. A hair of blue matches the chart panel, so the
-       whole app reads as one surface family instead of two. */
-    --background: #0B0714;
-    --foreground: #ededed;
+    /* The mockup's dark is a cool near-black, barely blue. It is NOT
+       purple tinted: a purple cast made the whole app look like a
+       filter had been applied over it. */
+    --background: #0A0A12;
+    --foreground: #F2F2F5;
   }
 }
 
 body {
-  /* The mockup's soft violet wash bleeding down from the top. */
-  background:
-    radial-gradient(
-      1000px 520px at 50% -120px,
-      rgba(124, 58, 237, 0.1),
-      transparent 60%
-    ),
-    var(--background);
+  background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
   /* No gray flash when tapping buttons on mobile. */
