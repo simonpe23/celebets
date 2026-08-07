@@ -281,6 +281,25 @@ THE ONE LINE SUMMARY:
 ## The Track page (August 2026, built to the owner's mockups, on the
 ## wip branch, not deployed)
 
+THE MOCKUPS ARE THE SPEC, TO THE PIXEL. The owner rejected two earlier
+attempts ("a reskin is far from enough", "a fake cheap copy") because
+the mockup was poured into the old design system instead of replacing
+it. What that cost, written down so it is never repeated:
+- A mockup is an anatomy, not a palette. Copy the skeleton first
+  (what is in the card, in what order, at what size), then the color.
+- The old system's habits are the tell: uppercase labels everywhere,
+  full width action bars, three-column stat grids, five rows of text
+  where the mockup has two.
+- Primary buttons are a vertical violet gradient with a glow (BTN in
+  src/lib/ui.ts). A flat fill reads cheap.
+- Sparklines are a line with a gradient fading under it, or a bare
+  line. Never a flat filled block.
+- Card labels are sentence case. Uppercase survives only where the
+  mockup itself shouts (TRACKING BALANCE).
+- Pending Bets is ONE card holding the heading, View all, and the
+  bets as lighter inner rows. Parlays open with a rail threading the
+  leg icons, singles collapse to a row with a chevron.
+
 The owner drew four mockups (mobile and web, light and dark) and they
 are the spec, with the divergences listed in ROADMAP.md. The home page
 is now the Track page: greeting, Tracking Balance card with the purple

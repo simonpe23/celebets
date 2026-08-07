@@ -68,12 +68,30 @@ export default async function HomePage() {
   const name = fullName ? fullName.split(" ")[0] : null;
 
   return (
-    <main className="min-h-dvh px-4 pt-6 pb-24 sm:px-6">
+    <main className="min-h-dvh px-4 pt-6 pb-32 sm:px-6">
       <div className="mx-auto w-full max-w-md space-y-4">
         <header className="flex items-center justify-between">
           <h1>
             <Wordmark className="text-2xl" />
           </h1>
+          <span className="flex items-center gap-3">
+            <span
+              className="text-neutral-500 dark:text-neutral-400"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-6 w-6"
+              >
+                <path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.7 21a2 2 0 0 1-3.4 0" />
+              </svg>
+            </span>
           <form action="/auth/signout" method="post">
             <button
               type="submit"
@@ -84,6 +102,7 @@ export default async function HomePage() {
               {(name ?? "C").charAt(0).toUpperCase()}
             </button>
           </form>
+          </span>
         </header>
 
         <HomeDashboard

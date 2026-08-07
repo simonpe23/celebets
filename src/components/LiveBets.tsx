@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import {
@@ -34,6 +35,9 @@ export default function LiveBets({ bets }: Props) {
   const [addAmount, setAddAmount] = useState("");
   const [addPayout, setAddPayout] = useState("");
   const [expandedBuys, setExpandedBuys] = useState<string | null>(null);
+  // Which bets the user has opened or closed by hand. Untouched bets
+  // fall back to the mockup's default: parlays open, singles closed.
+  const [toggled, setToggled] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
   // Dates render after mount so they use the phone's timezone.
   const [mounted, setMounted] = useState(false);
@@ -164,15 +168,23 @@ export default function LiveBets({ bets }: Props) {
   }
 
   return (
-    <section>
-      <h2 className="flex items-center gap-2 text-lg font-bold">
-        Pending bets
-        {bets.length > 0 && (
-          <span className="rounded-full bg-[#7C3AED]/10 px-2.5 py-0.5 font-money text-xs font-semibold tabular-nums text-[#7C3AED] dark:bg-[#A78BFA]/15 dark:text-[#A78BFA]">
-            {bets.length}
-          </span>
-        )}
-      </h2>
+    <section className={`${CARD} p-4`}>
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="flex items-center gap-2 text-lg font-bold">
+          Pending Bets
+          {bets.length > 0 && (
+            <span className="rounded-full bg-[#7C3AED]/10 px-2.5 py-0.5 font-money text-xs font-semibold tabular-nums text-[#7C3AED] dark:bg-[#A78BFA]/15 dark:text-[#A78BFA]">
+              {bets.length}
+            </span>
+          )}
+        </h2>
+        <Link
+          href="/stats"
+          className="shrink-0 text-sm font-bold text-[#7C3AED] dark:text-[#A78BFA]"
+        >
+          View all →
+        </Link>
+      </div>
 
       {error && (
         <p className="mt-3 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
@@ -181,39 +193,49 @@ export default function LiveBets({ bets }: Props) {
       )}
 
       {bets.length === 0 ? (
-        <p className="mt-3 rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:text-neutral-400 dark:border-white/15">
+        <p className="mt-3 rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:border-white/15 dark:text-neutral-400">
           No pending bets. Track one above.
         </p>
       ) : (
-        <div className="mt-3 space-y-3">
+        <div className="mt-3 space-y-2">
           {bets.map((bet) => {
             const stake = Number(bet.stake);
             const totalOdds = Number(bet.total_odds);
+            const isParlay = bet.legs.length > 1;
+            // The mockup opens parlays and closes singles.
+            const open = toggled[bet.id] ?? isParlay;
+
             return (
               <div
                 key={bet.id}
-                className={`${CARD} p-4`}
+                className="rounded-2xl bg-neutral-50 p-3.5 ring-1 ring-neutral-900/5 dark:bg-white/[0.04] dark:ring-white/10"
               >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex min-w-0 items-center gap-2.5">
-                    {bet.legs.length > 1 ? (
-                      <span className="shrink-0 rounded-md bg-[#7C3AED]/12 px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-[#7C3AED] dark:bg-[#A78BFA]/15 dark:text-[#A78BFA]">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setToggled((prev) => ({ ...prev, [bet.id]: !open }))
+                  }
+                  className="flex w-full items-center justify-between gap-3 text-left"
+                >
+                  <span className="flex min-w-0 items-center gap-2.5">
+                    {isParlay ? (
+                      <span className="shrink-0 rounded-md bg-[#7C3AED]/15 px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-[#7C3AED] dark:text-[#A78BFA]">
                         Parlay
                       </span>
                     ) : (
-                      <span className="shrink-0 text-xl leading-none">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-neutral-200/70 text-lg dark:bg-white/10">
                         {SPORT_EMOJI[bet.legs[0]?.sport ?? "Football"]}
                       </span>
                     )}
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-bold">
-                        {bet.legs.length > 1
+                    <span className="min-w-0">
+                      <span className="block truncate text-[15px] font-bold">
+                        {isParlay
                           ? `${bet.legs.length} Leg Parlay`
                           : (bet.legs[0]?.description ??
                             bet.legs[0]?.subcategory ??
                             bet.legs[0]?.sport)}
-                      </p>
-                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                      </span>
+                      <span className="block text-xs text-neutral-500 dark:text-neutral-400">
                         {mounted
                           ? new Date(bet.placed_at).toLocaleDateString(
                               "en-US",
@@ -227,411 +249,406 @@ export default function LiveBets({ bets }: Props) {
                             {bet.status}
                           </span>
                         )}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="shrink-0 text-right">
-                    <p className="font-money text-sm font-bold tabular-nums">
-                      {formatOdds(totalOdds)}
-                    </p>
-                    <p className="font-money text-xs tabular-nums text-neutral-500 dark:text-neutral-400">
-                      {formatMoney(stake)}
-                    </p>
-                  </div>
-                </div>
-
-                {addingMoney === bet.id && (
-                  <div className="mt-3 rounded-xl bg-neutral-100 p-3 dark:bg-[#1D1530]">
-                    <label
-                      htmlFor={`add-amount-${bet.id}`}
-                      className="block text-sm font-semibold"
-                    >
-                      Amount added (USD)
-                    </label>
-                    <input
-                      id={`add-amount-${bet.id}`}
-                      type="text"
-                      inputMode="decimal"
-                      autoFocus
-                      placeholder="0.00"
-                      value={addAmount}
-                      onChange={(e) => setAddAmount(e.target.value)}
-                      className="mt-1 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-white/15 dark:bg-[#151022] dark:text-neutral-100"
-                    />
-                    <label
-                      htmlFor={`add-payout-${bet.id}`}
-                      className="mt-3 block text-sm font-semibold"
-                    >
-                      That buy&apos;s own payout (USD)
-                    </label>
-                    <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
-                      The payout if right for this buy alone, from your
-                      betting app&apos;s order history.
-                    </p>
-                    <input
-                      id={`add-payout-${bet.id}`}
-                      type="text"
-                      inputMode="decimal"
-                      placeholder="0.00"
-                      value={addPayout}
-                      onChange={(e) => setAddPayout(e.target.value)}
-                      className="mt-1 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-white/15 dark:bg-[#151022] dark:text-neutral-100"
-                    />
-                    {parseMoney(addAmount) !== null &&
-                      parseMoney(addPayout) !== null && (
-                        <p className="mt-2 text-xs">
-                          New totals: stake{" "}
-                          {formatMoney(
-                            round2(stake + (parseMoney(addAmount) as number))
-                          )}
-                          , To Collect{" "}
-                          {formatMoney(
-                            round2(
-                              round2(stake * totalOdds) +
-                                (parseMoney(addPayout) as number)
-                            )
-                          )}
-                        </p>
-                      )}
-                    <div className="mt-2 flex justify-end gap-2">
-                      <button
-                        type="button"
-                        disabled={busyLeg !== null}
-                        onClick={() => {
-                          setAddingMoney(null);
-                          setAddAmount("");
-                          setAddPayout("");
-                        }}
-                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-semibold dark:border-white/15"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="button"
-                        disabled={
-                          busyLeg !== null ||
-                          parseMoney(addAmount) === null ||
-                          parseMoney(addPayout) === null
-                        }
-                        onClick={() => addMoney(bet.id, stake, totalOdds)}
-                        className="rounded-lg bg-[#7C3AED] px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
-                      >
-                        Confirm add
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {bet.cashed_out && (
-                  <div className="mt-3 flex items-center justify-between gap-2 rounded-xl bg-neutral-100 p-3 dark:bg-[#1D1530]">
-                    <p className="text-sm">
-                      Cashed out for{" "}
-                      <span className="font-bold">
-                        {formatMoney(Number(bet.payout ?? 0))}
                       </span>
-                      . Done, moves to history in a few minutes.
-                    </p>
-                    <button
-                      type="button"
-                      disabled={busyLeg !== null}
-                      onClick={() => undoCashOut(bet.id)}
-                      className="shrink-0 rounded-lg border border-neutral-300 px-3 py-1.5 text-xs text-neutral-500 dark:text-neutral-400 disabled:opacity-50 dark:border-white/15"
-                    >
-                      Undo
-                    </button>
-                  </div>
-                )}
+                    </span>
+                  </span>
 
-                {cashingOut === bet.id && (
-                  <div className="mt-3 rounded-xl bg-neutral-100 p-3 dark:bg-[#1D1530]">
-                    <label
-                      htmlFor={`cashout-${bet.id}`}
-                      className="block text-sm font-semibold"
+                  <span className="flex shrink-0 items-center gap-2">
+                    <span className="text-right">
+                      <span className="block font-money text-[15px] font-bold tabular-nums">
+                        {formatOdds(totalOdds)}
+                      </span>
+                      <span className="block font-money text-xs tabular-nums text-neutral-500 dark:text-neutral-400">
+                        {formatMoney(stake)}
+                      </span>
+                    </span>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className={`h-4 w-4 shrink-0 text-neutral-400 transition-transform ${
+                        open ? "rotate-90" : ""
+                      }`}
+                      aria-hidden="true"
                     >
-                      Cash out amount (USD)
-                    </label>
-                    <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
-                      The amount your betting app paid you. Above your{" "}
-                      {formatMoney(Number(bet.stake))} stake counts as a win,
-                      below counts as a loss.
+                      <path d="M9 6l6 6-6 6" />
+                    </svg>
+                  </span>
+                </button>
+
+                {open && (
+                  <>
+                    {/* The legs, with the rail threading the icons on a
+                        parlay so the picks read as one ticket. */}
+                    <div className="relative mt-3 space-y-2.5">
+                      {isParlay && bet.legs.length > 1 && (
+                        <span
+                          className="absolute left-[15px] top-4 bottom-4 w-px bg-neutral-300 dark:bg-white/15"
+                          aria-hidden="true"
+                        />
+                      )}
+                      {bet.legs.map((leg) => (
+                        <div
+                          key={leg.id}
+                          className="relative flex items-center justify-between gap-3"
+                        >
+                          <div className="flex min-w-0 items-center gap-2.5">
+                            <span className="z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-neutral-200/70 text-base dark:bg-white/10">
+                              {SPORT_EMOJI[leg.sport]}
+                            </span>
+                            <div className="min-w-0">
+                              <p className="truncate text-sm font-semibold">
+                                {leg.description ?? leg.subcategory ?? leg.sport}
+                              </p>
+                              <p className="truncate text-xs text-neutral-500 dark:text-neutral-400">
+                                {leg.subcategory ?? formatOdds(Number(leg.odds ?? 0))}
+                              </p>
+                            </div>
+                          </div>
+
+                          {!bet.cashed_out && (
+                            <div className="flex shrink-0 items-center gap-1.5">
+                              {leg.result === "pending" ? (
+                                <>
+                                  <button
+                                    type="button"
+                                    disabled={busyLeg !== null}
+                                    onClick={() => setResult(leg.id, "won")}
+                                    className="rounded-lg border border-emerald-600/30 bg-emerald-600/10 px-3.5 py-1.5 text-sm font-semibold text-emerald-700 active:bg-emerald-600/20 disabled:opacity-50 dark:border-emerald-400/25 dark:bg-emerald-400/10 dark:text-emerald-400"
+                                  >
+                                    Won
+                                  </button>
+                                  <button
+                                    type="button"
+                                    disabled={busyLeg !== null}
+                                    onClick={() => setResult(leg.id, "lost")}
+                                    className="rounded-lg border border-red-600/30 bg-red-600/10 px-3.5 py-1.5 text-sm font-semibold text-red-600 active:bg-red-600/20 disabled:opacity-50 dark:border-red-400/25 dark:bg-red-400/10 dark:text-red-400"
+                                  >
+                                    Lost
+                                  </button>
+                                </>
+                              ) : (
+                                <>
+                                  <span
+                                    className={`text-sm font-bold capitalize ${
+                                      leg.result === "won"
+                                        ? "text-emerald-600 dark:text-emerald-400"
+                                        : "text-red-600 dark:text-red-400"
+                                    }`}
+                                  >
+                                    {leg.result}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    disabled={busyLeg !== null}
+                                    onClick={() => setResult(leg.id, "pending")}
+                                    className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs text-neutral-500 disabled:opacity-50 dark:border-white/15 dark:text-neutral-400"
+                                  >
+                                    Undo
+                                  </button>
+                                </>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+
+                    {addingMoney === bet.id && (
+                      <div className="mt-3 rounded-xl bg-neutral-100 p-3 dark:bg-[#1D1530]">
+                        <label
+                          htmlFor={`add-amount-${bet.id}`}
+                          className="block text-sm font-semibold"
+                        >
+                          Amount added (USD)
+                        </label>
+                        <input
+                          id={`add-amount-${bet.id}`}
+                          type="text"
+                          inputMode="decimal"
+                          autoFocus
+                          placeholder="0.00"
+                          value={addAmount}
+                          onChange={(e) => setAddAmount(e.target.value)}
+                          className="mt-1 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-white/15 dark:bg-[#151022] dark:text-neutral-100"
+                        />
+                        <label
+                          htmlFor={`add-payout-${bet.id}`}
+                          className="mt-3 block text-sm font-semibold"
+                        >
+                          That buy&apos;s own payout (USD)
+                        </label>
+                        <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
+                          The payout if right for this buy alone, from your
+                          betting app&apos;s order history.
+                        </p>
+                        <input
+                          id={`add-payout-${bet.id}`}
+                          type="text"
+                          inputMode="decimal"
+                          placeholder="0.00"
+                          value={addPayout}
+                          onChange={(e) => setAddPayout(e.target.value)}
+                          className="mt-1 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-white/15 dark:bg-[#151022] dark:text-neutral-100"
+                        />
+                        {parseMoney(addAmount) !== null &&
+                          parseMoney(addPayout) !== null && (
+                            <p className="mt-2 text-xs">
+                              New totals: stake{" "}
+                              {formatMoney(
+                                round2(stake + (parseMoney(addAmount) as number))
+                              )}
+                              , To Collect{" "}
+                              {formatMoney(
+                                round2(
+                                  round2(stake * totalOdds) +
+                                    (parseMoney(addPayout) as number)
+                                )
+                              )}
+                            </p>
+                          )}
+                        <div className="mt-2 flex justify-end gap-2">
+                          <button
+                            type="button"
+                            disabled={busyLeg !== null}
+                            onClick={() => {
+                              setAddingMoney(null);
+                              setAddAmount("");
+                              setAddPayout("");
+                            }}
+                            className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-semibold dark:border-white/15"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type="button"
+                            disabled={
+                              busyLeg !== null ||
+                              parseMoney(addAmount) === null ||
+                              parseMoney(addPayout) === null
+                            }
+                            onClick={() => addMoney(bet.id, stake, totalOdds)}
+                            className="rounded-lg bg-[#7C3AED] px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
+                          >
+                            Confirm add
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                    {bet.cashed_out && (
+                      <div className="mt-3 flex items-center justify-between gap-2 rounded-xl bg-neutral-100 p-3 dark:bg-[#1D1530]">
+                        <p className="text-sm">
+                          Cashed out for{" "}
+                          <span className="font-bold">
+                            {formatMoney(Number(bet.payout ?? 0))}
+                          </span>
+                          . Done, moves to history in a few minutes.
+                        </p>
+                        <button
+                          type="button"
+                          disabled={busyLeg !== null}
+                          onClick={() => undoCashOut(bet.id)}
+                          className="shrink-0 rounded-lg border border-neutral-300 px-3 py-1.5 text-xs text-neutral-500 dark:text-neutral-400 disabled:opacity-50 dark:border-white/15"
+                        >
+                          Undo
+                        </button>
+                      </div>
+                    )}
+                    {cashingOut === bet.id && (
+                      <div className="mt-3 rounded-xl bg-neutral-100 p-3 dark:bg-[#1D1530]">
+                        <label
+                          htmlFor={`cashout-${bet.id}`}
+                          className="block text-sm font-semibold"
+                        >
+                          Cash out amount (USD)
+                        </label>
+                        <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
+                          The amount your betting app paid you. Above your{" "}
+                          {formatMoney(Number(bet.stake))} stake counts as a win,
+                          below counts as a loss.
+                        </p>
+                        <input
+                          id={`cashout-${bet.id}`}
+                          type="text"
+                          inputMode="decimal"
+                          autoFocus
+                          placeholder="0.00"
+                          value={cashOutAmount}
+                          onChange={(e) => setCashOutAmount(e.target.value)}
+                          className="mt-2 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-white/15 dark:bg-[#151022] dark:text-neutral-100"
+                        />
+                        <div className="mt-2 flex justify-end gap-2">
+                          <button
+                            type="button"
+                            disabled={busyLeg !== null}
+                            onClick={() => {
+                              setCashingOut(null);
+                              setCashOutAmount("");
+                            }}
+                            className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-semibold dark:border-white/15"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type="button"
+                            disabled={
+                              busyLeg !== null ||
+                              parseMoney(cashOutAmount) === null
+                            }
+                            onClick={() => cashOut(bet.id)}
+                            className="rounded-lg bg-[#7C3AED] px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
+                          >
+                            Confirm cash out
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                    {confirmingDelete === bet.id && (
+                      <div className="mt-3 flex items-center justify-between gap-2 rounded-xl bg-red-50 p-3 dark:bg-red-950">
+                        <p className="text-sm text-red-700 dark:text-red-300">
+                          Delete this bet? The stake returns to your balance.
+                        </p>
+                        <div className="flex shrink-0 gap-2">
+                          <button
+                            type="button"
+                            disabled={busyLeg !== null}
+                            onClick={() => setConfirmingDelete(null)}
+                            className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-semibold dark:border-white/15"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type="button"
+                            disabled={busyLeg !== null}
+                            onClick={() => deleteBet(bet.id)}
+                            className="rounded-lg bg-red-600 px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
+                          >
+                            Yes, delete
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                    {(bet.bet_buys?.length ?? 0) > 1 && (
+                      <div className="mt-3">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setExpandedBuys(
+                              expandedBuys === bet.id ? null : bet.id
+                            )
+                          }
+                          className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs text-neutral-500 dark:text-neutral-400 dark:border-white/15"
+                        >
+                          {expandedBuys === bet.id
+                            ? "Hide buys"
+                            : `${bet.bet_buys.length} buys`}
+                        </button>
+                        {expandedBuys === bet.id && (
+                          <div className="mt-2 space-y-1 rounded-xl bg-neutral-100 p-3 dark:bg-[#1D1530]">
+                            {[...bet.bet_buys]
+                              .sort(
+                                (a, b) =>
+                                  new Date(a.created_at).getTime() -
+                                  new Date(b.created_at).getTime()
+                              )
+                              .map((buy, i) => (
+                                <p key={buy.id} className="text-xs">
+                                  Buy {i + 1}: {formatMoney(Number(buy.amount))}{" "}
+                                  pays {formatMoney(Number(buy.payout))} (odds{" "}
+                                  {formatOdds(
+                                    Number(buy.payout) / Number(buy.amount)
+                                  )}
+                                  )
+                                </p>
+                              ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    <p className="mt-3 text-xs text-neutral-500 dark:text-neutral-400">
+                      {bet.cashed_out ? (
+                        <>
+                          <span className="font-money tabular-nums">
+                            {formatMoney(stake)}
+                          </span>{" "}
+                          cashed out for{" "}
+                          <span className="font-money tabular-nums">
+                            {formatMoney(Number(bet.payout ?? 0))}
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          {bet.legs.length}{" "}
+                          {bet.legs.length === 1 ? "leg" : "legs"}
+                          {"  ·  "}
+                          <span className="font-money tabular-nums">
+                            {formatMoney(stake)}
+                          </span>{" "}
+                          to win{" "}
+                          <span className="font-money tabular-nums">
+                            {formatMoney(round2(stake * (totalOdds - 1)))}
+                          </span>
+                        </>
+                      )}
                     </p>
-                    <input
-                      id={`cashout-${bet.id}`}
-                      type="text"
-                      inputMode="decimal"
-                      autoFocus
-                      placeholder="0.00"
-                      value={cashOutAmount}
-                      onChange={(e) => setCashOutAmount(e.target.value)}
-                      className="mt-2 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-white/15 dark:bg-[#151022] dark:text-neutral-100"
-                    />
-                    <div className="mt-2 flex justify-end gap-2">
+
+                    <div className="mt-3 flex gap-2">
+                      {bet.status === "pending" && !bet.cashed_out && (
+                        <>
+                          <button
+                            type="button"
+                            disabled={busyLeg !== null}
+                            onClick={() => {
+                              setCashingOut(null);
+                              setConfirmingDelete(null);
+                              setAddAmount("");
+                              setAddPayout("");
+                              setAddingMoney(
+                                addingMoney === bet.id ? null : bet.id
+                              );
+                            }}
+                            className="rounded-lg border border-[#7C3AED]/40 px-3 py-1.5 text-xs font-semibold text-[#7C3AED] disabled:opacity-50 dark:border-[#A78BFA]/40 dark:text-[#A78BFA]"
+                          >
+                            Add money
+                          </button>
+                          <button
+                            type="button"
+                            disabled={busyLeg !== null}
+                            onClick={() => {
+                              setAddingMoney(null);
+                              setConfirmingDelete(null);
+                              setCashOutAmount("");
+                              setCashingOut(
+                                cashingOut === bet.id ? null : bet.id
+                              );
+                            }}
+                            className="rounded-lg border border-[#7C3AED]/40 px-3 py-1.5 text-xs font-semibold text-[#7C3AED] disabled:opacity-50 dark:border-[#A78BFA]/40 dark:text-[#A78BFA]"
+                          >
+                            Cash out
+                          </button>
+                        </>
+                      )}
                       <button
                         type="button"
                         disabled={busyLeg !== null}
                         onClick={() => {
                           setCashingOut(null);
-                          setCashOutAmount("");
+                          setAddingMoney(null);
+                          setConfirmingDelete(
+                            confirmingDelete === bet.id ? null : bet.id
+                          );
                         }}
-                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-semibold dark:border-white/15"
+                        className="ml-auto rounded-lg border border-neutral-300 px-3 py-1.5 text-xs text-neutral-500 disabled:opacity-50 dark:border-white/15 dark:text-neutral-400"
                       >
-                        Cancel
-                      </button>
-                      <button
-                        type="button"
-                        disabled={
-                          busyLeg !== null ||
-                          parseMoney(cashOutAmount) === null
-                        }
-                        onClick={() => cashOut(bet.id)}
-                        className="rounded-lg bg-[#7C3AED] px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
-                      >
-                        Confirm cash out
+                        Delete
                       </button>
                     </div>
-                  </div>
+                  </>
                 )}
-
-                {confirmingDelete === bet.id && (
-                  <div className="mt-3 flex items-center justify-between gap-2 rounded-xl bg-red-50 p-3 dark:bg-red-950">
-                    <p className="text-sm text-red-700 dark:text-red-300">
-                      Delete this bet? The stake returns to your balance.
-                    </p>
-                    <div className="flex shrink-0 gap-2">
-                      <button
-                        type="button"
-                        disabled={busyLeg !== null}
-                        onClick={() => setConfirmingDelete(null)}
-                        className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs font-semibold dark:border-white/15"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="button"
-                        disabled={busyLeg !== null}
-                        onClick={() => deleteBet(bet.id)}
-                        className="rounded-lg bg-red-600 px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
-                      >
-                        Yes, delete
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                <div className="mt-3 space-y-2.5">
-                  {bet.legs.map((leg) => (
-                    <div
-                      key={leg.id}
-                      className="flex items-center justify-between gap-3"
-                    >
-                      {bet.legs.length > 1 ? (
-                        <div className="min-w-0">
-                          <p className="truncate text-sm font-semibold">
-                            {SPORT_EMOJI[leg.sport]}{" "}
-                            {leg.description ?? leg.subcategory ?? leg.sport}
-                            {leg.odds !== null && (
-                              <span className="ml-1.5 font-money text-xs font-normal tabular-nums text-neutral-500 dark:text-neutral-400">
-                                {formatOdds(Number(leg.odds))}
-                              </span>
-                            )}
-                          </p>
-                          {leg.description !== null &&
-                            leg.subcategory !== null && (
-                              <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                                {leg.subcategory}
-                              </p>
-                            )}
-                        </div>
-                      ) : (
-                        <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                          {leg.subcategory ?? "Result"}
-                        </p>
-                      )}
-
-                      {!bet.cashed_out && (
-                        <div className="flex shrink-0 items-center gap-1.5">
-                          {leg.result === "pending" ? (
-                            <>
-                              <button
-                                type="button"
-                                disabled={busyLeg !== null}
-                                onClick={() => setResult(leg.id, "won")}
-                                className="rounded-lg bg-emerald-600/10 px-3.5 py-1.5 text-sm font-semibold text-emerald-700 active:bg-emerald-600/20 disabled:opacity-50 dark:bg-emerald-400/10 dark:text-emerald-400"
-                              >
-                                Won
-                              </button>
-                              <button
-                                type="button"
-                                disabled={busyLeg !== null}
-                                onClick={() => setResult(leg.id, "lost")}
-                                className="rounded-lg bg-red-600/10 px-3.5 py-1.5 text-sm font-semibold text-red-600 active:bg-red-600/20 disabled:opacity-50 dark:bg-red-400/10 dark:text-red-400"
-                              >
-                                Lost
-                              </button>
-                            </>
-                          ) : (
-                            <>
-                              <span
-                                className={`text-sm font-bold capitalize ${
-                                  leg.result === "won"
-                                    ? "text-emerald-600 dark:text-emerald-400"
-                                    : "text-red-600 dark:text-red-400"
-                                }`}
-                              >
-                                {leg.result}
-                              </span>
-                              <button
-                                type="button"
-                                disabled={busyLeg !== null}
-                                onClick={() => setResult(leg.id, "pending")}
-                                className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs text-neutral-500 dark:text-neutral-400 disabled:opacity-50 dark:border-white/15"
-                              >
-                                Undo
-                              </button>
-                            </>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-
-                {(bet.bet_buys?.length ?? 0) > 1 && (
-                  <div className="mt-3">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setExpandedBuys(
-                          expandedBuys === bet.id ? null : bet.id
-                        )
-                      }
-                      className="rounded-lg border border-neutral-300 px-3 py-1.5 text-xs text-neutral-500 dark:text-neutral-400 dark:border-white/15"
-                    >
-                      {expandedBuys === bet.id
-                        ? "Hide buys"
-                        : `${bet.bet_buys.length} buys`}
-                    </button>
-                    {expandedBuys === bet.id && (
-                      <div className="mt-2 space-y-1 rounded-xl bg-neutral-100 p-3 dark:bg-[#1D1530]">
-                        {[...bet.bet_buys]
-                          .sort(
-                            (a, b) =>
-                              new Date(a.created_at).getTime() -
-                              new Date(b.created_at).getTime()
-                          )
-                          .map((buy, i) => (
-                            <p key={buy.id} className="text-xs">
-                              Buy {i + 1}: {formatMoney(Number(buy.amount))}{" "}
-                              pays {formatMoney(Number(buy.payout))} (odds{" "}
-                              {formatOdds(
-                                Number(buy.payout) / Number(buy.amount)
-                              )}
-                              )
-                            </p>
-                          ))}
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                <div className="mt-3 flex items-baseline justify-between gap-3 border-t border-neutral-100 pt-3 dark:border-white/10">
-                  {bet.cashed_out ? (
-                    <>
-                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                        <span className="font-money tabular-nums">
-                          {formatMoney(stake)}
-                        </span>{" "}
-                        cashed out for{" "}
-                        <span className="font-money tabular-nums">
-                          {formatMoney(Number(bet.payout ?? 0))}
-                        </span>
-                      </p>
-                      <p
-                        className={`shrink-0 font-money text-sm font-bold tabular-nums ${
-                          Number(bet.payout ?? 0) - stake >= 0
-                            ? "text-emerald-600 dark:text-emerald-400"
-                            : "text-red-600 dark:text-red-400"
-                        }`}
-                      >
-                        {formatSignedMoney(
-                          round2(Number(bet.payout ?? 0) - stake)
-                        )}
-                      </p>
-                    </>
-                  ) : (
-                    <>
-                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                        {bet.legs.length}{" "}
-                        {bet.legs.length === 1 ? "pick" : "picks"} ·{" "}
-                        <span className="font-money tabular-nums">
-                          {formatMoney(stake)}
-                        </span>{" "}
-                        to win{" "}
-                        <span className="font-money tabular-nums">
-                          {formatMoney(round2(stake * (totalOdds - 1)))}
-                        </span>
-                      </p>
-                      <p className="shrink-0 text-xs text-neutral-500 dark:text-neutral-400">
-                        Collects{" "}
-                        <span className="font-money text-sm font-bold tabular-nums text-neutral-900 dark:text-white">
-                          {formatMoney(round2(stake * totalOdds))}
-                        </span>
-                      </p>
-                    </>
-                  )}
-                </div>
-
-                <div className="mt-3 flex gap-2">
-                    {bet.status === "pending" && !bet.cashed_out && (
-                      <>
-                        <button
-                          type="button"
-                          disabled={busyLeg !== null}
-                          onClick={() => {
-                            setCashingOut(null);
-                            setConfirmingDelete(null);
-                            setAddAmount("");
-                            setAddPayout("");
-                            setAddingMoney(
-                              addingMoney === bet.id ? null : bet.id
-                            );
-                          }}
-                          className="rounded-lg border border-[#7C3AED]/40 px-3 py-1.5 text-xs font-semibold text-[#7C3AED] disabled:opacity-50 dark:border-[#A78BFA]/40 dark:text-[#A78BFA]"
-                        >
-                          Add money
-                        </button>
-                        <button
-                          type="button"
-                          disabled={busyLeg !== null}
-                          onClick={() => {
-                            setAddingMoney(null);
-                            setConfirmingDelete(null);
-                            setCashOutAmount("");
-                            setCashingOut(
-                              cashingOut === bet.id ? null : bet.id
-                            );
-                          }}
-                          className="rounded-lg border border-[#7C3AED]/40 px-3 py-1.5 text-xs font-semibold text-[#7C3AED] disabled:opacity-50 dark:border-[#A78BFA]/40 dark:text-[#A78BFA]"
-                        >
-                          Cash out
-                        </button>
-                      </>
-                    )}
-                    <button
-                      type="button"
-                      disabled={busyLeg !== null}
-                      onClick={() => {
-                        setCashingOut(null);
-                        setAddingMoney(null);
-                        setConfirmingDelete(
-                          confirmingDelete === bet.id ? null : bet.id
-                        );
-                      }}
-                      className="ml-auto rounded-lg border border-neutral-300 px-3 py-1.5 text-xs text-neutral-500 dark:text-neutral-400 disabled:opacity-50 dark:border-white/15"
-                    >
-                      Delete
-                    </button>
-                </div>
               </div>
             );
           })}

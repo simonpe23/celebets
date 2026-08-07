@@ -62,8 +62,8 @@ export default function TabBar() {
   const pathname = usePathname() ?? "";
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-neutral-200/80 bg-white/95 backdrop-blur dark:border-white/10 dark:bg-[#100A1E]/95">
-      <div className="mx-auto flex w-full max-w-md items-stretch pb-[env(safe-area-inset-bottom)]">
+    <nav className="fixed inset-x-0 bottom-0 z-40 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
+      <div className="mx-auto flex w-full max-w-md items-stretch rounded-3xl bg-white/95 p-1.5 shadow-[0_12px_34px_-14px_rgba(46,16,80,0.5)] ring-1 ring-neutral-900/5 backdrop-blur dark:bg-[#171226]/95 dark:ring-white/10">
         {TABS.map((tab, i) => {
           const Icon = ICONS[i];
           const active = tab.match(pathname);
@@ -71,13 +71,19 @@ export default function TabBar() {
             <Link
               key={tab.href}
               href={tab.href}
-              className={`flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] font-bold ${
+              className={`flex flex-1 flex-col items-center gap-1 rounded-2xl py-2 text-[11px] font-bold ${
                 active
                   ? "text-[#7C3AED] dark:text-[#A78BFA]"
                   : "text-neutral-500 dark:text-neutral-400"
               }`}
             >
-              <Icon />
+              <span
+                className={`flex h-9 w-12 items-center justify-center rounded-xl ${
+                  active ? "bg-[#7C3AED]/12 dark:bg-[#A78BFA]/15" : ""
+                }`}
+              >
+                <Icon />
+              </span>
               {tab.label}
             </Link>
           );

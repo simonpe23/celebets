@@ -25,7 +25,7 @@ export default function Greeting({ name }: { name: string | null }) {
   }, []);
 
   return (
-    <h2 className="min-h-8 text-2xl font-bold">
+    <h2 className="min-h-9 text-[28px] font-bold leading-9">
       {daypart === null ? "" : (
         <>
           {daypart}

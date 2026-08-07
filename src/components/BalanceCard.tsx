@@ -108,7 +108,20 @@ export default function BalanceCard({
         <>
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
-              <MicroLabel>Tracking Balance</MicroLabel>
+              <span className="flex items-center gap-1.5">
+                <MicroLabel>Tracking Balance</MicroLabel>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  className="h-3.5 w-3.5 text-neutral-400"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M12 8h.01M12 11v5" strokeLinecap="round" />
+                </svg>
+              </span>
               <p
                 className={`mt-1 ${
                   balance < 0 ? "text-red-600 dark:text-red-400" : ""
@@ -117,43 +130,27 @@ export default function BalanceCard({
                 <HeroMoney
                   value={balance}
                   signed={false}
-                  className="text-[32px]"
+                  className="text-[34px]"
                 />
               </p>
-              <p className="mt-1 text-sm">
-                <span className="text-neutral-500 dark:text-neutral-400">
-                  Net profit{" "}
-                </span>
-                <span
-                  className={`font-money font-semibold tabular-nums ${profitColor}`}
-                >
+              <p className={`mt-1.5 text-sm font-bold ${profitColor}`}>
+                Net profit{" "}
+                <span className="font-money tabular-nums">
                   {formatSignedMoney(netProfit)}
                 </span>
               </p>
             </div>
             {series && series.length > 1 && (
-              <div className="w-36 shrink-0 self-center">
+              <div className="-mr-1 w-[44%] shrink-0 self-center">
                 <Sparkline
                   points={series}
                   tone="purple"
                   dots
-                  className="h-16"
+                  className="h-[104px]"
                 />
               </div>
             )}
           </div>
-          {/* The equation's other half, kept quiet: started with plus
-              net profit equals the number above. */}
-          <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
-            Started with{" "}
-            <span className="font-money tabular-nums">
-              {formatMoney(startedWith)}
-            </span>
-            {" · "}
-            <Link href="/transactions" className="underline underline-offset-2">
-              Balance history
-            </Link>
-          </p>
         </>
       ) : (
         /* Nobody has to set a balance. Until someone does, profit is the
@@ -181,16 +178,16 @@ export default function BalanceCard({
           setMode("set");
           setOpen(true);
         }}
-        className={`${BTN} mt-4 h-12 w-full text-sm`}
+        className={`${BTN} mt-4 h-[52px] w-full text-base`}
       >
-        Set Tracking Balance
+        Set tracking balance
       </button>
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center">
           <div className="w-full max-w-sm rounded-t-2xl bg-white p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:rounded-2xl sm:pb-6 dark:bg-[#1D1530]">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-bold">Set Tracking Balance</h3>
+              <h3 className="text-lg font-bold">Set tracking balance</h3>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
@@ -206,6 +203,19 @@ export default function BalanceCard({
                 <MicroLabel>Tracking Balance</MicroLabel>
                 <p className="mt-0.5 font-money text-lg font-bold tabular-nums">
                   {formatMoney(balance)}
+                </p>
+                <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+                  Started with{" "}
+                  <span className="font-money tabular-nums">
+                    {formatMoney(startedWith)}
+                  </span>
+                  {" · "}
+                  <Link
+                    href="/transactions"
+                    className="underline underline-offset-2"
+                  >
+                    Balance history
+                  </Link>
                 </p>
               </div>
             )}

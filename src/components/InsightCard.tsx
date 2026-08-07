@@ -37,9 +37,9 @@ export default function InsightCard({ bets }: { bets: BetWithLegs[] }) {
   if (!text) return null;
 
   return (
-    <Link href="/stats" className={`${CARD} flex items-center gap-4 p-5`}>
+    <Link href="/stats" className={`${CARD} flex items-center gap-3 p-4`}>
       <span className="min-w-0 grow">
-        <span className="flex items-center gap-2">
+        <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
           <svg
             viewBox="0 0 24 24"
             fill="currentColor"
@@ -48,16 +48,15 @@ export default function InsightCard({ bets }: { bets: BetWithLegs[] }) {
           >
             <path d="M12 2l2.2 5.8L20 10l-5.8 2.2L12 18l-2.2-5.8L4 10l5.8-2.2L12 2Z" />
           </svg>
-          <span className="text-sm font-bold">Insight of the day</span>
+          <span className="whitespace-nowrap text-sm font-bold">
+            Insight of the day
+          </span>
           <span className="rounded bg-[#7C3AED]/10 px-1.5 py-0.5 text-[10px] font-bold text-[#7C3AED] dark:bg-[#A78BFA]/15 dark:text-[#A78BFA]">
             AI
           </span>
         </span>
-        <span className="mt-2 block text-[17px] font-semibold leading-snug">
+        <span className="mt-2 line-clamp-3 text-[15px] font-semibold leading-snug">
           {text}
-        </span>
-        <span className="mt-2 block text-sm font-bold text-[#7C3AED] dark:text-[#A78BFA]">
-          View Performance →
         </span>
       </span>
 
@@ -65,7 +64,7 @@ export default function InsightCard({ bets }: { bets: BetWithLegs[] }) {
           page. Drawn in code so it is crisp in both themes. */}
       <span className="relative shrink-0" aria-hidden="true">
         <span className="absolute -inset-3 rounded-full bg-[#7C3AED]/35 blur-xl" />
-        <span className="relative flex h-16 w-16 items-center justify-center rounded-full bg-[linear-gradient(135deg,#A78BFA,#7C3AED)]">
+        <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-[linear-gradient(135deg,#A78BFA,#7C3AED)]">
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -73,12 +72,16 @@ export default function InsightCard({ bets }: { bets: BetWithLegs[] }) {
             strokeWidth={2}
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="h-7 w-7"
+            className="h-6 w-6"
           >
             <path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4Z" />
             <path d="M7 6H4a1 1 0 0 0-1 1c0 2 1.5 3.5 4 4M17 6h3a1 1 0 0 1 1 1c0 2-1.5 3.5-4 4" />
           </svg>
         </span>
+      </span>
+
+      <span className="w-[72px] shrink-0 text-xs font-bold leading-tight text-[#7C3AED] dark:text-[#A78BFA]">
+        View Performance →
       </span>
     </Link>
   );

@@ -116,6 +116,7 @@ export default function SnapshotCard({
               points={series(settled, "profit")}
               positive={profit >= 0}
               className="h-5"
+              fill="none"
             />
           </div>
         </div>
@@ -134,6 +135,7 @@ export default function SnapshotCard({
               points={series(settled, "roi")}
               positive={(t.roi ?? 0) >= 0}
               className="h-5"
+              fill="none"
             />
           </div>
         </div>
@@ -148,6 +150,7 @@ export default function SnapshotCard({
               points={series(settled, "hitRate")}
               tone="purple"
               className="h-5"
+              fill="none"
             />
           </div>
         </div>

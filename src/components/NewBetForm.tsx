@@ -363,7 +363,28 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
 
   return (
     <section className={`${CARD} p-5`}>
-      <h2 className="text-lg font-bold">Track a bet</h2>
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-lg font-bold">Track a bet</h2>
+        {compact && (
+          /* Inert until there is a walkthrough behind it. It is in the
+             owner's mockup, so it is drawn; it just does not pretend to
+             play anything yet. */
+          <span className="flex items-center gap-1.5 text-sm font-semibold text-[#7C3AED] dark:text-[#A78BFA]">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              className="h-4 w-4"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="9" />
+              <path d="M10 9l5 3-5 3V9Z" fill="currentColor" stroke="none" />
+            </svg>
+            How it works
+          </span>
+        )}
+      </div>
       {!compact && (
         <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
           Paste a screenshot of your bet slip and Celebet fills the rest in.
@@ -380,7 +401,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
             type="button"
             disabled={importing}
             onClick={pasteSlip}
-            className="flex flex-col items-center gap-2 rounded-xl border border-[#7C3AED] bg-[#7C3AED]/5 px-1 py-4 text-xs font-semibold active:bg-[#7C3AED]/15 disabled:opacity-50 dark:bg-[#7C3AED]/15"
+            className="flex flex-col items-center gap-2 rounded-xl border border-[#7C3AED] bg-[#7C3AED]/5 px-1 py-4 text-sm font-semibold active:bg-[#7C3AED]/15 disabled:opacity-50 dark:bg-[#7C3AED]/15"
           >
             <span className="text-[#7C3AED] dark:text-[#A78BFA]">
               <ClipboardIcon className="h-7 w-7" />
@@ -394,7 +415,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
             type="button"
             disabled={importing}
             onClick={() => fileInputRef.current?.click()}
-            className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 bg-white px-1 py-4 text-xs font-semibold active:bg-neutral-50 disabled:opacity-50 dark:border-white/10 dark:bg-transparent"
+            className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 bg-white px-1 py-4 text-sm font-semibold active:bg-neutral-50 disabled:opacity-50 dark:border-white/10 dark:bg-transparent"
           >
             <span className="text-[#3B82F6]">
               <CameraIcon className="h-7 w-7" />
@@ -404,14 +425,14 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
           <button
             type="button"
             onClick={() => setManualOpen(true)}
-            className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 bg-white px-1 py-4 text-xs font-semibold active:bg-neutral-50 dark:border-white/10 dark:bg-transparent"
+            className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 bg-white px-1 py-4 text-sm font-semibold active:bg-neutral-50 dark:border-white/10 dark:bg-transparent"
           >
             <span className="text-[#F97316]">
               <PencilIcon className="h-7 w-7" />
             </span>
             <span className="text-center leading-tight">Manual entry</span>
           </button>
-          <div className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 bg-white px-1 py-4 text-xs font-semibold text-neutral-400 dark:border-white/10 dark:bg-transparent dark:text-neutral-600">
+          <div className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 bg-white px-1 py-4 text-sm font-semibold text-neutral-400 dark:border-white/10 dark:bg-transparent dark:text-neutral-600">
             <span className="text-[#22C55E]">
               <LinkIcon className="h-7 w-7" />
             </span>

@@ -45,7 +45,7 @@ const ALLOWED_HEX = new Set([
   "#151022", // dark card
   "#1D1530", // dark popup
   "#0B0714", // dark page
-  "#100A1E", // dark tab bar
+  "#171226", // dark tab bar, floating
   "#17102A", // chart panel
   "#F6F5FA", // light page
   "#34D399", // chart green
@@ -84,13 +84,17 @@ for (const file of files) {
 
     // 2. Buttons and chips must not invent their own size.
     // A numeral is not a button, and it carries the numeral face, which
-    // no button in the app does.
+    // no button in the app does. Neither is a caption sized inline
+    // link, which is why leading-tight excuses a line here: it is set
+    // to wrap inside a card corner, not to be pressed like a button.
     const isNumeral = line.includes("font-money");
+    const isInlineLink = line.includes("leading-tight");
     if (
       line.includes("text-xs font-bold") &&
       !line.includes("uppercase") &&
       !isBadge &&
-      !isNumeral
+      !isNumeral &&
+      !isInlineLink
     ) {
       note(file, n, "text-xs font-bold: buttons are text-sm font-bold");
     }
