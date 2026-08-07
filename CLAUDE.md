@@ -160,6 +160,12 @@ page: that was invented, not copied).
   corner, link, button) and /preview/buttons compares them.
 - Buttons are squared, not pills. rounded-md is the primary, and the
   owner rejected rounded-xl and rounded-lg as too round.
+- THE TAB BAR. The active tab is a FILLED icon plus a label, both in
+  purple, on the bar's own white (or #14141E) background. There is
+  NO purple pill behind it: the owner sent a screenshot of the look
+  he wanted and the block was heavier than everything near it. Track
+  and Performance fill their shapes when active; the magnifier has no
+  solid form that still reads as a magnifier, so it thickens instead.
 - Green means money went up, red means money went down, and neither
   is ever an action color. emerald-600 light, emerald-400 dark.
   Red: red-600 light, red-400 dark.

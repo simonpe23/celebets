@@ -29,29 +29,87 @@ const TABS = [
   },
 ];
 
-function TrackIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-[22px] w-[22px]" aria-hidden="true">
-      <path d="M3 10.5 12 3l9 7.5" />
-      <path d="M5 9.5V21h14V9.5" />
-      <path d="M10 21v-6h4v6" />
+// The active tab is a FILLED icon in purple on the bar's own
+// background. Ruled by the owner from his own screenshot: no purple
+// block behind it. A solid shape reads as selected by itself, and the
+// pill was heavier than everything around it.
+const ICON = "h-[26px] w-[26px]";
+
+function TrackIcon({ active }: { active: boolean }) {
+  return active ? (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={ICON}
+      aria-hidden="true"
+    >
+      <path d="M11.47 3.4a.75.75 0 0 1 1.06 0l8.25 8.25a.75.75 0 0 1-1.06 1.06l-.47-.47v7.51A2.25 2.25 0 0 1 17 22h-2.25a.75.75 0 0 1-.75-.75V17a.75.75 0 0 0-.75-.75h-2.5a.75.75 0 0 0-.75.75v4.25a.75.75 0 0 1-.75.75H7a2.25 2.25 0 0 1-2.25-2.25v-7.51l-.47.47a.75.75 0 0 1-1.06-1.06l8.25-8.25Z" />
+    </svg>
+  ) : (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.9}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={ICON}
+      aria-hidden="true"
+    >
+      <path d="M3.5 11 12 3.5l8.5 7.5" />
+      <path d="M5.5 10v9.5h13V10" />
+      <path d="M10 20.5V15h4v5.5" />
     </svg>
   );
 }
 
-function PerformanceIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-[22px] w-[22px]" aria-hidden="true">
-      <path d="M5 20v-6M12 20V6M19 20v-10" />
+function PerformanceIcon({ active }: { active: boolean }) {
+  // Three bars, short then tall then middling, the shape a chart makes.
+  const bars = (
+    <>
+      <rect x="3.5" y="13.5" width="4" height="7" rx="1.3" />
+      <rect x="10" y="6.5" width="4" height="14" rx="1.3" />
+      <rect x="16.5" y="10" width="4" height="10.5" rx="1.3" />
+    </>
+  );
+  return active ? (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={ICON}
+      aria-hidden="true"
+    >
+      {bars}
+    </svg>
+  ) : (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.9}
+      className={ICON}
+      aria-hidden="true"
+    >
+      {bars}
     </svg>
   );
 }
 
-function ResearchIcon() {
+function ResearchIcon({ active }: { active: boolean }) {
+  // A magnifier has no solid form that still reads as a magnifier, so
+  // this one thickens instead of filling.
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-[22px] w-[22px]" aria-hidden="true">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={active ? 2.5 : 1.9}
+      strokeLinecap="round"
+      className={ICON}
+      aria-hidden="true"
+    >
       <circle cx="11" cy="11" r="7" />
-      <path d="M20 20l-3.5-3.5" />
+      <path d="M20 20l-3.8-3.8" />
     </svg>
   );
 }
@@ -65,7 +123,7 @@ export default function TabBar({ activeHref }: { activeHref?: string }) {
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
-      <div className="mx-auto flex w-full max-w-md items-stretch gap-1 rounded-[26px] bg-white/95 p-2 shadow-[0_10px_34px_-10px_rgba(16,16,26,0.45)] ring-1 ring-neutral-900/[0.07] backdrop-blur-xl dark:bg-[#14141E]/95 dark:ring-white/[0.09]">
+      <div className="mx-auto flex w-full max-w-md items-stretch rounded-[26px] bg-white p-2 shadow-[0_8px_28px_-12px_rgba(16,16,26,0.35)] ring-1 ring-neutral-900/[0.06] dark:bg-[#14141E] dark:ring-white/[0.07]">
         {TABS.map((tab, i) => {
           const Icon = ICONS[i];
           const active = tab.match(pathname);
@@ -73,13 +131,13 @@ export default function TabBar({ activeHref }: { activeHref?: string }) {
             <Link
               key={tab.href}
               href={tab.href}
-              className={`flex flex-1 flex-col items-center justify-center gap-1 rounded-[18px] py-2.5 text-[12px] font-bold transition-colors ${
+              className={`flex flex-1 flex-col items-center justify-center gap-1 py-1.5 text-[13px] font-semibold ${
                 active
-                  ? "bg-[#4C1D95] text-white"
+                  ? "text-[#7C3AED] dark:text-[#A78BFA]"
                   : "text-neutral-500 dark:text-neutral-400"
               }`}
             >
-              <Icon />
+              <Icon active={active} />
               {tab.label}
             </Link>
           );
