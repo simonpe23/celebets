@@ -172,23 +172,15 @@ export default function StatsView({
           <h1 className="text-[22px] font-bold tracking-tight">Performance</h1>
         </header>
 
-        {/* THE REVIEW. All time, unfiltered, and it opens the page,
-            because the owner ruled that Performance must not land on
-            graphs. What am I good at, what is costing me, where do I
-            stand. */}
-        <InsightCard bets={bets} linked={false} />
-        <KeyInsights bets={allSettled} />
-        <SnapshotCard bets={bets} netProfit={netProfit} linked={false} />
+        {/* THE DATA, and it opens the page. The owner moved it here
+            (August 2026) after seeing the built version, reversing his
+            own earlier note that Performance should not land on graphs.
+            His call, made in front of the real screen.
 
-        {/* THE DATA. Everything below answers to the period and sport
-            controls, which is why the boundary is named out loud. */}
-        <div className="pt-2">
-          <h2 className="text-[17px] font-bold">Charts and breakdowns</h2>
-          <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
-            Everything below follows the period and sport you pick.
-          </p>
-        </div>
-
+            It carries NO heading. I added one ("Charts and breakdowns")
+            to mark where the filtered half started, and the owner cut
+            it: he never asked for it, and the period label already sits
+            over the headline. Do not reintroduce it. */}
         <section>
           <HeadlineProfit
             label={`${periodLabel}${sport === null ? "" : ` / ${sport}`}`}
@@ -433,9 +425,24 @@ export default function StatsView({
               </section>
             )}
 
-            <BetHistory bets={historyBets} />
           </>
         )}
+
+        {/* THE REVIEW. All time and unfiltered, so it sits under a rule
+            and its own heading: without them it reads as a third set of
+            numbers disagreeing with the two above. */}
+        <div className="border-t border-neutral-200 pt-5 dark:border-white/10">
+          <h2 className="text-[17px] font-bold">Your review</h2>
+          <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
+            All time, and it ignores the filters above.
+          </p>
+        </div>
+
+        <InsightCard bets={bets} linked={false} />
+        <KeyInsights bets={allSettled} />
+        <SnapshotCard bets={bets} netProfit={netProfit} linked={false} />
+
+        {filtered.length > 0 && <BetHistory bets={historyBets} />}
       </div>
       <TabBar activeHref={activeHref} />
     </main>

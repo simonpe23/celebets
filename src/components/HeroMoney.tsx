@@ -2,12 +2,13 @@
 
 import { round2 } from "@/lib/format";
 
-// The one big money number, used on the analytics headline and on the
-// balance card. Set in Inter Tight at weight 600, matched to the
-// owner's mockups: one size, one weight, one color.
+// The one big money number, used on the Performance headline and on
+// the balance card. Inter Tight at weight 500, the owner's choice from
+// 5 August 2026: one size, one weight, one color.
 //
-// Inter Tight is a display cut. It belongs on numbers above 30 pixels
-// and nowhere else. Everything smaller stays in Geist.
+// The weight is 500, not 600. I raised it during the Track rebuild and
+// the owner asked for the original back. It also matches the number
+// ladder in CLAUDE.md, which said 500 the whole time.
 export default function HeroMoney({
   value,
   signed = true,
@@ -28,7 +29,7 @@ export default function HeroMoney({
   return (
     <span
       className={`font-money leading-none tabular-nums ${className}`}
-      style={{ fontWeight: 600, letterSpacing: "-0.02em" }}
+      style={{ fontWeight: 500, letterSpacing: "-0.02em" }}
     >
       {sign}${digits}
     </span>
