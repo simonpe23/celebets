@@ -97,7 +97,7 @@ export default function SnapshotCard({
         <h2 className="text-[17px] font-bold">Performance Snapshot</h2>
         <Link
           href="/stats"
-          className="shrink-0 text-sm font-semibold text-[#7C3AED] dark:text-[#A78BFA]"
+          className="shrink-0 text-sm font-semibold text-[#7C3AED] dark:text-[#9A57FC]"
         >
           View all →
         </Link>

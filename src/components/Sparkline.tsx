@@ -45,7 +45,7 @@ export default function Sparkline({
 
   // The same two colors the big chart uses, plus the wordmark purple.
   const stroke =
-    tone === "purple" ? "#A78BFA" : positive ? "#34D399" : "#FB7185";
+    tone === "purple" ? "#9A57FC" : positive ? "#34D399" : "#FB7185";
 
   // Stable enough: two sparklines only collide when they would define
   // the identical gradient anyway.

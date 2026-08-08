@@ -136,28 +136,39 @@ BUTTONS, THREE TIERS.
 - Tier three  text-xs font-semibold. Only inside a dense card row
               (Won, Lost, Cash out, Delete, Add money, Remove).
 
-COLOR (rewritten twice in August 2026. First the purple was too
-muted, then the surfaces carried a purple cast that made the app look
-like a filter had been laid over it. The mockup's dark is a COOL
-near-black, barely blue, never violet. There is no violet wash on the
-page: that was invented, not copied).
+COLOR (rewritten three times in August 2026, and only the third time
+from measurements).
+
+THE RULE THAT ENDED IT: SAMPLE THE MOCKUP, DO NOT EYEBALL IT. The
+owner re-uploaded mobile-dark-10.png and every value below was read
+out of it with Pillow. Two of my guesses had been wrong for weeks:
+- The dark page is NAVY (#04081B), not the neutral grey-black I built.
+  My own note said "a cool near-black, barely blue". The blue channel
+  actually runs about four times the red. That single error is why the
+  build looked flat beside the mockup while each piece looked right.
+- The purple was DARKER than the mockup, not brighter. The owner had
+  said "your purple is bright and childish" so many times that I
+  over-corrected past his mockup and landed on #4C1D95.
+Keep the mockup files. If they are lost, ask for them again rather
+than matching by eye. Sampling took ten minutes and settled six
+rounds of argument.
+
 - Ink is the default. Muted is neutral 500 light, neutral 400 dark,
   everywhere, with no exceptions.
-- Two purples with two jobs, ruled by the owner (August 2026):
-  #4C1D95 is a surface you press (the primary button, the active tab,
-  the avatar), pressed #3B1578. #7C3AED is purple as TEXT, an icon or
-  a tint. On dark surfaces purple text is #A78BFA. The owner called
-  the pressable purple bright and childish four separate times, each
-  time after it had only been nudged. It is now violet-900, much
-  darker than instinct suggests.
+- Purple has three jobs, all sampled (August 2026):
+  a surface you press is the mockup's vertical gradient, #5525C6 at
+  the top down to #4915AD, pressed #3D0F94. That is the primary
+  button, the avatar and the active chip. Purple as TEXT, an icon or
+  a tint is #7C3AED on light and #9A57FC on dark.
+  The owner chose this over the flat #4C1D95 in a labelled A/B.
 - THE FILL SWEEP (August 2026). Seventeen filled buttons across the
-  app were still #7C3AED with a #6D28D9 press. That is why the purple
-  kept reading bright after each fix: the rule above was written but
-  only the newest buttons obeyed it. Every solid purple button is now
-  #4C1D95 / #3B1578, and #6D28D9 is gone from the palette.
-  design-check rule 4c fails on either of the old values.
+  app were still on the old text purple with a #6D28D9 press. That is
+  why the purple kept reading wrong after each fix: the rule was
+  written but only the newest buttons obeyed it. design-check rule 4c
+  now fails on every retired value (#6D28D9, #4C1D95, #3B1578) and on
+  any filled #7C3AED button.
 - THE SET BALANCE BUTTON, settled after six rounds. 32px tall, auto
-  width, 13px semibold, a 6px radius, #4C1D95, sitting under Net
+  width, 13px semibold, a 6px radius, the BTN gradient, sitting under Net
   profit. It went 52px, then 44px, and the owner still called it too
   big every time because only the size moved. The real answer was
   that setting a tracking balance happens ONCE, so it never deserved
@@ -167,15 +178,16 @@ page: that was invented, not copied).
 - Buttons are squared, not pills. rounded-md is the primary, and the
   owner rejected rounded-xl and rounded-lg as too round.
 - THE TAB BAR. The active tab is a FILLED icon plus a label, both in
-  purple, on the bar's own white (or #14141E) background. There is
+  purple, on the bar's own white (or #0C1125) background. There is
   NO purple pill behind it: the owner sent a screenshot of the look
   he wanted and the block was heavier than everything near it. Track
   and Performance fill their shapes when active; the magnifier has no
   solid form that still reads as a magnifier, so it thickens instead.
-  The active purple is #4C1D95, the Set balance button's purple, ruled
+  The active purple is #5525C6, the Set balance button's purple, ruled
   by the owner: one purple per screen, not two shades of it. Dark uses
-  #7C3AED instead, because #4C1D95 on the #14141E bar is a contrast
-  ratio of about 1.6 and the selected tab reads as switched off.
+  #9A57FC, because #5525C6 on the #0C1125 bar is a contrast ratio of
+  about 2.3 and the selected tab reads as switched off. #9A57FC is
+  the mockup's own active tab color, so dark is not a compromise.
 - Green means money went up, red means money went down, and neither
   is ever an action color. emerald-600 light, emerald-400 dark.
   Red: red-600 light, red-400 dark.
@@ -189,8 +201,12 @@ page: that was invented, not copied).
   camera #3B82F6, pencil #F97316, connect #22C55E. Icons only,
   never buttons.
 - Light surfaces: page #F7F7FB, white cards with a hairline ring.
-- Dark surfaces: page #0A0A12, cards #13131C, popups #1A1A24,
-  tab bar #14141E, chart panel #12121C, hairlines white/[0.07].
+- Dark surfaces, all sampled: page #04081B, cards #0E1228, popups
+  #161D38, tab bar and other raised surfaces #0C1125, chart panel
+  #080D20, hairlines white/[0.07]. It is a navy near-black. The page
+  is much darker than everything sitting on it, and the raised
+  surfaces are nearly all the same value: what separates a card from
+  a row inside it is the hairline, not the fill.
 - Cards are defined by their EDGE, not by a shadow. The heavy
   violet-cast shadow was another invention.
 - src/lib/ui.ts owns CARD, INNER (the row inside a card), BTN, and

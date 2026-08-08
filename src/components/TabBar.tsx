@@ -36,12 +36,13 @@ const TABS = [
 const ICON = "h-[26px] w-[26px]";
 
 // The active purple is the Set balance button's purple, ruled by the
-// owner: one purple, not two shades of it on the same screen.
+// owner: one purple, not two shades of it on the same screen. On light
+// that is the button's own #5525C6.
 //
-// Dark cannot use it. #4C1D95 on the #0C1125 bar is a contrast ratio of
-// about 1.6, so the selected tab reads as switched off. Dark takes the
-// next step up in the same hue instead.
-const ACTIVE = "text-[#4C1D95] dark:text-[#7C3AED]";
+// Dark cannot use it. #5525C6 on the #0C1125 bar is a contrast ratio of
+// about 2.3, so the selected tab reads as switched off. Dark takes the
+// mockup's own answer, #9A57FC, which is what it sets its active tab in.
+const ACTIVE = "text-[#5525C6] dark:text-[#9A57FC]";
 
 function TrackIcon({ active }: { active: boolean }) {
   return active ? (

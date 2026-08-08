@@ -19,7 +19,7 @@ export default function MicroLabel({
 }) {
   const color =
     tone === "purple"
-      ? "text-[#7C3AED] dark:text-[#A78BFA]"
+      ? "text-[#7C3AED] dark:text-[#9A57FC]"
       : onDark
         ? "text-white/40"
         : "text-neutral-400";

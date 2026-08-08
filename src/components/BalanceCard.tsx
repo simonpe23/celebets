@@ -225,7 +225,7 @@ export default function BalanceCard({
         <button
           type="button"
           onClick={openSheet}
-          className="mt-3 text-[13px] font-semibold text-[#7C3AED] dark:text-[#A78BFA]"
+          className="mt-3 text-[13px] font-semibold text-[#7C3AED] dark:text-[#9A57FC]"
         >
           Set tracking balance
         </button>

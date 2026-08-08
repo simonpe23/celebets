@@ -113,7 +113,7 @@ export default function LandingPage() {
                 <GoogleButton large />
                 <Link
                   href="/signup"
-                  className="flex h-14 w-full items-center justify-center rounded-xl bg-[#4C1D95] text-base font-semibold text-white shadow-lg shadow-[#4C1D95]/30 active:bg-[#3B1578]"
+                  className="flex h-14 w-full items-center justify-center rounded-xl bg-[#5525C6] text-base font-semibold text-white shadow-lg shadow-[#5525C6]/30 active:bg-[#4915AD]"
                 >
                   Create free account
                 </Link>

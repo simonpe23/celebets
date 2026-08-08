@@ -34,10 +34,11 @@ const COMPACT_OK = [
 const ALLOWED_HEX = new Set([
   "#7C3AED", // action purple, from the owner's mockups
   "#EF4444", // outcome pill, Lost
-  "#A78BFA", // purple on dark surfaces, and the wordmark gradient
+  "#9A57FC", // purple on dark surfaces, and the wordmark gradient
   "#5B21B6", // primary button, and the wordmark gradient deep end
-  "#4C1D95", // primary button
-  "#3B1578", // primary button, pressed
+  "#5525C6", // primary button, gradient top
+  "#4915AD", // primary button, gradient foot
+  "#3D0F94", // primary button, pressed
   "#16A34A", // the Won settle button only, see rule 4b
   "#15803D", // Won settle button, pressed
   "#3B82F6", // capture tile icon, camera
@@ -130,15 +131,16 @@ for (const file of files) {
       note(file, n, "green #16A34A outside the Won button, actions are purple");
     }
 
-    // 4c. Two purples, two jobs. #4C1D95 is a surface you press,
-    // #7C3AED is purple as text, a border or a tint. Seventeen filled
-    // buttons had drifted onto the bright one, which is why the owner
-    // kept calling the purple bright and childish after each fix.
+    // 4c. Two purples, two jobs. #5525C6 is a surface you press,
+    // #7C3AED is purple as text, a border or a tint on a LIGHT surface,
+    // #9A57FC the same on a dark one. All three sampled from the
+    // owner's mockup. The retired values are caught below because
+    // seventeen filled buttons once drifted onto the wrong one.
     if (/bg-\[#7C3AED\](?![/[])/.test(line)) {
-      note(file, n, "filled purple button: pressable purple is #4C1D95");
+      note(file, n, "filled purple button: pressable purple is #5525C6");
     }
-    if (/active:bg-\[#6D28D9\]/.test(line)) {
-      note(file, n, "pressed purple is #3B1578, not #6D28D9");
+    if (/#6D28D9|#4C1D95|#3B1578/.test(line)) {
+      note(file, n, "retired purple, the mockup's is #5525C6 / #4915AD");
     }
 
     // 5. The card surface comes from CARD in src/lib/ui.ts. Thirteen

@@ -43,7 +43,7 @@ export default function InsightCard({ bets }: { bets: BetWithLegs[] }) {
           <svg
             viewBox="0 0 24 24"
             fill="currentColor"
-            className="h-4 w-4 shrink-0 text-[#7C3AED] dark:text-[#A78BFA]"
+            className="h-4 w-4 shrink-0 text-[#7C3AED] dark:text-[#9A57FC]"
             aria-hidden="true"
           >
             <path d="M12 2l2.2 5.8L20 10l-5.8 2.2L12 18l-2.2-5.8L4 10l5.8-2.2L12 2Z" />
@@ -51,7 +51,7 @@ export default function InsightCard({ bets }: { bets: BetWithLegs[] }) {
           <span className="whitespace-nowrap text-sm font-bold">
             Insight of the day
           </span>
-          <span className="rounded bg-[#7C3AED]/10 px-1.5 py-0.5 text-[10px] font-bold text-[#7C3AED] dark:bg-[#A78BFA]/15 dark:text-[#A78BFA]">
+          <span className="rounded bg-[#7C3AED]/10 px-1.5 py-0.5 text-[10px] font-bold text-[#7C3AED] dark:bg-[#9A57FC]/15 dark:text-[#9A57FC]">
             AI
           </span>
         </span>
@@ -66,8 +66,8 @@ export default function InsightCard({ bets }: { bets: BetWithLegs[] }) {
           itself. */}
       <span className="relative shrink-0" aria-hidden="true">
         <span className="absolute -inset-5 rounded-full bg-[#7C3AED]/25 blur-2xl" />
-        <span className="absolute -inset-2 rounded-full bg-[#A78BFA]/30 blur-lg" />
-        <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-[radial-gradient(circle_at_30%_25%,#A78BFA,#7C3AED_55%,#5B21B6)] shadow-[0_0_28px_-4px_rgba(124,58,237,0.85),inset_0_1px_1px_rgba(255,255,255,0.45)]">
+        <span className="absolute -inset-2 rounded-full bg-[#9A57FC]/30 blur-lg" />
+        <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-[radial-gradient(circle_at_30%_25%,#9A57FC,#7C3AED_55%,#5B21B6)] shadow-[0_0_28px_-4px_rgba(124,58,237,0.85),inset_0_1px_1px_rgba(255,255,255,0.45)]">
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -83,7 +83,7 @@ export default function InsightCard({ bets }: { bets: BetWithLegs[] }) {
         </span>
       </span>
 
-      <span className="w-[72px] shrink-0 text-xs font-bold leading-tight text-[#7C3AED] dark:text-[#A78BFA]">
+      <span className="w-[72px] shrink-0 text-xs font-bold leading-tight text-[#7C3AED] dark:text-[#9A57FC]">
         View Performance →
       </span>
     </Link>

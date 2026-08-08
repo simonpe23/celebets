@@ -11,16 +11,15 @@ export const CARD =
 export const INNER =
   "rounded-xl bg-neutral-50 ring-1 ring-neutral-900/[0.05] dark:bg-white/[0.03] dark:ring-white/[0.06]";
 
-// The primary action. Deep violet, nearly square corners, no glow.
-// The owner called the purple bright and childish three separate
-// times and the shape too much of a pill twice, so this is darker and
-// squarer than instinct suggests: #4C1D95 at a 6px radius.
+// The primary action. Nearly square corners, and the mockup's own
+// vertical gradient: #5525C6 at the top down to #4915AD at the foot,
+// both sampled from mobile-dark-10.png. The owner chose this over the
+// flatter, darker #4C1D95 he had been shown before.
 //
-// The mockup's own button is a vertical gradient, #5525C6 down to
-// #4915AD, which is brighter and bluer than this. The owner is
-// choosing between the two, so this stays on his last ruling.
+// The shape is still squarer than instinct suggests. He rejected
+// rounded-xl and rounded-lg as too much of a pill.
 export const BTN =
-  "rounded-md bg-[#4C1D95] text-[13px] font-semibold text-white active:bg-[#3B1578] disabled:opacity-60";
+  "rounded-md bg-gradient-to-b from-[#5525C6] to-[#4915AD] text-[13px] font-semibold text-white active:from-[#4915AD] active:to-[#3D0F94] disabled:opacity-60";
 
 // An outcome control on a pending pick: a quiet tinted pill that names
 // what happened. Never a filled bar, which shouted louder than the bet.
