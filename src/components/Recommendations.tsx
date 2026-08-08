@@ -18,7 +18,7 @@ export default function Recommendations({ bets }: { bets: BetWithLegs[] }) {
       <button
         type="button"
         onClick={roll}
-        className="rounded-xl bg-[#7C3AED] px-3 py-2.5 text-center text-sm font-bold text-white active:bg-[#6D28D9]"
+        className="rounded-xl bg-[#4C1D95] px-3 py-2.5 text-center text-sm font-bold text-white active:bg-[#3B1578]"
       >
         Your insights
       </button>
@@ -31,7 +31,7 @@ export default function Recommendations({ bets }: { bets: BetWithLegs[] }) {
               <button
                 type="button"
                 onClick={() => setRecs(null)}
-                className="rounded-lg bg-[#7C3AED] px-4 py-2 text-sm font-semibold text-white active:bg-[#6D28D9]"
+                className="rounded-lg bg-[#4C1D95] px-4 py-2 text-sm font-semibold text-white active:bg-[#3B1578]"
               >
                 Hide
               </button>

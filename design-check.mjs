@@ -34,7 +34,6 @@ const COMPACT_OK = [
 const ALLOWED_HEX = new Set([
   "#7C3AED", // action purple, from the owner's mockups
   "#EF4444", // outcome pill, Lost
-  "#6D28D9", // action purple, pressed
   "#A78BFA", // purple on dark surfaces, and the wordmark gradient
   "#5B21B6", // primary button, and the wordmark gradient deep end
   "#4C1D95", // primary button
@@ -127,6 +126,17 @@ for (const file of files) {
     // Won on a pending pick, which is an outcome, not an action.
     if (/#16A34A|#15803D/.test(line) && short !== "LiveBets.tsx") {
       note(file, n, "green #16A34A outside the Won button, actions are purple");
+    }
+
+    // 4c. Two purples, two jobs. #4C1D95 is a surface you press,
+    // #7C3AED is purple as text, a border or a tint. Seventeen filled
+    // buttons had drifted onto the bright one, which is why the owner
+    // kept calling the purple bright and childish after each fix.
+    if (/bg-\[#7C3AED\](?![/[])/.test(line)) {
+      note(file, n, "filled purple button: pressable purple is #4C1D95");
+    }
+    if (/active:bg-\[#6D28D9\]/.test(line)) {
+      note(file, n, "pressed purple is #3B1578, not #6D28D9");
     }
 
     // 5. The card surface comes from CARD in src/lib/ui.ts. Thirteen

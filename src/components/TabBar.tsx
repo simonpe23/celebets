@@ -35,6 +35,14 @@ const TABS = [
 // pill was heavier than everything around it.
 const ICON = "h-[26px] w-[26px]";
 
+// The active purple is the Set balance button's purple, ruled by the
+// owner: one purple, not two shades of it on the same screen.
+//
+// Dark cannot use it. #4C1D95 on the #14141E bar is a contrast ratio of
+// about 1.6, so the selected tab reads as switched off. Dark takes the
+// next step up in the same hue instead.
+const ACTIVE = "text-[#4C1D95] dark:text-[#7C3AED]";
+
 function TrackIcon({ active }: { active: boolean }) {
   return active ? (
     <svg
@@ -132,9 +140,7 @@ export default function TabBar({ activeHref }: { activeHref?: string }) {
               key={tab.href}
               href={tab.href}
               className={`flex flex-1 flex-col items-center justify-center gap-1 py-1.5 text-[13px] font-semibold ${
-                active
-                  ? "text-[#7C3AED] dark:text-[#A78BFA]"
-                  : "text-neutral-500 dark:text-neutral-400"
+                active ? ACTIVE : "text-neutral-500 dark:text-neutral-400"
               }`}
             >
               <Icon active={active} />

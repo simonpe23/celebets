@@ -431,7 +431,7 @@ export default function LiveBets({ bets }: Props) {
                               parseMoney(addPayout) === null
                             }
                             onClick={() => addMoney(bet.id, stake, totalOdds)}
-                            className="rounded-lg bg-[#7C3AED] px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
+                            className="rounded-lg bg-[#4C1D95] px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
                           >
                             Confirm add
                           </button>
@@ -499,7 +499,7 @@ export default function LiveBets({ bets }: Props) {
                               parseMoney(cashOutAmount) === null
                             }
                             onClick={() => cashOut(bet.id)}
-                            className="rounded-lg bg-[#7C3AED] px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
+                            className="rounded-lg bg-[#4C1D95] px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
                           >
                             Confirm cash out
                           </button>

@@ -150,6 +150,12 @@ page: that was invented, not copied).
   the pressable purple bright and childish four separate times, each
   time after it had only been nudged. It is now violet-900, much
   darker than instinct suggests.
+- THE FILL SWEEP (August 2026). Seventeen filled buttons across the
+  app were still #7C3AED with a #6D28D9 press. That is why the purple
+  kept reading bright after each fix: the rule above was written but
+  only the newest buttons obeyed it. Every solid purple button is now
+  #4C1D95 / #3B1578, and #6D28D9 is gone from the palette.
+  design-check rule 4c fails on either of the old values.
 - THE SET BALANCE BUTTON, settled after six rounds. 32px tall, auto
   width, 13px semibold, a 6px radius, #4C1D95, sitting under Net
   profit. It went 52px, then 44px, and the owner still called it too
@@ -166,6 +172,10 @@ page: that was invented, not copied).
   he wanted and the block was heavier than everything near it. Track
   and Performance fill their shapes when active; the magnifier has no
   solid form that still reads as a magnifier, so it thickens instead.
+  The active purple is #4C1D95, the Set balance button's purple, ruled
+  by the owner: one purple per screen, not two shades of it. Dark uses
+  #7C3AED instead, because #4C1D95 on the #14141E bar is a contrast
+  ratio of about 1.6 and the selected tab reads as switched off.
 - Green means money went up, red means money went down, and neither
   is ever an action color. emerald-600 light, emerald-400 dark.
   Red: red-600 light, red-400 dark.
