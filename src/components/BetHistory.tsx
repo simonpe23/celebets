@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { formatOdds, formatMoney, formatSignedMoney } from "@/lib/format";
@@ -39,12 +40,18 @@ function BuysList({ bet }: { bet: BetWithLegs }) {
   );
 }
 import { SPORT_EMOJI, type BetWithLegs } from "@/lib/types";
-import { CARD } from "@/lib/ui";
+import { CARD, CARD_LINK } from "@/lib/ui";
 
 interface Props {
   bets: BetWithLegs[];
-  // The home page shows only the newest few. Performance passes
-  // nothing and shows them all.
+  // Track shows only the newest few. Performance passes nothing and
+  // shows them all.
+  //
+  // ONE component for both, not two. The owner asked for the same
+  // controls in both places, and a second copy of a row that can edit
+  // and delete is a copy that drifts. Both pages read from Supabase on
+  // the server and every action calls router.refresh(), so settling a
+  // bet on either page updates the other.
   limit?: number;
 }
 
@@ -121,7 +128,14 @@ export default function BetHistory({ bets, limit }: Props) {
 
   return (
     <section>
-      <h2 className="text-lg font-bold">Betting history</h2>
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-lg font-bold">Betting history</h2>
+        {limit !== undefined && bets.length > limit && (
+          <Link href="/stats" className={CARD_LINK}>
+            View all ›
+          </Link>
+        )}
+      </div>
 
       {error && (
         <p className="mt-3 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
