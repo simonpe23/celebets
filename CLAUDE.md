@@ -401,6 +401,22 @@ THE ONE LINE SUMMARY:
 - Performance means understand yourself.
 - Research means understand the game before your next bet.
 
+BUILT, August 2026. Research is a shell: a search field and six doors
+(Who is playing, Team and player trends, Compare odds, Weather, What
+the community thinks, Ask CeleBOT). Every one needs data Celebet does
+not have, so none of them work and the section says "Coming to
+Research" rather than wearing six identical Soon badges. The icons are
+ink: a color would say the door works. They earn one when they ship.
+
+The full insight list used to BE the Research tab, which contradicted
+the split above. It moved to /insights, reached from "Show all" in the
+insights sheet, and it lights the Performance tab because that is the
+area it belongs to.
+
+The Research address stays /recommendations, the same reasoning as
+Performance living at /stats: old links and the tab bar's match both
+keep working, and a redirect is one more thing to get wrong.
+
 ## The Track page (August 2026, built to the owner's mockups, on the
 ## wip branch, not deployed)
 
