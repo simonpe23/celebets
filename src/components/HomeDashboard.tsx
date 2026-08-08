@@ -2,8 +2,8 @@ import BalanceCard from "@/components/BalanceCard";
 import Greeting from "@/components/Greeting";
 import InsightCard from "@/components/InsightCard";
 import LiveBets from "@/components/LiveBets";
+import BetHistory from "@/components/BetHistory";
 import NewBetForm from "@/components/NewBetForm";
-import RecentBets from "@/components/RecentBets";
 import SnapshotCard from "@/components/SnapshotCard";
 import { round2 } from "@/lib/format";
 import { betProfit, sinceLine } from "@/lib/stats";
@@ -54,7 +54,11 @@ export default function HomeDashboard({
         new Date(b.settled_at ?? 0).getTime()
     );
 
-  // The purple line in the balance card: the balance after each settled
+  // Newest first for the history card. `settled` above is oldest
+  // first, because the balance line is drawn in the order it happened.
+  const settledNewestFirst = [...settled].reverse();
+
+  // The line in the balance card: the balance after each settled
   // bet, starting from what the user put in.
   let running = startedWith;
   const series = [startedWith, ...settled.map((b) => (running = round2(running + betProfit(b))))];
@@ -83,9 +87,11 @@ export default function HomeDashboard({
       <LiveBets bets={liveBets} />
 
       {/* What just finished, under what is still riding, so the page
-          reads forward in time. Counts from the fresh start line like
-          everything else here. */}
-      <RecentBets bets={counted} />
+          reads forward in time. The SAME component Performance uses,
+          capped at ten: the owner wants settling, date edits and
+          deletes to work in both places, and both pages re-read from
+          the server after any of them. */}
+      <BetHistory bets={settledNewestFirst} limit={10} />
     </div>
   );
 }
