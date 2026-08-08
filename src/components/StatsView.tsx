@@ -18,6 +18,7 @@ import {
   typeRows,
 } from "@/lib/stats";
 import { SPORTS, SPORT_EMOJI, type BetWithLegs, type Sport } from "@/lib/types";
+import { CARD } from "@/lib/ui";
 
 const PERIOD_LABELS: { key: Period; label: string }[] = [
   { key: "all", label: "All time" },
@@ -131,15 +132,15 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
   const pillClass = (active: boolean) =>
     `shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
       active
-        ? "border-[#4F7A57] bg-[#4F7A57] text-white"
-        : "border-neutral-300 bg-white text-neutral-600 dark:border-white/15 dark:bg-[#1A2032] dark:text-neutral-300"
+        ? "border-[#7C3AED] bg-[#5525C6] text-white"
+        : "border-neutral-300 bg-white text-neutral-600 dark:border-white/15 dark:bg-[#161D38] dark:text-neutral-300"
     }`;
 
   return (
     <main className="min-h-dvh px-4 py-6 sm:px-6">
       <div className="mx-auto w-full max-w-md space-y-5">
         <header className="flex items-center justify-between gap-2">
-          <h1 className="text-2xl font-bold tracking-tight">Analytics</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Performance</h1>
           <div className="flex shrink-0 items-center gap-2">
             <Recommendations bets={allSettled} />
             <Link
@@ -243,7 +244,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
               />
             </section>
 
-            <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] p-4 dark:border-white/10 dark:bg-[#151A28]">
+            <section className={`${CARD} p-4`}>
               <h2 className="text-lg font-bold">Sports breakdown</h2>
               <div className="mt-3 divide-y divide-neutral-300/60 dark:divide-neutral-800">
                 {breakdown.map((row) => (
@@ -275,7 +276,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
               </p>
             </section>
 
-            <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-4 dark:border-white/10">
+            <section className={`${CARD} p-4`}>
               <h2 className="text-lg font-bold">Singles vs parlays</h2>
               {bySportType !== null && (
                 <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
@@ -340,7 +341,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
               </div>
             </section>
 
-            <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-4 dark:border-white/10">
+            <section className={`${CARD} p-4`}>
               <h2 className="text-lg font-bold">Odds groups</h2>
               <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
                 Your settled picks grouped by how risky they were. Picks
@@ -364,7 +365,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
             </section>
 
             {sport !== null && byCategory.length > 0 && (
-              <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-4 dark:border-white/10">
+              <section className={`${CARD} p-4`}>
                 <h2 className="text-lg font-bold">Per category</h2>
                 <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
                   Your {sport} picks grouped by what you bet on. Same money

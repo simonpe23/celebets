@@ -11,6 +11,7 @@ import {
   round4,
 } from "@/lib/format";
 import { SPORTS, SPORT_EMOJI, SUBCATEGORIES, type Sport } from "@/lib/types";
+import { CARD } from "@/lib/ui";
 
 interface LegDraft {
   sport: Sport | null;
@@ -53,13 +54,16 @@ function parsePercent(input: string): number | null {
 interface Props {
   // The most recent stake, offered as a quick chip only.
   lastStake: string;
+  // The home screen shows this card among several others, so it drops
+  // the heading and the explaining line and leads with the buttons.
+  compact?: boolean;
 }
 
 const QUICK_STAKES = ["20", "50", "100"];
 
-// Small line icons for the two slip import buttons. They take their
-// color from the button's own text color.
-function ClipboardIcon() {
+// Small line icons for the capture tiles. They take their color from
+// the tile's own text color.
+function PencilIcon({ className = "h-3.5 w-3.5 shrink-0" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -68,7 +72,42 @@ function ClipboardIcon() {
       strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-3.5 w-3.5 shrink-0"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3Z" />
+    </svg>
+  );
+}
+
+function LinkIcon({ className = "h-3.5 w-3.5 shrink-0" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7" />
+      <path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7" />
+    </svg>
+  );
+}
+
+function ClipboardIcon({ className = "h-3.5 w-3.5 shrink-0" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
       aria-hidden="true"
     >
       <rect x="8" y="2" width="8" height="4" rx="1" />
@@ -77,7 +116,7 @@ function ClipboardIcon() {
   );
 }
 
-function CameraIcon() {
+function CameraIcon({ className = "h-3.5 w-3.5 shrink-0" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -86,7 +125,7 @@ function CameraIcon() {
       strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-3.5 w-3.5 shrink-0"
+      className={className}
       aria-hidden="true"
     >
       <path d="M14.5 4h-5L8 6H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-4l-1.5-2Z" />
@@ -95,7 +134,7 @@ function CameraIcon() {
   );
 }
 
-export default function NewBetForm({ lastStake }: Props) {
+export default function NewBetForm({ lastStake, compact = false }: Props) {
   const router = useRouter();
   const [stake, setStake] = useState("");
   const [legs, setLegs] = useState<LegDraft[]>([emptyLeg()]);
@@ -104,6 +143,8 @@ export default function NewBetForm({ lastStake }: Props) {
   const [placed, setPlaced] = useState(false);
   const [saving, setSaving] = useState(false);
   const [importing, setImporting] = useState(false);
+  // The manual form is long, so it stays folded until asked for.
+  const [manualOpen, setManualOpen] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -278,6 +319,7 @@ export default function NewBetForm({ lastStake }: Props) {
     }
 
     applyParsedSlip(data);
+    setManualOpen(true);
   }
 
   async function pasteSlip() {
@@ -317,32 +359,121 @@ export default function NewBetForm({ lastStake }: Props) {
   }
 
   const inputClass =
-    "mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#4F7A57] focus:ring-2 focus:ring-[#4F7A57]/30 dark:border-white/15 dark:bg-[#151A28] dark:text-neutral-100";
+    "mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#7C3AED] focus:ring-2 focus:ring-[#7C3AED]/30 dark:border-white/15 dark:bg-[#0E1228] dark:text-neutral-100";
 
   return (
-    <section className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-5 dark:border-white/10">
-      <h2 className="text-lg font-bold">New Bet</h2>
-
-      <div className="mt-3 grid grid-cols-2 gap-2">
-        <button
-          type="button"
-          disabled={importing}
-          onClick={pasteSlip}
-          className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-emerald-600/60 bg-white text-sm font-bold text-emerald-600 active:bg-emerald-600/10 disabled:opacity-50 dark:border-emerald-500/50 dark:bg-transparent dark:text-emerald-400"
-        >
-          <ClipboardIcon />
-          Paste bet slip
-        </button>
-        <button
-          type="button"
-          disabled={importing}
-          onClick={() => fileInputRef.current?.click()}
-          className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-neutral-300 bg-white text-sm font-bold text-neutral-600 active:bg-neutral-100 disabled:opacity-50 dark:border-white/15 dark:bg-transparent dark:text-neutral-400"
-        >
-          <CameraIcon />
-          Upload image
-        </button>
+    <section className={`${CARD} p-4`}>
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-[17px] font-bold">Track a bet</h2>
+        {compact && (
+          /* Inert until there is a walkthrough behind it. It is in the
+             owner's mockup, so it is drawn; it just does not pretend to
+             play anything yet. */
+          <span className="flex items-center gap-1.5 text-sm font-semibold text-[#7C3AED] dark:text-[#9A57FC]">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              className="h-4 w-4"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="9" />
+              <path d="M10 9l5 3-5 3V9Z" fill="currentColor" stroke="none" />
+            </svg>
+            How it works
+          </span>
+        )}
       </div>
+      {!compact && (
+        <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+          Paste a screenshot of your bet slip and Celebet fills the rest in.
+        </p>
+      )}
+
+      {compact ? (
+        /* The four ways in, side by side, from the owner's mockup.
+           Paste leads because it is the fastest, Connect accounts is a
+           promise (idea 13), so it wears a Soon badge instead of dying
+           silently when tapped. */
+        <>
+          {/* Two big tiles for the ways people actually capture a bet,
+              and two small ones underneath for the rest. Ruled by the
+              owner: manual entry and connect accounts are barely
+              tapped, so four equal tiles spent the card's best space on
+              its least used doors. */}
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              disabled={importing}
+              onClick={pasteSlip}
+              className="relative flex flex-col items-center gap-2 rounded-xl border border-[#7C3AED] bg-[#7C3AED]/[0.07] px-2 py-5 text-[15px] font-semibold active:bg-[#7C3AED]/15 disabled:opacity-50"
+            >
+              <span className="text-[#7C3AED] dark:text-[#9A57FC]">
+                <ClipboardIcon className="h-7 w-7" />
+              </span>
+              Paste bet slip
+              <span className="rounded-full bg-[#7C3AED]/12 px-2 py-0.5 text-[10px] font-bold text-[#7C3AED] dark:bg-[#9A57FC]/15 dark:text-[#9A57FC]">
+                Recommended
+              </span>
+            </button>
+            <button
+              type="button"
+              disabled={importing}
+              onClick={() => fileInputRef.current?.click()}
+              className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 px-2 py-5 text-[15px] font-semibold active:bg-neutral-50 disabled:opacity-50 dark:border-white/10"
+            >
+              <span className="text-[#3B82F6]">
+                <CameraIcon className="h-7 w-7" />
+              </span>
+              Upload screenshot
+            </button>
+          </div>
+
+          <div className="mt-2 grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={() => setManualOpen(true)}
+              className="flex items-center justify-center gap-2 rounded-xl border border-neutral-200 px-2 py-2.5 text-[13px] font-semibold active:bg-neutral-50 dark:border-white/10"
+            >
+              <span className="text-[#F97316]">
+                <PencilIcon className="h-4 w-4" />
+              </span>
+              Manual entry
+            </button>
+            <div className="flex items-center justify-center gap-2 rounded-xl border border-neutral-200 px-2 py-2.5 text-[13px] font-semibold text-neutral-400 dark:border-white/10 dark:text-neutral-600">
+              <span className="text-[#22C55E]">
+                <LinkIcon className="h-4 w-4" />
+              </span>
+              Connect
+              <span className="rounded-full bg-[#22C55E]/15 px-1.5 py-0.5 text-[9px] font-bold text-[#22C55E]">
+                Soon
+              </span>
+            </div>
+          </div>
+        </>
+      ) : (
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            disabled={importing}
+            onClick={pasteSlip}
+            className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-[#7C3AED] bg-white text-sm font-bold text-[#7C3AED] active:bg-[#7C3AED]/10 disabled:opacity-50 dark:border-[#9A57FC]/60 dark:bg-transparent dark:text-[#9A57FC]"
+          >
+            <ClipboardIcon />
+            Paste bet slip
+          </button>
+          <button
+            type="button"
+            disabled={importing}
+            onClick={() => fileInputRef.current?.click()}
+            className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-neutral-300 bg-white text-sm font-bold text-neutral-600 active:bg-neutral-100 disabled:opacity-50 dark:border-white/15 dark:bg-transparent dark:text-neutral-400"
+          >
+            <CameraIcon />
+            Upload image
+          </button>
+        </div>
+      )}
       <input
         ref={fileInputRef}
         type="file"
@@ -355,7 +486,7 @@ export default function NewBetForm({ lastStake }: Props) {
         }}
       />
       {importing && (
-        <p className="mt-2 rounded-lg bg-neutral-100 px-4 py-3 text-sm dark:bg-[#1A2032]">
+        <p className="mt-2 rounded-lg bg-neutral-100 px-4 py-3 text-sm dark:bg-[#161D38]">
           Reading the slip...
         </p>
       )}
@@ -365,6 +496,17 @@ export default function NewBetForm({ lastStake }: Props) {
         </p>
       )}
 
+      {!manualOpen && !compact && (
+        <button
+          type="button"
+          onClick={() => setManualOpen(true)}
+          className="mt-3 h-11 w-full rounded-xl border border-dashed border-neutral-300 text-sm font-bold text-neutral-600 dark:border-white/15 dark:text-neutral-300"
+        >
+          Add manually
+        </button>
+      )}
+
+      <div className={manualOpen ? "" : "hidden"}>
       <label htmlFor="stake" className="mt-4 block text-sm font-semibold">
         Stake (USD)
       </label>
@@ -388,7 +530,7 @@ export default function NewBetForm({ lastStake }: Props) {
             onClick={() => setStake(amount)}
             className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
               stake === amount
-                ? "border-[#4F7A57] text-emerald-600 dark:text-emerald-400"
+                ? "border-[#7C3AED] text-[#7C3AED] dark:text-[#9A57FC]"
                 : "border-neutral-300 text-neutral-500 dark:text-neutral-400 dark:border-white/15"
             }`}
           >
@@ -440,7 +582,7 @@ export default function NewBetForm({ lastStake }: Props) {
                 }
                 className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
                   leg.sport === s
-                    ? "border-[#4F7A57] bg-[#4F7A57] text-white"
+                    ? "border-[#7C3AED] bg-[#5525C6] text-white"
                     : "border-neutral-300 dark:border-white/15"
                 }`}
               >
@@ -498,7 +640,7 @@ export default function NewBetForm({ lastStake }: Props) {
                           }
                           className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
                             selected
-                              ? "border-[#4F7A57] bg-[#4F7A57] text-white"
+                              ? "border-[#7C3AED] bg-[#5525C6] text-white"
                               : "border-neutral-300 dark:border-white/15"
                           }`}
                         >
@@ -524,9 +666,9 @@ export default function NewBetForm({ lastStake }: Props) {
                         }
                         className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
                           groupSelected
-                            ? "border-[#4F7A57] bg-[#4F7A57] text-white"
+                            ? "border-[#7C3AED] bg-[#5525C6] text-white"
                             : groupOpen
-                              ? "border-[#4F7A57] text-emerald-600 dark:text-emerald-400"
+                              ? "border-[#7C3AED] text-[#7C3AED] dark:text-[#9A57FC]"
                               : "border-neutral-300 dark:border-white/15"
                         }`}
                       >
@@ -546,7 +688,7 @@ export default function NewBetForm({ lastStake }: Props) {
                   return (
                     <div
                       key={item.label}
-                      className="mt-2 flex gap-2 overflow-x-auto rounded-xl bg-neutral-100 p-2 dark:bg-[#1A2032]"
+                      className="mt-2 flex gap-2 overflow-x-auto rounded-xl bg-neutral-100 p-2 dark:bg-[#161D38]"
                     >
                       {item.children.map((child) => {
                         const value = `${item.label}: ${child}`;
@@ -562,8 +704,8 @@ export default function NewBetForm({ lastStake }: Props) {
                             }
                             className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
                               selected
-                                ? "border-[#4F7A57] bg-[#4F7A57] text-white"
-                                : "border-neutral-300 bg-white dark:border-white/15 dark:bg-[#151A28]"
+                                ? "border-[#7C3AED] bg-[#5525C6] text-white"
+                                : "border-neutral-300 bg-white dark:border-white/15 dark:bg-[#0E1228]"
                             }`}
                           >
                             {child}
@@ -652,7 +794,7 @@ export default function NewBetForm({ lastStake }: Props) {
         </p>
       </div>
 
-      <div className="mt-5 grid grid-cols-3 gap-2 rounded-xl bg-neutral-100 p-3 text-center dark:bg-[#1A2032]">
+      <div className="mt-5 grid grid-cols-3 gap-2 rounded-xl bg-neutral-100 p-3 text-center dark:bg-[#161D38]">
         <div>
           <p className="text-xs text-neutral-500 dark:text-neutral-400">Total odds</p>
           <p className="mt-0.5 font-money text-sm font-bold tabular-nums">
@@ -689,10 +831,11 @@ export default function NewBetForm({ lastStake }: Props) {
         type="button"
         disabled={!canPlace}
         onClick={placeBet}
-        className="mt-4 h-14 w-full rounded-xl bg-[#4F7A57] text-lg font-bold text-white active:bg-[#3F6446] disabled:opacity-40"
+        className="mt-4 h-14 w-full rounded-xl bg-[#5525C6] text-lg font-bold text-white active:bg-[#4915AD] disabled:opacity-40"
       >
         {saving ? "Tracking..." : "Track Bet"}
       </button>
+      </div>
     </section>
   );
 }

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { buildInsightPool, buildSportInsightPool } from "@/lib/stats";
 import { SPORT_EMOJI, type BetWithLegs, type Sport } from "@/lib/types";
+import { CARD } from "@/lib/ui";
 
 interface Props {
   bets: BetWithLegs[];
@@ -32,7 +33,7 @@ export default function AllRecommendations({ bets, sport }: Props) {
         <header className="flex items-center justify-between gap-3">
           <h1 className="text-2xl font-bold tracking-tight">
             {sport === null
-              ? "All recommendations"
+              ? "All insights"
               : `${SPORT_EMOJI[sport]} ${sport}`}
           </h1>
           <div className="flex shrink-0 gap-2">
@@ -40,7 +41,7 @@ export default function AllRecommendations({ bets, sport }: Props) {
               href="/stats"
               className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-bold dark:border-white/15"
             >
-              Analytics
+              Performance
             </Link>
             <Link
               href="/app"
@@ -70,7 +71,7 @@ export default function AllRecommendations({ bets, sport }: Props) {
             {insights.map((text, i) => (
               <div
                 key={i}
-                className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-4 dark:border-white/10"
+                className={`${CARD} p-4`}
               >
                 <p className="text-sm leading-relaxed">{text}</p>
               </div>

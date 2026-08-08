@@ -1,0 +1,75 @@
+import BalanceCard from "@/components/BalanceCard";
+import Greeting from "@/components/Greeting";
+import InsightCard from "@/components/InsightCard";
+import LiveBets from "@/components/LiveBets";
+import NewBetForm from "@/components/NewBetForm";
+import SnapshotCard from "@/components/SnapshotCard";
+import { round2 } from "@/lib/format";
+import { betProfit } from "@/lib/stats";
+import type { BetWithLegs } from "@/lib/types";
+
+interface Props {
+  bets: BetWithLegs[];
+  liveBets: BetWithLegs[];
+  balance: number;
+  netProfit: number;
+  startedWith: number;
+  hasBalance: boolean;
+  lastStake: string;
+  userId: string;
+  // First name for the greeting, null when we do not know one.
+  name: string | null;
+}
+
+// The Track page, built to the owner's mockup (August 2026): greeting,
+// balance, the four ways to capture a bet, insight of the day, the
+// performance snapshot, then what is pending. History and charts live
+// on Performance, one tab away.
+export default function HomeDashboard({
+  bets,
+  liveBets,
+  balance,
+  netProfit,
+  startedWith,
+  hasBalance,
+  lastStake,
+  userId,
+  name,
+}: Props) {
+  const settled = bets
+    .filter((b) => b.status !== "pending" && b.settled_at !== null)
+    .sort(
+      (a, b) =>
+        new Date(a.settled_at ?? 0).getTime() -
+        new Date(b.settled_at ?? 0).getTime()
+    );
+
+  // The purple line in the balance card: the balance after each settled
+  // bet, starting from what the user put in.
+  let running = startedWith;
+  const series = [startedWith, ...settled.map((b) => (running = round2(running + betProfit(b))))];
+
+  return (
+    <div className="space-y-4">
+      <Greeting name={name} />
+
+      <BalanceCard
+        balance={balance}
+        netProfit={netProfit}
+        startedWith={startedWith}
+        hasBalance={hasBalance}
+        betCount={settled.length}
+        userId={userId}
+        series={hasBalance ? series : undefined}
+      />
+
+      <NewBetForm lastStake={lastStake} compact />
+
+      <InsightCard bets={bets} />
+
+      <SnapshotCard bets={bets} netProfit={netProfit} />
+
+      <LiveBets bets={liveBets} />
+    </div>
+  );
+}

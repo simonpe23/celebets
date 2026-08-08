@@ -59,8 +59,10 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+    // The phone paints its status bar with this, so it has to be the
+    // page color or a seam shows above the header.
+    { media: "(prefers-color-scheme: light)", color: "#F7F7FB" },
+    { media: "(prefers-color-scheme: dark)", color: "#04081B" },
   ],
 };
 

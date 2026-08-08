@@ -19,7 +19,7 @@ function BuysList({ bet }: { bet: BetWithLegs }) {
         {expanded ? "Hide buys" : `${bet.bet_buys.length} buys`}
       </button>
       {expanded && (
-        <div className="mt-2 space-y-1 rounded-xl bg-neutral-100 p-3 dark:bg-[#1A2032]">
+        <div className="mt-2 space-y-1 rounded-xl bg-neutral-100 p-3 dark:bg-[#161D38]">
           {[...bet.bet_buys]
             .sort(
               (a, b) =>
@@ -39,9 +39,13 @@ function BuysList({ bet }: { bet: BetWithLegs }) {
   );
 }
 import { SPORT_EMOJI, type BetWithLegs } from "@/lib/types";
+import { CARD } from "@/lib/ui";
 
 interface Props {
   bets: BetWithLegs[];
+  // The home page shows only the newest few. Performance passes
+  // nothing and shows them all.
+  limit?: number;
 }
 
 // Payout minus stake covers every case: won bets, plain lost bets
@@ -58,7 +62,8 @@ function toDateInputValue(timestamp: string): string {
   return `${d.getFullYear()}-${month}-${day}`;
 }
 
-export default function BetHistory({ bets }: Props) {
+export default function BetHistory({ bets, limit }: Props) {
+  const shown = limit === undefined ? bets : bets.slice(0, limit);
   const router = useRouter();
   const [confirming, setConfirming] = useState<string | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
@@ -130,12 +135,12 @@ export default function BetHistory({ bets }: Props) {
         </p>
       ) : (
         <div className="mt-3 space-y-2">
-          {bets.map((bet) => {
+          {shown.map((bet) => {
             const profit = profitOf(bet);
             return (
               <div
                 key={bet.id}
-                className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-4 dark:border-white/10"
+                className={`${CARD} p-4`}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
@@ -210,7 +215,7 @@ export default function BetHistory({ bets }: Props) {
                 </div>
 
                 {editing === bet.id && (
-                  <div className="mt-3 flex items-end gap-2 rounded-xl bg-neutral-100 p-3 dark:bg-[#1A2032]">
+                  <div className="mt-3 flex items-end gap-2 rounded-xl bg-neutral-100 p-3 dark:bg-[#161D38]">
                     <div className="grow">
                       <label
                         htmlFor={`date-${bet.id}`}
@@ -223,7 +228,7 @@ export default function BetHistory({ bets }: Props) {
                         type="date"
                         value={dateValue}
                         onChange={(e) => setDateValue(e.target.value)}
-                        className="mt-1 block h-10 w-full rounded-lg border border-neutral-300 bg-white px-3 text-sm text-neutral-900 dark:border-white/15 dark:bg-[#151A28] dark:text-neutral-100"
+                        className="mt-1 block h-10 w-full rounded-lg border border-neutral-300 bg-white px-3 text-sm text-neutral-900 dark:border-white/15 dark:bg-[#0E1228] dark:text-neutral-100"
                       />
                     </div>
                     <button
@@ -238,7 +243,7 @@ export default function BetHistory({ bets }: Props) {
                       type="button"
                       disabled={busy || !dateValue}
                       onClick={() => saveDate(bet.id)}
-                      className="h-10 rounded-lg bg-[#4F7A57] px-3 text-xs font-semibold text-white disabled:opacity-50"
+                      className="h-10 rounded-lg bg-[#5525C6] px-3 text-xs font-semibold text-white disabled:opacity-50"
                     >
                       Save
                     </button>
@@ -248,7 +253,7 @@ export default function BetHistory({ bets }: Props) {
                 {confirming === bet.id && (
                   <div className="mt-3 flex items-center justify-between gap-2 rounded-xl bg-red-50 p-3 dark:bg-red-950">
                     <p className="text-sm text-red-700 dark:text-red-300">
-                      Delete this bet? The stake returns to your wallet and
+                      Delete this bet? The stake returns to your balance and
                       all stats forget it.
                     </p>
                     <div className="flex shrink-0 gap-2">

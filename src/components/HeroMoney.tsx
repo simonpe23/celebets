@@ -3,8 +3,8 @@
 import { round2 } from "@/lib/format";
 
 // The one big money number, used on the analytics headline and on the
-// wallet card. Set in Inter Tight at weight 500, flat: one size, one
-// weight, one color, the way a trading app sets it.
+// balance card. Set in Inter Tight at weight 600, matched to the
+// owner's mockups: one size, one weight, one color.
 //
 // Inter Tight is a display cut. It belongs on numbers above 30 pixels
 // and nowhere else. Everything smaller stays in Geist.
@@ -28,7 +28,7 @@ export default function HeroMoney({
   return (
     <span
       className={`font-money leading-none tabular-nums ${className}`}
-      style={{ fontWeight: 500, letterSpacing: "-0.02em" }}
+      style={{ fontWeight: 600, letterSpacing: "-0.02em" }}
     >
       {sign}${digits}
     </span>

@@ -40,9 +40,15 @@ local preview pages in src/app/preview never get new utility classes.
 Use inline styles there, or the preview silently falls back and you
 compare two identical things.
 
-Run `node design-check.mjs` before every screenshot. It reads the
-system below and fails on drift. Never show the owner a screenshot
+Run `npm run check` before every screenshot. It is design-check plus
+tsc plus a real production build. Never show the owner a screenshot
 while it is failing.
+
+Do NOT run `node design-check.mjs` on its own. In August 2026 the
+owner got a session's worth of "Failed preview deployment" emails
+from Vercel while design-check and tsc were both green: ESLint's
+rules-of-hooks only runs inside `next build`. If the build is not
+part of the check, the check is a lie.
 
 THE SWEEP RULE (added August 2026, after the owner had to ask three
 times whether a font change had reached the whole app):
@@ -92,11 +98,15 @@ SHARED COMPONENTS. Never copy their markup into a page.
 - src/components/StatTile.tsx    the labelled number in a card
 - src/components/HeroMoney.tsx   the big money number
 
-TWO TYPEFACES, ONE RULE.
-- Numbers are Inter Tight, applied with the `font-money` class.
-- Words are Geist.
-- Money inside a sentence stays Geist. Changing face mid sentence
-  reads as a bug. design-check.mjs enforces both halves.
+ONE TYPEFACE (changed August 2026). Numbers and words are both Geist.
+`font-money` still exists and still marks a figure, but it now points
+at the body face and only carries tabular figures.
+- Inter Tight was the numeral face until the owner put the build next
+  to his mockups. A condensed display cut made every figure read
+  narrow and cheap. The mockup sets its numbers in the same face as
+  its text. That single change fixed more than any card edit did.
+- design-check still enforces that every money value carries
+  `font-money` or is listed as prose.
 
 THREE WEIGHTS. font-medium does not exist in this app.
 - normal    body text, captions, inputs
@@ -132,16 +142,91 @@ BUTTONS, THREE TIERS.
 - Tier three  text-xs font-semibold. Only inside a dense card row
               (Won, Lost, Cash out, Delete, Add money, Remove).
 
-COLOR.
+COLOR (rewritten three times in August 2026, and only the third time
+from measurements).
+
+THE RULE THAT ENDED IT: SAMPLE THE MOCKUP, DO NOT EYEBALL IT. The
+owner re-uploaded mobile-dark-10.png and every value below was read
+out of it with Pillow. Two of my guesses had been wrong for weeks:
+- The dark page is NAVY (#04081B), not the neutral grey-black I built.
+  My own note said "a cool near-black, barely blue". The blue channel
+  actually runs about four times the red. That single error is why the
+  build looked flat beside the mockup while each piece looked right.
+- The purple was DARKER than the mockup, not brighter. The owner had
+  said "your purple is bright and childish" so many times that I
+  over-corrected past his mockup and landed on #4C1D95.
+Keep the mockup files. If they are lost, ask for them again rather
+than matching by eye. Sampling took ten minutes and settled six
+rounds of argument.
+
 - Ink is the default. Muted is neutral 500 light, neutral 400 dark,
   everywhere, with no exceptions.
-- Two greens with two jobs. #4F7A57 is a button you press.
-  emerald-600 light and emerald-400 dark means money went up.
-  Never mix them.
-- Red: red-600 light, red-400 dark, means money went down.
-- Purple #58287F is recommendations and the wordmark. Nothing else.
-- Dark mode surfaces: page #0B0D14, cards #151A28, popups #1A2032,
-  borders white/10 and white/15.
+- Purple has three jobs, all sampled (August 2026):
+  a surface you press is the mockup's vertical gradient, #5525C6 at
+  the top down to #4915AD, pressed #3D0F94. That is the primary
+  button, the avatar and the active chip. Purple as TEXT, an icon or
+  a tint is #7C3AED on light and #9A57FC on dark.
+  The owner chose this over the flat #4C1D95 in a labelled A/B.
+- THE FILL SWEEP (August 2026). Seventeen filled buttons across the
+  app were still on the old text purple with a #6D28D9 press. That is
+  why the purple kept reading wrong after each fix: the rule was
+  written but only the newest buttons obeyed it. design-check rule 4c
+  now fails on every retired value (#6D28D9, #4C1D95, #3B1578) and on
+  any filled #7C3AED button.
+- THE SET BALANCE BUTTON, settled after six rounds. 32px tall, auto
+  width, 13px semibold, a 6px radius, the BTN gradient, sitting under Net
+  profit. It went 52px, then 44px, and the owner still called it too
+  big every time because only the size moved. The real answer was
+  that setting a tracking balance happens ONCE, so it never deserved
+  a full width primary button. Its label shortens to "Set balance"
+  once a balance exists. BalanceCard keeps a `control` prop (under,
+  corner, link, button) and /preview/buttons compares them.
+- Buttons are squared, not pills. rounded-md is the primary, and the
+  owner rejected rounded-xl and rounded-lg as too round.
+- THE TAB BAR. The active tab is a FILLED icon plus a label, both in
+  purple, on the bar's own white (or #0C1125) background. There is
+  NO purple pill behind it: the owner sent a screenshot of the look
+  he wanted and the block was heavier than everything near it. Track
+  and Performance fill their shapes when active; the magnifier has no
+  solid form that still reads as a magnifier, so it thickens instead.
+  The active purple is #5525C6, the Set balance button's purple, ruled
+  by the owner: one purple per screen, not two shades of it. Dark uses
+  #9A57FC, because #5525C6 on the #0C1125 bar is a contrast ratio of
+  about 2.3 and the selected tab reads as switched off. #9A57FC is
+  the mockup's own active tab color, so dark is not a compromise.
+- Green means money went up, red means money went down, and neither
+  is ever an action color. emerald-600 light, emerald-400 dark.
+  Red: red-600 light, red-400 dark.
+- One green button survives: Won on a pending pick, #16A34A, pressed
+  #15803D, because it declares an outcome, not an action.
+  design-check rule 4b enforces that it appears nowhere else.
+- The outcome pills use the mockup's own brighter pair, #22C55E and
+  #EF4444, identical in both themes so a settled pick reads the same
+  everywhere. Tailwind's emerald-600 and red-600 were too dull.
+- The capture tiles carry their own icon colors, from the mockup:
+  camera #3B82F6, pencil #F97316, connect #22C55E. Icons only,
+  never buttons.
+- Light surfaces: page #F7F7FB, white cards with a hairline ring.
+- Dark surfaces, all sampled: page #04081B, cards #0E1228, popups
+  #161D38, tab bar and other raised surfaces #0C1125, chart panel
+  #080D20, hairlines white/[0.07]. It is a navy near-black. The page
+  is much darker than everything sitting on it, and the raised
+  surfaces are nearly all the same value: what separates a card from
+  a row inside it is the hairline, not the fill.
+- Cards are defined by their EDGE, not by a shadow. The heavy
+  violet-cast shadow was another invention.
+- src/lib/ui.ts owns CARD, INNER (the row inside a card), BTN, and
+  the OUTCOME pills. Won and Lost are quiet tinted pills, never
+  filled bars: a filled bar shouted louder than the bet it settled.
+
+CAPTURE TILES. Two big tiles (Paste bet slip, Upload screenshot) over
+two small ones (Manual entry, Connect). Ruled by the owner: four equal
+tiles spent the card's best space on its two least tapped doors.
+
+SIZE. The build ran about a fifth larger than the mockups for weeks,
+which is why the mockup fits Pending Bets on the first screen and the
+build did not. Greeting 22px, card headings 17px, hero balance 34px,
+primary button 52px tall at 16px.
 
 ## Status
 
@@ -213,6 +298,106 @@ COLOR.
   bookmarks keep working.
 - Dark mode is designed, not default. It follows the phone's setting.
   A real toggle needs a settings page, which does not exist yet.
+
+## The flow: Track, Performance, Research (owner, August 2026)
+
+Written down as given. Not built. Mockups are coming next.
+
+THE SPLIT THAT MAKES IT WORK. Insights and Research are opposite
+ends of one timeline:
+- Research happens BEFORE a bet. It is active. The user goes looking.
+- Insights happen AFTER a bet. Celebet surfaced them on its own.
+
+AN INSIGHT is something Celebet discovered. Not something the user
+asked for, not something an AI researched. It comes from the user's
+own data. Examples given by the owner:
+- You have won 63% of bets between 1.01 and 1.80 odds.
+- Parlays account for 72% of your losses.
+- Tennis has become your most profitable sport.
+- You are 9-1 betting Dodgers home games.
+- You perform much better on weekdays.
+
+RESEARCH is the user looking for information before betting:
+who is pitching tonight, is LeBron playing, Dodgers trends, compare
+odds, the weather, what the community thinks, ask CeleBOT.
+
+THREE TABS, AND ONLY THREE. Track, Performance, Research. Insights
+does NOT get a tab. It becomes a layer inside Performance, the way
+Apple Health puts insights inside the health data rather than beside
+it.
+
+PERFORMANCE IS A PERFORMANCE REVIEW, NOT A STATISTICS PAGE. Opening
+it should not land on graphs. Order ruled by the owner:
+1. Today's Insight
+2. Key Insights
+3. Performance Snapshot
+4. Charts
+5. Sports Breakdown
+6. Odds Groups
+7. Singles vs Parlays
+8. History and Trends
+The owner's example of the top of that page: Today's Insight, then
+Biggest Strength (MLB Favorites +$812), Biggest Weakness (Player
+Props -18% ROI), Trending (your ROI has improved three weeks in a
+row).
+
+THE HOME PAGE INSIGHT CARD. Its link must not read "View Insights",
+because that sounds like a separate product. It reads "View
+Performance" or "See Why" or "Open Performance", because tapping it
+enters the Performance area, whose first section is Today's Insight.
+
+THE ONE LINE SUMMARY:
+- Track means capture data.
+- Performance means understand yourself.
+- Research means understand the game before your next bet.
+
+## The Track page (August 2026, built to the owner's mockups, on the
+## wip branch, not deployed)
+
+THE MOCKUPS ARE THE SPEC, TO THE PIXEL. The owner rejected two earlier
+attempts ("a reskin is far from enough", "a fake cheap copy") because
+the mockup was poured into the old design system instead of replacing
+it. What that cost, written down so it is never repeated:
+- A mockup is an anatomy, not a palette. Copy the skeleton first
+  (what is in the card, in what order, at what size), then the color.
+- The old system's habits are the tell: uppercase labels everywhere,
+  full width action bars, three-column stat grids, five rows of text
+  where the mockup has two.
+- Primary buttons are a vertical violet gradient with a glow (BTN in
+  src/lib/ui.ts). A flat fill reads cheap.
+- Sparklines are a line with a gradient fading under it, or a bare
+  line. Never a flat filled block.
+- Card labels are sentence case. Uppercase survives only where the
+  mockup itself shouts (TRACKING BALANCE).
+- Pending Bets is ONE card holding the heading, View all, and the
+  bets as lighter inner rows. Parlays open with a rail threading the
+  leg icons, singles collapse to a row with a chevron.
+
+The owner drew four mockups (mobile and web, light and dark) and they
+are the spec, with the divergences listed in ROADMAP.md. The home page
+is now the Track page: greeting, Tracking Balance card with the purple
+balance sparkline and one Set Tracking Balance button, the four
+capture tiles (Paste bet slip with a Recommended badge, Upload
+screenshot, Manual entry, Connect accounts with a Soon badge), Insight
+of the day linking to Performance, the Performance Snapshot, then
+Pending bets. History and charts live on Performance.
+
+Navigation is the bottom TabBar: Track, Performance, Research. The
+home page carries no navigation buttons of its own anymore.
+
+Decisions locked in during this build:
+- Net profit has ONE definition (balance + removals minus additions)
+  and every surface shows that same number. The snapshot must never
+  compute its own settled-only version, that mismatch was caught and
+  fixed before it shipped.
+- Insight of the day is seeded by the phone's date: steady all day,
+  new overnight.
+- The greeting uses the Google account's first name and greets bare
+  on email accounts. A mangled email prefix is worse than no name.
+- Best Sport in the snapshot shows profit, not ROI, because per sport
+  ROI has no honest formula yet (parlay stakes span sports).
+- Soon badges instead of dead links, ruled by the owner. The pip
+  strip (recent form) was dropped by the owner.
 
 ## Tester readiness (July 2026, complete and verified)
 

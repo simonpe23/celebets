@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { formatMoney } from "@/lib/format";
 import type { Transaction } from "@/lib/types";
+import { CARD } from "@/lib/ui";
 
 export default function TransactionsList({
   transactions,
@@ -79,7 +80,7 @@ export default function TransactionsList({
     <main className="min-h-dvh px-4 py-6 sm:px-6">
       <div className="mx-auto w-full max-w-md space-y-5">
         <header className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold tracking-tight">Transactions</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Balance history</h1>
           <Link
             href="/app"
             className="rounded-lg border border-neutral-300 px-4 py-2 text-sm font-bold dark:border-white/15"
@@ -96,19 +97,19 @@ export default function TransactionsList({
 
         {transactions.length === 0 ? (
           <p className="rounded-2xl border border-dashed border-neutral-300 p-5 text-center text-sm text-neutral-500 dark:text-neutral-400 dark:border-white/15">
-            No deposits or withdrawals yet.
+            No balance changes yet.
           </p>
         ) : (
           <div className="space-y-2">
             {transactions.map((tx) => (
               <div
                 key={tx.id}
-                className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-4 dark:border-white/10"
+                className={`${CARD} p-4`}
               >
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-sm font-semibold capitalize">
-                      {tx.type}
+                    <p className="text-sm font-semibold">
+                      {tx.type === "deposit" ? "Added" : "Removed"}
                     </p>
                     <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
                       {mounted
@@ -158,7 +159,7 @@ export default function TransactionsList({
                 </div>
 
                 {editing === tx.id && (
-                  <div className="mt-3 flex items-end gap-2 rounded-xl bg-neutral-100 p-3 dark:bg-[#1A2032]">
+                  <div className="mt-3 flex items-end gap-2 rounded-xl bg-neutral-100 p-3 dark:bg-[#161D38]">
                     <div className="grow">
                       <label
                         htmlFor={`date-${tx.id}`}
@@ -171,7 +172,7 @@ export default function TransactionsList({
                         type="date"
                         value={dateValue}
                         onChange={(e) => setDateValue(e.target.value)}
-                        className="mt-1 block h-10 w-full rounded-lg border border-neutral-300 bg-white px-3 text-sm text-neutral-900 dark:border-white/15 dark:bg-[#151A28] dark:text-neutral-100"
+                        className="mt-1 block h-10 w-full rounded-lg border border-neutral-300 bg-white px-3 text-sm text-neutral-900 dark:border-white/15 dark:bg-[#0E1228] dark:text-neutral-100"
                       />
                     </div>
                     <button
@@ -186,7 +187,7 @@ export default function TransactionsList({
                       type="button"
                       disabled={busy || !dateValue}
                       onClick={() => saveDate(tx.id)}
-                      className="h-10 rounded-lg bg-[#4F7A57] px-3 text-xs font-semibold text-white disabled:opacity-50"
+                      className="h-10 rounded-lg bg-[#5525C6] px-3 text-xs font-semibold text-white disabled:opacity-50"
                     >
                       Save
                     </button>
@@ -195,7 +196,7 @@ export default function TransactionsList({
 
                 {confirming === tx.id && (
                   <div className="mt-3 flex items-center justify-between gap-2 border-t border-neutral-100 pt-3 dark:border-white/10">
-                    <p className="text-sm">Delete this {tx.type}?</p>
+                    <p className="text-sm">Delete this change?</p>
                     <div className="flex gap-2">
                       <button
                         type="button"

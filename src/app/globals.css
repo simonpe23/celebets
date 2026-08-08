@@ -4,12 +4,12 @@
   /* Brand palette. Cream page, white cards, blue for actions,
      purple for the wordmark and recommendations. Profit stays green
      and loss stays red, because those colors carry meaning. */
-  --background: #E9ECF0;
-  --foreground: #171717;
+  --background: #F7F7FB;
+  --foreground: #0E0E14;
   --brand-cream: #f5edce;
   --brand-blue: #72afcc;
   --brand-blue-dark: #5b96b3;
-  --brand-purple: #58287f;
+  --brand-purple: #7C3AED;
 }
 
 @theme inline {
@@ -19,8 +19,10 @@
   --font-mono: var(--font-geist-mono);
   --font-brand: var(--font-brand);
   --font-inter-tight: var(--font-inter-tight);
-  /* The numeral face. Money and counts, never words. */
-  --font-money: var(--font-inter-tight);
+  /* Numbers are set in the body face, like the mockup. Inter Tight,
+     a condensed display cut, made every figure read narrow next to
+     the mockup and was the single biggest typographic difference. */
+  --font-money: var(--font-geist-sans);
   --font-plex: var(--font-plex);
   --font-instrument: var(--font-instrument);
   --color-cream: var(--brand-cream);
@@ -31,10 +33,13 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Not pure black. A hair of blue matches the chart panel, so the
-       whole app reads as one surface family instead of two. */
-    --background: #0B0D14;
-    --foreground: #ededed;
+    /* Sampled from the owner's mockup, not guessed. It is a NAVY
+       near-black: the blue channel runs about four times the red one.
+       "Barely blue" was my eyeball reading of it and it was wrong,
+       which is why the build looked grey next to the mockup. It is
+       still not purple tinted, that cast was a separate mistake. */
+    --background: #04081B;
+    --foreground: #F2F2F5;
   }
 }
 

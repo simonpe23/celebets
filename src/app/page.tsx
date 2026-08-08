@@ -1,5 +1,6 @@
 import Link from "next/link";
 import GoogleButton from "@/components/GoogleButton";
+import { CARD } from "@/lib/ui";
 
 // Short labels only. The owner writes the real copy.
 const FEATURES = [
@@ -16,7 +17,7 @@ function PhoneMockup() {
       <div className="rounded-[2.25rem] border-[9px] border-neutral-900 bg-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.35)]">
         <div className="space-y-2.5 p-3.5">
           <div className="rounded-2xl bg-neutral-900 p-3.5 text-white">
-            <p className="text-[10px] text-neutral-400">My Wallet</p>
+            <p className="text-[10px] text-neutral-400">Tracking Balance</p>
             <p className="mt-0.5 text-[26px] font-bold leading-none tracking-tight">
               $2,657
             </p>
@@ -42,7 +43,7 @@ function PhoneMockup() {
             ))}
           </div>
 
-          <div className="rounded-2xl border border-neutral-300/70 bg-[#F2F4F7] dark:bg-[#151A28] p-3">
+          <div className={`${CARD} p-3`}>
             <div className="flex items-center justify-between">
               <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[9px] font-semibold text-amber-800">
                 Pending
@@ -112,7 +113,7 @@ export default function LandingPage() {
                 <GoogleButton large />
                 <Link
                   href="/signup"
-                  className="flex h-14 w-full items-center justify-center rounded-xl bg-[#4F7A57] text-base font-semibold text-white shadow-lg shadow-[#4F7A57]/30 active:bg-[#3F6446]"
+                  className="flex h-14 w-full items-center justify-center rounded-xl bg-[#5525C6] text-base font-semibold text-white shadow-lg shadow-[#5525C6]/30 active:bg-[#4915AD]"
                 >
                   Create free account
                 </Link>

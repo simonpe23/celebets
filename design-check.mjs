@@ -1,8 +1,13 @@
 // Checks the app against the design system in CLAUDE.md.
-// Run it before every screenshot: node design-check.mjs
 //
 // This exists because font and spacing drift cost the owner six rounds
 // of review. A machine should catch this, not a person.
+//
+// DO NOT run this alone. Run `npm run check`, which is this plus tsc
+// plus a real production build. Vercel emailed the owner about failed
+// deployments for a whole session because this file and tsc both
+// passed while `next build` did not: ESLint's rules-of-hooks only runs
+// during the build. Green here is not green.
 
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
@@ -32,20 +37,28 @@ const COMPACT_OK = [
 
 // Colors that are allowed to appear as raw hex, and what each is for.
 const ALLOWED_HEX = new Set([
-  "#4F7A57", // button green
-  "#3F6446", // button green, pressed
-  "#58287F", // purple, recommendations and wordmark
-  "#431E63", // purple, pressed
-  "#A97FD0", // purple on dark
-  "#F2F4F7", // light card
-  "#151A28", // dark card
-  "#1A2032", // dark popup
-  "#0B0D14", // dark page
-  "#101322", // chart panel
+  "#7C3AED", // action purple, from the owner's mockups
+  "#EF4444", // outcome pill, Lost
+  "#9A57FC", // purple on dark surfaces, and the wordmark gradient
+  "#5B21B6", // primary button, and the wordmark gradient deep end
+  "#5525C6", // primary button, gradient top
+  "#4915AD", // primary button, gradient foot
+  "#3D0F94", // primary button, pressed
+  "#16A34A", // the Won settle button only, see rule 4b
+  "#15803D", // Won settle button, pressed
+  "#3B82F6", // capture tile icon, camera
+  "#F97316", // capture tile icon, pencil
+  "#22C55E", // outcome pill Won, and the connect tile icon
+  // The dark surfaces, sampled from the owner's mockup. It is a navy
+  // near-black, not the neutral grey-black the build used to have.
+  "#0E1228", // dark card
+  "#161D38", // dark popup
+  "#04081B", // dark page
+  "#0C1125", // dark tab bar and other raised surfaces
+  "#080D20", // chart panel
+  "#F7F7FB", // light page
   "#34D399", // chart green
   "#FB7185", // chart red
-  "#7C3FAF", // wordmark gradient
-  "#3A1857", // wordmark gradient
   "#FFFFFF", // svg strokes and the theme-color meta tag
   "#0A0A0A", // theme-color meta tag
   "#4285F4", // Google logo, fixed by Google's brand rules
@@ -65,17 +78,32 @@ for (const file of files) {
   lines.forEach((line, i) => {
     const n = i + 1;
 
+    // A pill that states a fact is not a control, so it is not bound by
+    // the button tiers. Both rules below share this test.
+    const isBadge = line.includes("rounded-full") && line.includes("px-2.5");
+
     // 1. The compact tier belongs only inside bet card rows.
-    if (line.includes("text-xs font-semibold") && !COMPACT_OK.includes(short)) {
+    if (
+      line.includes("text-xs font-semibold") &&
+      !COMPACT_OK.includes(short) &&
+      !isBadge
+    ) {
       note(file, n, "compact tier (text-xs font-semibold) outside a bet card");
     }
 
     // 2. Buttons and chips must not invent their own size.
-    const isBadge = line.includes("rounded-full") && line.includes("px-2.5");
+    // A numeral is not a button, and it carries the numeral face, which
+    // no button in the app does. Neither is a caption sized inline
+    // link, which is why leading-tight excuses a line here: it is set
+    // to wrap inside a card corner, not to be pressed like a button.
+    const isNumeral = line.includes("font-money");
+    const isInlineLink = line.includes("leading-tight");
     if (
       line.includes("text-xs font-bold") &&
       !line.includes("uppercase") &&
-      !isBadge
+      !isBadge &&
+      !isNumeral &&
+      !isInlineLink
     ) {
       note(file, n, "text-xs font-bold: buttons are text-sm font-bold");
     }
@@ -101,7 +129,32 @@ for (const file of files) {
       }
     }
 
-    // 5. The tile must come from the shared component.
+    // 4b. Green stopped being the action color in August 2026. Purple
+    // #58287F is the button you press. The one green button left is
+    // Won on a pending pick, which is an outcome, not an action.
+    if (/#16A34A|#15803D/.test(line) && short !== "LiveBets.tsx") {
+      note(file, n, "green #16A34A outside the Won button, actions are purple");
+    }
+
+    // 4c. Two purples, two jobs. #5525C6 is a surface you press,
+    // #7C3AED is purple as text, a border or a tint on a LIGHT surface,
+    // #9A57FC the same on a dark one. All three sampled from the
+    // owner's mockup. The retired values are caught below because
+    // seventeen filled buttons once drifted onto the wrong one.
+    if (/bg-\[#7C3AED\](?![/[])/.test(line)) {
+      note(file, n, "filled purple button: pressable purple is #5525C6");
+    }
+    if (/#6D28D9|#4C1D95|#3B1578/.test(line)) {
+      note(file, n, "retired purple, the mockup's is #5525C6 / #4915AD");
+    }
+
+    // 5. The card surface comes from CARD in src/lib/ui.ts. Thirteen
+    // files once repeated it, and it drifted.
+    if (line.includes("bg-[#F2F4F7]") || line.includes("shadow-[0_10px_30px")) {
+      note(file, n, "card surface hand-rolled, import CARD from @/lib/ui");
+    }
+
+    // 6. The tile must come from the shared component.
     if (
       line.includes("text-[10px] font-bold uppercase tracking-widest") &&
       short !== "MicroLabel.tsx"
@@ -129,6 +182,11 @@ const PROSE = [
   "New totals",
   "Cashed out for",
   "Enter a valid amount",
+  // The hero sub-line reads as a sentence: "+12.4% ROI on $840 staked".
+  "% ROI on",
+  // The in play panel speaks in sentences too.
+  "riding, across",
+  "Paste a slip below",
 ];
 
 for (const file of files) {
@@ -155,6 +213,50 @@ for (const file of files) {
       i + 1,
       "money value with no numeral face and not marked as prose"
     );
+  });
+}
+
+// 7. THE VOCABULARY CHECK.
+//
+// Celebet never holds money, so it never speaks like a bank. The owner
+// ruled out this vocabulary: "No wallet. No deposit. No withdraw.
+// That's finance language. The feature is about tracking performance,
+// not banking." The words are Tracking Balance, Set Tracking Balance,
+// Add and Remove, Balance history.
+//
+// Only text a user reads is checked. The database columns are still
+// named deposit and withdrawal, and renaming those would be a migration
+// with no user-visible gain.
+const BANNED_WORDS = /\b(wallet|deposits?|withdrawals?|withdraw|bankroll)\b/i;
+
+for (const file of files) {
+  if (SKIP.some((dir) => file.includes(`/${dir}/`))) continue;
+  const lines = readFileSync(file, "utf8").split("\n");
+
+  lines.forEach((line, i) => {
+    const trimmed = line.trim();
+    if (trimmed.startsWith("//") || trimmed.startsWith("*")) return;
+    if (/^import\s|from\s+["']/.test(trimmed)) return;
+    if (/\.from\(|type:|"deposit"|"withdrawal"|const |let |interface /.test(line))
+      return;
+
+    // Copy shows up three ways: between JSX tags on one line, as a bare
+    // prose line inside a JSX block, or inside a quoted sentence.
+    const jsxText = line.match(/>([^<>{}]*[A-Za-z][^<>{}]*)</)?.[1] ?? "";
+    const bareProse = /^[^<>{}()=[\]`$]*[A-Za-z][^<>{}()=[\]`$]*$/.test(trimmed)
+      ? trimmed
+      : "";
+    const quoted = (line.match(/"[^"]* [^"]*"/g) ?? []).join(" ");
+    const copy = `${jsxText} ${bareProse} ${quoted}`;
+
+    if (BANNED_WORDS.test(copy)) {
+      const word = copy.match(BANNED_WORDS)[0];
+      note(
+        file,
+        i + 1,
+        `"${word}" is finance language, use the balance vocabulary`
+      );
+    }
   });
 }
 

@@ -28,6 +28,10 @@ interface Props {
   onCustomFrom: (value: string) => void;
   onCustomTo: (value: string) => void;
   onScrub: (point: { value: number; date: Date } | null) => void;
+  // Optional block drawn on the panel above the chart. The home screen
+  // puts its headline number here so the number and the line it draws
+  // share one surface instead of sitting in two separate cards.
+  header?: React.ReactNode;
 }
 
 function CalendarIcon() {
@@ -60,6 +64,7 @@ export default function ProfitPanel({
   onCustomFrom,
   onCustomTo,
   onScrub,
+  header,
 }: Props) {
   const custom = period === "custom";
 
@@ -67,7 +72,7 @@ export default function ProfitPanel({
     "mt-1 block h-10 w-full rounded-lg border border-white/15 bg-white/5 px-3 text-sm text-white outline-none focus:border-white/40 [color-scheme:dark]";
 
   return (
-    <section className="overflow-hidden rounded-3xl bg-[#101322] p-4 dark:bg-[#151A28] shadow-[0_18px_40px_-20px_rgba(16,19,34,0.9)] ring-1 ring-white/5">
+    <section className="overflow-hidden rounded-3xl bg-[#080D20] p-4 dark:bg-[#0E1228] shadow-[0_18px_40px_-20px_rgba(16,19,34,0.9)] ring-1 ring-white/5">
       <div className="flex items-center justify-between gap-3">
         <MicroLabel onDark>Profit</MicroLabel>
 
@@ -79,7 +84,7 @@ export default function ProfitPanel({
               onClick={() => onPeriodChange(key)}
               className={`rounded-full px-2.5 py-1 text-[11px] font-bold tracking-wide transition-colors ${
                 period === key
-                  ? "bg-white text-[#101322]"
+                  ? "bg-white text-[#080D20]"
                   : "text-white/50 active:text-white/80"
               }`}
             >
@@ -92,7 +97,7 @@ export default function ProfitPanel({
             aria-label="Custom date range"
             className={`flex items-center rounded-full px-2 py-1.5 transition-colors ${
               custom
-                ? "bg-white text-[#101322]"
+                ? "bg-white text-[#080D20]"
                 : "text-white/50 active:text-white/80"
             }`}
           >
@@ -135,6 +140,8 @@ export default function ProfitPanel({
           </div>
         </div>
       )}
+
+      {header}
 
       {bets.length === 0 ? (
         <p className="flex h-52 items-center justify-center text-sm text-white/40">
