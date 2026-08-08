@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import InsightsPopup, { rollInsights } from "@/components/InsightsPopup";
 import MicroLabel from "@/components/MicroLabel";
-import { buildInsightPool, keyInsights, pickInsights } from "@/lib/stats";
+import { keyInsights } from "@/lib/stats";
 import type { BetWithLegs } from "@/lib/types";
-import { BTN, CARD, CARD_LINK, INNER } from "@/lib/ui";
+import { CARD, CARD_LINK, INNER } from "@/lib/ui";
 
 // Key Insights: the second section of Performance, and the reason the
 // page is a performance review rather than a statistics page.
@@ -78,7 +78,7 @@ export default function KeyInsights({ bets }: { bets: BetWithLegs[] }) {
   const rows = keyInsights(bets);
 
   function roll() {
-    setMore(pickInsights(buildInsightPool(bets)));
+    setMore(rollInsights(bets));
   }
 
   return (
@@ -131,52 +131,11 @@ export default function KeyInsights({ bets }: { bets: BetWithLegs[] }) {
         </div>
       )}
 
-      {more !== null && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center">
-          <div className="w-full max-w-sm rounded-t-2xl bg-white p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:rounded-2xl sm:pb-6 dark:bg-[#161D38]">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-bold">More insights</h3>
-              <button
-                type="button"
-                onClick={() => setMore(null)}
-                className="rounded-lg px-3 py-1 text-sm text-neutral-500 dark:text-neutral-400"
-              >
-                Close
-              </button>
-            </div>
-
-            {more.length === 0 ? (
-              <p className="mt-4 text-sm">
-                Nothing to say yet. Settle a few bets and tap again.
-              </p>
-            ) : (
-              <ul className="mt-4 space-y-3">
-                {more.map((text, i) => (
-                  <li key={i} className="text-sm leading-relaxed">
-                    {text}
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            <div className="mt-5 flex items-center justify-between gap-2">
-              <button
-                type="button"
-                onClick={roll}
-                className={`${BTN} h-9 px-4`}
-              >
-                New mix
-              </button>
-              <Link
-                href="/recommendations"
-                className={`${CARD_LINK} underline underline-offset-2`}
-              >
-                Show all
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
+      <InsightsPopup
+        items={more}
+        onReroll={roll}
+        onClose={() => setMore(null)}
+      />
     </section>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import InsightsPopup, { rollInsights } from "@/components/InsightsPopup";
 import { buildInsightPool } from "@/lib/stats";
 import type { BetWithLegs } from "@/lib/types";
 import { ACCENT, CARD, CARD_LINK } from "@/lib/ui";
@@ -16,10 +16,17 @@ import { ACCENT, CARD, CARD_LINK } from "@/lib/ui";
 // visit. Picked after mount because the phone's date is the one that
 // matters, not the server's.
 //
-// On Track it links to Performance, because insights are a layer
-// inside Performance, the way Apple Health keeps insights inside the
-// health data. On Performance itself it is the first section of the
-// page, so it drops the link rather than pointing at itself.
+// On Track it carries "View Insights", which opens the rotating pool
+// in a sheet rather than navigating anywhere. Ruled by the owner
+// (August 2026), reversing his earlier note that the link should say
+// "View Performance" because "View Insights" sounds like a separate
+// product. He decided in front of the built page: the insight is the
+// thing you want more of, so the tap should give you more of it, not
+// move you to another screen.
+//
+// On Performance itself the card is the first section of the page and
+// Key Insights already carries "More insights", so it shows no
+// control at all.
 export default function InsightCard({
   bets,
   linked = true,
@@ -28,12 +35,17 @@ export default function InsightCard({
   linked?: boolean;
 }) {
   const [text, setText] = useState<string | null>(null);
+  // null means the sheet is closed.
+  const [popup, setPopup] = useState<string[] | null>(null);
+
+  const settled = bets.filter(
+    (b) => b.status !== "pending" && b.settled_at !== null
+  );
 
   useEffect(() => {
-    const settled = bets.filter(
-      (b) => b.status !== "pending" && b.settled_at !== null
+    const pool = buildInsightPool(
+      bets.filter((b) => b.status !== "pending" && b.settled_at !== null)
     );
-    const pool = buildInsightPool(settled);
     if (pool.length === 0) return;
     const now = new Date();
     const seed =
@@ -92,15 +104,27 @@ export default function InsightCard({
   );
 
   if (!linked) {
-    return <section className={`${CARD} flex items-center gap-3 p-4`}>{body}</section>;
+    return (
+      <section className={`${CARD} flex items-center gap-3 p-4`}>{body}</section>
+    );
   }
 
   return (
-    <Link href="/stats" className={`${CARD} flex items-center gap-3 p-4`}>
+    <section className={`${CARD} flex items-center gap-3 p-4`}>
       {body}
-      <span className={`w-[68px] leading-tight ${CARD_LINK} text-xs`}>
-        View Performance ›
-      </span>
-    </Link>
+      <button
+        type="button"
+        onClick={() => setPopup(rollInsights(settled))}
+        className={`w-[68px] shrink-0 text-left leading-tight ${CARD_LINK} text-xs`}
+      >
+        View Insights ›
+      </button>
+
+      <InsightsPopup
+        items={popup}
+        onReroll={() => setPopup(rollInsights(settled))}
+        onClose={() => setPopup(null)}
+      />
+    </section>
   );
 }
