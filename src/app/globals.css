@@ -19,10 +19,12 @@
   --font-mono: var(--font-geist-mono);
   --font-brand: var(--font-brand);
   --font-inter-tight: var(--font-inter-tight);
-  /* Numbers are set in the body face, like the mockup. Inter Tight,
-     a condensed display cut, made every figure read narrow next to
-     the mockup and was the single biggest typographic difference. */
-  --font-money: var(--font-geist-sans);
+  /* The numeral face. Inter Tight, chosen by the owner on 5 August
+     2026 from a comparison page of candidates.
+     I switched this to Geist during the Track page rebuild because the
+     condensed cut read narrow beside the mockup. That was my call, not
+     his, and he put it back. Do not change it again without asking. */
+  --font-money: var(--font-inter-tight);
   --font-plex: var(--font-plex);
   --font-instrument: var(--font-instrument);
   --color-cream: var(--brand-cream);

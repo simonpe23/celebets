@@ -98,15 +98,19 @@ SHARED COMPONENTS. Never copy their markup into a page.
 - src/components/StatTile.tsx    the labelled number in a card
 - src/components/HeroMoney.tsx   the big money number
 
-ONE TYPEFACE (changed August 2026). Numbers and words are both Geist.
-`font-money` still exists and still marks a figure, but it now points
-at the body face and only carries tabular figures.
-- Inter Tight was the numeral face until the owner put the build next
-  to his mockups. A condensed display cut made every figure read
-  narrow and cheap. The mockup sets its numbers in the same face as
-  its text. That single change fixed more than any card edit did.
-- design-check still enforces that every money value carries
-  `font-money` or is listed as prose.
+TWO FACES. Words are Geist. Numbers are INTER TIGHT, through the
+`font-money` variable, at weight 500 on the big hero figures.
+- The owner chose Inter Tight on 5 August 2026 from a comparison page
+  of candidates. It is a decision he made, not a default.
+- DO NOT SWITCH IT. I pointed `font-money` at Geist during the Track
+  rebuild because the condensed cut read narrow beside the mockup, and
+  I never asked. He caught it days later and put it back. A typeface
+  the owner picked is a product decision: propose, never apply.
+- The same mistake raised HeroMoney from weight 500 to 600. The number
+  ladder below said 500 the whole time, so the code and the notes
+  disagreed and nobody noticed. Back at 500.
+- design-check enforces that every money value carries `font-money` or
+  is listed as prose.
 
 THREE WEIGHTS. font-medium does not exist in this app.
 - normal    body text, captions, inputs
