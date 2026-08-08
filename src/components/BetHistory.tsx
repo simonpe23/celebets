@@ -19,7 +19,7 @@ function BuysList({ bet }: { bet: BetWithLegs }) {
         {expanded ? "Hide buys" : `${bet.bet_buys.length} buys`}
       </button>
       {expanded && (
-        <div className="mt-2 space-y-1 rounded-xl bg-neutral-100 p-3 dark:bg-[#1A1A24]">
+        <div className="mt-2 space-y-1 rounded-xl bg-neutral-100 p-3 dark:bg-[#161D38]">
           {[...bet.bet_buys]
             .sort(
               (a, b) =>
@@ -215,7 +215,7 @@ export default function BetHistory({ bets, limit }: Props) {
                 </div>
 
                 {editing === bet.id && (
-                  <div className="mt-3 flex items-end gap-2 rounded-xl bg-neutral-100 p-3 dark:bg-[#1A1A24]">
+                  <div className="mt-3 flex items-end gap-2 rounded-xl bg-neutral-100 p-3 dark:bg-[#161D38]">
                     <div className="grow">
                       <label
                         htmlFor={`date-${bet.id}`}
@@ -228,7 +228,7 @@ export default function BetHistory({ bets, limit }: Props) {
                         type="date"
                         value={dateValue}
                         onChange={(e) => setDateValue(e.target.value)}
-                        className="mt-1 block h-10 w-full rounded-lg border border-neutral-300 bg-white px-3 text-sm text-neutral-900 dark:border-white/15 dark:bg-[#13131C] dark:text-neutral-100"
+                        className="mt-1 block h-10 w-full rounded-lg border border-neutral-300 bg-white px-3 text-sm text-neutral-900 dark:border-white/15 dark:bg-[#0E1228] dark:text-neutral-100"
                       />
                     </div>
                     <button

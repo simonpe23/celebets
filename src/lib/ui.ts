@@ -5,7 +5,7 @@
 // carry a real border, because the mockup's cards are defined by their
 // edge, not by a shadow.
 export const CARD =
-  "rounded-2xl bg-white ring-1 ring-neutral-900/[0.06] shadow-[0_1px_2px_rgba(16,16,26,0.04)] dark:bg-[#13131C] dark:ring-white/[0.07] dark:shadow-none";
+  "rounded-2xl bg-white ring-1 ring-neutral-900/[0.06] shadow-[0_1px_2px_rgba(16,16,26,0.04)] dark:bg-[#0E1228] dark:ring-white/[0.07] dark:shadow-none";
 
 // The inner row inside a card: pending bets sit on this.
 export const INNER =
@@ -15,6 +15,10 @@ export const INNER =
 // The owner called the purple bright and childish three separate
 // times and the shape too much of a pill twice, so this is darker and
 // squarer than instinct suggests: #4C1D95 at a 6px radius.
+//
+// The mockup's own button is a vertical gradient, #5525C6 down to
+// #4915AD, which is brighter and bluer than this. The owner is
+// choosing between the two, so this stays on his last ruling.
 export const BTN =
   "rounded-md bg-[#4C1D95] text-[13px] font-semibold text-white active:bg-[#3B1578] disabled:opacity-60";
 

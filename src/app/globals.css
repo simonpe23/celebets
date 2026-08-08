@@ -33,10 +33,12 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* The mockup's dark is a cool near-black, barely blue. It is NOT
-       purple tinted: a purple cast made the whole app look like a
-       filter had been applied over it. */
-    --background: #0A0A12;
+    /* Sampled from the owner's mockup, not guessed. It is a NAVY
+       near-black: the blue channel runs about four times the red one.
+       "Barely blue" was my eyeball reading of it and it was wrong,
+       which is why the build looked grey next to the mockup. It is
+       still not purple tinted, that cast was a separate mistake. */
+    --background: #04081B;
     --foreground: #F2F2F5;
   }
 }

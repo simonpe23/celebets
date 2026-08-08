@@ -72,7 +72,7 @@ export default function ProfitPanel({
     "mt-1 block h-10 w-full rounded-lg border border-white/15 bg-white/5 px-3 text-sm text-white outline-none focus:border-white/40 [color-scheme:dark]";
 
   return (
-    <section className="overflow-hidden rounded-3xl bg-[#12121C] p-4 dark:bg-[#13131C] shadow-[0_18px_40px_-20px_rgba(16,19,34,0.9)] ring-1 ring-white/5">
+    <section className="overflow-hidden rounded-3xl bg-[#080D20] p-4 dark:bg-[#0E1228] shadow-[0_18px_40px_-20px_rgba(16,19,34,0.9)] ring-1 ring-white/5">
       <div className="flex items-center justify-between gap-3">
         <MicroLabel onDark>Profit</MicroLabel>
 
@@ -84,7 +84,7 @@ export default function ProfitPanel({
               onClick={() => onPeriodChange(key)}
               className={`rounded-full px-2.5 py-1 text-[11px] font-bold tracking-wide transition-colors ${
                 period === key
-                  ? "bg-white text-[#12121C]"
+                  ? "bg-white text-[#080D20]"
                   : "text-white/50 active:text-white/80"
               }`}
             >
@@ -97,7 +97,7 @@ export default function ProfitPanel({
             aria-label="Custom date range"
             className={`flex items-center rounded-full px-2 py-1.5 transition-colors ${
               custom
-                ? "bg-white text-[#12121C]"
+                ? "bg-white text-[#080D20]"
                 : "text-white/50 active:text-white/80"
             }`}
           >

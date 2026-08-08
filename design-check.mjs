@@ -43,11 +43,13 @@ const ALLOWED_HEX = new Set([
   "#3B82F6", // capture tile icon, camera
   "#F97316", // capture tile icon, pencil
   "#22C55E", // outcome pill Won, and the connect tile icon
-  "#13131C", // dark card
-  "#1A1A24", // dark popup
-  "#0A0A12", // dark page
-  "#14141E", // dark tab bar, floating
-  "#12121C", // chart panel
+  // The dark surfaces, sampled from the owner's mockup. It is a navy
+  // near-black, not the neutral grey-black the build used to have.
+  "#0E1228", // dark card
+  "#161D38", // dark popup
+  "#04081B", // dark page
+  "#0C1125", // dark tab bar and other raised surfaces
+  "#080D20", // chart panel
   "#F7F7FB", // light page
   "#34D399", // chart green
   "#FB7185", // chart red

@@ -358,7 +358,7 @@ export default function LiveBets({ bets }: Props) {
                     </div>
 
                     {addingMoney === bet.id && (
-                      <div className="mt-3 rounded-xl bg-neutral-100 p-3 dark:bg-[#1A1A24]">
+                      <div className="mt-3 rounded-xl bg-neutral-100 p-3 dark:bg-[#161D38]">
                         <label
                           htmlFor={`add-amount-${bet.id}`}
                           className="block text-sm font-semibold"
@@ -373,7 +373,7 @@ export default function LiveBets({ bets }: Props) {
                           placeholder="0.00"
                           value={addAmount}
                           onChange={(e) => setAddAmount(e.target.value)}
-                          className="mt-1 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-white/15 dark:bg-[#13131C] dark:text-neutral-100"
+                          className="mt-1 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-white/15 dark:bg-[#0E1228] dark:text-neutral-100"
                         />
                         <label
                           htmlFor={`add-payout-${bet.id}`}
@@ -392,7 +392,7 @@ export default function LiveBets({ bets }: Props) {
                           placeholder="0.00"
                           value={addPayout}
                           onChange={(e) => setAddPayout(e.target.value)}
-                          className="mt-1 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-white/15 dark:bg-[#13131C] dark:text-neutral-100"
+                          className="mt-1 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-white/15 dark:bg-[#0E1228] dark:text-neutral-100"
                         />
                         {parseMoney(addAmount) !== null &&
                           parseMoney(addPayout) !== null && (
@@ -439,7 +439,7 @@ export default function LiveBets({ bets }: Props) {
                       </div>
                     )}
                     {bet.cashed_out && (
-                      <div className="mt-3 flex items-center justify-between gap-2 rounded-xl bg-neutral-100 p-3 dark:bg-[#1A1A24]">
+                      <div className="mt-3 flex items-center justify-between gap-2 rounded-xl bg-neutral-100 p-3 dark:bg-[#161D38]">
                         <p className="text-sm">
                           Cashed out for{" "}
                           <span className="font-bold">
@@ -458,7 +458,7 @@ export default function LiveBets({ bets }: Props) {
                       </div>
                     )}
                     {cashingOut === bet.id && (
-                      <div className="mt-3 rounded-xl bg-neutral-100 p-3 dark:bg-[#1A1A24]">
+                      <div className="mt-3 rounded-xl bg-neutral-100 p-3 dark:bg-[#161D38]">
                         <label
                           htmlFor={`cashout-${bet.id}`}
                           className="block text-sm font-semibold"
@@ -478,7 +478,7 @@ export default function LiveBets({ bets }: Props) {
                           placeholder="0.00"
                           value={cashOutAmount}
                           onChange={(e) => setCashOutAmount(e.target.value)}
-                          className="mt-2 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-white/15 dark:bg-[#13131C] dark:text-neutral-100"
+                          className="mt-2 block h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 dark:border-white/15 dark:bg-[#0E1228] dark:text-neutral-100"
                         />
                         <div className="mt-2 flex justify-end gap-2">
                           <button
@@ -547,7 +547,7 @@ export default function LiveBets({ bets }: Props) {
                             : `${bet.bet_buys.length} buys`}
                         </button>
                         {expandedBuys === bet.id && (
-                          <div className="mt-2 space-y-1 rounded-xl bg-neutral-100 p-3 dark:bg-[#1A1A24]">
+                          <div className="mt-2 space-y-1 rounded-xl bg-neutral-100 p-3 dark:bg-[#161D38]">
                             {[...bet.bet_buys]
                               .sort(
                                 (a, b) =>

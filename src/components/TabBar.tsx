@@ -38,7 +38,7 @@ const ICON = "h-[26px] w-[26px]";
 // The active purple is the Set balance button's purple, ruled by the
 // owner: one purple, not two shades of it on the same screen.
 //
-// Dark cannot use it. #4C1D95 on the #14141E bar is a contrast ratio of
+// Dark cannot use it. #4C1D95 on the #0C1125 bar is a contrast ratio of
 // about 1.6, so the selected tab reads as switched off. Dark takes the
 // next step up in the same hue instead.
 const ACTIVE = "text-[#4C1D95] dark:text-[#7C3AED]";
@@ -131,7 +131,7 @@ export default function TabBar({ activeHref }: { activeHref?: string }) {
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
-      <div className="mx-auto flex w-full max-w-md items-stretch rounded-[26px] bg-white p-2 shadow-[0_8px_28px_-12px_rgba(16,16,26,0.35)] ring-1 ring-neutral-900/[0.06] dark:bg-[#14141E] dark:ring-white/[0.07]">
+      <div className="mx-auto flex w-full max-w-md items-stretch rounded-[26px] bg-white p-2 shadow-[0_8px_28px_-12px_rgba(16,16,26,0.35)] ring-1 ring-neutral-900/[0.06] dark:bg-[#0C1125] dark:ring-white/[0.07]">
         {TABS.map((tab, i) => {
           const Icon = ICONS[i];
           const active = tab.match(pathname);

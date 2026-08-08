@@ -359,7 +359,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
   }
 
   const inputClass =
-    "mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#7C3AED] focus:ring-2 focus:ring-[#7C3AED]/30 dark:border-white/15 dark:bg-[#13131C] dark:text-neutral-100";
+    "mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#7C3AED] focus:ring-2 focus:ring-[#7C3AED]/30 dark:border-white/15 dark:bg-[#0E1228] dark:text-neutral-100";
 
   return (
     <section className={`${CARD} p-4`}>
@@ -486,7 +486,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
         }}
       />
       {importing && (
-        <p className="mt-2 rounded-lg bg-neutral-100 px-4 py-3 text-sm dark:bg-[#1A1A24]">
+        <p className="mt-2 rounded-lg bg-neutral-100 px-4 py-3 text-sm dark:bg-[#161D38]">
           Reading the slip...
         </p>
       )}
@@ -688,7 +688,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
                   return (
                     <div
                       key={item.label}
-                      className="mt-2 flex gap-2 overflow-x-auto rounded-xl bg-neutral-100 p-2 dark:bg-[#1A1A24]"
+                      className="mt-2 flex gap-2 overflow-x-auto rounded-xl bg-neutral-100 p-2 dark:bg-[#161D38]"
                     >
                       {item.children.map((child) => {
                         const value = `${item.label}: ${child}`;
@@ -705,7 +705,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
                             className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
                               selected
                                 ? "border-[#7C3AED] bg-[#4C1D95] text-white"
-                                : "border-neutral-300 bg-white dark:border-white/15 dark:bg-[#13131C]"
+                                : "border-neutral-300 bg-white dark:border-white/15 dark:bg-[#0E1228]"
                             }`}
                           >
                             {child}
@@ -794,7 +794,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
         </p>
       </div>
 
-      <div className="mt-5 grid grid-cols-3 gap-2 rounded-xl bg-neutral-100 p-3 text-center dark:bg-[#1A1A24]">
+      <div className="mt-5 grid grid-cols-3 gap-2 rounded-xl bg-neutral-100 p-3 text-center dark:bg-[#161D38]">
         <div>
           <p className="text-xs text-neutral-500 dark:text-neutral-400">Total odds</p>
           <p className="mt-0.5 font-money text-sm font-bold tabular-nums">

@@ -108,7 +108,7 @@ export default function BalanceCard({
   const tabClass = (active: boolean) =>
     `flex-1 rounded-lg px-3 py-2 text-sm font-semibold ${
       active
-        ? "bg-white text-neutral-900 shadow-sm dark:bg-[#13131C] dark:text-white"
+        ? "bg-white text-neutral-900 shadow-sm dark:bg-[#0E1228] dark:text-white"
         : "text-neutral-500 dark:text-neutral-400"
     }`;
 
@@ -233,7 +233,7 @@ export default function BalanceCard({
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center">
-          <div className="w-full max-w-sm rounded-t-2xl bg-white p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:rounded-2xl sm:pb-6 dark:bg-[#1A1A24]">
+          <div className="w-full max-w-sm rounded-t-2xl bg-white p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:rounded-2xl sm:pb-6 dark:bg-[#161D38]">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-bold">Set tracking balance</h3>
               <button
@@ -247,7 +247,7 @@ export default function BalanceCard({
 
             {/* Shown because months later nobody remembers what they set. */}
             {hasBalance && (
-              <div className="mt-4 rounded-xl bg-neutral-100 p-3 dark:bg-[#13131C]">
+              <div className="mt-4 rounded-xl bg-neutral-100 p-3 dark:bg-[#0E1228]">
                 <MicroLabel>Tracking Balance</MicroLabel>
                 <p className="mt-0.5 font-money text-lg font-bold tabular-nums">
                   {formatMoney(balance)}
@@ -269,7 +269,7 @@ export default function BalanceCard({
             )}
 
             {hasBalance && (
-              <div className="mt-4 flex gap-1 rounded-xl bg-neutral-100 p-1 dark:bg-[#13131C]">
+              <div className="mt-4 flex gap-1 rounded-xl bg-neutral-100 p-1 dark:bg-[#0E1228]">
                 <button
                   type="button"
                   onClick={() => setMode("adjust")}
@@ -298,7 +298,7 @@ export default function BalanceCard({
               placeholder="0.00"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#7C3AED] focus:ring-2 focus:ring-[#7C3AED]/30 dark:border-white/15 dark:bg-[#13131C] dark:text-neutral-100"
+              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#7C3AED] focus:ring-2 focus:ring-[#7C3AED]/30 dark:border-white/15 dark:bg-[#0E1228] dark:text-neutral-100"
             />
 
             {error && (
