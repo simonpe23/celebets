@@ -3,6 +3,7 @@ import Greeting from "@/components/Greeting";
 import InsightCard from "@/components/InsightCard";
 import LiveBets from "@/components/LiveBets";
 import NewBetForm from "@/components/NewBetForm";
+import RecentBets from "@/components/RecentBets";
 import SnapshotCard from "@/components/SnapshotCard";
 import { round2 } from "@/lib/format";
 import { betProfit, sinceLine } from "@/lib/stats";
@@ -80,6 +81,11 @@ export default function HomeDashboard({
       <SnapshotCard bets={counted} netProfit={netProfit} />
 
       <LiveBets bets={liveBets} />
+
+      {/* What just finished, under what is still riding, so the page
+          reads forward in time. Counts from the fresh start line like
+          everything else here. */}
+      <RecentBets bets={counted} />
     </div>
   );
 }
