@@ -62,7 +62,7 @@ export default function InsightsPopup({
             New mix
           </button>
           <Link
-            href="/recommendations"
+            href="/insights"
             className={`${CARD_LINK} underline underline-offset-2`}
           >
             Show all ›

@@ -1,26 +1,12 @@
-import { createClient } from "@/lib/supabase/server";
-import AllRecommendations from "@/components/AllRecommendations";
-import { SPORTS, type BetWithLegs, type Sport } from "@/lib/types";
+import Research from "@/components/Research";
 
-interface Props {
-  searchParams: Promise<{ sport?: string }>;
-}
-
-export default async function RecommendationsPage({ searchParams }: Props) {
-  const { sport: sportParam } = await searchParams;
-  const sport = (SPORTS as readonly string[]).includes(sportParam ?? "")
-    ? (sportParam as Sport)
-    : null;
-
-  const supabase = await createClient();
-  const { data: bets } = await supabase
-    .from("bets")
-    .select(
-      "id, stake, total_odds, status, placed_at, settled_at, payout, cashed_out, legs (id, sport, description, odds, result, subcategory), bet_buys (id, amount, payout, created_at)"
-    )
-    .order("placed_at", { ascending: false });
-
-  return (
-    <AllRecommendations bets={(bets ?? []) as BetWithLegs[]} sport={sport} />
-  );
+// The Research tab. The address stays /recommendations, the same
+// reasoning as /stats being called Performance: old bookmarks and the
+// tab bar's match both keep working, and a redirect is one more thing
+// to get wrong.
+//
+// What used to live here, the full insight list, moved to /insights.
+// Insights happen after a bet; Research happens before one.
+export default function ResearchPage() {
+  return <Research />;
 }
