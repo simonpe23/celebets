@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { buildInsightPool } from "@/lib/stats";
 import type { BetWithLegs } from "@/lib/types";
-import { ACCENT, ACCENT_TINT, CARD, CARD_LINK } from "@/lib/ui";
+import { ACCENT, CARD, CARD_LINK } from "@/lib/ui";
 
 // Insight of the day. One thing Celebet noticed in the user's own
 // data, surfaced on its own: the user did not ask, and no AI went
@@ -55,11 +55,11 @@ export default function InsightCard({
           >
             <path d="M12 2l2.2 5.8L20 10l-5.8 2.2L12 18l-2.2-5.8L4 10l5.8-2.2L12 2Z" />
           </svg>
+          {/* No AI badge. Removed by the owner, August 2026. The
+              sparkle already says Celebet noticed this on its own, and
+              the badge was a second label for the same idea. */}
           <span className="whitespace-nowrap text-sm font-bold">
             {linked ? "Insight of the day" : "Today's Insight"}
-          </span>
-          <span className={`rounded px-1.5 py-0.5 text-[10px] font-bold ${ACCENT_TINT}`}>
-            AI
           </span>
         </span>
         <span className="mt-2 line-clamp-3 text-[15px] font-semibold leading-snug">

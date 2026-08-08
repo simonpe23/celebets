@@ -43,6 +43,9 @@ export const BTN =
 // shade of the same thing. It marks insights and nothing else, so
 // Performance reads as its own place rather than more of Track.
 export const ACCENT = "text-[#B45309] dark:text-[#FBBF24]";
+// Unused right now: the AI badge that carried it was removed by
+// the owner. Kept because the accent needs a tinted form the moment
+// anything else on Performance is marked as an insight.
 export const ACCENT_TINT =
   "bg-[#B45309]/10 text-[#B45309] dark:bg-[#FBBF24]/15 dark:text-[#FBBF24]";
 
