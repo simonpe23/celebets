@@ -72,9 +72,13 @@ const moneyTone = (value: number) =>
 export default function SnapshotCard({
   bets,
   netProfit,
+  // On Track the whole card leads to Performance. On Performance it is
+  // already there, so the link would point at itself.
+  linked = true,
 }: {
   bets: BetWithLegs[];
   netProfit: number;
+  linked?: boolean;
 }) {
   const settled = bets.filter(
     (b) => b.status !== "pending" && b.settled_at !== null
@@ -95,12 +99,18 @@ export default function SnapshotCard({
     <section className={`${CARD} p-4`}>
       <div className="flex items-baseline justify-between gap-3">
         <h2 className="text-[17px] font-bold">Performance Snapshot</h2>
-        <Link
-          href="/stats"
-          className="shrink-0 text-sm font-semibold text-[#7C3AED] dark:text-[#9A57FC]"
-        >
-          View all →
-        </Link>
+        {linked ? (
+          <Link
+            href="/stats"
+            className="shrink-0 text-sm font-semibold text-[#7C3AED] dark:text-[#9A57FC]"
+          >
+            View all →
+          </Link>
+        ) : (
+          <span className="shrink-0 text-xs text-neutral-500 dark:text-neutral-400">
+            All time
+          </span>
+        )}
       </div>
 
       <div className="mt-3 grid grid-cols-4 divide-x divide-neutral-200 dark:divide-white/10">
@@ -159,11 +169,14 @@ export default function SnapshotCard({
           <p className={LABEL}>Best Sport</p>
           {best ? (
             <>
-              <p className="mt-1 truncate text-sm font-bold leading-7">
+              {/* Wraps rather than truncates. A quarter of the card is
+                  not wide enough for "American Football", and cutting a
+                  sport's name to "Americ..." is worse than two lines. */}
+              <p className="mt-1 text-sm font-bold leading-tight">
                 {SPORT_EMOJI[best.sport]} {best.sport}
               </p>
               <p
-                className={`mt-2 font-money text-xs tabular-nums ${moneyTone(best.profit)}`}
+                className={`mt-1 font-money text-xs tabular-nums ${moneyTone(best.profit)}`}
               >
                 {short(best.profit)}
               </p>

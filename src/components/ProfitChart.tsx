@@ -40,6 +40,20 @@ export default function ProfitChart({
   const plotRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
+  // The right hand edge of the chart is "now", which cannot be read
+  // during render: the server reads its clock, the browser reads its
+  // own milliseconds later, every x coordinate comes out different and
+  // React reports a hydration mismatch. It also means the server's
+  // timezone decided where today ended, not the phone's.
+  //
+  // So the clock is read once after mount, and until then the chart
+  // draws nothing. It sits inside a panel of a fixed height, so there
+  // is no layout jump.
+  const [now, setNow] = useState<Date | null>(null);
+  useEffect(() => {
+    setNow(new Date());
+  }, []);
+
   // Touch is handled by hand rather than through React, because the
   // browser only lets you cancel a scroll from a non-passive listener.
   //
@@ -113,11 +127,11 @@ export default function ProfitChart({
     );
 
   if (settled.length === 0) return null;
+  if (now === null) return null;
 
   // The line always starts at zero, so every period stands on its own.
   const firstSettled = new Date(settled[0].settled_at as string);
   const startX = from ?? new Date(firstSettled.getTime() - 60 * 60 * 1000);
-  const now = new Date();
   const lastSettled = new Date(
     settled[settled.length - 1].settled_at as string
   );

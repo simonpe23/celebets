@@ -539,6 +539,207 @@ export function buildSportInsightPool(
   return out;
 }
 
+// ---------------------------------------------------------------
+// KEY INSIGHTS: the three statements at the top of Performance.
+//
+// These are not the rotating pool. They are fixed, they always say the
+// same thing for the same data, and they answer three questions in
+// order: what am I good at, what is costing me, which way am I going.
+//
+// Everything here speaks in MONEY, never in a percentage. Ruled by the
+// owner (August 2026): a parlay's stake covers several sports, so
+// there is no honest per-sport or per-category ROI. Profit has no such
+// problem, because betProfitFor already splits a bet's money across
+// its picks by their odds.
+// ---------------------------------------------------------------
+
+export interface KeyInsight {
+  kind: "strength" | "weakness" | "trend";
+  // The thing itself: a sport, a category, a direction.
+  headline: string;
+  // The money or the movement behind it.
+  value: string;
+  // One line of plain English under it.
+  detail: string;
+  tone: "up" | "down" | "flat";
+}
+
+// A group needs this many settled picks before it is allowed to be
+// called a strength or a weakness. Below it, one lucky bet decides.
+const KEY_MIN_PICKS = 5;
+
+interface Group {
+  label: string;
+  wins: number;
+  losses: number;
+  profit: number;
+  // Set when the group is a whole sport, so the statement can name the
+  // sub-category most of that money came from.
+  sport?: Sport;
+}
+
+// Sports and sub-categories compete in one list, because the owner's
+// own example mixed them: "MLB Favorites" beside "Player Props".
+//
+// A sport almost always beats its own sub-categories on absolute money,
+// because it contains them. That is why the sport keeps a pointer back
+// to itself: the headline stays the sport, and the detail line names
+// the category that drove it. Ranking a part above its whole would
+// need a rule nobody has agreed.
+function keyGroups(settledBets: BetWithLegs[]): Group[] {
+  const out: Group[] = [];
+
+  for (const row of sportRows(settledBets)) {
+    if (row.wins + row.losses < KEY_MIN_PICKS) continue;
+    out.push({
+      label: row.sport,
+      wins: row.wins,
+      losses: row.losses,
+      profit: row.profit,
+      sport: row.sport,
+    });
+  }
+
+  for (const sport of SPORTS) {
+    for (const row of categoryRows(settledBets, sport)) {
+      if (row.label === "No category") continue;
+      if (row.wins + row.losses < KEY_MIN_PICKS) continue;
+      out.push({
+        label: `${sport} ${row.label}`,
+        wins: row.wins,
+        losses: row.losses,
+        profit: row.profit,
+      });
+    }
+  }
+
+  return out;
+}
+
+// The sub-category that drove a sport's result, named only when it
+// carries most of the money. "Mostly Player Props" is worth saying;
+// "mostly a category holding 8% of it" is noise.
+function drivingCategory(
+  settledBets: BetWithLegs[],
+  group: Group
+): string | null {
+  if (!group.sport) return null;
+  const rows = categoryRows(settledBets, group.sport).filter(
+    (r) => r.label !== "No category"
+  );
+  if (rows.length === 0) return null;
+  const wanted = group.profit >= 0 ? 1 : -1;
+  const best = rows
+    .filter((r) => Math.sign(r.profit) === wanted)
+    .sort((a, b) => Math.abs(b.profit) - Math.abs(a.profit))[0];
+  if (!best) return null;
+  if (Math.abs(best.profit) < Math.abs(group.profit) * 0.5) return null;
+  return best.label;
+}
+
+// Profit per calendar week, oldest first, over the last `weeks` weeks.
+function weeklyProfit(settledBets: BetWithLegs[], weeks: number): number[] {
+  const now = new Date();
+  const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const daysSinceMonday = (startToday.getDay() + 6) % 7;
+  const thisMonday = new Date(startToday);
+  thisMonday.setDate(startToday.getDate() - daysSinceMonday);
+
+  const out: number[] = [];
+  for (let i = weeks - 1; i >= 0; i--) {
+    const from = new Date(thisMonday);
+    from.setDate(thisMonday.getDate() - i * 7);
+    const to = new Date(from);
+    to.setDate(from.getDate() + 7);
+    const inWeek = settledBets.filter((b) => {
+      const settled = new Date(b.settled_at as string);
+      return settled >= from && settled < to;
+    });
+    out.push(inWeek.reduce((sum, b) => sum + betProfit(b), 0));
+  }
+  return out;
+}
+
+export function keyInsights(settledBets: BetWithLegs[]): KeyInsight[] {
+  const out: KeyInsight[] = [];
+  const groups = keyGroups(settledBets);
+
+  const winners = groups
+    .filter((g) => g.profit > 0)
+    .sort((a, b) => b.profit - a.profit);
+  const losers = groups
+    .filter((g) => g.profit < 0)
+    .sort((a, b) => a.profit - b.profit);
+
+  if (winners.length > 0) {
+    const g = winners[0];
+    const picks = g.wins + g.losses;
+    const driver = drivingCategory(settledBets, g);
+    out.push({
+      kind: "strength",
+      headline: g.label,
+      value: usd(g.profit),
+      detail: driver
+        ? `Right on ${g.wins} of ${picks} picks, mostly ${driver}.`
+        : `Right on ${g.wins} of ${picks} picks. Your best earner.`,
+      tone: "up",
+    });
+  }
+
+  if (losers.length > 0) {
+    const g = losers[0];
+    const picks = g.wins + g.losses;
+    const driver = drivingCategory(settledBets, g);
+    out.push({
+      kind: "weakness",
+      headline: g.label,
+      value: usd(g.profit),
+      detail: driver
+        ? `Right on ${g.wins} of ${picks} picks, mostly ${driver}.`
+        : `Right on ${g.wins} of ${picks} picks. Costing you the most.`,
+      tone: "down",
+    });
+  }
+
+  // Trending: the last three finished weeks, ignoring the week in
+  // progress, because a Monday would otherwise always look like a
+  // collapse. A run of three needs three finished weeks of data.
+  const weeks = weeklyProfit(settledBets, 4).slice(0, 3);
+  const hasWeeks = weeks.some((w) => w !== 0);
+  if (hasWeeks) {
+    const rising = weeks[0] < weeks[1] && weeks[1] < weeks[2];
+    const falling = weeks[0] > weeks[1] && weeks[1] > weeks[2];
+    const last = weeks[2];
+    if (rising) {
+      out.push({
+        kind: "trend",
+        headline: "Trending up",
+        value: usd(last),
+        detail: "Three weeks in a row of better results.",
+        tone: "up",
+      });
+    } else if (falling) {
+      out.push({
+        kind: "trend",
+        headline: "Trending down",
+        value: usd(last),
+        detail: "Three weeks in a row of worse results.",
+        tone: "down",
+      });
+    } else {
+      out.push({
+        kind: "trend",
+        headline: "Last full week",
+        value: usd(last),
+        detail: "No clear run up or down over the last three weeks.",
+        tone: last > 0 ? "up" : last < 0 ? "down" : "flat",
+      });
+    }
+  }
+
+  return out;
+}
+
 function shuffle<T>(items: T[]): T[] {
   const arr = [...items];
   for (let i = arr.length - 1; i > 0; i--) {

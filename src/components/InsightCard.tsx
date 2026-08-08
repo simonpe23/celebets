@@ -16,10 +16,17 @@ import { CARD } from "@/lib/ui";
 // visit. Picked after mount because the phone's date is the one that
 // matters, not the server's.
 //
-// It links to Performance, not to a separate insights page. Insights
-// are a layer inside Performance, the way Apple Health keeps insights
-// inside the health data. Ruled by the owner, August 2026.
-export default function InsightCard({ bets }: { bets: BetWithLegs[] }) {
+// On Track it links to Performance, because insights are a layer
+// inside Performance, the way Apple Health keeps insights inside the
+// health data. On Performance itself it is the first section of the
+// page, so it drops the link rather than pointing at itself.
+export default function InsightCard({
+  bets,
+  linked = true,
+}: {
+  bets: BetWithLegs[];
+  linked?: boolean;
+}) {
   const [text, setText] = useState<string | null>(null);
 
   useEffect(() => {
@@ -36,8 +43,8 @@ export default function InsightCard({ bets }: { bets: BetWithLegs[] }) {
 
   if (!text) return null;
 
-  return (
-    <Link href="/stats" className={`${CARD} flex items-center gap-3 p-4`}>
+  const body = (
+    <>
       <span className="min-w-0 grow">
         <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
           <svg
@@ -49,7 +56,7 @@ export default function InsightCard({ bets }: { bets: BetWithLegs[] }) {
             <path d="M12 2l2.2 5.8L20 10l-5.8 2.2L12 18l-2.2-5.8L4 10l5.8-2.2L12 2Z" />
           </svg>
           <span className="whitespace-nowrap text-sm font-bold">
-            Insight of the day
+            {linked ? "Insight of the day" : "Today's Insight"}
           </span>
           <span className="rounded bg-[#7C3AED]/10 px-1.5 py-0.5 text-[10px] font-bold text-[#7C3AED] dark:bg-[#9A57FC]/15 dark:text-[#9A57FC]">
             AI
@@ -82,7 +89,16 @@ export default function InsightCard({ bets }: { bets: BetWithLegs[] }) {
           </svg>
         </span>
       </span>
+    </>
+  );
 
+  if (!linked) {
+    return <section className={`${CARD} flex items-center gap-3 p-4`}>{body}</section>;
+  }
+
+  return (
+    <Link href="/stats" className={`${CARD} flex items-center gap-3 p-4`}>
+      {body}
       <span className="w-[72px] shrink-0 text-xs font-bold leading-tight text-[#7C3AED] dark:text-[#9A57FC]">
         View Performance →
       </span>
