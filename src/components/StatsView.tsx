@@ -2,13 +2,15 @@
 
 import MicroLabel from "@/components/MicroLabel";
 import { useState } from "react";
-import Link from "next/link";
 import { formatMoney, formatSignedMoney, round2 } from "@/lib/format";
 import BetHistory from "@/components/BetHistory";
 import HeadlineProfit from "@/components/HeadlineProfit";
+import InsightCard from "@/components/InsightCard";
+import KeyInsights from "@/components/KeyInsights";
+import SnapshotCard from "@/components/SnapshotCard";
 import StatTile from "@/components/StatTile";
+import TabBar from "@/components/TabBar";
 import ProfitPanel, { type Period } from "@/components/ProfitPanel";
-import Recommendations from "@/components/Recommendations";
 import {
   bucketRows,
   categoryRows,
@@ -55,7 +57,34 @@ function pctLabel(wins: number, total: number): string {
   return `${Math.round((wins / total) * 100)}%`;
 }
 
-export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
+// PERFORMANCE IS A PERFORMANCE REVIEW, NOT A STATISTICS PAGE. Ruled by
+// the owner (August 2026). Opening it must not land on graphs, so the
+// page runs in two halves:
+//
+//   The review, all time and unfiltered:
+//     Today's Insight, Key Insights, Performance Snapshot
+//   The data, filtered by period and by sport:
+//     the headline and chart, the tiles, the breakdowns, the history
+//
+// The split is stated on the page. Without it the all time snapshot
+// and the filtered headline sit under one screen showing two different
+// profits, which reads as a bug.
+export default function StatsView({
+  bets,
+  netProfit,
+  activeHref,
+}: {
+  bets: BetWithLegs[];
+  // The app's ONE definition of net profit, computed by the page from
+  // balance and transactions. Never recomputed here from settled bets:
+  // that version ignores money still riding and disagrees with the
+  // Track page by hundreds of dollars.
+  netProfit: number;
+  // For the local preview only, whose URL is /preview/performance and
+  // would otherwise light no tab at all. The real page leaves it unset
+  // and the tab bar reads the address itself.
+  activeHref?: string;
+}) {
   const [sport, setSport] = useState<Sport | null>(null);
   const [period, setPeriod] = useState<Period>("all");
   const [customFrom, setCustomFrom] = useState("");
@@ -137,23 +166,29 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
     }`;
 
   return (
-    <main className="min-h-dvh px-4 py-6 sm:px-6">
-      <div className="mx-auto w-full max-w-md space-y-5">
-        <header className="flex items-center justify-between gap-2">
-          <h1 className="text-2xl font-bold tracking-tight">Performance</h1>
-          <div className="flex shrink-0 items-center gap-2">
-            <Recommendations bets={allSettled} />
-            <Link
-              href="/app"
-              className="rounded-xl border border-neutral-300 px-3 py-2.5 text-sm font-bold text-neutral-600 dark:border-white/15 dark:text-neutral-300"
-            >
-              Home
-            </Link>
-          </div>
+    <main className="min-h-dvh px-4 pt-6 pb-32 sm:px-6">
+      <div className="mx-auto w-full max-w-md space-y-4">
+        <header>
+          <h1 className="text-[22px] font-bold tracking-tight">Performance</h1>
         </header>
 
-        {/* The headline and the chart sit straight on the page. No card,
-            so the top of the screen reads as one open area. */}
+        {/* THE REVIEW. All time, unfiltered, and it opens the page,
+            because the owner ruled that Performance must not land on
+            graphs. What am I good at, what is costing me, where do I
+            stand. */}
+        <InsightCard bets={bets} linked={false} />
+        <KeyInsights bets={allSettled} />
+        <SnapshotCard bets={bets} netProfit={netProfit} linked={false} />
+
+        {/* THE DATA. Everything below answers to the period and sport
+            controls, which is why the boundary is named out loud. */}
+        <div className="pt-2">
+          <h2 className="text-[17px] font-bold">Charts and breakdowns</h2>
+          <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
+            Everything below follows the period and sport you pick.
+          </p>
+        </div>
+
         <section>
           <HeadlineProfit
             label={`${periodLabel}${sport === null ? "" : ` / ${sport}`}`}
@@ -277,6 +312,29 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
             </section>
 
             <section className={`${CARD} p-4`}>
+              <h2 className="text-lg font-bold">Odds groups</h2>
+              <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+                Your settled picks grouped by how risky they were. Picks
+                without odds are not shown here.
+              </p>
+              <div className="mt-3 space-y-2">
+                {byBucket.map((row) => (
+                  <div
+                    key={row.label}
+                    className="flex items-center justify-between gap-2"
+                  >
+                    <p className="text-sm font-semibold">{row.label}</p>
+                    <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                      {row.total === 0
+                        ? "no picks"
+                        : `${pctLabel(row.wins, row.total)} right (${row.wins} of ${row.total})`}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className={`${CARD} p-4`}>
               <h2 className="text-lg font-bold">Singles vs parlays</h2>
               {bySportType !== null && (
                 <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
@@ -341,29 +399,6 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
               </div>
             </section>
 
-            <section className={`${CARD} p-4`}>
-              <h2 className="text-lg font-bold">Odds groups</h2>
-              <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
-                Your settled picks grouped by how risky they were. Picks
-                without odds are not shown here.
-              </p>
-              <div className="mt-3 space-y-2">
-                {byBucket.map((row) => (
-                  <div
-                    key={row.label}
-                    className="flex items-center justify-between gap-2"
-                  >
-                    <p className="text-sm font-semibold">{row.label}</p>
-                    <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                      {row.total === 0
-                        ? "no picks"
-                        : `${pctLabel(row.wins, row.total)} right (${row.wins} of ${row.total})`}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </section>
-
             {sport !== null && byCategory.length > 0 && (
               <section className={`${CARD} p-4`}>
                 <h2 className="text-lg font-bold">Per category</h2>
@@ -402,6 +437,7 @@ export default function StatsView({ bets }: { bets: BetWithLegs[] }) {
           </>
         )}
       </div>
+      <TabBar activeHref={activeHref} />
     </main>
   );
 }
