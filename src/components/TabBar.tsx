@@ -128,7 +128,12 @@ const ICONS = [TrackIcon, PerformanceIcon, ResearchIcon];
 // activeHref exists for the local preview, whose URL is /preview and
 // would otherwise light no tab at all.
 export default function TabBar({ activeHref }: { activeHref?: string }) {
-  const pathname = activeHref ?? usePathname() ?? "";
+  // usePathname is called unconditionally on purpose. Writing
+  // `activeHref ?? usePathname()` short-circuits, which skips the hook
+  // on some renders and breaks the rules of hooks. It compiled locally
+  // and failed the real build.
+  const currentPath = usePathname();
+  const pathname = activeHref ?? currentPath ?? "";
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">

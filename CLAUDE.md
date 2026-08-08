@@ -40,9 +40,15 @@ local preview pages in src/app/preview never get new utility classes.
 Use inline styles there, or the preview silently falls back and you
 compare two identical things.
 
-Run `node design-check.mjs` before every screenshot. It reads the
-system below and fails on drift. Never show the owner a screenshot
+Run `npm run check` before every screenshot. It is design-check plus
+tsc plus a real production build. Never show the owner a screenshot
 while it is failing.
+
+Do NOT run `node design-check.mjs` on its own. In August 2026 the
+owner got a session's worth of "Failed preview deployment" emails
+from Vercel while design-check and tsc were both green: ESLint's
+rules-of-hooks only runs inside `next build`. If the build is not
+part of the check, the check is a lie.
 
 THE SWEEP RULE (added August 2026, after the owner had to ask three
 times whether a font change had reached the whole app):

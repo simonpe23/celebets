@@ -1,8 +1,13 @@
 // Checks the app against the design system in CLAUDE.md.
-// Run it before every screenshot: node design-check.mjs
 //
 // This exists because font and spacing drift cost the owner six rounds
 // of review. A machine should catch this, not a person.
+//
+// DO NOT run this alone. Run `npm run check`, which is this plus tsc
+// plus a real production build. Vercel emailed the owner about failed
+// deployments for a whole session because this file and tsc both
+// passed while `next build` did not: ESLint's rules-of-hooks only runs
+// during the build. Green here is not green.
 
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
