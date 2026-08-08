@@ -11,7 +11,7 @@ import {
   round2,
 } from "@/lib/format";
 import { SPORT_EMOJI, type BetWithLegs, type LegResult } from "@/lib/types";
-import { CARD, INNER, OUTCOME, OUTCOME_LOST, OUTCOME_WON } from "@/lib/ui";
+import { CARD, CARD_LINK, INNER, OUTCOME, OUTCOME_LOST, OUTCOME_WON } from "@/lib/ui";
 
 interface Props {
   bets: BetWithLegs[];
@@ -172,16 +172,16 @@ export default function LiveBets({ bets }: Props) {
         <h2 className="flex items-center gap-2 text-[17px] font-bold">
           Pending Bets
           {bets.length > 0 && (
-            <span className="rounded-full bg-[#7C3AED]/10 px-2.5 py-0.5 font-money text-xs font-semibold tabular-nums text-[#7C3AED] dark:bg-[#9A57FC]/15 dark:text-[#9A57FC]">
+            <span className="rounded-full bg-neutral-200/70 px-2.5 py-0.5 font-money text-xs font-semibold tabular-nums text-neutral-600 dark:bg-white/10 dark:text-neutral-300">
               {bets.length}
             </span>
           )}
         </h2>
         <Link
           href="/stats"
-          className="shrink-0 text-sm font-bold text-[#7C3AED] dark:text-[#9A57FC]"
+          className={CARD_LINK}
         >
-          View all →
+          View all ›
         </Link>
       </div>
 
@@ -218,7 +218,7 @@ export default function LiveBets({ bets }: Props) {
                 >
                   <span className="flex min-w-0 items-center gap-2.5">
                     {isParlay ? (
-                      <span className="shrink-0 rounded-md bg-[#7C3AED]/15 px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-[#7C3AED] dark:text-[#9A57FC]">
+                      <span className="shrink-0 rounded-md bg-neutral-200/70 px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-neutral-600 dark:bg-white/10 dark:text-neutral-300">
                         Parlay
                       </span>
                     ) : (
@@ -430,7 +430,7 @@ export default function LiveBets({ bets }: Props) {
                               parseMoney(addPayout) === null
                             }
                             onClick={() => addMoney(bet.id, stake, totalOdds)}
-                            className="rounded-lg bg-[#5525C6] px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
+                            className="rounded-lg bg-brand-top px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
                           >
                             Confirm add
                           </button>
@@ -498,7 +498,7 @@ export default function LiveBets({ bets }: Props) {
                               parseMoney(cashOutAmount) === null
                             }
                             onClick={() => cashOut(bet.id)}
-                            className="rounded-lg bg-[#5525C6] px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
+                            className="rounded-lg bg-brand-top px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
                           >
                             Confirm cash out
                           </button>
@@ -610,7 +610,7 @@ export default function LiveBets({ bets }: Props) {
                                 addingMoney === bet.id ? null : bet.id
                               );
                             }}
-                            className="rounded-lg border border-[#7C3AED]/40 px-3 py-1.5 text-xs font-semibold text-[#7C3AED] disabled:opacity-50 dark:border-[#9A57FC]/40 dark:text-[#9A57FC]"
+                            className="rounded-lg border border-brand-mark/40 px-3 py-1.5 text-xs font-semibold text-brand-mark disabled:opacity-50 dark:text-brand-mark"
                           >
                             Add money
                           </button>
@@ -625,7 +625,7 @@ export default function LiveBets({ bets }: Props) {
                                 cashingOut === bet.id ? null : bet.id
                               );
                             }}
-                            className="rounded-lg border border-[#7C3AED]/40 px-3 py-1.5 text-xs font-semibold text-[#7C3AED] disabled:opacity-50 dark:border-[#9A57FC]/40 dark:text-[#9A57FC]"
+                            className="rounded-lg border border-brand-mark/40 px-3 py-1.5 text-xs font-semibold text-brand-mark disabled:opacity-50 dark:text-brand-mark"
                           >
                             Cash out
                           </button>

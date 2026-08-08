@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { buildInsightPool } from "@/lib/stats";
 import type { BetWithLegs } from "@/lib/types";
-import { CARD } from "@/lib/ui";
+import { ACCENT, CARD, CARD_LINK } from "@/lib/ui";
 
 // Insight of the day. One thing Celebet noticed in the user's own
 // data, surfaced on its own: the user did not ask, and no AI went
@@ -50,16 +50,16 @@ export default function InsightCard({
           <svg
             viewBox="0 0 24 24"
             fill="currentColor"
-            className="h-4 w-4 shrink-0 text-[#7C3AED] dark:text-[#9A57FC]"
+            className={`h-4 w-4 shrink-0 ${ACCENT}`}
             aria-hidden="true"
           >
             <path d="M12 2l2.2 5.8L20 10l-5.8 2.2L12 18l-2.2-5.8L4 10l5.8-2.2L12 2Z" />
           </svg>
+          {/* No AI badge. Removed by the owner, August 2026. The
+              sparkle already says Celebet noticed this on its own, and
+              the badge was a second label for the same idea. */}
           <span className="whitespace-nowrap text-sm font-bold">
             {linked ? "Insight of the day" : "Today's Insight"}
-          </span>
-          <span className="rounded bg-[#7C3AED]/10 px-1.5 py-0.5 text-[10px] font-bold text-[#7C3AED] dark:bg-[#9A57FC]/15 dark:text-[#9A57FC]">
-            AI
           </span>
         </span>
         <span className="mt-2 line-clamp-3 text-[15px] font-semibold leading-snug">
@@ -72,9 +72,8 @@ export default function InsightCard({
           halo, a tighter bright ring, and a lit gradient on the disc
           itself. */}
       <span className="relative shrink-0" aria-hidden="true">
-        <span className="absolute -inset-5 rounded-full bg-[#7C3AED]/25 blur-2xl" />
-        <span className="absolute -inset-2 rounded-full bg-[#9A57FC]/30 blur-lg" />
-        <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-[radial-gradient(circle_at_30%_25%,#9A57FC,#7C3AED_55%,#5B21B6)] shadow-[0_0_28px_-4px_rgba(124,58,237,0.85),inset_0_1px_1px_rgba(255,255,255,0.45)]">
+        <span className="absolute -inset-4 rounded-full bg-[#FBBF24]/20 blur-xl" />
+        <span className="relative flex h-12 w-12 items-center justify-center rounded-full bg-[radial-gradient(circle_at_30%_25%,#FBBF24,#F59E0B_55%,#B45309)] shadow-[inset_0_1px_1px_rgba(255,255,255,0.45)]">
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -82,7 +81,7 @@ export default function InsightCard({
             strokeWidth={1.9}
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="h-7 w-7"
+            className="h-6 w-6"
           >
             <path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4Z" />
             <path d="M7 6H4a1 1 0 0 0-1 1c0 2 1.5 3.5 4 4M17 6h3a1 1 0 0 1 1 1c0 2-1.5 3.5-4 4" />
@@ -99,8 +98,8 @@ export default function InsightCard({
   return (
     <Link href="/stats" className={`${CARD} flex items-center gap-3 p-4`}>
       {body}
-      <span className="w-[72px] shrink-0 text-xs font-bold leading-tight text-[#7C3AED] dark:text-[#9A57FC]">
-        View Performance →
+      <span className={`w-[68px] leading-tight ${CARD_LINK} text-xs`}>
+        View Performance ›
       </span>
     </Link>
   );

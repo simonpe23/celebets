@@ -42,7 +42,9 @@ const ICON = "h-[26px] w-[26px]";
 // Dark cannot use it. #5525C6 on the #0C1125 bar is a contrast ratio of
 // about 2.3, so the selected tab reads as switched off. Dark takes the
 // mockup's own answer, #9A57FC, which is what it sets its active tab in.
-const ACTIVE = "text-[#5525C6] dark:text-[#9A57FC]";
+// Light uses the button's own top shade, dark uses the mark, which
+// lifts off the navy bar. Both come from globals.css.
+const ACTIVE = "text-brand-top dark:text-brand-mark";
 
 function TrackIcon({ active }: { active: boolean }) {
   return active ? (

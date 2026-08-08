@@ -187,12 +187,36 @@ rounds of argument.
 
 - Ink is the default. Muted is neutral 500 light, neutral 400 dark,
   everywhere, with no exceptions.
-- Purple has three jobs, all sampled (August 2026):
-  a surface you press is the mockup's vertical gradient, #5525C6 at
-  the top down to #4915AD, pressed #3D0F94. That is the primary
-  button, the avatar and the active chip. Purple as TEXT, an icon or
-  a tint is #7C3AED on light and #9A57FC on dark.
-  The owner chose this over the flat #4C1D95 in a labelled A/B.
+- PURPLE HAS ONE JOB: SOMETHING YOU PRESS. Ruled by the owner, August
+  2026: "the purple color is too overwhelming, it's just too much
+  purple, everywhere."
+  He was right and the shade was not the problem. Purple was doing
+  seven jobs at once (brand, button, active tab, link, badge, data
+  line, decoration) and twelve purple objects sat on the Track page's
+  first screen. A color that means seven things means nothing, so
+  nothing looked important.
+  Purple is now the primary button, the active tab, the selected chip
+  and the primary capture tile. That is all.
+  Values, sampled from the mockup: the vertical gradient #5525C6 down
+  to #4915AD, pressed #3D0F94, chosen by the owner in a labelled A/B
+  over the flat #4C1D95. #7C3AED and #9A57FC survive only as the
+  border and icon of a purple control.
+  design-check rule 8b fails on purple in any file not on its
+  allowlist, and every entry on that list names the control it is for.
+- WHAT REPLACED IT, so the app is not just purple and white:
+  links      ink plus a chevron. "View all ›", never a colored link.
+  data       green up, red down. The balance sparkline is money, so it
+             is green or red. A line that is not money (a win rate) is
+             neutral #94A3B8. There is no purple data line.
+  insights   THE ACCENT, the app's one secondary color: warm amber,
+             #B45309 on light and #FBBF24 on dark, with the trophy a
+             #FBBF24 to #B45309 gradient. It is the opposite
+             temperature to purple, which is where the variety comes
+             from, and it marks insights ONLY: the sparkle, the AI
+             badge, the trophy. Never a button, never a link.
+             ACCENT and ACCENT_TINT live in src/lib/ui.ts.
+  badges     the pending count and the PARLAY chip are neutral. A
+             count is data, a type is a label; neither is a control.
 - THE FILL SWEEP (August 2026). Seventeen filled buttons across the
   app were still on the old text purple with a #6D28D9 press. That is
   why the purple kept reading wrong after each fix: the rule was

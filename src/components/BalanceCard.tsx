@@ -188,9 +188,12 @@ export default function BalanceCard({
             </div>
             {series && series.length > 1 && (
               <div className="-mr-1 w-[44%] shrink-0 self-center">
+                {/* The balance line is money, so it is green when the
+                    balance is above where it started and red when it is
+                    below. It used to be purple, which said nothing. */}
                 <Sparkline
                   points={series}
-                  tone="purple"
+                  positive={netProfit >= 0}
                   dots
                   className="h-[104px]"
                 />
@@ -225,7 +228,7 @@ export default function BalanceCard({
         <button
           type="button"
           onClick={openSheet}
-          className="mt-3 text-[13px] font-semibold text-[#7C3AED] dark:text-[#9A57FC]"
+          className="mt-3 text-[13px] font-semibold text-brand-mark"
         >
           Set tracking balance
         </button>
@@ -298,7 +301,7 @@ export default function BalanceCard({
               placeholder="0.00"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#7C3AED] focus:ring-2 focus:ring-[#7C3AED]/30 dark:border-white/15 dark:bg-[#0E1228] dark:text-neutral-100"
+              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-brand-mark focus:ring-2 focus:ring-brand-mark/30 dark:border-white/15 dark:bg-[#0E1228] dark:text-neutral-100"
             />
 
             {error && (

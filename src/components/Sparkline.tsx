@@ -12,9 +12,12 @@ export default function Sparkline({
   points: number[];
   positive?: boolean;
   // auto colors by direction with the big chart's green and red.
-  // purple is for lines that are not money, like a win rate, and for
-  // the balance line, which the owner's mockups draw in brand purple.
-  tone?: "auto" | "purple";
+  // neutral is for a line that is not money, like a win rate: it has
+  // no up-is-good meaning to carry, so it carries no color either.
+  //
+  // There is no purple tone any more. A purple data line said nothing,
+  // and it was two of the twelve purples the owner called overwhelming.
+  tone?: "auto" | "neutral";
   className?: string;
   // Dots on every vertex, the mockup's balance chart look.
   dots?: boolean;
@@ -43,9 +46,9 @@ export default function Sparkline({
     })
     .join(" ");
 
-  // The same two colors the big chart uses, plus the wordmark purple.
+  // The same two colors the big chart uses.
   const stroke =
-    tone === "purple" ? "#9A57FC" : positive ? "#34D399" : "#FB7185";
+    tone === "neutral" ? "#94A3B8" : positive ? "#34D399" : "#FB7185";
 
   // Stable enough: two sparklines only collide when they would define
   // the identical gradient anyway.

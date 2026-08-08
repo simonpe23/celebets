@@ -5,7 +5,7 @@ import Link from "next/link";
 import MicroLabel from "@/components/MicroLabel";
 import { buildInsightPool, keyInsights, pickInsights } from "@/lib/stats";
 import type { BetWithLegs } from "@/lib/types";
-import { CARD, INNER } from "@/lib/ui";
+import { BTN, CARD, CARD_LINK, INNER } from "@/lib/ui";
 
 // Key Insights: the second section of Performance, and the reason the
 // page is a performance review rather than a statistics page.
@@ -88,9 +88,9 @@ export default function KeyInsights({ bets }: { bets: BetWithLegs[] }) {
         <button
           type="button"
           onClick={roll}
-          className="shrink-0 text-sm font-bold text-[#7C3AED] dark:text-[#9A57FC]"
+          className={CARD_LINK}
         >
-          More insights →
+          More insights ›
         </button>
       </div>
 
@@ -163,13 +163,13 @@ export default function KeyInsights({ bets }: { bets: BetWithLegs[] }) {
               <button
                 type="button"
                 onClick={roll}
-                className="rounded-md border border-[#7C3AED] px-4 py-2 text-sm font-bold text-[#7C3AED] dark:border-[#9A57FC]/60 dark:text-[#9A57FC]"
+                className={`${BTN} h-9 px-4`}
               >
                 New mix
               </button>
               <Link
                 href="/recommendations"
-                className="text-sm font-bold text-[#7C3AED] underline underline-offset-2 dark:text-[#9A57FC]"
+                className={`${CARD_LINK} underline underline-offset-2`}
               >
                 Show all
               </Link>

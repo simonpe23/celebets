@@ -161,7 +161,7 @@ export default function StatsView({
   const pillClass = (active: boolean) =>
     `shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
       active
-        ? "border-[#7C3AED] bg-[#5525C6] text-white"
+        ? "border-brand-mark bg-brand-top text-white"
         : "border-neutral-300 bg-white text-neutral-600 dark:border-white/15 dark:bg-[#161D38] dark:text-neutral-300"
     }`;
 

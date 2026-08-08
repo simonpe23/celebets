@@ -359,7 +359,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
   }
 
   const inputClass =
-    "mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-[#7C3AED] focus:ring-2 focus:ring-[#7C3AED]/30 dark:border-white/15 dark:bg-[#0E1228] dark:text-neutral-100";
+    "mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-brand-mark focus:ring-2 focus:ring-brand-mark/30 dark:border-white/15 dark:bg-[#0E1228] dark:text-neutral-100";
 
   return (
     <section className={`${CARD} p-4`}>
@@ -369,7 +369,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
           /* Inert until there is a walkthrough behind it. It is in the
              owner's mockup, so it is drawn; it just does not pretend to
              play anything yet. */
-          <span className="flex items-center gap-1.5 text-sm font-semibold text-[#7C3AED] dark:text-[#9A57FC]">
+          <span className="flex items-center gap-1.5 text-sm font-semibold text-neutral-600 dark:text-neutral-300">
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -407,13 +407,13 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
               type="button"
               disabled={importing}
               onClick={pasteSlip}
-              className="relative flex flex-col items-center gap-2 rounded-xl border border-[#7C3AED] bg-[#7C3AED]/[0.07] px-2 py-5 text-[15px] font-semibold active:bg-[#7C3AED]/15 disabled:opacity-50"
+              className="relative flex flex-col items-center gap-2 rounded-xl border border-brand-mark px-2 py-5 text-[15px] font-semibold active:bg-brand-mark/10 disabled:opacity-50"
             >
-              <span className="text-[#7C3AED] dark:text-[#9A57FC]">
+              <span className="text-brand-mark">
                 <ClipboardIcon className="h-7 w-7" />
               </span>
               Paste bet slip
-              <span className="rounded-full bg-[#7C3AED]/12 px-2 py-0.5 text-[10px] font-bold text-[#7C3AED] dark:bg-[#9A57FC]/15 dark:text-[#9A57FC]">
+              <span className="rounded-full bg-brand-mark/12 px-2 py-0.5 text-[10px] font-bold text-brand-mark">
                 Recommended
               </span>
             </button>
@@ -458,7 +458,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
             type="button"
             disabled={importing}
             onClick={pasteSlip}
-            className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-[#7C3AED] bg-white text-sm font-bold text-[#7C3AED] active:bg-[#7C3AED]/10 disabled:opacity-50 dark:border-[#9A57FC]/60 dark:bg-transparent dark:text-[#9A57FC]"
+            className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-brand-mark bg-white text-sm font-bold text-brand-mark active:bg-brand-mark/10 disabled:opacity-50 dark:dark:bg-transparent dark:text-brand-mark"
           >
             <ClipboardIcon />
             Paste bet slip
@@ -530,7 +530,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
             onClick={() => setStake(amount)}
             className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
               stake === amount
-                ? "border-[#7C3AED] text-[#7C3AED] dark:text-[#9A57FC]"
+                ? "border-brand-mark text-brand-mark"
                 : "border-neutral-300 text-neutral-500 dark:text-neutral-400 dark:border-white/15"
             }`}
           >
@@ -582,7 +582,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
                 }
                 className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
                   leg.sport === s
-                    ? "border-[#7C3AED] bg-[#5525C6] text-white"
+                    ? "border-brand-mark bg-brand-top text-white"
                     : "border-neutral-300 dark:border-white/15"
                 }`}
               >
@@ -640,7 +640,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
                           }
                           className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
                             selected
-                              ? "border-[#7C3AED] bg-[#5525C6] text-white"
+                              ? "border-brand-mark bg-brand-top text-white"
                               : "border-neutral-300 dark:border-white/15"
                           }`}
                         >
@@ -666,9 +666,9 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
                         }
                         className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
                           groupSelected
-                            ? "border-[#7C3AED] bg-[#5525C6] text-white"
+                            ? "border-brand-mark bg-brand-top text-white"
                             : groupOpen
-                              ? "border-[#7C3AED] text-[#7C3AED] dark:text-[#9A57FC]"
+                              ? "border-brand-mark text-brand-mark"
                               : "border-neutral-300 dark:border-white/15"
                         }`}
                       >
@@ -704,7 +704,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
                             }
                             className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
                               selected
-                                ? "border-[#7C3AED] bg-[#5525C6] text-white"
+                                ? "border-brand-mark bg-brand-top text-white"
                                 : "border-neutral-300 bg-white dark:border-white/15 dark:bg-[#0E1228]"
                             }`}
                           >
@@ -831,7 +831,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
         type="button"
         disabled={!canPlace}
         onClick={placeBet}
-        className="mt-4 h-14 w-full rounded-xl bg-[#5525C6] text-lg font-bold text-white active:bg-[#4915AD] disabled:opacity-40"
+        className="mt-4 h-14 w-full rounded-xl bg-brand-top text-lg font-bold text-white active:bg-brand-bottom disabled:opacity-40"
       >
         {saving ? "Tracking..." : "Track Bet"}
       </button>
