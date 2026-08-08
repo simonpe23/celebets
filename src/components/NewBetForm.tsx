@@ -369,7 +369,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
           /* Inert until there is a walkthrough behind it. It is in the
              owner's mockup, so it is drawn; it just does not pretend to
              play anything yet. */
-          <span className="flex items-center gap-1.5 text-sm font-semibold text-[#7C3AED] dark:text-[#9A57FC]">
+          <span className="flex items-center gap-1.5 text-sm font-semibold text-neutral-600 dark:text-neutral-300">
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -407,7 +407,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
               type="button"
               disabled={importing}
               onClick={pasteSlip}
-              className="relative flex flex-col items-center gap-2 rounded-xl border border-[#7C3AED] bg-[#7C3AED]/[0.07] px-2 py-5 text-[15px] font-semibold active:bg-[#7C3AED]/15 disabled:opacity-50"
+              className="relative flex flex-col items-center gap-2 rounded-xl border border-[#7C3AED] px-2 py-5 text-[15px] font-semibold active:bg-[#7C3AED]/10 disabled:opacity-50 dark:border-[#9A57FC]/70"
             >
               <span className="text-[#7C3AED] dark:text-[#9A57FC]">
                 <ClipboardIcon className="h-7 w-7" />

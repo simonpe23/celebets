@@ -188,9 +188,12 @@ export default function BalanceCard({
             </div>
             {series && series.length > 1 && (
               <div className="-mr-1 w-[44%] shrink-0 self-center">
+                {/* The balance line is money, so it is green when the
+                    balance is above where it started and red when it is
+                    below. It used to be purple, which said nothing. */}
                 <Sparkline
                   points={series}
-                  tone="purple"
+                  positive={netProfit >= 0}
                   dots
                   className="h-[104px]"
                 />

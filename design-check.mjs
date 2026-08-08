@@ -46,6 +46,13 @@ const ALLOWED_HEX = new Set([
   "#3D0F94", // primary button, pressed
   "#16A34A", // the Won settle button only, see rule 4b
   "#15803D", // Won settle button, pressed
+  // The insight accent, the app's one secondary color. Warm amber
+  // against the navy, and it marks insights only: the sparkle, the AI
+  // badge, the trophy. Never a button, never a link.
+  "#B45309", // insight accent on light, and the trophy's deep end
+  "#FBBF24", // insight accent on dark, and the trophy's lit edge
+  "#F59E0B", // the trophy gradient's middle
+  "#94A3B8", // a sparkline that is not money, like a win rate
   "#3B82F6", // capture tile icon, camera
   "#F97316", // capture tile icon, pencil
   "#22C55E", // outcome pill Won, and the connect tile icon
@@ -255,6 +262,49 @@ for (const file of files) {
         file,
         i + 1,
         `"${word}" is finance language, use the balance vocabulary`
+      );
+    }
+  });
+}
+
+// 8b. THE ONE JOB RULE.
+//
+// The owner, August 2026: "the purple color is too overwhelming, it's
+// just too much purple, everywhere." Twelve purple objects sat on the
+// Track page's first screen, because purple was doing seven jobs:
+// brand, button, active tab, link, badge, data line and decoration.
+//
+// Purple now means one thing, something you press. These are the files
+// allowed to write a purple, and why. Anywhere else, purple is drifting
+// back into a second job and the sweep starts over.
+const PURPLE_OK = {
+  "ui.ts": "the primary button",
+  "TabBar.tsx": "the active tab",
+  "NewBetForm.tsx": "the primary capture tile and the selected chips",
+  "StatsView.tsx": "the selected sport filter",
+  "LiveBets.tsx": "the Add money and Cash out buttons",
+  "BetHistory.tsx": "the Save button on an edited date",
+  "TransactionsList.tsx": "the Save button on an edited date",
+  "BalanceCard.tsx": "the input focus ring and the link control variant",
+  "Wordmark.tsx": "the brand mark, kept purple by the owner",
+  "page.tsx": "the avatar, which is the brand mark",
+};
+
+for (const file of files) {
+  if (SKIP.some((dir) => file.includes(`/${dir}/`))) continue;
+  const short = file.split("/").pop();
+  if (short in PURPLE_OK) continue;
+  const lines = readFileSync(file, "utf8").split("\n");
+  lines.forEach((line, i) => {
+    const trimmed = line.trim();
+    if (trimmed.startsWith("//") || trimmed.startsWith("*")) return;
+    if (/#7C3AED|#9A57FC|#5525C6|#4915AD/.test(line)) {
+      note(
+        file,
+        i + 1,
+        "purple outside a control. It means one thing now: something " +
+          "you press. Links are ink, data is green or red, insights " +
+          "are the amber accent."
       );
     }
   });

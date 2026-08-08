@@ -21,6 +21,36 @@ export const INNER =
 export const BTN =
   "rounded-md bg-gradient-to-b from-[#5525C6] to-[#4915AD] text-[13px] font-semibold text-white active:from-[#4915AD] active:to-[#3D0F94] disabled:opacity-60";
 
+// THE ONE JOB RULE (August 2026). The owner: "the purple color is too
+// overwhelming, it's just too much purple, everywhere."
+//
+// He was right, and the cause was not the shade. Purple was doing seven
+// jobs at once: brand, button, active tab, link, badge, data line and
+// decoration. Twelve purple objects sat on the first screen. A color
+// that means seven things means nothing, so nothing looked important.
+//
+// Purple now means ONE thing: something you press. The primary button,
+// the active tab, and the primary capture tile.
+//
+// Everything else found another way to be seen:
+//   links        ink plus a chevron, not a color
+//   data lines   green up, red down, or neutral when not money
+//   insights     the accent below, the app's one secondary color
+//   brand        the wordmark and the avatar, kept purple by the owner
+//
+// INSIGHT ACCENT. Warm amber against the navy: the opposite temperature
+// to purple, which is what gives the app variety instead of a second
+// shade of the same thing. It marks insights and nothing else, so
+// Performance reads as its own place rather than more of Track.
+export const ACCENT = "text-[#B45309] dark:text-[#FBBF24]";
+export const ACCENT_TINT =
+  "bg-[#B45309]/10 text-[#B45309] dark:bg-[#FBBF24]/15 dark:text-[#FBBF24]";
+
+// A link inside a card. Ink, with a chevron doing the pointing. This
+// replaced four purple links on the Track page alone.
+export const CARD_LINK =
+  "shrink-0 text-sm font-semibold text-neutral-600 dark:text-neutral-300";
+
 // An outcome control on a pending pick: a quiet tinted pill that names
 // what happened. Never a filled bar, which shouted louder than the bet.
 // The green and red are the mockup's own, brighter than Tailwind's

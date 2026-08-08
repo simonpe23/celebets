@@ -3,7 +3,7 @@ import Sparkline from "@/components/Sparkline";
 import { round2 } from "@/lib/format";
 import { sportRows, totals } from "@/lib/stats";
 import { SPORT_EMOJI, type BetWithLegs } from "@/lib/types";
-import { CARD } from "@/lib/ui";
+import { CARD, CARD_LINK } from "@/lib/ui";
 
 // The Performance Snapshot: four all time figures with the shape each
 // one made getting here. A taste of the Performance page, not a copy
@@ -102,9 +102,9 @@ export default function SnapshotCard({
         {linked ? (
           <Link
             href="/stats"
-            className="shrink-0 text-sm font-semibold text-[#7C3AED] dark:text-[#9A57FC]"
+            className={CARD_LINK}
           >
-            View all →
+            View all ›
           </Link>
         ) : (
           <span className="shrink-0 text-xs text-neutral-500 dark:text-neutral-400">
@@ -158,7 +158,7 @@ export default function SnapshotCard({
           <div className="mt-2">
             <Sparkline
               points={series(settled, "hitRate")}
-              tone="purple"
+              tone="neutral"
               className="h-5"
               fill="none"
             />
