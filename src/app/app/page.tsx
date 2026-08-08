@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import Disclaimer from "@/components/Disclaimer";
 import HomeDashboard from "@/components/HomeDashboard";
@@ -92,16 +93,17 @@ export default async function HomePage() {
                 <path d="M13.7 21a2 2 0 0 1-3.4 0" />
               </svg>
             </span>
-          <form action="/auth/signout" method="post">
-            <button
-              type="submit"
-              title="Log out"
-              aria-label="Log out"
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-top text-sm font-bold text-white"
-            >
-              {(name ?? "C").charAt(0).toUpperCase()}
-            </button>
-          </form>
+          {/* The avatar opens Settings. It used to be the log out
+              button, so one stray tap ended the session. Log out now
+              lives at the foot of Settings. */}
+          <Link
+            href="/settings"
+            title="Settings"
+            aria-label="Settings"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-top text-sm font-bold text-white"
+          >
+            {(name ?? "C").charAt(0).toUpperCase()}
+          </Link>
           </span>
         </header>
 

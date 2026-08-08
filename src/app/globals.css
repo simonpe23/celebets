@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
+/* Dark mode is a data attribute, not a media query.
+ *
+ * It used to be `prefers-color-scheme` alone, which meant the phone
+ * decided and the user could not. The settings page lets them pick
+ * System, Light or Dark, so something has to be able to override the
+ * phone, and only an attribute can do that.
+ *
+ * "System" is still the default. A small script in the layout reads
+ * the saved choice, falls back to the phone, and stamps data-theme on
+ * <html> before the first paint. Everything below keys off that one
+ * attribute, so there is no second source of truth. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 :root {
   /* Brand palette. Cream page, white cards, blue for actions,
      purple for the wordmark and recommendations. Profit stays green
@@ -53,20 +66,18 @@
   --color-brand-mark: var(--brand-mark);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Sampled from the owner's mockup, not guessed. It is a NAVY
-       near-black: the blue channel runs about four times the red one.
-       "Barely blue" was my eyeball reading of it and it was wrong,
-       which is why the build looked grey next to the mockup. It is
-       still not purple tinted, that cast was a separate mistake. */
-    --background: #04081B;
-    --foreground: #F2F2F5;
-    /* The deep shade disappears against the navy page, so the mark
-       lifts. The button gradient does not: it is a filled surface
-       with white on it and reads fine either way. */
-    --brand-mark: #9A57FC;
-  }
+[data-theme="dark"] {
+  /* Sampled from the owner's mockup, not guessed. It is a NAVY
+     near-black: the blue channel runs about four times the red one.
+     "Barely blue" was my eyeball reading of it and it was wrong,
+     which is why the build looked grey next to the mockup. It is
+     still not purple tinted, that cast was a separate mistake. */
+  --background: #04081B;
+  --foreground: #F2F2F5;
+  /* The deep shade disappears against the navy page, so the mark
+     lifts. The button gradient does not: it is a filled surface
+     with white on it and reads fine either way. */
+  --brand-mark: #9A57FC;
 }
 
 body {

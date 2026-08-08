@@ -346,8 +346,9 @@ primary button 52px tall at 16px.
   iOS has a vibration API, and the switch trick did not fire).
 - The page is called Analytics. The web address stays /stats so old
   bookmarks keep working.
-- Dark mode is designed, not default. It follows the phone's setting.
-  A real toggle needs a settings page, which does not exist yet.
+- Dark mode follows a data attribute on <html>, not a media query.
+  System, Light and Dark live on the settings page, and the choice is
+  saved in localStorage on that device. See the settings section.
 
 ## The flow: Track, Performance, Research (owner, August 2026)
 
@@ -543,3 +544,35 @@ Decisions locked in during this build:
 - All SQL files through supabase/phase8.sql have been run (July 2026).
   phase8 (Crypto) was applied by Claude via the Supabase connector.
   Transaction dates are editable.
+
+## Settings (August 2026, built and verified)
+
+- Reached by tapping the AVATAR, not from a tab. The owner ruled three
+  tabs and only three. The avatar used to be the log out button, so one
+  stray tap ended the session; log out now sits at the foot of Settings.
+- Address is /settings. It shows the tab bar with Track lit, because it
+  is reached from Track.
+
+THEME. System, Light or Dark, stored in localStorage under
+`celebet-theme`. System is the default and stores nothing, so anyone
+who never opens Settings keeps following their phone forever.
+- The whole app keys off `data-theme` on <html>. globals.css declares
+  `@custom-variant dark (&:where([data-theme="dark"], ...))`, so a
+  media query alone can no longer decide anything. That swap was the
+  only way a user choice could beat the phone.
+- A raw script in the layout head sets the attribute BEFORE the first
+  paint. A React effect runs after paint, which is the flash itself.
+  The script and Settings' `apply()` must stay in step: two rules for
+  one attribute is how a flash comes back.
+- There is ONE theme-color meta tag, rewritten by that script. A light
+  and dark pair cannot be overridden, so choosing Light on a dark phone
+  left a navy status bar above a white page.
+
+RESET ALL DATA. Deletes every bet and every transaction for the user.
+Legs and buys cascade from bets, so two deletes clear everything.
+Behind a sheet that requires typing RESET exactly. The account and the
+login survive. There is no undo and no backup, which the sheet says.
+
+NAME. Stored in the auth user's metadata (`full_name`), not a table, so
+it needed no migration. It is the same field Google fills in, and the
+same one the Track greeting reads.
