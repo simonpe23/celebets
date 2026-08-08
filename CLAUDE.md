@@ -50,6 +50,18 @@ from Vercel while design-check and tsc were both green: ESLint's
 rules-of-hooks only runs inside `next build`. If the build is not
 part of the check, the check is a lie.
 
+GESTURES DO NOT SHOW UP IN A SCREENSHOT. Added August 2026, after the
+owner found that press and hold scrubbing on the Performance chart had
+been dead for four days. I broke it fixing something else: the chart
+stopped rendering on its first pass, so the touch listeners attached to
+an element that did not exist and never attached again. No error, no
+warning, no failing build, and every screenshot looked perfect.
+
+So: after ANY change to a component that handles touch, drag, long
+press or scroll, run `node scrubtest.mjs <port>` against a dev server.
+It drives a real finger across the chart and checks the headline
+follows. A design check cannot catch a dead event listener.
+
 THE SWEEP RULE (added August 2026, after the owner had to ask three
 times whether a font change had reached the whole app):
 
@@ -77,6 +89,16 @@ Before showing any UI change:
 3. Change nothing the owner did not ask for. Alignment, casing, size
    and color are product decisions. Propose them, do not apply them.
    Reverting an unrequested change costs the owner a full round trip.
+
+   NEVER CHANGE A FONT WITHOUT HIS PERMISSION. His words, August 2026,
+   after I swapped the numeral face from Inter Tight to Geist during a
+   rebuild, wrote a note in this file justifying it, and he found it
+   days later on the live site. This covers the family, the weight and
+   the size: HeroMoney's weight went 500 to 600 in the same edit and
+   nobody caught that for days either. Ask first. Every time. If a
+   font looks wrong to you, say so and show him a comparison.
+   design-check rule 8 fails the build if the numeral face or the hero
+   weight moves, so this cannot happen by accident again.
 4. Compare the two pages side by side before showing anything. The
    home page and the stats page must look like one product.
 5. Show options when the owner is judging looks. Two or three named
