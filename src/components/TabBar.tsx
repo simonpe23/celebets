@@ -139,27 +139,21 @@ const ICONS = [TrackIcon, PerformanceIcon, ResearchIcon];
 //   RADIUS  rounded-[26px] was, in his word, childish. Squared down to
 //           match the buttons, which he already ruled square.
 //
-// `surface` exists only so /preview/tabbar can show the options side
-// by side. The app never passes it.
-const SURFACES: Record<string, string> = {
-  tinted:
-    "bg-[#ECECF3] ring-1 ring-neutral-900/[0.07] dark:bg-[#111731] dark:ring-white/[0.09]",
-  white:
-    "bg-white ring-1 ring-neutral-900/[0.06] dark:bg-[#0C1125] dark:ring-white/[0.07]",
-  ink: "bg-[#1B2039] ring-1 ring-white/[0.08] dark:bg-[#111731] dark:ring-white/[0.09]",
-};
+// He chose this shade from three, side by side: tinted, white and a
+// dark ink bar. The other two are gone rather than left in as options,
+// because an unused variant is how the purple sprawl started.
+const SURFACE =
+  "bg-[#ECECF3] ring-1 ring-neutral-900/[0.07] dark:bg-[#111731] dark:ring-white/[0.09]";
 
 export default function TabBar({
   activeHref,
-  surface = "tinted",
   inline = false,
 }: {
   activeHref?: string;
-  surface?: "tinted" | "white" | "ink";
-  // Drops the fixed positioning so /preview/tabbar can stack the three
-  // surfaces on one page. Tailwind v4 skips gitignored files when it
-  // generates classes, so the preview cannot override `fixed` from its
-  // own file. The app never passes this.
+  // Drops the fixed positioning so the local preview can place the bar
+  // in the flow. Tailwind v4 skips gitignored files when it generates
+  // classes, so the preview cannot override `fixed` from its own file.
+  // The app never passes this.
   inline?: boolean;
 }) {
   // usePathname is called unconditionally on purpose. Writing
@@ -178,7 +172,7 @@ export default function TabBar({
       }
     >
       <div
-        className={`mx-auto flex w-full max-w-md items-stretch rounded-xl p-1 shadow-[0_6px_20px_-10px_rgba(16,16,26,0.4)] ${SURFACES[surface]}`}
+        className={`mx-auto flex w-full max-w-md items-stretch rounded-xl p-1 shadow-[0_6px_20px_-10px_rgba(16,16,26,0.4)] ${SURFACE}`}
       >
         {TABS.map((tab, i) => {
           const Icon = ICONS[i];
@@ -188,11 +182,7 @@ export default function TabBar({
               key={tab.href}
               href={tab.href}
               className={`flex flex-1 flex-col items-center justify-center gap-0.5 py-1.5 text-[11px] font-semibold ${
-                active
-                  ? ACTIVE
-                  : surface === "ink"
-                    ? "text-white/55"
-                    : "text-neutral-500 dark:text-neutral-400"
+                active ? ACTIVE : "text-neutral-500 dark:text-neutral-400"
               }`}
             >
               <Icon active={active} />
