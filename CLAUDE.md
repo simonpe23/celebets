@@ -568,7 +568,7 @@ who never opens Settings keeps following their phone forever.
   and dark pair cannot be overridden, so choosing Light on a dark phone
   left a navy status bar above a white page.
 
-START FRESH, and there is NO delete-everything button anywhere.
+START A NEW RECORD, and there is NO delete-everything button anywhere.
 
 I built one. The owner rejected it: he had asked to reset the tracking
 balance so a user could start over, and deleting their bets is not
@@ -593,6 +593,23 @@ keeps a bet if it was NOT already settled before that date.
   fresh. Verified with a arithmetic test, not by eye.
 - startedWith is now derived as balance minus net profit, so
   startedWith + netProfit = balance holds with or without a line.
+
+IT IS FULLY REVERSIBLE, and that is the point. The owner rejected my
+first version of this too: "too much risk in the start fresh button.
+there must be an option to regret the start fresh... i don't want
+people to accidentally loose all their data."
+- Undo has NO time limit. It lives in Settings for as long as a line
+  exists, not for fifteen minutes.
+- Undo reverses BOTH halves: it clears the date and deletes the exact
+  balance transaction the restart created. Its id is stored beside the
+  date in metadata (`tracking_reset_tx`) so Undo cannot touch anything
+  else the user has done to their balance since.
+- The sheet leads with "Nothing is deleted" in green, then two lists:
+  what changes, and what does not. The owner's fear was a user tapping
+  this and believing their bets were gone, so the reassurance comes
+  before the consequences, not after.
+- The control is called "Start a new record", not "Start fresh". Fresh
+  sounds like wiping.
 
 NAME. Stored in the auth user's metadata (`full_name`), not a table, so
 it needed no migration. It is the same field Google fills in, and the

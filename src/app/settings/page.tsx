@@ -42,6 +42,9 @@ export default async function SettingsPage() {
       trackingSince={
         (user?.user_metadata?.tracking_since as string | undefined) ?? null
       }
+      trackingResetTx={
+        (user?.user_metadata?.tracking_reset_tx as string | undefined) ?? null
+      }
     />
   );
 }

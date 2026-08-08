@@ -15,11 +15,18 @@ import { BTN, CARD, CARD_LINK, INNER } from "@/lib/ui";
 // Log out used to be the avatar itself, which meant one stray tap
 // ended your session. It lives down here now, under everything else.
 //
-// There is NO delete-everything button. I built one and the owner
-// rejected it: he had asked to reset the tracking balance so a user
-// could start over, and deleting their bets is not that. "i think data
-// is still valuable despite wanting a fresh reset of your tracking."
-// Start fresh draws a line instead. See sinceLine in src/lib/stats.ts.
+// There is NO delete-everything button, and never will be. I built one
+// and the owner rejected it: he had asked to reset the tracking balance
+// so a user could start over, and deleting their bets is not that. "i
+// think data is still valuable despite wanting a fresh reset of your
+// tracking."
+//
+// He then rejected my first replacement too, for the right reason:
+// "too much risk... there must be an option to regret the start fresh.
+// i don't want people to accidentally loose all their data." So the
+// wording leads with what is kept, and Undo has no time limit.
+//
+// Starting a new record draws a line. See sinceLine in src/lib/stats.ts.
 
 const MONTHS = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(" ");
 function shortDate(iso: string): string {
@@ -55,6 +62,7 @@ export default function Settings({
   userId,
   balance,
   trackingSince,
+  trackingResetTx,
 }: {
   email: string;
   name: string | null;
@@ -63,6 +71,9 @@ export default function Settings({
   // rather than an empty box.
   balance: number;
   trackingSince: string | null;
+  // The balance transaction that starting the record created, so Undo
+  // can remove exactly that row and nothing else.
+  trackingResetTx: string | null;
 }) {
   const router = useRouter();
 
@@ -111,19 +122,27 @@ export default function Settings({
     router.refresh();
   }
 
-  // START FRESH. The owner asked for a reset and I built a delete, which
-  // was the wrong tool: "i think data is still valuable despite wanting
-  // a fresh reset of your tracking".
+  // START A NEW RECORD, and it is fully reversible.
   //
-  // So nothing is deleted. Celebet writes today as the start of the
-  // record and sets the balance to whatever the user types. Profit, ROI
-  // and the charts count from there; every old bet stays and Performance
-  // has an All time switch to see it.
+  // The owner rejected a delete, then rejected the first version of
+  // this: "too much risk in the start fresh button. there must be an
+  // option to regret the start fresh. i don't want people to
+  // accidentally loose all their data."
+  //
+  // Nothing is deleted here, and nothing ever was. Two things happen:
+  // a date goes into the user's metadata, and the balance moves by one
+  // transaction. Undo reverses both, so a mistap costs one tap to fix
+  // and there is no time limit on it.
+  //
+  // The transaction's id is stored beside the date so Undo can remove
+  // exactly the row this created, and nothing else the user has done
+  // to their balance since.
   const [freshOpen, setFreshOpen] = useState(false);
   const [freshAmount, setFreshAmount] = useState("");
   const [saving, setSaving] = useState(false);
+  const [undoing, setUndoing] = useState(false);
 
-  async function startFresh() {
+  async function startNewRecord() {
     const value = parseMoney(freshAmount);
     if (value === null) {
       setError("Enter a starting balance above 0, for example 1000.");
@@ -137,21 +156,30 @@ export default function Settings({
     // transaction for the difference, so the history stays honest about
     // what happened and when.
     const delta = value - balance;
+    let txId: string | null = null;
     if (delta !== 0) {
-      const { error: txError } = await supabase.from("transactions").insert({
-        user_id: userId,
-        type: delta > 0 ? "deposit" : "withdrawal",
-        amount: Math.abs(delta),
-      });
+      const { data, error: txError } = await supabase
+        .from("transactions")
+        .insert({
+          user_id: userId,
+          type: delta > 0 ? "deposit" : "withdrawal",
+          amount: Math.abs(delta),
+        })
+        .select("id")
+        .single();
       if (txError) {
         setSaving(false);
         setError(txError.message);
         return;
       }
+      txId = data?.id ?? null;
     }
 
     const { error: metaError } = await supabase.auth.updateUser({
-      data: { tracking_since: new Date().toISOString() },
+      data: {
+        tracking_since: new Date().toISOString(),
+        tracking_reset_tx: txId,
+      },
     });
     setSaving(false);
     if (metaError) {
@@ -160,6 +188,38 @@ export default function Settings({
     }
     setFreshOpen(false);
     setFreshAmount("");
+    router.push("/app");
+    router.refresh();
+  }
+
+  async function undoNewRecord() {
+    setError(null);
+    setUndoing(true);
+    const supabase = createClient();
+
+    // The balance change goes back first. If this fails there is no
+    // point clearing the date: the user would be left with a balance
+    // they did not choose and no way to see why.
+    if (trackingResetTx) {
+      const { error: txError } = await supabase
+        .from("transactions")
+        .delete()
+        .eq("id", trackingResetTx);
+      if (txError) {
+        setUndoing(false);
+        setError(txError.message);
+        return;
+      }
+    }
+
+    const { error: metaError } = await supabase.auth.updateUser({
+      data: { tracking_since: null, tracking_reset_tx: null },
+    });
+    setUndoing(false);
+    if (metaError) {
+      setError(metaError.message);
+      return;
+    }
     router.push("/app");
     router.refresh();
   }
@@ -279,24 +339,61 @@ export default function Settings({
               <span className={CARD_LINK}>Open ›</span>
             </Link>
 
-            <button
-              type="button"
-              onClick={() => {
-                setFreshAmount(String(balance));
-                setFreshOpen(true);
-              }}
-              className={`${INNER} flex w-full items-center justify-between gap-3 px-3 py-3 text-left`}
-            >
-              <span className="min-w-0">
-                <span className="block text-sm font-semibold">Start fresh</span>
-                <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
-                  {trackingSince
-                    ? `Your record started again on ${shortDate(trackingSince)}. You can draw a new line any time.`
-                    : "Set a new balance and begin your record from today. Nothing is deleted."}
+            {trackingSince ? (
+              /* Already running a new record. The card states it plainly
+                 and keeps Undo in reach forever, not for fifteen
+                 minutes: the owner asked for a way to regret it. */
+              <div className={`${INNER} px-3 py-3`}>
+                <p className="text-sm font-semibold">
+                  Your record restarted on {shortDate(trackingSince)}
+                </p>
+                <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
+                  Stats count from that date. Every bet before it is still
+                  saved, and Performance has an All time switch to see
+                  them.
+                </p>
+                <div className="mt-3 flex gap-2">
+                  <button
+                    type="button"
+                    disabled={undoing}
+                    onClick={undoNewRecord}
+                    className="h-9 rounded-md border border-neutral-300 px-4 text-sm font-bold text-neutral-600 disabled:opacity-50 dark:border-white/15 dark:text-neutral-300"
+                  >
+                    {undoing ? "Undoing..." : "Undo restart"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFreshAmount(String(balance));
+                      setFreshOpen(true);
+                    }}
+                    className="h-9 rounded-md px-3 text-sm font-semibold text-neutral-600 dark:text-neutral-300"
+                  >
+                    Restart again
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  setFreshAmount(String(balance));
+                  setFreshOpen(true);
+                }}
+                className={`${INNER} flex w-full items-center justify-between gap-3 px-3 py-3 text-left`}
+              >
+                <span className="min-w-0">
+                  <span className="block text-sm font-semibold">
+                    Start a new record
+                  </span>
+                  <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
+                    Set a new balance and count your stats from today.
+                    Nothing is deleted, and you can undo it.
+                  </span>
                 </span>
-              </span>
-              <span className={CARD_LINK}>›</span>
-            </button>
+                <span className={CARD_LINK}>›</span>
+              </button>
+            )}
           </div>
         </section>
 
@@ -312,15 +409,37 @@ export default function Settings({
         {freshOpen && (
           <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center">
             <div className="w-full max-w-sm rounded-t-2xl bg-white p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:rounded-2xl sm:pb-6 dark:bg-[#161D38]">
-              <h3 className="text-lg font-bold">Start fresh</h3>
-              <p className="mt-3 text-sm leading-relaxed">
-                Your net profit, ROI, win rate and charts start again from
-                today. Set the balance you want to begin with.
-              </p>
-              <p className="mt-2 text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
-                Nothing is deleted. Every bet you have tracked stays, and
-                Performance has an All time switch to see the whole record.
-              </p>
+              <h3 className="text-lg font-bold">Start a new record</h3>
+
+              {/* The reassurance leads. The owner's worry was that a
+                  user taps this and believes their bets are gone. */}
+              <div className={`${INNER} mt-3 px-3 py-3`}>
+                <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
+                  Nothing is deleted.
+                </p>
+                <p className="mt-1 text-sm leading-relaxed">
+                  Every bet you have tracked stays exactly where it is.
+                  This only changes which ones your stats count.
+                </p>
+              </div>
+
+              <p className="mt-3 text-sm font-semibold">What changes</p>
+              <ul className="mt-1 space-y-1 text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
+                <li>Net profit, ROI, win rate and the charts start at zero.</li>
+                <li>They count bets from today onwards.</li>
+                <li>Your balance becomes the figure you set below.</li>
+              </ul>
+
+              <p className="mt-3 text-sm font-semibold">What does not</p>
+              <ul className="mt-1 space-y-1 text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
+                <li>Every bet, pick and result is kept.</li>
+                <li>Bets still running carry over to the new record.</li>
+                <li>
+                  Performance keeps an All time switch, so the old record
+                  is one tap away.
+                </li>
+                <li>You can undo this at any time, from this page.</li>
+              </ul>
 
               <label
                 htmlFor="fresh"
@@ -332,7 +451,6 @@ export default function Settings({
                 id="fresh"
                 type="text"
                 inputMode="decimal"
-                autoFocus
                 placeholder="0.00"
                 value={freshAmount}
                 onChange={(e) => setFreshAmount(e.target.value)}
@@ -356,10 +474,10 @@ export default function Settings({
                 <button
                   type="button"
                   disabled={saving}
-                  onClick={startFresh}
+                  onClick={startNewRecord}
                   className={`${BTN} h-11`}
                 >
-                  {saving ? "Starting..." : "Start fresh"}
+                  {saving ? "Starting..." : "Start new record"}
                 </button>
               </div>
             </div>
