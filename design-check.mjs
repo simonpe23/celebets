@@ -260,6 +260,40 @@ for (const file of files) {
   });
 }
 
+// 8. THE FONT LOCK.
+//
+// "Don't ever change a font again without my permission." The owner,
+// August 2026, after I swapped the numeral face during a rebuild and
+// he found it days later on the live site. The weight moved in the
+// same edit and went unnoticed for just as long.
+//
+// These two values are his, not defaults. If a font genuinely looks
+// wrong, show him a comparison and let him rule. Changing this check
+// to make a font change pass is the same offence as the font change.
+const FONT_LOCK = [
+  {
+    file: "src/app/globals.css",
+    pattern: /--font-money:\s*var\(--font-inter-tight\)/,
+    what: "the numeral face must be Inter Tight",
+  },
+  {
+    file: "src/components/HeroMoney.tsx",
+    pattern: /fontWeight:\s*500/,
+    what: "the hero money weight must be 500",
+  },
+];
+
+for (const lock of FONT_LOCK) {
+  const text = readFileSync(lock.file, "utf8");
+  if (!lock.pattern.test(text)) {
+    note(
+      lock.file,
+      1,
+      `${lock.what}. The owner chose it and asked to be consulted first.`
+    );
+  }
+}
+
 if (problems.length === 0) {
   console.log("Design check passed.");
 } else {
