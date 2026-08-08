@@ -344,9 +344,11 @@ export default function Settings({
               <span className={CARD_LINK}>Open ›</span>
             </Link>
 
-            {/* A plain fact, not a control. Almost nobody restarts, so
-                the normal wording is when your record began, and the
-                restart lives in its own quiet section below. */}
+            {/* A plain fact, not a control. No Undo button here: the
+                owner cut it. "a restart is uncommon. to undo a restart
+                is even more unique. we can't have a big button that
+                talks about such a minor part of the app." Undo lives
+                beside the restart, at the same tiny weight. */}
             {recordStartedAt && (
               <div className={`${INNER} px-3 py-3`}>
                 <span className="block text-sm font-semibold">
@@ -357,16 +359,6 @@ export default function Settings({
                     ? "You restarted your record on this date. Everything you tracked before it is still saved, and Performance has an All time switch to see it."
                     : "Everything you have tracked counts toward your stats."}
                 </span>
-                {trackingSince && (
-                  <button
-                    type="button"
-                    disabled={undoing}
-                    onClick={undoNewRecord}
-                    className="mt-3 h-9 rounded-md border border-neutral-300 px-4 text-sm font-bold text-neutral-600 disabled:opacity-50 dark:border-white/15 dark:text-neutral-300"
-                  >
-                    {undoing ? "Undoing..." : "Undo the restart"}
-                  </button>
-                )}
               </div>
             )}
           </div>
@@ -386,7 +378,11 @@ export default function Settings({
             restart is just a what if. most users will not restart...
             it can trick them into a false reality of being profitable
             when maybe not." So it is available, honest about the risk,
-            and not sold. */}
+            and not sold.
+
+            Undo sits here too, at the same tiny weight, and it says
+            what it does rather than saying "undo". Undoing a restart is
+            rarer than restarting, so it cannot be louder. */}
         <div className="pt-2 pb-2 text-center">
           <button
             type="button"
@@ -403,6 +399,19 @@ export default function Settings({
             this, and hiding past results can make you look more
             profitable than you are.
           </p>
+
+          {trackingSince && (
+            <button
+              type="button"
+              disabled={undoing}
+              onClick={undoNewRecord}
+              className="mt-3 text-xs text-neutral-500 underline underline-offset-4 disabled:opacity-50 dark:text-neutral-400"
+            >
+              {undoing
+                ? "Putting it back..."
+                : "Count all my bets again, from the start"}
+            </button>
+          )}
         </div>
 
         {freshOpen && (

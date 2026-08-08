@@ -600,6 +600,13 @@ there must be an option to regret the start fresh... i don't want
 people to accidentally loose all their data."
 - Undo has NO time limit. It lives in Settings for as long as a line
   exists, not for fifteen minutes.
+- Undo sits BESIDE the restart, in the same quiet section, at the same
+  tiny weight. It is not a button in Your data. The owner cut that: "a
+  restart is uncommon. to undo a restart is even more unique. we can't
+  have a big button that talks about such a minor part of the app."
+- It is labelled by what it does, not by the word undo: "Count all my
+  bets again, from the start". His test: "if you click it, what
+  happens? then the button should say so."
 - Undo reverses BOTH halves: it clears the date and deletes the exact
   balance transaction the restart created. Its id is stored beside the
   date in metadata (`tracking_reset_tx`) so Undo cannot touch anything
