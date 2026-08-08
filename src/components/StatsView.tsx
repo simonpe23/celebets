@@ -15,6 +15,7 @@ import {
   bucketRows,
   categoryRows,
   sportRows,
+  sinceLine,
   sportTypeRows,
   totals,
   typeRows,
@@ -52,6 +53,15 @@ function profitColor(value: number): string {
   return "text-neutral-500 dark:text-neutral-400";
 }
 
+// Fixed month names, not the locale's, so the server and the phone
+// never disagree and trigger a hydration mismatch.
+const MONTHS = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(" ");
+function shortDate(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
+}
+
 function pctLabel(wins: number, total: number): string {
   if (total === 0) return "-";
   return `${Math.round((wins / total) * 100)}%`;
@@ -72,6 +82,7 @@ function pctLabel(wins: number, total: number): string {
 export default function StatsView({
   bets,
   netProfit,
+  trackingSince,
   activeHref,
 }: {
   bets: BetWithLegs[];
@@ -80,6 +91,11 @@ export default function StatsView({
   // that version ignores money still riding and disagrees with the
   // Track page by hundreds of dollars.
   netProfit: number;
+  // The fresh start line, or null. Performance is the one page that
+  // still shows everything: the review at the foot counts from the
+  // line, and the charts have an explicit All time switch, because
+  // this is exactly where a user goes to look at the old record.
+  trackingSince: string | null;
   // For the local preview only, whose URL is /preview/performance and
   // would otherwise light no tab at all. The real page leaves it unset
   // and the tab bar reads the address itself.
@@ -92,8 +108,14 @@ export default function StatsView({
   const [scrub, setScrub] = useState<{ value: number; date: Date } | null>(
     null
   );
+  // With a fresh start line, the charts show the current record by
+  // default and this opens the whole history back up.
+  const [showAllTime, setShowAllTime] = useState(false);
 
-  const allSettled = bets.filter(
+  const inPeriodLine =
+    trackingSince && !showAllTime ? sinceLine(bets, trackingSince) : bets;
+
+  const allSettled = inPeriodLine.filter(
     (b) => b.status !== "pending" && b.settled_at !== null
   );
 
@@ -139,8 +161,15 @@ export default function StatsView({
 
   // The hero speaks in bets with no sport chosen, and in that sport's
   // picks and money share once one is.
-  const periodLabel =
+  // With a fresh start line, "All" means all of the CURRENT record,
+  // not all of history. Saying "All time" over a filtered number was
+  // the headline contradicting the caption two lines above it.
+  const rawPeriodLabel =
     PERIOD_LABELS.find((p) => p.key === period)?.label ?? "All time";
+  const periodLabel =
+    period === "all" && trackingSince && !showAllTime
+      ? "Since restart"
+      : rawPeriodLabel;
   const heroProfit =
     sportTotals === null ? t.returned - t.staked : sportTotals.profit;
   const heroRoi = sportTotals === null ? t.roi : null;
@@ -157,6 +186,11 @@ export default function StatsView({
   const breakdown = bySport
     .filter((row) => row.wins + row.losses > 0)
     .sort((a, b) => b.profit - a.profit);
+
+  // The review is the user's current record, so it ignores the All
+  // time switch above it. Mixing them would put two different profits
+  // under one screen with nothing saying why.
+  const reviewBets = sinceLine(bets, trackingSince);
 
   const pillClass = (active: boolean) =>
     `shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
@@ -181,6 +215,26 @@ export default function StatsView({
             to mark where the filtered half started, and the owner cut
             it: he never asked for it, and the period label already sits
             over the headline. Do not reintroduce it. */}
+        {/* The fresh start line, stated and reversible. Without this
+            the old bets look deleted, which is the exact fear that
+            made the owner reject a destructive reset. */}
+        {trackingSince && (
+          <div className="flex items-center justify-between gap-3 text-xs">
+            <span className="text-neutral-500 dark:text-neutral-400">
+              {showAllTime
+                ? "Showing everything you have ever tracked."
+                : `Your record since ${shortDate(trackingSince)}.`}
+            </span>
+            <button
+              type="button"
+              onClick={() => setShowAllTime((v) => !v)}
+              className="shrink-0 text-sm font-semibold text-neutral-600 dark:text-neutral-300"
+            >
+              {showAllTime ? "Since restart ›" : "All time ›"}
+            </button>
+          </div>
+        )}
+
         <section>
           <HeadlineProfit
             label={`${periodLabel}${sport === null ? "" : ` / ${sport}`}`}
@@ -438,9 +492,9 @@ export default function StatsView({
           </p>
         </div>
 
-        <InsightCard bets={bets} linked={false} />
+        <InsightCard bets={reviewBets} linked={false} />
         <KeyInsights bets={allSettled} />
-        <SnapshotCard bets={bets} netProfit={netProfit} linked={false} />
+        <SnapshotCard bets={reviewBets} netProfit={netProfit} linked={false} />
 
         {filtered.length > 0 && <BetHistory bets={historyBets} />}
       </div>

@@ -19,6 +19,9 @@ interface Props {
   // set one and only track bets and profit, which the product supports
   // on purpose, so this card has two shapes instead of one.
   hasBalance: boolean;
+  // The fresh start line, or null. Only used to caption Net profit, so
+  // the user can see their record began again and did not vanish.
+  trackingSince?: string | null;
   betCount: number;
   userId: string;
   // The balance over time, oldest first, drawn as the purple line in
@@ -37,11 +40,21 @@ interface Props {
 
 type Mode = "adjust" | "set";
 
+// Rendered on the server too, so it must not depend on the phone's
+// locale drifting from the server's. Fixed month names, no surprises.
+const MONTHS = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(" ");
+function shortDate(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
+}
+
 export default function BalanceCard({
   balance,
   netProfit,
   startedWith,
   hasBalance,
+  trackingSince,
   betCount,
   userId,
   series,
@@ -185,6 +198,11 @@ export default function BalanceCard({
                   {formatSignedMoney(netProfit)}
                 </span>
               </p>
+              {trackingSince && (
+                <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
+                  Since {shortDate(trackingSince)}
+                </p>
+              )}
             </div>
             {series && series.length > 1 && (
               <div className="-mr-1 w-[44%] shrink-0 self-center">

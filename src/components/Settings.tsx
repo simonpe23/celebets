@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import MicroLabel from "@/components/MicroLabel";
 import TabBar from "@/components/TabBar";
+import { formatMoney, parseMoney } from "@/lib/format";
 import { BTN, CARD, CARD_LINK, INNER } from "@/lib/ui";
 
 // Settings, reached by tapping the avatar. Not a tab: the owner ruled
@@ -13,6 +14,19 @@ import { BTN, CARD, CARD_LINK, INNER } from "@/lib/ui";
 //
 // Log out used to be the avatar itself, which meant one stray tap
 // ended your session. It lives down here now, under everything else.
+//
+// There is NO delete-everything button. I built one and the owner
+// rejected it: he had asked to reset the tracking balance so a user
+// could start over, and deleting their bets is not that. "i think data
+// is still valuable despite wanting a fresh reset of your tracking."
+// Start fresh draws a line instead. See sinceLine in src/lib/stats.ts.
+
+const MONTHS = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(" ");
+function shortDate(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
+}
 
 type Theme = "system" | "light" | "dark";
 
@@ -39,10 +53,16 @@ export default function Settings({
   email,
   name,
   userId,
+  balance,
+  trackingSince,
 }: {
   email: string;
   name: string | null;
   userId: string;
+  // Prefilled into Start fresh, so the sheet opens on what you have
+  // rather than an empty box.
+  balance: number;
+  trackingSince: string | null;
 }) {
   const router = useRouter();
 
@@ -91,32 +111,55 @@ export default function Settings({
     router.refresh();
   }
 
-  // Reset. Typed confirmation, because there is no undo and no backup.
-  const [resetOpen, setResetOpen] = useState(false);
-  const [confirmText, setConfirmText] = useState("");
-  const [resetting, setResetting] = useState(false);
+  // START FRESH. The owner asked for a reset and I built a delete, which
+  // was the wrong tool: "i think data is still valuable despite wanting
+  // a fresh reset of your tracking".
+  //
+  // So nothing is deleted. Celebet writes today as the start of the
+  // record and sets the balance to whatever the user types. Profit, ROI
+  // and the charts count from there; every old bet stays and Performance
+  // has an All time switch to see it.
+  const [freshOpen, setFreshOpen] = useState(false);
+  const [freshAmount, setFreshAmount] = useState("");
+  const [saving, setSaving] = useState(false);
 
-  async function reset() {
-    setError(null);
-    setResetting(true);
-    const supabase = createClient();
-    // Legs and buys hang off bets with on delete cascade, so deleting
-    // the bets takes them with it. Only these two tables hold data.
-    const { error: betError } = await supabase
-      .from("bets")
-      .delete()
-      .eq("user_id", userId);
-    const { error: txError } = await supabase
-      .from("transactions")
-      .delete()
-      .eq("user_id", userId);
-    setResetting(false);
-    if (betError || txError) {
-      setError((betError ?? txError)?.message ?? "Could not reset.");
+  async function startFresh() {
+    const value = parseMoney(freshAmount);
+    if (value === null) {
+      setError("Enter a starting balance above 0, for example 1000.");
       return;
     }
-    setResetOpen(false);
-    setConfirmText("");
+    setError(null);
+    setSaving(true);
+    const supabase = createClient();
+
+    // The balance moves the same way the Set balance sheet moves it: a
+    // transaction for the difference, so the history stays honest about
+    // what happened and when.
+    const delta = value - balance;
+    if (delta !== 0) {
+      const { error: txError } = await supabase.from("transactions").insert({
+        user_id: userId,
+        type: delta > 0 ? "deposit" : "withdrawal",
+        amount: Math.abs(delta),
+      });
+      if (txError) {
+        setSaving(false);
+        setError(txError.message);
+        return;
+      }
+    }
+
+    const { error: metaError } = await supabase.auth.updateUser({
+      data: { tracking_since: new Date().toISOString() },
+    });
+    setSaving(false);
+    if (metaError) {
+      setError(metaError.message);
+      return;
+    }
+    setFreshOpen(false);
+    setFreshAmount("");
     router.push("/app");
     router.refresh();
   }
@@ -238,16 +281,18 @@ export default function Settings({
 
             <button
               type="button"
-              onClick={() => setResetOpen(true)}
+              onClick={() => {
+                setFreshAmount(String(balance));
+                setFreshOpen(true);
+              }}
               className={`${INNER} flex w-full items-center justify-between gap-3 px-3 py-3 text-left`}
             >
               <span className="min-w-0">
-                <span className="block text-sm font-semibold text-red-600 dark:text-red-400">
-                  Reset all data
-                </span>
+                <span className="block text-sm font-semibold">Start fresh</span>
                 <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
-                  Deletes every bet and every balance change. Cannot be
-                  undone.
+                  {trackingSince
+                    ? `Your record started again on ${shortDate(trackingSince)}. You can draw a new line any time.`
+                    : "Set a new balance and begin your record from today. Nothing is deleted."}
                 </span>
               </span>
               <span className={CARD_LINK}>›</span>
@@ -264,39 +309,45 @@ export default function Settings({
           </button>
         </form>
 
-        {resetOpen && (
+        {freshOpen && (
           <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center">
             <div className="w-full max-w-sm rounded-t-2xl bg-white p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:rounded-2xl sm:pb-6 dark:bg-[#161D38]">
-              <h3 className="text-lg font-bold text-red-600 dark:text-red-400">
-                Reset all data
-              </h3>
+              <h3 className="text-lg font-bold">Start fresh</h3>
               <p className="mt-3 text-sm leading-relaxed">
-                This deletes every bet, every pick and every change you have
-                made to your tracking balance. There is no undo and no
-                backup. Your account and your login stay.
+                Your net profit, ROI, win rate and charts start again from
+                today. Set the balance you want to begin with.
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
+                Nothing is deleted. Every bet you have tracked stays, and
+                Performance has an All time switch to see the whole record.
               </p>
 
               <label
-                htmlFor="confirm"
+                htmlFor="fresh"
                 className="mt-4 block text-sm font-semibold"
               >
-                Type RESET to confirm
+                Starting balance
               </label>
               <input
-                id="confirm"
+                id="fresh"
                 type="text"
-                autoComplete="off"
-                value={confirmText}
-                onChange={(e) => setConfirmText(e.target.value)}
-                className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/30 dark:border-white/15 dark:bg-[#0E1228] dark:text-neutral-100"
+                inputMode="decimal"
+                autoFocus
+                placeholder="0.00"
+                value={freshAmount}
+                onChange={(e) => setFreshAmount(e.target.value)}
+                className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-brand-mark focus:ring-2 focus:ring-brand-mark/30 dark:border-white/15 dark:bg-[#0E1228] dark:text-neutral-100"
               />
+              <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
+                Your balance today is {formatMoney(balance)}.
+              </p>
 
               <div className="mt-5 grid grid-cols-2 gap-3">
                 <button
                   type="button"
                   onClick={() => {
-                    setResetOpen(false);
-                    setConfirmText("");
+                    setFreshOpen(false);
+                    setFreshAmount("");
                   }}
                   className="h-11 rounded-md border border-neutral-300 text-sm font-bold dark:border-white/15"
                 >
@@ -304,16 +355,17 @@ export default function Settings({
                 </button>
                 <button
                   type="button"
-                  disabled={confirmText !== "RESET" || resetting}
-                  onClick={reset}
-                  className="h-11 rounded-md bg-red-600 text-sm font-bold text-white active:bg-red-700 disabled:opacity-40"
+                  disabled={saving}
+                  onClick={startFresh}
+                  className={`${BTN} h-11`}
                 >
-                  {resetting ? "Deleting..." : "Delete everything"}
+                  {saving ? "Starting..." : "Start fresh"}
                 </button>
               </div>
             </div>
           </div>
         )}
+
       </div>
       <TabBar activeHref="/app" />
     </main>

@@ -5,7 +5,7 @@ import LiveBets from "@/components/LiveBets";
 import NewBetForm from "@/components/NewBetForm";
 import SnapshotCard from "@/components/SnapshotCard";
 import { round2 } from "@/lib/format";
-import { betProfit } from "@/lib/stats";
+import { betProfit, sinceLine } from "@/lib/stats";
 import type { BetWithLegs } from "@/lib/types";
 
 interface Props {
@@ -14,6 +14,10 @@ interface Props {
   balance: number;
   netProfit: number;
   startedWith: number;
+  // The fresh start line, or null. Everything the user judges
+  // themselves on counts from here: the balance line, the snapshot,
+  // and the insights.
+  trackingSince: string | null;
   hasBalance: boolean;
   lastStake: string;
   userId: string;
@@ -31,12 +35,17 @@ export default function HomeDashboard({
   balance,
   netProfit,
   startedWith,
+  trackingSince,
   hasBalance,
   lastStake,
   userId,
   name,
 }: Props) {
-  const settled = bets
+  // Everything on this page speaks in the current period. The old
+  // bets are not gone, they live in the history on Performance.
+  const counted = sinceLine(bets, trackingSince);
+
+  const settled = counted
     .filter((b) => b.status !== "pending" && b.settled_at !== null)
     .sort(
       (a, b) =>
@@ -60,14 +69,15 @@ export default function HomeDashboard({
         hasBalance={hasBalance}
         betCount={settled.length}
         userId={userId}
+        trackingSince={trackingSince}
         series={hasBalance ? series : undefined}
       />
 
       <NewBetForm lastStake={lastStake} compact />
 
-      <InsightCard bets={bets} />
+      <InsightCard bets={counted} />
 
-      <SnapshotCard bets={bets} netProfit={netProfit} />
+      <SnapshotCard bets={counted} netProfit={netProfit} />
 
       <LiveBets bets={liveBets} />
     </div>

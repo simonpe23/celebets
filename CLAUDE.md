@@ -568,10 +568,31 @@ who never opens Settings keeps following their phone forever.
   and dark pair cannot be overridden, so choosing Light on a dark phone
   left a navy status bar above a white page.
 
-RESET ALL DATA. Deletes every bet and every transaction for the user.
-Legs and buys cascade from bets, so two deletes clear everything.
-Behind a sheet that requires typing RESET exactly. The account and the
-login survive. There is no undo and no backup, which the sheet says.
+START FRESH, and there is NO delete-everything button anywhere.
+
+I built one. The owner rejected it: he had asked to reset the tracking
+balance so a user could start over, and deleting their bets is not
+that. His words: "i think data is still valuable despite wanting a
+fresh reset of your tracking."
+
+So Celebet draws a LINE instead. `tracking_since` goes into the auth
+user's metadata (no migration), and `sinceLine()` in src/lib/stats.ts
+keeps a bet if it was NOT already settled before that date.
+- That one rule carries pending bets over, which the owner wanted: a
+  bet still riding when you draw the line is live money, so it belongs
+  to the new record.
+- A bet settled exactly ON the line belongs to the old record.
+- Net profit, ROI, win rate, the chart, the snapshot and the insights
+  all count from the line. Nothing is deleted.
+- Performance carries an "All time" switch, so the old record is one
+  tap away. The review at the foot ignores that switch on purpose: it
+  is the CURRENT record, and mixing the two would put two different
+  profits on one screen.
+- With no line, netProfitOf(all bets) equals balance + removals minus
+  additions exactly, so nothing moves for a user who never starts
+  fresh. Verified with a arithmetic test, not by eye.
+- startedWith is now derived as balance minus net profit, so
+  startedWith + netProfit = balance holds with or without a line.
 
 NAME. Stored in the auth user's metadata (`full_name`), not a table, so
 it needed no migration. It is the same field Google fills in, and the
