@@ -11,7 +11,7 @@ export default function Wordmark({
       className={`font-brand font-semibold lowercase tracking-tight ${className}`}
     >
       <span className="text-neutral-900 dark:text-white">cele</span>
-      <span className="bg-gradient-to-br from-[#9A57FC] via-[#7C3AED] to-[#5B21B6] bg-clip-text text-transparent">
+      <span className="bg-gradient-to-br from-brand-mark via-brand-top to-brand-press bg-clip-text text-transparent">
         bet
       </span>
     </span>

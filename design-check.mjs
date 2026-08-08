@@ -37,13 +37,10 @@ const COMPACT_OK = [
 
 // Colors that are allowed to appear as raw hex, and what each is for.
 const ALLOWED_HEX = new Set([
-  "#7C3AED", // action purple, from the owner's mockups
+  // The brand purple is NOT here. It lives in globals.css as four
+  // custom properties and is reached through bg-brand-top and friends.
+  // Rule 8b fails on any brand hex written by hand.
   "#EF4444", // outcome pill, Lost
-  "#9A57FC", // purple on dark surfaces, and the wordmark gradient
-  "#5B21B6", // primary button, and the wordmark gradient deep end
-  "#5525C6", // primary button, gradient top
-  "#4915AD", // primary button, gradient foot
-  "#3D0F94", // primary button, pressed
   "#16A34A", // the Won settle button only, see rule 4b
   "#15803D", // Won settle button, pressed
   // The insight accent, the app's one secondary color. Warm amber
@@ -126,8 +123,11 @@ for (const file of files) {
       note(file, n, "text-neutral-500 without dark:text-neutral-400");
     }
 
-    // 4. No stray brand colors.
-    for (const hex of line.match(/#[0-9A-Fa-f]{6}/g) ?? []) {
+    // 4. No stray brand colors. Comments are exempt: the notes name
+    // retired values on purpose, so that the reason a color was
+    // dropped survives next to the code.
+    const isComment = line.trim().startsWith("//") || line.trim().startsWith("*");
+    for (const hex of isComment ? [] : (line.match(/#[0-9A-Fa-f]{6}/g) ?? [])) {
       if (!ALLOWED_HEX.has(hex.toUpperCase().replace("#", "#"))) {
         const known = [...ALLOWED_HEX].some(
           (h) => h.toLowerCase() === hex.toLowerCase()
@@ -141,18 +141,6 @@ for (const file of files) {
     // Won on a pending pick, which is an outcome, not an action.
     if (/#16A34A|#15803D/.test(line) && short !== "LiveBets.tsx") {
       note(file, n, "green #16A34A outside the Won button, actions are purple");
-    }
-
-    // 4c. Two purples, two jobs. #5525C6 is a surface you press,
-    // #7C3AED is purple as text, a border or a tint on a LIGHT surface,
-    // #9A57FC the same on a dark one. All three sampled from the
-    // owner's mockup. The retired values are caught below because
-    // seventeen filled buttons once drifted onto the wrong one.
-    if (/bg-\[#7C3AED\](?![/[])/.test(line)) {
-      note(file, n, "filled purple button: pressable purple is #5525C6");
-    }
-    if (/#6D28D9|#4C1D95|#3B1578/.test(line)) {
-      note(file, n, "retired purple, the mockup's is #5525C6 / #4915AD");
     }
 
     // 5. The card surface comes from CARD in src/lib/ui.ts. Thirteen
@@ -267,44 +255,37 @@ for (const file of files) {
   });
 }
 
-// 8b. THE ONE JOB RULE.
+// 8b. THE ONE JOB RULE, AND ONE PLACE FOR THE COLOR.
 //
 // The owner, August 2026: "the purple color is too overwhelming, it's
 // just too much purple, everywhere." Twelve purple objects sat on the
 // Track page's first screen, because purple was doing seven jobs:
 // brand, button, active tab, link, badge, data line and decoration.
+// Purple now means one thing, something you press.
 //
-// Purple now means one thing, something you press. These are the files
-// allowed to write a purple, and why. Anywhere else, purple is drifting
-// back into a second job and the sweep starts over.
-const PURPLE_OK = {
-  "ui.ts": "the primary button",
-  "TabBar.tsx": "the active tab",
-  "NewBetForm.tsx": "the primary capture tile and the selected chips",
-  "StatsView.tsx": "the selected sport filter",
-  "LiveBets.tsx": "the Add money and Cash out buttons",
-  "BetHistory.tsx": "the Save button on an edited date",
-  "TransactionsList.tsx": "the Save button on an edited date",
-  "BalanceCard.tsx": "the input focus ring and the link control variant",
-  "Wordmark.tsx": "the brand mark, kept purple by the owner",
-  "page.tsx": "the avatar, which is the brand mark",
-};
+// The brand color also lives in exactly one place now, as four custom
+// properties in globals.css, reached through bg-brand-top,
+// text-brand-mark and friends. Changing the app's action color is four
+// lines. It used to be 45 edits across 17 files, which is a sweep
+// nobody wins: miss one and two shades ship together.
+//
+// So a raw brand hex anywhere in src outside globals.css means someone
+// pinned a color in place and the next change will miss it.
+const BRAND_HEX = /#5525C6|#4915AD|#3D0F94|#7C3AED|#9A57FC|#5B21B6|#4C1D95|#3B1578|#6D28D9/i;
 
 for (const file of files) {
   if (SKIP.some((dir) => file.includes(`/${dir}/`))) continue;
-  const short = file.split("/").pop();
-  if (short in PURPLE_OK) continue;
   const lines = readFileSync(file, "utf8").split("\n");
   lines.forEach((line, i) => {
     const trimmed = line.trim();
     if (trimmed.startsWith("//") || trimmed.startsWith("*")) return;
-    if (/#7C3AED|#9A57FC|#5525C6|#4915AD/.test(line)) {
+    if (BRAND_HEX.test(line)) {
       note(
         file,
         i + 1,
-        "purple outside a control. It means one thing now: something " +
-          "you press. Links are ink, data is green or red, insights " +
-          "are the amber accent."
+        "brand color written by hand. It lives in globals.css: use " +
+          "bg-brand-top, to-brand-bottom, active:to-brand-press or " +
+          "text-brand-mark."
       );
     }
   });

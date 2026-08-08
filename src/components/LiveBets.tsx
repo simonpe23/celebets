@@ -430,7 +430,7 @@ export default function LiveBets({ bets }: Props) {
                               parseMoney(addPayout) === null
                             }
                             onClick={() => addMoney(bet.id, stake, totalOdds)}
-                            className="rounded-lg bg-[#5525C6] px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
+                            className="rounded-lg bg-brand-top px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
                           >
                             Confirm add
                           </button>
@@ -498,7 +498,7 @@ export default function LiveBets({ bets }: Props) {
                               parseMoney(cashOutAmount) === null
                             }
                             onClick={() => cashOut(bet.id)}
-                            className="rounded-lg bg-[#5525C6] px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
+                            className="rounded-lg bg-brand-top px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
                           >
                             Confirm cash out
                           </button>
@@ -610,7 +610,7 @@ export default function LiveBets({ bets }: Props) {
                                 addingMoney === bet.id ? null : bet.id
                               );
                             }}
-                            className="rounded-lg border border-[#7C3AED]/40 px-3 py-1.5 text-xs font-semibold text-[#7C3AED] disabled:opacity-50 dark:border-[#9A57FC]/40 dark:text-[#9A57FC]"
+                            className="rounded-lg border border-brand-mark/40 px-3 py-1.5 text-xs font-semibold text-brand-mark disabled:opacity-50 dark:text-brand-mark"
                           >
                             Add money
                           </button>
@@ -625,7 +625,7 @@ export default function LiveBets({ bets }: Props) {
                                 cashingOut === bet.id ? null : bet.id
                               );
                             }}
-                            className="rounded-lg border border-[#7C3AED]/40 px-3 py-1.5 text-xs font-semibold text-[#7C3AED] disabled:opacity-50 dark:border-[#9A57FC]/40 dark:text-[#9A57FC]"
+                            className="rounded-lg border border-brand-mark/40 px-3 py-1.5 text-xs font-semibold text-brand-mark disabled:opacity-50 dark:text-brand-mark"
                           >
                             Cash out
                           </button>

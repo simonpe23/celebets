@@ -7,9 +7,28 @@
   --background: #F7F7FB;
   --foreground: #0E0E14;
   --brand-cream: #f5edce;
-  --brand-blue: #72afcc;
-  --brand-blue-dark: #5b96b3;
-  --brand-purple: #7C3AED;
+
+  /* ---------------------------------------------------------------
+     THE BRAND COLOR LIVES HERE AND NOWHERE ELSE.
+
+     Changing the app's action color means editing these four lines.
+     It used to mean 45 edits across 17 files, which is a sweep nobody
+     wins: one missed spot and two shades ship together.
+
+     Four values, because a button is a gradient and a pressed button
+     is darker:
+       top     the button's lit edge, and the active tab on light
+       bottom  the button's foot
+       press   held down
+       mark    purple as a border or an icon ON a control, never as
+               a link, a badge or a data line. See the one job rule.
+     `mark` has a dark counterpart below, because the deep shade is
+     nearly invisible against the navy page.
+     --------------------------------------------------------------- */
+  --brand-top: #5525C6;
+  --brand-bottom: #4915AD;
+  --brand-press: #3D0F94;
+  --brand-mark: #7C3AED;
 }
 
 @theme inline {
@@ -28,9 +47,10 @@
   --font-plex: var(--font-plex);
   --font-instrument: var(--font-instrument);
   --color-cream: var(--brand-cream);
-  --color-brand: var(--brand-blue);
-  --color-brand-dark: var(--brand-blue-dark);
-  --color-plum: var(--brand-purple);
+  --color-brand-top: var(--brand-top);
+  --color-brand-bottom: var(--brand-bottom);
+  --color-brand-press: var(--brand-press);
+  --color-brand-mark: var(--brand-mark);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -42,6 +62,10 @@
        still not purple tinted, that cast was a separate mistake. */
     --background: #04081B;
     --foreground: #F2F2F5;
+    /* The deep shade disappears against the navy page, so the mark
+       lifts. The button gradient does not: it is a filled surface
+       with white on it and reads fine either way. */
+    --brand-mark: #9A57FC;
   }
 }
 

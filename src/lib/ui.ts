@@ -19,7 +19,7 @@ export const INNER =
 // The shape is still squarer than instinct suggests. He rejected
 // rounded-xl and rounded-lg as too much of a pill.
 export const BTN =
-  "rounded-md bg-gradient-to-b from-[#5525C6] to-[#4915AD] text-[13px] font-semibold text-white active:from-[#4915AD] active:to-[#3D0F94] disabled:opacity-60";
+  "rounded-md bg-gradient-to-b from-brand-top to-brand-bottom text-[13px] font-semibold text-white active:from-brand-bottom active:to-brand-press disabled:opacity-60";
 
 // THE ONE JOB RULE (August 2026). The owner: "the purple color is too
 // overwhelming, it's just too much purple, everywhere."
