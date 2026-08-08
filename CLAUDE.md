@@ -50,6 +50,18 @@ from Vercel while design-check and tsc were both green: ESLint's
 rules-of-hooks only runs inside `next build`. If the build is not
 part of the check, the check is a lie.
 
+GESTURES DO NOT SHOW UP IN A SCREENSHOT. Added August 2026, after the
+owner found that press and hold scrubbing on the Performance chart had
+been dead for four days. I broke it fixing something else: the chart
+stopped rendering on its first pass, so the touch listeners attached to
+an element that did not exist and never attached again. No error, no
+warning, no failing build, and every screenshot looked perfect.
+
+So: after ANY change to a component that handles touch, drag, long
+press or scroll, run `node scrubtest.mjs <port>` against a dev server.
+It drives a real finger across the chart and checks the headline
+follows. A design check cannot catch a dead event listener.
+
 THE SWEEP RULE (added August 2026, after the owner had to ask three
 times whether a font change had reached the whole app):
 

@@ -37,7 +37,7 @@ export default function ProfitChart({
   to,
   onScrub,
 }: Props) {
-  const plotRef = useRef<HTMLDivElement>(null);
+  const plotRef = useRef<HTMLDivElement | null>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   // The right hand edge of the chart is "now", which cannot be read
@@ -64,8 +64,17 @@ export default function ProfitChart({
   const endRef = useRef<() => void>(() => {});
   const lockedRef = useRef(false);
 
+  // `plotNode` exists as well as `plotRef` because a ref does not tell
+  // React when it gets filled in, and this chart does not render on the
+  // first pass: it waits for the clock to be read after mount. With a
+  // plain ref the listener effect ran once against a null element,
+  // bailed, and never ran again, so press and hold scrubbing silently
+  // stopped working. Holding the node in state re-runs the effect the
+  // moment the element appears.
+  const [plotNode, setPlotNode] = useState<HTMLDivElement | null>(null);
+
   useEffect(() => {
-    const el = plotRef.current;
+    const el = plotNode;
     if (!el) return;
 
     const lock = (x: number) => {
@@ -116,7 +125,7 @@ export default function ProfitChart({
       el.removeEventListener("touchend", onEnd);
       el.removeEventListener("touchcancel", onEnd);
     };
-  }, []);
+  }, [plotNode]);
 
   const settled = bets
     .filter((b) => b.settled_at !== null)
@@ -236,7 +245,10 @@ export default function ProfitChart({
     <div>
       <div className="relative -mx-1 mt-4 h-[200px] select-none">
         <div
-          ref={plotRef}
+          ref={(el) => {
+            plotRef.current = el;
+            setPlotNode(el);
+          }}
           className="absolute inset-0"
           style={{
             // Nothing scrolls inside the chart. Every touch here is
