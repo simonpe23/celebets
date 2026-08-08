@@ -177,17 +177,10 @@ export default function StatsView({
             own earlier note that Performance should not land on graphs.
             His call, made in front of the real screen.
 
-            Everything in this half answers to the period and sport
-            controls, which is why the boundary is named out loud: the
-            Snapshot further down is all time and would otherwise look
-            like it disagreed. */}
-        <div>
-          <h2 className="text-[17px] font-bold">Charts and breakdowns</h2>
-          <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
-            Everything here follows the period and sport you pick.
-          </p>
-        </div>
-
+            It carries NO heading. I added one ("Charts and breakdowns")
+            to mark where the filtered half started, and the owner cut
+            it: he never asked for it, and the period label already sits
+            over the headline. Do not reintroduce it. */}
         <section>
           <HeadlineProfit
             label={`${periodLabel}${sport === null ? "" : ` / ${sport}`}`}
