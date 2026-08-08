@@ -62,6 +62,7 @@ export default function Settings({
   userId,
   balance,
   trackingSince,
+  recordStartedAt,
   trackingResetTx,
 }: {
   email: string;
@@ -71,6 +72,10 @@ export default function Settings({
   // rather than an empty box.
   balance: number;
   trackingSince: string | null;
+  // When the current record began: normally the first thing the user
+  // ever tracked, or the restart date if they have restarted. Shown as
+  // a plain fact, because for almost everyone it is one.
+  recordStartedAt: string | null;
   // The balance transaction that starting the record created, so Undo
   // can remove exactly that row and nothing else.
   trackingResetTx: string | null;
@@ -339,60 +344,30 @@ export default function Settings({
               <span className={CARD_LINK}>Open ›</span>
             </Link>
 
-            {trackingSince ? (
-              /* Already running a new record. The card states it plainly
-                 and keeps Undo in reach forever, not for fifteen
-                 minutes: the owner asked for a way to regret it. */
+            {/* A plain fact, not a control. Almost nobody restarts, so
+                the normal wording is when your record began, and the
+                restart lives in its own quiet section below. */}
+            {recordStartedAt && (
               <div className={`${INNER} px-3 py-3`}>
-                <p className="text-sm font-semibold">
-                  Your record restarted on {shortDate(trackingSince)}
-                </p>
-                <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
-                  Stats count from that date. Every bet before it is still
-                  saved, and Performance has an All time switch to see
-                  them.
-                </p>
-                <div className="mt-3 flex gap-2">
+                <span className="block text-sm font-semibold">
+                  Your record started on {shortDate(recordStartedAt)}
+                </span>
+                <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
+                  {trackingSince
+                    ? "You restarted your record on this date. Everything you tracked before it is still saved, and Performance has an All time switch to see it."
+                    : "Everything you have tracked counts toward your stats."}
+                </span>
+                {trackingSince && (
                   <button
                     type="button"
                     disabled={undoing}
                     onClick={undoNewRecord}
-                    className="h-9 rounded-md border border-neutral-300 px-4 text-sm font-bold text-neutral-600 disabled:opacity-50 dark:border-white/15 dark:text-neutral-300"
+                    className="mt-3 h-9 rounded-md border border-neutral-300 px-4 text-sm font-bold text-neutral-600 disabled:opacity-50 dark:border-white/15 dark:text-neutral-300"
                   >
-                    {undoing ? "Undoing..." : "Undo restart"}
+                    {undoing ? "Undoing..." : "Undo the restart"}
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setFreshAmount(String(balance));
-                      setFreshOpen(true);
-                    }}
-                    className="h-9 rounded-md px-3 text-sm font-semibold text-neutral-600 dark:text-neutral-300"
-                  >
-                    Restart again
-                  </button>
-                </div>
+                )}
               </div>
-            ) : (
-              <button
-                type="button"
-                onClick={() => {
-                  setFreshAmount(String(balance));
-                  setFreshOpen(true);
-                }}
-                className={`${INNER} flex w-full items-center justify-between gap-3 px-3 py-3 text-left`}
-              >
-                <span className="min-w-0">
-                  <span className="block text-sm font-semibold">
-                    Start a new record
-                  </span>
-                  <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
-                    Set a new balance and count your stats from today.
-                    Nothing is deleted, and you can undo it.
-                  </span>
-                </span>
-                <span className={CARD_LINK}>›</span>
-              </button>
             )}
           </div>
         </section>
@@ -406,13 +381,46 @@ export default function Settings({
           </button>
         </form>
 
+        {/* Deliberately the quietest thing on the page: below log out,
+            no card, no button, muted text. Ruled by the owner: "a
+            restart is just a what if. most users will not restart...
+            it can trick them into a false reality of being profitable
+            when maybe not." So it is available, honest about the risk,
+            and not sold. */}
+        <div className="pt-2 pb-2 text-center">
+          <button
+            type="button"
+            onClick={() => {
+              setFreshAmount(String(balance));
+              setFreshOpen(true);
+            }}
+            className="text-xs text-neutral-500 underline underline-offset-4 dark:text-neutral-400"
+          >
+            Restart my record
+          </button>
+          <p className="mx-auto mt-1.5 max-w-[19rem] text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
+            Starts your stats at zero from today. Most people never need
+            this, and hiding past results can make you look more
+            profitable than you are.
+          </p>
+        </div>
+
         {freshOpen && (
           <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center">
             <div className="w-full max-w-sm rounded-t-2xl bg-white p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:rounded-2xl sm:pb-6 dark:bg-[#161D38]">
-              <h3 className="text-lg font-bold">Start a new record</h3>
+              <h3 className="text-lg font-bold">Restart my record</h3>
 
-              {/* The reassurance leads. The owner's worry was that a
-                  user taps this and believes their bets are gone. */}
+              {/* The honest caution first. The owner's point, and he is
+                  right: hiding a losing run makes you look profitable
+                  when you are not, and a bet tracker that helps you lie
+                  to yourself is worse than no tracker. */}
+              <p className="mt-3 text-sm leading-relaxed">
+                Only do this if you are genuinely starting a new budget.
+                Hiding a losing run can make you look more profitable
+                than you really are, which is the opposite of what
+                Celebet is for.
+              </p>
+
               <div className={`${INNER} mt-3 px-3 py-3`}>
                 <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
                   Nothing is deleted.
@@ -477,7 +485,7 @@ export default function Settings({
                   onClick={startNewRecord}
                   className={`${BTN} h-11`}
                 >
-                  {saving ? "Starting..." : "Start new record"}
+                  {saving ? "Restarting..." : "Restart my record"}
                 </button>
               </div>
             </div>

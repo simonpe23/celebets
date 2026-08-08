@@ -608,8 +608,18 @@ people to accidentally loose all their data."
   what changes, and what does not. The owner's fear was a user tapping
   this and believing their bets were gone, so the reassurance comes
   before the consequences, not after.
-- The control is called "Start a new record", not "Start fresh". Fresh
-  sounds like wiping.
+- The normal wording is "Your record started on <date>", stated as a
+  plain fact in Your data. Ruled by the owner: "a restart is just a
+  what if. most users will not restart." Without a restart that date is
+  the first thing the user ever tracked.
+- The restart itself is the QUIETEST thing on the page: below Log out,
+  no card, no button, muted underlined text. The owner asked for this
+  and gave the reason, which is a good one: hiding a losing run "can
+  trick them into a false reality of being profitable when maybe not."
+  So the sheet opens by saying exactly that, before anything else.
+  Available, honest, not sold.
+- The control is called "Restart my record", never "Start fresh" or
+  "Reset". Fresh and reset both sound like wiping.
 
 NAME. Stored in the auth user's metadata (`full_name`), not a table, so
 it needed no migration. It is the same field Google fills in, and the
