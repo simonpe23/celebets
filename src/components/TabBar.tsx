@@ -33,7 +33,7 @@ const TABS = [
 // background. Ruled by the owner from his own screenshot: no purple
 // block behind it. A solid shape reads as selected by itself, and the
 // pill was heavier than everything around it.
-const ICON = "h-[26px] w-[26px]";
+const ICON = "h-[23px] w-[23px]";
 
 // The active purple is the Set balance button's purple, ruled by the
 // owner: one purple, not two shades of it on the same screen. On light
@@ -129,7 +129,33 @@ const ICONS = [TrackIcon, PerformanceIcon, ResearchIcon];
 
 // activeHref exists for the local preview, whose URL is /preview and
 // would otherwise light no tab at all.
-export default function TabBar({ activeHref }: { activeHref?: string }) {
+// The bar's own surface. Three things the owner ruled in August 2026:
+//
+//   SHADE   it was white on the #F7F7FB page, so it blurred into
+//           everything. It now sits a step darker than the page on
+//           light, and a step lighter than it on dark, so it reads as
+//           a bar in both.
+//   HEIGHT  it was 78px of a 844px screen. Now 62.
+//   RADIUS  rounded-[26px] was, in his word, childish. Squared down to
+//           match the buttons, which he already ruled square.
+//
+// He chose this shade from three, side by side: tinted, white and a
+// dark ink bar. The other two are gone rather than left in as options,
+// because an unused variant is how the purple sprawl started.
+const SURFACE =
+  "bg-[#ECECF3] ring-1 ring-neutral-900/[0.07] dark:bg-[#111731] dark:ring-white/[0.09]";
+
+export default function TabBar({
+  activeHref,
+  inline = false,
+}: {
+  activeHref?: string;
+  // Drops the fixed positioning so the local preview can place the bar
+  // in the flow. Tailwind v4 skips gitignored files when it generates
+  // classes, so the preview cannot override `fixed` from its own file.
+  // The app never passes this.
+  inline?: boolean;
+}) {
   // usePathname is called unconditionally on purpose. Writing
   // `activeHref ?? usePathname()` short-circuits, which skips the hook
   // on some renders and breaks the rules of hooks. It compiled locally
@@ -138,8 +164,16 @@ export default function TabBar({ activeHref }: { activeHref?: string }) {
   const pathname = activeHref ?? currentPath ?? "";
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
-      <div className="mx-auto flex w-full max-w-md items-stretch rounded-[26px] bg-white p-2 shadow-[0_8px_28px_-12px_rgba(16,16,26,0.35)] ring-1 ring-neutral-900/[0.06] dark:bg-[#0C1125] dark:ring-white/[0.07]">
+    <nav
+      className={
+        inline
+          ? ""
+          : "fixed inset-x-0 bottom-0 z-40 px-4 pb-[calc(0.625rem+env(safe-area-inset-bottom))]"
+      }
+    >
+      <div
+        className={`mx-auto flex w-full max-w-md items-stretch rounded-xl p-1 shadow-[0_6px_20px_-10px_rgba(16,16,26,0.4)] ${SURFACE}`}
+      >
         {TABS.map((tab, i) => {
           const Icon = ICONS[i];
           const active = tab.match(pathname);
@@ -147,7 +181,7 @@ export default function TabBar({ activeHref }: { activeHref?: string }) {
             <Link
               key={tab.href}
               href={tab.href}
-              className={`flex flex-1 flex-col items-center justify-center gap-1 py-1.5 text-[13px] font-semibold ${
+              className={`flex flex-1 flex-col items-center justify-center gap-0.5 py-1.5 text-[11px] font-semibold ${
                 active ? ACTIVE : "text-neutral-500 dark:text-neutral-400"
               }`}
             >

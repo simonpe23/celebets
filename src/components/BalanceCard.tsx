@@ -204,16 +204,18 @@ export default function BalanceCard({
                 </p>
               )}
             </div>
+            {/* No negative margin: the end dot sits ON the last point,
+                so half of it used to hang outside the card. */}
             {series && series.length > 1 && (
-              <div className="-mr-1 w-[44%] shrink-0 self-center">
+              <div className="w-[44%] shrink-0 self-center pr-1">
                 {/* The balance line is money, so it is green when the
                     balance is above where it started and red when it is
                     below. It used to be purple, which said nothing. */}
                 <Sparkline
                   points={series}
                   positive={netProfit >= 0}
-                  dots
-                  className="h-[104px]"
+                  endDot
+                  className="h-[92px]"
                 />
               </div>
             )}

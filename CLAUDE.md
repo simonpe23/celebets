@@ -234,7 +234,11 @@ rounds of argument.
 - Buttons are squared, not pills. rounded-md is the primary, and the
   owner rejected rounded-xl and rounded-lg as too round.
 - THE TAB BAR. The active tab is a FILLED icon plus a label, both in
-  purple, on the bar's own white (or #0C1125) background. There is
+  purple, on the bar's own surface: #ECECF3 on light, #111731 on dark.
+  Chosen by the owner from three shown side by side (tinted, white,
+  ink). It used to be white on the #F7F7FB page and blurred into
+  everything. 62px tall, not 78, and rounded-xl, not rounded-[26px],
+  which he called childish. There is
   NO purple pill behind it: the owner sent a screenshot of the look
   he wanted and the block was heavier than everything near it. Track
   and Performance fill their shapes when active; the magnifier has no

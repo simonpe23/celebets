@@ -60,6 +60,10 @@ const ALLOWED_HEX = new Set([
   "#04081B", // dark page
   "#0C1125", // dark tab bar and other raised surfaces
   "#080D20", // chart panel
+  // The tab bar has its own shade, a step off the page in both themes,
+  // because white on #F7F7FB made it disappear.
+  "#ECECF3", // tab bar, light
+  "#111731", // tab bar, dark
   "#F7F7FB", // light page
   "#34D399", // chart green
   "#FB7185", // chart red
