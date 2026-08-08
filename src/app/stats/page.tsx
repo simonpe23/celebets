@@ -1,9 +1,14 @@
 import { createClient } from "@/lib/supabase/server";
 import StatsView from "@/components/StatsView";
+import { netProfitOf, sinceLine } from "@/lib/stats";
 import type { BetWithLegs } from "@/lib/types";
 
 export default async function StatsPage() {
   const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const [{ data: transactions }, { data: bets }] = await Promise.all([
     supabase.from("transactions").select("type, amount"),
@@ -34,7 +39,21 @@ export default async function StatsPage() {
   );
 
   const balance = deposits - withdrawals - totalStaked + totalPayouts;
-  const netProfit = balance + withdrawals - deposits;
 
-  return <StatsView bets={allBets} netProfit={netProfit} />;
+  // The fresh start line. See src/lib/stats.ts. The Snapshot must show
+  // the same number as the Track page, so both derive it the same way.
+  const trackingSince =
+    (user?.user_metadata?.tracking_since as string | undefined) ?? null;
+  const allTimeProfit = balance + withdrawals - deposits;
+  const netProfit = trackingSince
+    ? netProfitOf(sinceLine(allBets, trackingSince))
+    : allTimeProfit;
+
+  return (
+    <StatsView
+      bets={allBets}
+      netProfit={netProfit}
+      trackingSince={trackingSince}
+    />
+  );
 }

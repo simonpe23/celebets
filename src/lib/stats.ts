@@ -778,3 +778,42 @@ export function pickInsights(pool: Insight[], count = 4): string[] {
 
   return picked;
 }
+
+// ---------------------------------------------------------------
+// THE FRESH START LINE.
+//
+// A user who wants to "start over" does not want their bets deleted.
+// They want their record to begin again. So Celebet stores a date, and
+// everything before it stops counting toward profit while staying in
+// the history.
+//
+// A bet belongs to the current period if it was NOT already settled
+// before the line. That single rule carries pending bets over, which is
+// what the owner wanted: a bet still riding when you draw the line is
+// still live money, so it belongs to the new record, not the old one.
+//
+// The date lives in the auth user's metadata next to their name, so
+// this needed no migration.
+export function sinceLine(
+  bets: BetWithLegs[],
+  trackingSince: string | null
+): BetWithLegs[] {
+  if (!trackingSince) return bets;
+  const line = new Date(trackingSince).getTime();
+  if (Number.isNaN(line)) return bets;
+  return bets.filter((b) => {
+    if (!b.settled_at) return true;
+    return new Date(b.settled_at).getTime() > line;
+  });
+}
+
+// Net profit over a set of bets, using the app's ONE definition:
+// everything paid out minus everything staked, money still riding
+// included. All time this equals balance + removals minus additions,
+// which is why the two agree on every screen.
+export function netProfitOf(bets: BetWithLegs[]): number {
+  return bets.reduce(
+    (sum, b) => sum + Number(b.payout ?? 0) - Number(b.stake),
+    0
+  );
+}

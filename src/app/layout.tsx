@@ -58,13 +58,37 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: [
-    // The phone paints its status bar with this, so it has to be the
-    // page color or a seam shows above the header.
-    { media: "(prefers-color-scheme: light)", color: "#F7F7FB" },
-    { media: "(prefers-color-scheme: dark)", color: "#04081B" },
-  ],
+  // ONE theme-color tag, not a light and a dark one. A media query
+  // pair cannot be overridden, and the settings page lets the user
+  // choose a theme their phone disagrees with. The script in the head
+  // rewrites this tag whenever the theme changes.
+  themeColor: "#F7F7FB",
 };
+
+// Runs before the first paint, so the page never flashes the wrong
+// theme. It has to be a raw string in the head: a React effect runs
+// after paint, which is exactly the flash we are avoiding.
+//
+// "system" is the default and stores nothing, so a user who never opens
+// settings keeps following their phone forever.
+const THEME_SCRIPT = `
+(function () {
+  try {
+    var saved = localStorage.getItem("celebet-theme");
+    var dark =
+      saved === "dark" ||
+      ((!saved || saved === "system") &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches);
+    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+    // The phone paints its status bar from this. Without it, choosing
+    // Light on a dark phone leaves a navy bar above a white page.
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", dark ? "#04081B" : "#F7F7FB");
+  } catch (e) {
+    document.documentElement.setAttribute("data-theme", "light");
+  }
+})();
+`;
 
 export default function RootLayout({
   children,
@@ -72,7 +96,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${brand.variable} ${interTight.variable} ${plex.variable} ${instrument.variable} antialiased`}
       >

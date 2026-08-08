@@ -346,8 +346,9 @@ primary button 52px tall at 16px.
   iOS has a vibration API, and the switch trick did not fire).
 - The page is called Analytics. The web address stays /stats so old
   bookmarks keep working.
-- Dark mode is designed, not default. It follows the phone's setting.
-  A real toggle needs a settings page, which does not exist yet.
+- Dark mode follows a data attribute on <html>, not a media query.
+  System, Light and Dark live on the settings page, and the choice is
+  saved in localStorage on that device. See the settings section.
 
 ## The flow: Track, Performance, Research (owner, August 2026)
 
@@ -543,3 +544,90 @@ Decisions locked in during this build:
 - All SQL files through supabase/phase8.sql have been run (July 2026).
   phase8 (Crypto) was applied by Claude via the Supabase connector.
   Transaction dates are editable.
+
+## Settings (August 2026, built and verified)
+
+- Reached by tapping the AVATAR, not from a tab. The owner ruled three
+  tabs and only three. The avatar used to be the log out button, so one
+  stray tap ended the session; log out now sits at the foot of Settings.
+- Address is /settings. It shows the tab bar with Track lit, because it
+  is reached from Track.
+
+THEME. System, Light or Dark, stored in localStorage under
+`celebet-theme`. System is the default and stores nothing, so anyone
+who never opens Settings keeps following their phone forever.
+- The whole app keys off `data-theme` on <html>. globals.css declares
+  `@custom-variant dark (&:where([data-theme="dark"], ...))`, so a
+  media query alone can no longer decide anything. That swap was the
+  only way a user choice could beat the phone.
+- A raw script in the layout head sets the attribute BEFORE the first
+  paint. A React effect runs after paint, which is the flash itself.
+  The script and Settings' `apply()` must stay in step: two rules for
+  one attribute is how a flash comes back.
+- There is ONE theme-color meta tag, rewritten by that script. A light
+  and dark pair cannot be overridden, so choosing Light on a dark phone
+  left a navy status bar above a white page.
+
+START A NEW RECORD, and there is NO delete-everything button anywhere.
+
+I built one. The owner rejected it: he had asked to reset the tracking
+balance so a user could start over, and deleting their bets is not
+that. His words: "i think data is still valuable despite wanting a
+fresh reset of your tracking."
+
+So Celebet draws a LINE instead. `tracking_since` goes into the auth
+user's metadata (no migration), and `sinceLine()` in src/lib/stats.ts
+keeps a bet if it was NOT already settled before that date.
+- That one rule carries pending bets over, which the owner wanted: a
+  bet still riding when you draw the line is live money, so it belongs
+  to the new record.
+- A bet settled exactly ON the line belongs to the old record.
+- Net profit, ROI, win rate, the chart, the snapshot and the insights
+  all count from the line. Nothing is deleted.
+- Performance carries an "All time" switch, so the old record is one
+  tap away. The review at the foot ignores that switch on purpose: it
+  is the CURRENT record, and mixing the two would put two different
+  profits on one screen.
+- With no line, netProfitOf(all bets) equals balance + removals minus
+  additions exactly, so nothing moves for a user who never starts
+  fresh. Verified with a arithmetic test, not by eye.
+- startedWith is now derived as balance minus net profit, so
+  startedWith + netProfit = balance holds with or without a line.
+
+IT IS FULLY REVERSIBLE, and that is the point. The owner rejected my
+first version of this too: "too much risk in the start fresh button.
+there must be an option to regret the start fresh... i don't want
+people to accidentally loose all their data."
+- Undo has NO time limit. It lives in Settings for as long as a line
+  exists, not for fifteen minutes.
+- Undo sits BESIDE the restart, in the same quiet section, at the same
+  tiny weight. It is not a button in Your data. The owner cut that: "a
+  restart is uncommon. to undo a restart is even more unique. we can't
+  have a big button that talks about such a minor part of the app."
+- It is labelled by what it does, not by the word undo: "Count all my
+  bets again, from the start". His test: "if you click it, what
+  happens? then the button should say so."
+- Undo reverses BOTH halves: it clears the date and deletes the exact
+  balance transaction the restart created. Its id is stored beside the
+  date in metadata (`tracking_reset_tx`) so Undo cannot touch anything
+  else the user has done to their balance since.
+- The sheet leads with "Nothing is deleted" in green, then two lists:
+  what changes, and what does not. The owner's fear was a user tapping
+  this and believing their bets were gone, so the reassurance comes
+  before the consequences, not after.
+- The normal wording is "Your record started on <date>", stated as a
+  plain fact in Your data. Ruled by the owner: "a restart is just a
+  what if. most users will not restart." Without a restart that date is
+  the first thing the user ever tracked.
+- The restart itself is the QUIETEST thing on the page: below Log out,
+  no card, no button, muted underlined text. The owner asked for this
+  and gave the reason, which is a good one: hiding a losing run "can
+  trick them into a false reality of being profitable when maybe not."
+  So the sheet opens by saying exactly that, before anything else.
+  Available, honest, not sold.
+- The control is called "Restart my record", never "Start fresh" or
+  "Reset". Fresh and reset both sound like wiping.
+
+NAME. Stored in the auth user's metadata (`full_name`), not a table, so
+it needed no migration. It is the same field Google fills in, and the
+same one the Track greeting reads.

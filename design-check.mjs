@@ -182,6 +182,8 @@ const PROSE = [
   // The in play panel speaks in sentences too.
   "riding, across",
   "Paste a slip below",
+  // Start fresh explains what the box is starting from.
+  "Your balance today is",
 ];
 
 for (const file of files) {

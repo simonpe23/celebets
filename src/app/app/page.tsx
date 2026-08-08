@@ -1,8 +1,10 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import Disclaimer from "@/components/Disclaimer";
 import HomeDashboard from "@/components/HomeDashboard";
 import TabBar from "@/components/TabBar";
 import Wordmark from "@/components/Wordmark";
+import { netProfitOf, sinceLine } from "@/lib/stats";
 import type { BetWithLegs } from "@/lib/types";
 
 // Settled bets stay on a pending card with Undo for this long.
@@ -41,10 +43,23 @@ export default async function HomePage() {
   );
 
   const balance = deposits - withdrawals - totalStaked + totalPayouts;
-  const netProfit = balance + withdrawals - deposits;
-  // What the user put in. startedWith + netProfit = balance, and
-  // showing the parts is what makes the balance readable.
-  const startedWith = deposits - withdrawals;
+
+  // THE FRESH START LINE. With no line, net profit is the all time
+  // figure: balance plus removals minus additions, which equals
+  // everything paid out minus everything staked. With a line, it is
+  // the same sum over the bets that were not already settled before
+  // it. The two formulas agree when there is no line, so nothing
+  // moves for a user who never starts fresh.
+  const trackingSince =
+    (user?.user_metadata?.tracking_since as string | undefined) ?? null;
+  const counted = sinceLine(allBets, trackingSince);
+  const allTimeProfit = balance + withdrawals - deposits;
+  const netProfit = trackingSince ? netProfitOf(counted) : allTimeProfit;
+
+  // What the user put in. startedWith + netProfit = balance always,
+  // whether or not a line exists, which is what keeps the card
+  // readable: the parts still add up to the total.
+  const startedWith = balance - netProfit;
 
   // The most recent stake, shown only as a quick chip under the
   // stake field. The form itself always opens blank.
@@ -92,16 +107,17 @@ export default async function HomePage() {
                 <path d="M13.7 21a2 2 0 0 1-3.4 0" />
               </svg>
             </span>
-          <form action="/auth/signout" method="post">
-            <button
-              type="submit"
-              title="Log out"
-              aria-label="Log out"
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-top text-sm font-bold text-white"
-            >
-              {(name ?? "C").charAt(0).toUpperCase()}
-            </button>
-          </form>
+          {/* The avatar opens Settings. It used to be the log out
+              button, so one stray tap ended the session. Log out now
+              lives at the foot of Settings. */}
+          <Link
+            href="/settings"
+            title="Settings"
+            aria-label="Settings"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-top text-sm font-bold text-white"
+          >
+            {(name ?? "C").charAt(0).toUpperCase()}
+          </Link>
           </span>
         </header>
 
@@ -111,6 +127,7 @@ export default async function HomePage() {
           balance={balance}
           netProfit={netProfit}
           startedWith={startedWith}
+          trackingSince={trackingSince}
           hasBalance={allTransactions.length > 0}
           lastStake={lastStake}
           userId={user!.id}

@@ -82,6 +82,20 @@ How this file works:
    What remains is the human part: invite people, watch what they
    do, talk to them. A feedback channel would help.
 
+20. Seasons. A named tracking period you can close and look back at:
+    "2026 season, +$1,240". Grows out of the fresh start line shipped
+    in August 2026, which already draws the boundary; seasons just
+    name it and keep the old ones readable.
+    The owner's own example, and the reason it is worth building:
+    a weekend trip to Vegas. You want that trip's record on its own,
+    separate from the year, without losing either.
+    Open questions, none decided:
+    - Does a season have an end date, or does it end when the next
+      one starts?
+    - Can you be in two at once (a Vegas weekend inside the 2026
+      season), or is it strictly one at a time?
+    - Where do they live: a picker on Performance, or their own page?
+
 ## THE BIG ONE (own bucket, needs its own project)
 
 14. CeleBOT, a prediction market research assistant. DISCOVERY is
