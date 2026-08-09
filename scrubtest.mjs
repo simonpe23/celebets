@@ -30,14 +30,20 @@ const page = await ctx.newPage();
 await page.goto(url, { waitUntil: "networkidle" });
 await page.waitForTimeout(1800);
 
-// The headline above the chart, which is what a scrub changes.
-const headline = () =>
-  page
-    .locator("main")
-    .innerText()
-    .then((t) => t.split("\n").slice(0, 4).join(" | "));
+const panel = page.locator("[data-chart-panel]").first();
 
-const panel = page.locator("section").filter({ hasText: "PROFIT" }).first();
+// The headline lives ON the panel now, so read it there. It used to be
+// read from the top of <main>, which silently started reporting the
+// page title instead the moment the headline moved, and a test that
+// cannot see the thing it checks is worse than no test.
+const headline = () =>
+  panel.innerText().then((t) =>
+    t
+      .split("\n")
+      .filter((l) => /\$|%|^[A-Z][a-z]{2} \d/.test(l))
+      .slice(0, 3)
+      .join(" | ")
+  );
 const box = await panel.boundingBox();
 if (!box) {
   console.log("FAIL: no chart panel on the page");

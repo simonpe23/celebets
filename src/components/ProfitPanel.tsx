@@ -28,9 +28,10 @@ interface Props {
   onCustomFrom: (value: string) => void;
   onCustomTo: (value: string) => void;
   onScrub: (point: { value: number; date: Date } | null) => void;
-  // Optional block drawn on the panel above the chart. The home screen
-  // puts its headline number here so the number and the line it draws
-  // share one surface instead of sitting in two separate cards.
+  // Drawn on the panel between the period chips and the chart.
+  // Performance puts its headline number and record row here, so the
+  // number and the line that draws it share one surface instead of
+  // floating as separate things with a gap between them.
   header?: React.ReactNode;
 }
 
@@ -72,10 +73,19 @@ export default function ProfitPanel({
     "mt-1 block h-10 w-full rounded-lg border border-white/15 bg-white/5 px-3 text-sm text-white outline-none focus:border-white/40 [color-scheme:dark]";
 
   return (
-    <section className="overflow-hidden rounded-3xl bg-[#080D20] p-4 dark:bg-[#0E1228] shadow-[0_18px_40px_-20px_rgba(16,19,34,0.9)] ring-1 ring-white/5">
-      <div className="flex items-center justify-between gap-3">
-        <MicroLabel onDark>Profit</MicroLabel>
-
+    // data-chart-panel is a test hook, not a style. scrubtest.mjs used
+    // to find this panel by the word "PROFIT" on it, so deleting that
+    // label silently pointed the test at a different card and it
+    // reported the gesture dead when it was fine. A test that finds its
+    // target by copy breaks every time the copy changes.
+    <section
+      data-chart-panel
+      className="overflow-hidden rounded-3xl bg-[#080D20] p-4 shadow-[0_18px_40px_-20px_rgba(16,19,34,0.9)] ring-1 ring-white/5 dark:bg-[#0E1228]"
+    >
+      {/* No "PROFIT" label any more. The signed money figure sits right
+          below it now, which says the same thing louder, and three ways
+          of naming one number was the clutter the owner pointed at. */}
+      <div className="flex items-center justify-center gap-3">
         <div className="flex items-center gap-0.5 rounded-full bg-white/8 p-0.5">
           {RANGES.map(({ key, short }) => (
             <button

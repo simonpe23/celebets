@@ -332,8 +332,9 @@ primary button 52px tall at 16px.
   needs darkness. That was the change that made it stop looking thin.
 - The period control (ALL, 1D, 1W, 1M, 1Y, plus a calendar button for
   a custom range) lives on the panel, because it changes the panel.
-- Page order: header, headline profit with ROI pill, bare Bets /
-  Record / Hit rate row, chart panel, sport filter, three tiles
+- Page order: header, ONE dark panel holding the period chips, the
+  headline profit with its ROI pill, the Bets / Record / Hit rate row
+  and the chart, then sport filter, three tiles
   (Staked, Returned, ROI), sports breakdown, the older tables,
   betting history.
 - Recommendations moved to the top of the page, next to Home. The
@@ -353,6 +354,39 @@ primary button 52px tall at 16px.
 - Dark mode follows a data attribute on <html>, not a media query.
   System, Light and Dark live on the settings page, and the choice is
   saved in localStorage on that device. See the settings section.
+
+THE TOP OF PERFORMANCE (rebuilt August 2026). The owner: "there's too
+much dead space on the performance page at the top... i don't think we
+get the best possible information."
+
+Four causes, all mine:
+1. The title was left aligned and the hero centred, so the space
+   between them read as a hole, not as breathing room.
+2. "ALL TIME" sat over the number while "ALL" sat selected in the chart
+   panel just below. The same fact twice. "PROFIT" labelled the panel
+   as well, which made it three times.
+3. The number, the ROI pill, the record row and the chart were four
+   floating things on a plain page. The eye had nothing to hold.
+4. The title did no work: the tab bar already says you are on
+   Performance.
+
+The number now lives ON the chart panel, above the line that draws it,
+with the record row under a hairline. One object instead of five.
+ProfitPanel already had a `header` slot built for this and nothing had
+used it. The "PROFIT" label is gone, because a signed money figure
+sitting under it says the same thing louder.
+
+The subtitle is "Find what pays and what leaks." The owner offered
+three lines of copy (Learn, Analyze, Improve). One line earns its
+place at the top of a page opened daily; three become wallpaper by the
+third visit. The other two belong on the landing page or the empty
+state, not above live numbers.
+
+data-chart-panel on that section is a TEST HOOK, not a style.
+scrubtest.mjs used to find the panel by the word "PROFIT", so deleting
+that label silently pointed the test at another card and it reported
+the gesture dead when it was fine. Never let a test find its target by
+copy.
 
 ## The flow: Track, Performance, Research (owner, August 2026)
 
