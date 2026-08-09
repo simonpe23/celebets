@@ -65,8 +65,15 @@ const ALLOWED_HEX = new Set([
   "#ECECF3", // tab bar, light
   "#111731", // tab bar, dark
   "#F7F7FB", // light page
-  "#34D399", // chart green
-  "#FB7185", // chart red
+  "#34D399", // chart line, up, on the dark panel
+  "#FB7185", // chart line, down, on the dark panel
+  // The chart on a LIGHT panel: the app's ordinary money colors, with
+  // the glow switched off. A glow needs darkness.
+  "#059669", // chart line, up, on a light panel
+  "#DC2626", // chart line, down, on a light panel
+  "#ECEEF6", // the tinted chart panel
+  "#0F1228", // the hairline rule on a light chart panel
+  "#0E0E14", // ink, on a light chart panel
   "#FFFFFF", // svg strokes and the theme-color meta tag
   "#0A0A0A", // theme-color meta tag
   "#4285F4", // Google logo, fixed by Google's brand rules
