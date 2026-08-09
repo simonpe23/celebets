@@ -58,9 +58,14 @@ an element that did not exist and never attached again. No error, no
 warning, no failing build, and every screenshot looked perfect.
 
 So: after ANY change to a component that handles touch, drag, long
-press or scroll, run `node scrubtest.mjs <port>` against a dev server.
-It drives a real finger across the chart and checks the headline
-follows. A design check cannot catch a dead event listener.
+press or scroll, run `node scrubtest.mjs <port>` against a dev server,
+in BOTH themes: `node scrubtest.mjs 3000 dark` and `... light`. It
+drives a real finger across the chart and checks the headline follows.
+A design check cannot catch a dead event listener.
+
+The chart panel has a light surface as well as a dark one now, and a
+gesture proven on one is not proven on the other: a class change is
+exactly how the listeners came unstuck the first time.
 
 THE SWEEP RULE (added August 2026, after the owner had to ask three
 times whether a font change had reached the whole app):

@@ -1,6 +1,6 @@
 // Does press and hold scrubbing still work on the Performance chart?
 //
-// Run against a dev server:  node scrubtest.mjs [port]
+// Run against a dev server:  node scrubtest.mjs [port] [light|dark]
 //
 // This exists because the scrub broke silently. Fixing a hydration
 // mismatch made the chart skip its first render, so the touch listeners
@@ -20,9 +20,15 @@ const url = `http://localhost:${port}/preview/performance`;
 const browser = await chromium.launch({
   executablePath: "/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
 });
+// Both themes. The chart panel can be light now, and a gesture that
+// works on one surface is not proof it works on the other: the light
+// variants changed the panel's classes, and a class change is exactly
+// how the listeners came unstuck last time.
+const scheme = process.argv[3] === "light" ? "light" : "dark";
+
 const ctx = await browser.newContext({
   viewport: { width: 390, height: 844 },
-  colorScheme: "dark",
+  colorScheme: scheme,
   hasTouch: true,
   isMobile: true,
 });
@@ -83,12 +89,12 @@ if (dragged === held) problems.push("dragging left changed nothing");
 if (released !== before) problems.push("releasing did not restore the total");
 
 if (problems.length === 0) {
-  console.log("Scrub test passed.");
+  console.log(`Scrub test passed (${scheme}).`);
   console.log(`  rest    ${before}`);
   console.log(`  hold    ${held}`);
   console.log(`  drag    ${dragged}`);
 } else {
-  console.log("Scrub test FAILED:\n");
+  console.log(`Scrub test FAILED (${scheme}):\n`);
   for (const p of problems) console.log("  " + p);
   console.log(`\n  rest    ${before}`);
   console.log(`  hold    ${held}`);
