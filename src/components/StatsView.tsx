@@ -10,11 +10,7 @@ import KeyInsights from "@/components/KeyInsights";
 import SnapshotCard from "@/components/SnapshotCard";
 import StatTile from "@/components/StatTile";
 import TabBar from "@/components/TabBar";
-import ProfitPanel, {
-  SURFACES,
-  type Period,
-  type Surface,
-} from "@/components/ProfitPanel";
+import ProfitPanel, { type Period } from "@/components/ProfitPanel";
 import {
   bucketRows,
   categoryRows,
@@ -88,7 +84,6 @@ export default function StatsView({
   netProfit,
   trackingSince,
   activeHref,
-  surface = "dark",
 }: {
   bets: BetWithLegs[];
   // The app's ONE definition of net profit, computed by the page from
@@ -105,9 +100,6 @@ export default function StatsView({
   // would otherwise light no tab at all. The real page leaves it unset
   // and the tab bar reads the address itself.
   activeHref?: string;
-  // Also preview only: /preview/performance?surface=white shows the
-  // chart panel's light mode options side by side.
-  surface?: Surface;
 }) {
   const [sport, setSport] = useState<Sport | null>(null);
   const [period, setPeriod] = useState<Period>("all");
@@ -200,11 +192,6 @@ export default function StatsView({
   // under one screen with nothing saying why.
   const reviewBets = sinceLine(bets, trackingSince);
 
-  // The panel can be dark or light now, and everything drawn on it has
-  // to follow the panel, not the page theme.
-  const { onDark } = SURFACES[surface];
-  const statInk = onDark ? "text-white" : "text-neutral-900 dark:text-white";
-
   const pillClass = (active: boolean) =>
     `shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
       active
@@ -267,43 +254,35 @@ export default function StatsView({
             onCustomFrom={setCustomFrom}
             onCustomTo={setCustomTo}
             onScrub={setScrub}
-            surface={surface}
             header={
               <div className="mt-3">
                 <HeadlineProfit
                   label={`${periodLabel}${sport === null ? "" : ` / ${sport}`}`}
                   profit={heroProfit}
                   roi={heroRoi}
-                  onDark={onDark}
                   scrub={scrub}
                 />
 
                 {/* The record, on the panel under the headline, so the
                     three facts that qualify the number sit with it. */}
-                <div
-                  className={`mt-4 grid grid-cols-3 pt-3 ${
-                    onDark
-                      ? "divide-x divide-white/10 border-t border-white/10"
-                      : "divide-x divide-neutral-900/10 border-t border-neutral-900/10 dark:divide-white/10 dark:border-white/10"
-                  }`}
-                >
+                <div className="mt-4 grid grid-cols-3 divide-x divide-neutral-900/10 border-t border-neutral-900/10 pt-3 dark:divide-white/10 dark:border-white/10">
                   <div className="text-center">
-                    <MicroLabel onDark={onDark}>
+                    <MicroLabel>
                       {sport === null ? "Bets" : "Picks"}
                     </MicroLabel>
-                    <p className={`mt-0.5 font-money text-[17px] font-bold tabular-nums ${statInk}`}>
+                    <p className={`mt-0.5 font-money text-[17px] font-bold tabular-nums text-neutral-900 dark:text-white`}>
                       {heroWins + heroLosses}
                     </p>
                   </div>
                   <div className="text-center">
-                    <MicroLabel onDark={onDark}>Record</MicroLabel>
-                    <p className={`mt-0.5 font-money text-[17px] font-bold tabular-nums ${statInk}`}>
+                    <MicroLabel>Record</MicroLabel>
+                    <p className={`mt-0.5 font-money text-[17px] font-bold tabular-nums text-neutral-900 dark:text-white`}>
                       {heroWins}-{heroLosses}
                     </p>
                   </div>
                   <div className="text-center">
-                    <MicroLabel onDark={onDark}>Hit rate</MicroLabel>
-                    <p className={`mt-0.5 font-money text-[17px] font-bold tabular-nums ${statInk}`}>
+                    <MicroLabel>Hit rate</MicroLabel>
+                    <p className={`mt-0.5 font-money text-[17px] font-bold tabular-nums text-neutral-900 dark:text-white`}>
                       {pctLabel(heroWins, heroWins + heroLosses)}
                     </p>
                   </div>

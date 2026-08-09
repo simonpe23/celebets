@@ -333,8 +333,15 @@ primary button 52px tall at 16px.
 - Profit over time chart: running profit from a settled bet's date,
   always starting at zero for the chosen period. Green above zero,
   red below. Drawn by hand as SVG, no chart library.
-- The chart sits on a dark panel even in light mode, because a glow
-  needs darkness. That was the change that made it stop looking thin.
+- THE CHART HAS NO PANEL IN LIGHT MODE. It draws straight on the page,
+  with the app's ordinary money greens and reds and no glow. Chosen by
+  the owner from three (white card, soft tint, no panel), after he
+  said a black panel on a light page "does not go". He was right and
+  the old rule ("a glow needs darkness") only ever considered the
+  glow, never the page around it.
+- DARK MODE IS UNCHANGED: the navy panel and the glow belong there.
+  The chart's colors are CSS variables the panel sets, because they
+  are SVG attributes and an attribute cannot carry a dark: variant.
 - The period control (ALL, 1D, 1W, 1M, 1Y, plus a calendar button for
   a custom range) lives on the panel, because it changes the panel.
 - Page order: header, ONE dark panel holding the period chips, the

@@ -246,7 +246,11 @@ export default function ProfitChart({
 
   return (
     <div>
-      <div className="relative -mx-1 mt-4 h-[200px] select-none">
+      {/* No negative margin. It existed to let the line reach the
+          edges of a padded panel; with no panel in light mode it just
+          pushed the axis labels past the page margin and clipped
+          them. */}
+      <div className="relative mt-4 h-[200px] select-none">
         <div
           ref={(el) => {
             plotRef.current = el;
@@ -426,8 +430,12 @@ export default function ProfitChart({
         </div>
       </div>
 
+      {/* px-1 because the panel clips its overflow, and a glyph paints
+          a hair outside its layout box: the J of "Jul" and the 9 of
+          "Aug 9" were losing a sliver at the page edges. Measured at
+          4x, not guessed. */}
       <div
-        className="mt-3 flex justify-between text-[10px]"
+        className="mt-3 flex justify-between px-1 text-[10px]"
         style={{ color: "var(--chart-muted)" }}
       >
         {[0, 0.25, 0.5, 0.75, 1].map((f) => (
