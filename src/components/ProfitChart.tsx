@@ -21,10 +21,13 @@ interface Props {
 const W = 300;
 const H = 150;
 
-// Brighter than the page colors on purpose. These have to glow
-// against the dark panel.
-const GREEN = "#34D399";
-const RED = "#FB7185";
+// The chart's colors come from CSS variables the panel sets, because
+// the panel can now be dark or light and an SVG attribute cannot carry
+// a Tailwind dark: variant. ProfitPanel owns the values; see SURFACES
+// there. Bright and glowing on the dark panel, the app's ordinary
+// money colors on a light one.
+const GREEN = "var(--chart-up)";
+const RED = "var(--chart-down)";
 
 function shortDate(date: Date): string {
   return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
@@ -243,7 +246,11 @@ export default function ProfitChart({
 
   return (
     <div>
-      <div className="relative -mx-1 mt-4 h-[200px] select-none">
+      {/* No negative margin. It existed to let the line reach the
+          edges of a padded panel; with no panel in light mode it just
+          pushed the axis labels past the page margin and clipped
+          them. */}
+      <div className="relative mt-4 h-[200px] select-none">
         <div
           ref={(el) => {
             plotRef.current = el;
@@ -347,35 +354,39 @@ export default function ProfitChart({
               y1={zeroY}
               x2={W}
               y2={zeroY}
-              stroke="#ffffff"
-              strokeOpacity="0.22"
+              stroke="var(--chart-rule)"
               strokeWidth="1"
               strokeDasharray="2 5"
               vectorEffect="non-scaling-stroke"
             />
 
-            <path
-              d={line}
-              fill="none"
-              stroke="url(#celebet-line)"
-              strokeWidth="8"
-              strokeOpacity="0.45"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              vectorEffect="non-scaling-stroke"
-              filter="url(#celebet-bloom)"
-            />
-            <path
-              d={line}
-              fill="none"
-              stroke="url(#celebet-line)"
-              strokeWidth="4"
-              strokeOpacity="0.6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              vectorEffect="non-scaling-stroke"
-              filter="url(#celebet-glow)"
-            />
+            {/* The two glow passes. A glow needs darkness, so on a light
+                panel the group is simply switched off rather than left
+                to turn the line muddy. */}
+            <g style={{ opacity: "var(--chart-glow)" }}>
+              <path
+                d={line}
+                fill="none"
+                stroke="url(#celebet-line)"
+                strokeWidth="8"
+                strokeOpacity="0.45"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                vectorEffect="non-scaling-stroke"
+                filter="url(#celebet-bloom)"
+              />
+              <path
+                d={line}
+                fill="none"
+                stroke="url(#celebet-line)"
+                strokeWidth="4"
+                strokeOpacity="0.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                vectorEffect="non-scaling-stroke"
+                filter="url(#celebet-glow)"
+              />
+            </g>
             <path
               d={line}
               fill="none"
@@ -393,8 +404,8 @@ export default function ProfitChart({
                 y1="0"
                 x2={x(active.t)}
                 y2={H}
-                stroke="#ffffff"
-                strokeOpacity="0.45"
+                stroke="var(--chart-rule)"
+                strokeOpacity="0.9"
                 strokeWidth="1"
                 vectorEffect="non-scaling-stroke"
               />
@@ -411,7 +422,7 @@ export default function ProfitChart({
               left: `${(active ?? last).t * 100}%`,
               top: `${(y((active ?? last).value) / H) * 100}%`,
               backgroundColor: dotColor,
-              boxShadow: `0 0 14px 2px ${dotColor}`,
+              boxShadow: `0 0 calc(14px * var(--chart-glow)) 2px ${dotColor}`,
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               ["--tw-ring-color" as any]: `${dotColor}40`,
             }}
@@ -419,7 +430,14 @@ export default function ProfitChart({
         </div>
       </div>
 
-      <div className="mt-3 flex justify-between text-[10px] text-white/35">
+      {/* px-1 because the panel clips its overflow, and a glyph paints
+          a hair outside its layout box: the J of "Jul" and the 9 of
+          "Aug 9" were losing a sliver at the page edges. Measured at
+          4x, not guessed. */}
+      <div
+        className="mt-3 flex justify-between px-1 text-[10px]"
+        style={{ color: "var(--chart-muted)" }}
+      >
         {[0, 0.25, 0.5, 0.75, 1].map((f) => (
           <span key={f}>
             {shortDate(new Date(startX.getTime() + spanMs * f))}

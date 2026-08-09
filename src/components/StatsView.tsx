@@ -202,29 +202,29 @@ export default function StatsView({
   return (
     <main className="min-h-dvh px-4 pt-6 pb-32 sm:px-6">
       <div className="mx-auto w-full max-w-md space-y-4">
-        <header>
+        {/* THE TOP OF THE PAGE, rebuilt August 2026. The owner: "there's
+            too much dead space on the performance page at the top... i
+            don't think we get the best possible information."
+
+            He was right, and there were four causes:
+            1. The title was left aligned and the hero was centred, so
+               the space between them read as a hole rather than as
+               breathing room.
+            2. "ALL TIME" sat above the number and "ALL" sat selected in
+               the chart panel a moment below it. The same fact, twice.
+            3. The number, the ROI pill, the three stats and the chart
+               were four separate floating things on a plain page. The
+               eye had nothing to hold.
+            4. The title did no work. The tab bar already says you are
+               on Performance.
+
+            So the number now lives ON the chart panel, with the record
+            row, above the line that draws it. One object instead of
+            five. ProfitPanel was built with a `header` slot for exactly
+            this and nothing had used it. */}
+        <header className="flex items-baseline justify-between gap-3">
           <h1 className="text-[22px] font-bold tracking-tight">Performance</h1>
-        </header>
-
-        {/* THE DATA, and it opens the page. The owner moved it here
-            (August 2026) after seeing the built version, reversing his
-            own earlier note that Performance should not land on graphs.
-            His call, made in front of the real screen.
-
-            It carries NO heading. I added one ("Charts and breakdowns")
-            to mark where the filtered half started, and the owner cut
-            it: he never asked for it, and the period label already sits
-            over the headline. Do not reintroduce it. */}
-        {/* The fresh start line, stated and reversible. Without this
-            the old bets look deleted, which is the exact fear that
-            made the owner reject a destructive reset. */}
-        {trackingSince && (
-          <div className="flex items-center justify-between gap-3 text-xs">
-            <span className="text-neutral-500 dark:text-neutral-400">
-              {showAllTime
-                ? "Showing everything you have ever tracked."
-                : `Your record since ${shortDate(trackingSince)}.`}
-            </span>
+          {trackingSince && (
             <button
               type="button"
               onClick={() => setShowAllTime((v) => !v)}
@@ -232,56 +232,64 @@ export default function StatsView({
             >
               {showAllTime ? "Since restart ›" : "All time ›"}
             </button>
-          </div>
-        )}
+          )}
+        </header>
+
+        <p className="-mt-2 text-sm text-neutral-500 dark:text-neutral-400">
+          {trackingSince && !showAllTime
+            ? `Your record since ${shortDate(trackingSince)}.`
+            : "Find what pays and what leaks."}
+        </p>
 
         <section>
-          <HeadlineProfit
-            label={`${periodLabel}${sport === null ? "" : ` / ${sport}`}`}
-            profit={heroProfit}
-            roi={heroRoi}
-            scrub={scrub}
+          <ProfitPanel
+            bets={filtered}
+            sport={sport}
+            from={from}
+            to={to}
+            period={period}
+            onPeriodChange={setPeriod}
+            customFrom={customFrom}
+            customTo={customTo}
+            onCustomFrom={setCustomFrom}
+            onCustomTo={setCustomTo}
+            onScrub={setScrub}
+            header={
+              <div className="mt-3">
+                <HeadlineProfit
+                  label={`${periodLabel}${sport === null ? "" : ` / ${sport}`}`}
+                  profit={heroProfit}
+                  roi={heroRoi}
+                  scrub={scrub}
+                />
+
+                {/* The record, on the panel under the headline, so the
+                    three facts that qualify the number sit with it. */}
+                <div className="mt-4 grid grid-cols-3 divide-x divide-neutral-900/10 border-t border-neutral-900/10 pt-3 dark:divide-white/10 dark:border-white/10">
+                  <div className="text-center">
+                    <MicroLabel>
+                      {sport === null ? "Bets" : "Picks"}
+                    </MicroLabel>
+                    <p className={`mt-0.5 font-money text-[17px] font-bold tabular-nums text-neutral-900 dark:text-white`}>
+                      {heroWins + heroLosses}
+                    </p>
+                  </div>
+                  <div className="text-center">
+                    <MicroLabel>Record</MicroLabel>
+                    <p className={`mt-0.5 font-money text-[17px] font-bold tabular-nums text-neutral-900 dark:text-white`}>
+                      {heroWins}-{heroLosses}
+                    </p>
+                  </div>
+                  <div className="text-center">
+                    <MicroLabel>Hit rate</MicroLabel>
+                    <p className={`mt-0.5 font-money text-[17px] font-bold tabular-nums text-neutral-900 dark:text-white`}>
+                      {pctLabel(heroWins, heroWins + heroLosses)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            }
           />
-
-          {/* The record, bare on the page. No cards, so it reads as one
-              line of facts under the headline. */}
-          <div className="mt-4 grid grid-cols-3 divide-x divide-neutral-300/70 dark:divide-neutral-800">
-            <div className="text-center">
-              <MicroLabel>{sport === null ? "Bets" : "Picks"}</MicroLabel>
-              <p className="mt-0.5 font-money text-lg font-bold tabular-nums">
-                {heroWins + heroLosses}
-              </p>
-            </div>
-            <div className="text-center">
-              <MicroLabel>Record</MicroLabel>
-              <p className="mt-0.5 font-money text-lg font-bold tabular-nums">
-                {heroWins}-{heroLosses}
-              </p>
-            </div>
-            <div className="text-center">
-              <MicroLabel>Hit rate</MicroLabel>
-              <p className="mt-0.5 font-money text-lg font-bold tabular-nums">
-                {pctLabel(heroWins, heroWins + heroLosses)}
-              </p>
-            </div>
-          </div>
-
-
-          <div className="mt-5">
-            <ProfitPanel
-              bets={filtered}
-              sport={sport}
-              from={from}
-              to={to}
-              period={period}
-              onPeriodChange={setPeriod}
-              customFrom={customFrom}
-              customTo={customTo}
-              onCustomFrom={setCustomFrom}
-              onCustomTo={setCustomTo}
-              onScrub={setScrub}
-            />
-          </div>
 
           {/* One filter row on the light page, as pressable pills. */}
           <div className="-mx-4 mt-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:-mx-6 sm:px-6">

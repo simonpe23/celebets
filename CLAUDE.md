@@ -58,9 +58,14 @@ an element that did not exist and never attached again. No error, no
 warning, no failing build, and every screenshot looked perfect.
 
 So: after ANY change to a component that handles touch, drag, long
-press or scroll, run `node scrubtest.mjs <port>` against a dev server.
-It drives a real finger across the chart and checks the headline
-follows. A design check cannot catch a dead event listener.
+press or scroll, run `node scrubtest.mjs <port>` against a dev server,
+in BOTH themes: `node scrubtest.mjs 3000 dark` and `... light`. It
+drives a real finger across the chart and checks the headline follows.
+A design check cannot catch a dead event listener.
+
+The chart panel has a light surface as well as a dark one now, and a
+gesture proven on one is not proven on the other: a class change is
+exactly how the listeners came unstuck the first time.
 
 THE SWEEP RULE (added August 2026, after the owner had to ask three
 times whether a font change had reached the whole app):
@@ -328,12 +333,20 @@ primary button 52px tall at 16px.
 - Profit over time chart: running profit from a settled bet's date,
   always starting at zero for the chosen period. Green above zero,
   red below. Drawn by hand as SVG, no chart library.
-- The chart sits on a dark panel even in light mode, because a glow
-  needs darkness. That was the change that made it stop looking thin.
+- THE CHART HAS NO PANEL IN LIGHT MODE. It draws straight on the page,
+  with the app's ordinary money greens and reds and no glow. Chosen by
+  the owner from three (white card, soft tint, no panel), after he
+  said a black panel on a light page "does not go". He was right and
+  the old rule ("a glow needs darkness") only ever considered the
+  glow, never the page around it.
+- DARK MODE IS UNCHANGED: the navy panel and the glow belong there.
+  The chart's colors are CSS variables the panel sets, because they
+  are SVG attributes and an attribute cannot carry a dark: variant.
 - The period control (ALL, 1D, 1W, 1M, 1Y, plus a calendar button for
   a custom range) lives on the panel, because it changes the panel.
-- Page order: header, headline profit with ROI pill, bare Bets /
-  Record / Hit rate row, chart panel, sport filter, three tiles
+- Page order: header, ONE dark panel holding the period chips, the
+  headline profit with its ROI pill, the Bets / Record / Hit rate row
+  and the chart, then sport filter, three tiles
   (Staked, Returned, ROI), sports breakdown, the older tables,
   betting history.
 - Recommendations moved to the top of the page, next to Home. The
@@ -353,6 +366,39 @@ primary button 52px tall at 16px.
 - Dark mode follows a data attribute on <html>, not a media query.
   System, Light and Dark live on the settings page, and the choice is
   saved in localStorage on that device. See the settings section.
+
+THE TOP OF PERFORMANCE (rebuilt August 2026). The owner: "there's too
+much dead space on the performance page at the top... i don't think we
+get the best possible information."
+
+Four causes, all mine:
+1. The title was left aligned and the hero centred, so the space
+   between them read as a hole, not as breathing room.
+2. "ALL TIME" sat over the number while "ALL" sat selected in the chart
+   panel just below. The same fact twice. "PROFIT" labelled the panel
+   as well, which made it three times.
+3. The number, the ROI pill, the record row and the chart were four
+   floating things on a plain page. The eye had nothing to hold.
+4. The title did no work: the tab bar already says you are on
+   Performance.
+
+The number now lives ON the chart panel, above the line that draws it,
+with the record row under a hairline. One object instead of five.
+ProfitPanel already had a `header` slot built for this and nothing had
+used it. The "PROFIT" label is gone, because a signed money figure
+sitting under it says the same thing louder.
+
+The subtitle is "Find what pays and what leaks." The owner offered
+three lines of copy (Learn, Analyze, Improve). One line earns its
+place at the top of a page opened daily; three become wallpaper by the
+third visit. The other two belong on the landing page or the empty
+state, not above live numbers.
+
+data-chart-panel on that section is a TEST HOOK, not a style.
+scrubtest.mjs used to find the panel by the word "PROFIT", so deleting
+that label silently pointed the test at another card and it reported
+the gesture dead when it was fine. Never let a test find its target by
+copy.
 
 ## The flow: Track, Performance, Research (owner, August 2026)
 

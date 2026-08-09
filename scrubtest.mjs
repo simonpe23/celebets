@@ -1,6 +1,6 @@
 // Does press and hold scrubbing still work on the Performance chart?
 //
-// Run against a dev server:  node scrubtest.mjs [port]
+// Run against a dev server:  node scrubtest.mjs [port] [light|dark]
 //
 // This exists because the scrub broke silently. Fixing a hydration
 // mismatch made the chart skip its first render, so the touch listeners
@@ -20,9 +20,15 @@ const url = `http://localhost:${port}/preview/performance`;
 const browser = await chromium.launch({
   executablePath: "/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
 });
+// Both themes. The chart panel can be light now, and a gesture that
+// works on one surface is not proof it works on the other: the light
+// variants changed the panel's classes, and a class change is exactly
+// how the listeners came unstuck last time.
+const scheme = process.argv[3] === "light" ? "light" : "dark";
+
 const ctx = await browser.newContext({
   viewport: { width: 390, height: 844 },
-  colorScheme: "dark",
+  colorScheme: scheme,
   hasTouch: true,
   isMobile: true,
 });
@@ -30,14 +36,20 @@ const page = await ctx.newPage();
 await page.goto(url, { waitUntil: "networkidle" });
 await page.waitForTimeout(1800);
 
-// The headline above the chart, which is what a scrub changes.
-const headline = () =>
-  page
-    .locator("main")
-    .innerText()
-    .then((t) => t.split("\n").slice(0, 4).join(" | "));
+const panel = page.locator("[data-chart-panel]").first();
 
-const panel = page.locator("section").filter({ hasText: "PROFIT" }).first();
+// The headline lives ON the panel now, so read it there. It used to be
+// read from the top of <main>, which silently started reporting the
+// page title instead the moment the headline moved, and a test that
+// cannot see the thing it checks is worse than no test.
+const headline = () =>
+  panel.innerText().then((t) =>
+    t
+      .split("\n")
+      .filter((l) => /\$|%|^[A-Z][a-z]{2} \d/.test(l))
+      .slice(0, 3)
+      .join(" | ")
+  );
 const box = await panel.boundingBox();
 if (!box) {
   console.log("FAIL: no chart panel on the page");
@@ -77,12 +89,12 @@ if (dragged === held) problems.push("dragging left changed nothing");
 if (released !== before) problems.push("releasing did not restore the total");
 
 if (problems.length === 0) {
-  console.log("Scrub test passed.");
+  console.log(`Scrub test passed (${scheme}).`);
   console.log(`  rest    ${before}`);
   console.log(`  hold    ${held}`);
   console.log(`  drag    ${dragged}`);
 } else {
-  console.log("Scrub test FAILED:\n");
+  console.log(`Scrub test FAILED (${scheme}):\n`);
   for (const p of problems) console.log("  " + p);
   console.log(`\n  rest    ${before}`);
   console.log(`  hold    ${held}`);
