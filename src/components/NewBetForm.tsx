@@ -361,11 +361,17 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
   // The three capture tiles on the Track card. ONE string, used by all
   // three, so they can never drift apart the way they did when each
   // button carried its own copy.
+  //
+  // A filled surface with a hairline, chosen by the owner from three
+  // (stronger grey edge, muted teal edge, this). The fill gives the
+  // three tiles weight without spending a fourth colour on a tight
+  // row, and it separates them from the Connect row above, which stays
+  // a plain outline.
   const TILE =
     "flex flex-col items-center justify-start gap-1.5 rounded-xl px-1 py-3 " +
     "text-center text-[12px] font-semibold leading-tight disabled:opacity-50 " +
-    "border border-neutral-300 active:bg-neutral-100 " +
-    "dark:border-white/20 dark:active:bg-white/5";
+    "border border-neutral-200 bg-neutral-50 active:bg-neutral-100 " +
+    "dark:border-white/10 dark:bg-white/[0.04] dark:active:bg-white/10";
 
   const inputClass =
     "mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-brand-mark focus:ring-2 focus:ring-brand-mark/30 dark:border-white/15 dark:bg-[#0E1228] dark:text-neutral-100";
