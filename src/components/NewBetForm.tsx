@@ -407,10 +407,10 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
               type="button"
               disabled={importing}
               onClick={pasteSlip}
-              className="relative flex flex-col items-center gap-2 rounded-xl border border-brand-mark px-2 py-5 text-[15px] font-semibold active:bg-brand-mark/10 disabled:opacity-50"
+              className="relative flex flex-col items-center gap-2 rounded-xl border border-brand-mark px-2 py-2.5 text-[13px] font-semibold active:bg-brand-mark/10 disabled:opacity-50"
             >
               <span className="text-brand-mark">
-                <ClipboardIcon className="h-7 w-7" />
+                <ClipboardIcon className="h-5 w-5" />
               </span>
               Paste bet slip
               <span className="rounded-full bg-brand-mark/12 px-2 py-0.5 text-[10px] font-bold text-brand-mark">
@@ -421,10 +421,10 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
               type="button"
               disabled={importing}
               onClick={() => fileInputRef.current?.click()}
-              className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 px-2 py-5 text-[15px] font-semibold active:bg-neutral-50 disabled:opacity-50 dark:border-white/10"
+              className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 px-2 py-2.5 text-[13px] font-semibold active:bg-neutral-50 disabled:opacity-50 dark:border-white/10"
             >
               <span className="text-[#3B82F6]">
-                <CameraIcon className="h-7 w-7" />
+                <CameraIcon className="h-5 w-5" />
               </span>
               Upload screenshot
             </button>
@@ -437,17 +437,17 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
               className="flex items-center justify-center gap-2 rounded-xl border border-neutral-200 px-2 py-2.5 text-[13px] font-semibold active:bg-neutral-50 dark:border-white/10"
             >
               <span className="text-[#F97316]">
-                <PencilIcon className="h-4 w-4" />
+                <PencilIcon className="h-5 w-5" />
               </span>
               Manual entry
             </button>
             <div className="flex items-center justify-center gap-2 rounded-xl border border-neutral-200 px-2 py-2.5 text-[13px] font-semibold text-neutral-400 dark:border-white/10 dark:text-neutral-600">
               <span className="text-[#22C55E]">
-                <LinkIcon className="h-4 w-4" />
+                <LinkIcon className="h-5 w-5" />
               </span>
               Connect
               <span className="rounded-full bg-[#22C55E]/15 px-1.5 py-0.5 text-[9px] font-bold text-[#22C55E]">
-                Soon
+                Coming Soon
               </span>
             </div>
           </div>
