@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 // The three layers of the product, always on screen.
 //
@@ -163,6 +164,26 @@ export default function TabBar({
   const currentPath = usePathname();
   const pathname = activeHref ?? currentPath ?? "";
 
+  // THE TAB LIGHTS UP ON TOUCH, not when the page arrives.
+  //
+  // The owner: "i've seen them click the menu bar without anything
+  // happening." It was happening. Every tab is a server page that asks
+  // Supabase who you are and then downloads every bet you own, and
+  // until all of that came back the old page sat there fully drawn,
+  // looking untapped. usePathname only changes once the navigation is
+  // finished, so the bar itself was part of the lie.
+  //
+  // pending is the tab you just touched. It wins over pathname until
+  // the real page arrives, so the bar answers your finger in the same
+  // frame. It is cleared by the effect below rather than on a timer,
+  // so a navigation that fails or that you cancel does not leave the
+  // wrong tab lit.
+  const [pending, setPending] = useState<string | null>(null);
+  useEffect(() => {
+    setPending(null);
+  }, [currentPath]);
+  const shown = pending ?? pathname;
+
   // STICKY, NOT FIXED. The owner: "when i scroll slowly the menu bar is
   // shaking."
   //
@@ -202,11 +223,12 @@ export default function TabBar({
       >
         {TABS.map((tab, i) => {
           const Icon = ICONS[i];
-          const active = tab.match(pathname);
+          const active = tab.match(shown);
           return (
             <Link
               key={tab.href}
               href={tab.href}
+              onClick={() => setPending(tab.href)}
               className={`flex flex-1 flex-col items-center justify-center gap-0.5 py-1.5 text-[11px] font-semibold ${
                 active ? ACTIVE : "text-neutral-500 dark:text-neutral-400"
               }`}

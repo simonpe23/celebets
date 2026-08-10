@@ -12,11 +12,21 @@ const UNDO_WINDOW_MS = 15 * 60 * 1000;
 
 export default async function HomePage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const [{ data: transactions }, { data: bets }] = await Promise.all([
+  // getUser sits INSIDE the Promise.all, not before it.
+  //
+  // It is a network call to Supabase's auth server, and it used to be
+  // awaited on its own line, so every tab tap paid for that round trip
+  // and then started fetching the bets. Two waits, one after the other,
+  // for two things that do not depend on each other. Now they run
+  // together and the page arrives a round trip sooner.
+  const [
+    {
+      data: { user },
+    },
+    { data: transactions },
+    { data: bets },
+  ] = await Promise.all([
+    supabase.auth.getUser(),
     supabase.from("transactions").select("type, amount"),
     supabase
       .from("bets")
