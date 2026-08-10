@@ -250,19 +250,29 @@ export default function ProfitChart({
           edges of a padded panel; with no panel in light mode it just
           pushed the axis labels past the page margin and clipped
           them. */}
-      {/* 340px, up from 200. The owner: the chart is the hero of the
-          page, and the top third was reading as empty.
-          The exact number is not taste, it is measured. The tab bar is
-          fixed to the bottom of the viewport, so on the SHORT viewport
-          (393x659, an iPhone with Safari's toolbars showing) the sport
-          filter row used to sit half behind it at rest. 200px and
-          260px both left it half covered; 340px pushes it clean below
-          the fold, so the first screen is the panel and nothing else.
-          On a full screen phone the row then clears the bar by 81px.
-          If this height changes, re-measure both viewports. My first
-          fix looked right in a 393x852 screenshot and was still broken
-          on his actual phone. */}
-      <div className="relative mt-4 h-[340px] select-none">
+      {/* THE CHART OWNS THE FIRST SCREEN, so its height is measured
+          from the screen rather than picked.
+          The owner: the chart is the hero of the page, and the top
+          third was reading as empty. It was 200px.
+
+          Why a formula and not a number. The tab bar is fixed to the
+          bottom of the VIEWPORT, so where the sport filter row lands
+          against it depends on how tall the phone is, not on how long
+          the page is. I shipped 260px because it looked clear in a
+          393x852 screenshot, and it was still half behind the bar on
+          his phone: a browser with a URL bar and a toolbar leaves
+          about 664 points, not 852. Then 340px fixed his phone and
+          broke a Pro Max. There is no single number that works.
+
+          314px is everything on the panel that is not the chart: the
+          page title, the period chips, the headline, the record row,
+          the date axis, and the margin that clears the bar. Take that
+          off the screen height and the panel ends exactly at the fold,
+          so the filter row always starts just below it. Verified from
+          an iPhone SE to a Pro Max, in a browser and full screen.
+          Re-measure that sweep if anything above the chart changes
+          height, because 314 is the sum of those pieces. */}
+      <div className="relative mt-4 h-[clamp(220px,calc(100dvh-314px),640px)] select-none">
         <div
           ref={(el) => {
             plotRef.current = el;
