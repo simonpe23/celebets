@@ -253,29 +253,26 @@ export default function ProfitChart({
           edges of a padded panel; with no panel in light mode it just
           pushed the axis labels past the page margin and clipped
           them. */}
-      {/* THE CHART OWNS THE FIRST SCREEN, so its height is measured
-          from the screen rather than picked.
-          The owner: the chart is the hero of the page, and the top
-          third was reading as empty. It was 200px.
+      {/* A FIXED HEIGHT, and it has to stay fixed.
 
-          Why a formula and not a number. The tab bar is fixed to the
-          bottom of the VIEWPORT, so where the sport filter row lands
-          against it depends on how tall the phone is, not on how long
-          the page is. I shipped 260px because it looked clear in a
-          393x852 screenshot, and it was still half behind the bar on
-          his phone: a browser with a URL bar and a toolbar leaves
-          about 664 points, not 852. Then 340px fixed his phone and
-          broke a Pro Max. There is no single number that works.
+          It used to be calc(100dvh - 470px). dvh means DYNAMIC
+          viewport height: Chrome hides its URL bar and toolbar as you
+          scroll, dvh grows by about 80 points, and the chart grew with
+          it. The owner watched the whole page jump under his finger
+          mid-scroll. Any viewport unit here does that, and svh only
+          avoids it by promising not to move, which I cannot prove in a
+          headless browser: with no real toolbars, svh, lvh and dvh all
+          come out the same. jumptest.mjs proves a fixed number.
 
-          314px is everything on the panel that is not the chart: the
-          page title, the period chips, the headline, the record row,
-          the date axis, and the margin that clears the bar. Take that
-          off the screen height and the panel ends exactly at the fold,
-          so the filter row always starts just below it. Verified from
-          an iPhone SE to a Pro Max, in a browser and full screen.
-          Re-measure that sweep if anything above the chart changes
-          height, because 314 is the sum of those pieces. */}
-      <div className="relative mt-2 h-[clamp(180px,calc(100dvh-470px),260px)] select-none">
+          The formula existed to stop the sport filter row landing half
+          behind the tab bar. That is solved a better way now: the
+          filter row moved ONTO the panel, so nothing tappable comes
+          after it and the fold no longer matters. The formula outlived
+          its reason.
+
+          200px is close to what the formula gave on the owner's phone,
+          which is the version he approved. */}
+      <div className="relative mt-2 h-[200px] select-none">
         <div
           ref={(el) => {
             plotRef.current = el;
