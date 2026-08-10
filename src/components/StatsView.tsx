@@ -21,7 +21,7 @@ import {
   typeRows,
 } from "@/lib/stats";
 import { SPORTS, SPORT_EMOJI, type BetWithLegs, type Sport } from "@/lib/types";
-import { CARD } from "@/lib/ui";
+import { CARD, NO_SCROLLBAR } from "@/lib/ui";
 
 const PERIOD_LABELS: { key: Period; label: string }[] = [
   { key: "all", label: "All time" },
@@ -142,7 +142,7 @@ export default function StatsView({
       ? inPeriod
       : inPeriod.filter((b) => b.legs.some((leg) => leg.sport === sport));
 
-  const t = totals(filtered);
+  const t = totals(filtered, sport);
   const bySport = sportRows(filtered).filter(
     (row) => sport === null || row.sport === sport
   );
@@ -172,7 +172,11 @@ export default function StatsView({
       : rawPeriodLabel;
   const heroProfit =
     sportTotals === null ? t.returned - t.staked : sportTotals.profit;
-  const heroRoi = sportTotals === null ? t.roi : null;
+  // ROI now has an answer for every sport, because totals() splits a
+  // parlay's stake on the same weights it splits the profit. It used
+  // to be null the moment a sport was chosen, which is why the tile
+  // showed a dash.
+  const heroRoi = t.roi;
   const heroWins =
     sportTotals === null
       ? filtered.filter((b) => b.status === "won").length
@@ -235,11 +239,16 @@ export default function StatsView({
           )}
         </header>
 
-        <p className="-mt-2 text-sm text-neutral-500 dark:text-neutral-400">
-          {trackingSince && !showAllTime
-            ? `Your record since ${shortDate(trackingSince)}.`
-            : "Find what pays and what leaks."}
-        </p>
+        {/* "Find what pays and what leaks." is gone, cut by the owner.
+            The line under the title only survives to say which record
+            you are looking at, which is a fact the page cannot do
+            without. A tagline read as wallpaper by the third visit and
+            it was pushing the chart, the actual hero, down the page. */}
+        {trackingSince && !showAllTime && (
+          <p className="-mt-2 text-sm text-neutral-500 dark:text-neutral-400">
+            Your record since {shortDate(trackingSince)}.
+          </p>
+        )}
 
         <section>
           <ProfitPanel
@@ -256,10 +265,14 @@ export default function StatsView({
             onScrub={setScrub}
             header={
               <div className="mt-3">
+                {/* No ROI pill here. Ruled by the owner, August 2026:
+                    it says the same thing as the ROI tile a little
+                    further down, and two of them cost the chart the
+                    height it needed. The tile is the one that stays. */}
                 <HeadlineProfit
                   label={`${periodLabel}${sport === null ? "" : ` / ${sport}`}`}
                   profit={heroProfit}
-                  roi={heroRoi}
+                  roi={null}
                   scrub={scrub}
                 />
 
@@ -291,8 +304,14 @@ export default function StatsView({
             }
           />
 
-          {/* One filter row on the light page, as pressable pills. */}
-          <div className="-mx-4 mt-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:-mx-6 sm:px-6">
+          {/* One filter row, as pressable pills.
+              The scrollbar is hidden. iOS draws a grey bar across the
+              bottom of this row while you swipe it, and it sat right
+              through the chips: the owner sent a screenshot of it
+              cutting a filter button in half. Nothing is lost, because
+              a row of chips that clearly runs off the edge already
+              says it scrolls. */}
+          <div className={`-mx-4 mt-5 flex gap-2 overflow-x-auto px-4 pb-1 sm:-mx-6 sm:px-6 ${NO_SCROLLBAR}`}>
             <button
               type="button"
               onClick={() => setSport(null)}

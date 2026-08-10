@@ -21,6 +21,17 @@ export const INNER =
 export const BTN =
   "rounded-md bg-gradient-to-b from-brand-top to-brand-bottom text-[13px] font-semibold text-white active:from-brand-bottom active:to-brand-press disabled:opacity-60";
 
+// Add to any row that scrolls sideways. iOS paints a grey bar along
+// the bottom of the row while a finger is on it, and in a row of chips
+// that bar runs straight through the buttons: the owner sent a
+// screenshot of it cutting a filter in half. Added August 2026 and
+// swept across every sideways row in the app at the same time, because
+// they all had it and he only happened to hit one of them.
+// Nothing is lost. A row of chips that visibly runs off the edge
+// already tells you it scrolls.
+export const NO_SCROLLBAR =
+  "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden";
+
 // THE ONE JOB RULE (August 2026). The owner: "the purple color is too
 // overwhelming, it's just too much purple, everywhere."
 //

@@ -11,7 +11,7 @@ import {
   round4,
 } from "@/lib/format";
 import { SPORTS, SPORT_EMOJI, SUBCATEGORIES, type Sport } from "@/lib/types";
-import { CARD } from "@/lib/ui";
+import { CARD, NO_SCROLLBAR } from "@/lib/ui";
 
 interface LegDraft {
   sport: Sport | null;
@@ -540,7 +540,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
         onChange={(e) => setStake(e.target.value)}
         className={inputClass}
       />
-      <div className="-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1">
+      <div className={`-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1 ${NO_SCROLLBAR}`}>
         {(lastStake !== "" && !QUICK_STAKES.includes(lastStake)
           ? [lastStake, ...QUICK_STAKES]
           : QUICK_STAKES
@@ -583,7 +583,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
           )}
 
           <p className="mt-3 text-sm font-semibold">Sport</p>
-          <div className="-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1">
+          <div className={`-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1 ${NO_SCROLLBAR}`}>
             {SPORTS.map((s) => (
               <button
                 key={s}
@@ -645,7 +645,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
                     , optional. Scroll for more, tap {leg.sport} to hide.
                   </span>
                 </p>
-                <div className="-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1">
+                <div className={`-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1 ${NO_SCROLLBAR}`}>
                   {SUBCATEGORIES[leg.sport]!.map((item) => {
                     if (typeof item === "string") {
                       const selected = leg.subcategory === item;
@@ -709,7 +709,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
                   return (
                     <div
                       key={item.label}
-                      className="mt-2 flex gap-2 overflow-x-auto rounded-xl bg-neutral-100 p-2 dark:bg-[#161D38]"
+                      className={`mt-2 flex gap-2 overflow-x-auto rounded-xl bg-neutral-100 p-2 dark:bg-[#161D38] ${NO_SCROLLBAR}`}
                     >
                       {item.children.map((child) => {
                         const value = `${item.label}: ${child}`;

@@ -250,7 +250,11 @@ export default function ProfitChart({
           edges of a padded panel; with no panel in light mode it just
           pushed the axis labels past the page margin and clipped
           them. */}
-      <div className="relative mt-4 h-[200px] select-none">
+      {/* 260px, up from 200. The owner: the chart is the hero of the
+          page, and the top third was reading as empty. The height came
+          out of the ROI pill and the tagline above it, so the page
+          below the chart did not move. */}
+      <div className="relative mt-4 h-[260px] select-none">
         <div
           ref={(el) => {
             plotRef.current = el;

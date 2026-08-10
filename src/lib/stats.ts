@@ -69,6 +69,64 @@ export function legShares(bet: BetWithLegs): number[] {
   return bet.legs.map(() => 0);
 }
 
+// Splits a settled bet's STAKE across its legs, on exactly the weights
+// legShares uses for the profit. That pairing is the whole point: a
+// sport's staked and a sport's profit have to come from one rule or
+// the ROI built on them is nonsense.
+//
+// Won bets: odds-weighted, so every sport in the bet shows the bet's
+// own ROI. Lost bets: the whole stake sits on the losing leg(s), the
+// same legs that carry the whole loss. A leg that came in inside a
+// lost parlay is charged nothing, because it earned nothing: charging
+// it would punish a pick that was right.
+//
+// This is the rule the owner had never been asked for, and without it
+// per-sport ROI was a dash. Written down August 2026.
+export function legStakeShares(bet: BetWithLegs): number[] {
+  const stake = Number(bet.stake);
+  const n = bet.legs.length;
+  if (n === 0) return [];
+
+  if (bet.status === "won") {
+    const odds = bet.legs.map((leg) =>
+      leg.odds === null ? null : Number(leg.odds)
+    );
+    if (odds.every((o) => o !== null && o > 1)) {
+      const weights = odds.map((o) => (o as number) - 1);
+      const totalWeight = weights.reduce((sum, w) => sum + w, 0);
+      if (totalWeight > 0) {
+        return weights.map((w) => (stake * w) / totalWeight);
+      }
+    }
+    return bet.legs.map(() => stake / n);
+  }
+
+  if (bet.status === "lost") {
+    const losers = bet.legs.filter(
+      (leg) => effectiveResult(bet, leg) === "lost"
+    ).length;
+    if (losers > 0) {
+      return bet.legs.map((leg) =>
+        effectiveResult(bet, leg) === "lost" ? stake / losers : 0
+      );
+    }
+    return bet.legs.map(() => stake / n);
+  }
+
+  return bet.legs.map(() => 0);
+}
+
+// One settled bet's stake as a single sport carries it.
+export function betStakedFor(bet: BetWithLegs, sport: Sport | null): number {
+  if (sport === null) return Number(bet.stake);
+  const shares = legStakeShares(bet);
+  let sum = 0;
+  bet.legs.forEach((leg, i) => {
+    if (leg.sport === sport) sum += shares[i] ?? 0;
+  });
+  return sum;
+}
+
 // One settled bet's money as the profit chart counts it. With no
 // sport chosen that is the whole bet. With a sport chosen it is only
 // that sport's share, the same split the Per sport table uses.
@@ -283,10 +341,23 @@ export interface Totals {
   roi: number | null;
 }
 
-export function totals(bets: BetWithLegs[]): Totals {
-  const staked = bets.reduce((sum, b) => sum + Number(b.stake), 0);
-  // Payouts exist on won bets and on cashed out bets (even lost ones).
-  const returned = bets.reduce((sum, b) => sum + Number(b.payout ?? 0), 0);
+// With no sport chosen these are whole bets. With a sport chosen they
+// are that sport's share of every bet it appears in, split by
+// betStakedFor and betProfitFor, which run on one set of weights.
+//
+// This used to ignore the sport entirely, so picking Football showed
+// the FULL stake of every parlay with a Football leg in it. Staked
+// $4,525 and Returned $4,728 sat two lines under a headline of
+// +$527.09, and the two numbers did not subtract to the third. The ROI
+// tile showed a dash rather than admit it.
+export function totals(bets: BetWithLegs[], sport: Sport | null = null): Totals {
+  const staked = bets.reduce((sum, b) => sum + betStakedFor(b, sport), 0);
+  // Returned is what came back, so it is the staked money plus the
+  // profit on it. On a whole bet that is exactly the payout.
+  const returned = bets.reduce(
+    (sum, b) => sum + betStakedFor(b, sport) + betProfitFor(b, sport),
+    0
+  );
   const roi = staked > 0 ? ((returned - staked) / staked) * 100 : null;
   return { staked, returned, roi };
 }
