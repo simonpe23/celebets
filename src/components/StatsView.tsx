@@ -235,7 +235,7 @@ export default function StatsView({
     }`;
 
   return (
-    <main className="min-h-dvh px-4 pt-6 pb-32 sm:px-6">
+    <main className="flex min-h-svh flex-col px-4 pt-6 pb-2 sm:px-6">
       <div className="mx-auto w-full max-w-md space-y-4">
         {/* THE TOP OF THE PAGE, rebuilt August 2026. The owner: "there's
             too much dead space on the performance page at the top... i

@@ -83,7 +83,7 @@ export default async function HomePage() {
   const name = fullName ? fullName.split(" ")[0] : null;
 
   return (
-    <main className="min-h-dvh px-4 pt-6 pb-32 sm:px-6">
+    <main className="flex min-h-svh flex-col px-4 pt-6 pb-2 sm:px-6">
       <div className="mx-auto w-full max-w-md space-y-4">
         <header className="flex items-center justify-between">
           <h1>

@@ -5,6 +5,8 @@
 // the whole page shifts under your finger. This measures the chart
 // before and after that happens.
 import { chromium } from "playwright";
+
+const port = process.argv[2] ?? "3000";
 const browser = await chromium.launch({
   executablePath: "/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
 });
@@ -14,7 +16,7 @@ const TALL = 745;    // the same phone once they collapse
 const page = await browser.newPage({
   viewport: { width: 393, height: SHORT }, deviceScaleFactor: 2, hasTouch: true, isMobile: true,
 });
-await page.goto("http://localhost:3641/preview/performance", { waitUntil: "networkidle" });
+await page.goto(`http://localhost:${port}/preview/performance`, { waitUntil: "networkidle" });
 await page.waitForTimeout(1500);
 
 const chartH = () =>

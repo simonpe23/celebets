@@ -237,7 +237,7 @@ export default function Settings({
     }`;
 
   return (
-    <main className="min-h-dvh px-4 pt-6 pb-32 sm:px-6">
+    <main className="flex min-h-svh flex-col px-4 pt-6 pb-2 sm:px-6">
       <div className="mx-auto w-full max-w-md space-y-4">
         <header className="flex items-center gap-3">
           <Link

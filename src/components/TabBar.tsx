@@ -163,12 +163,38 @@ export default function TabBar({
   const currentPath = usePathname();
   const pathname = activeHref ?? currentPath ?? "";
 
+  // STICKY, NOT FIXED. The owner: "when i scroll slowly the menu bar is
+  // shaking."
+  //
+  // Fixed pins the bar to the bottom of the browser WINDOW. Chrome on a
+  // phone resizes that window continuously while it slides its toolbar
+  // away, and the bar chases it a frame behind the whole time. That is
+  // the shake, and no styling of the bar can fix it, because the bar is
+  // not the thing that is moving.
+  //
+  // Sticky puts the bar in the page instead. It clings to the bottom of
+  // what you can see, but it is laid out with the content, so it moves
+  // with the content rather than with the window. It also takes up its
+  // own space at the foot of the page, so nothing hides behind it at
+  // the very bottom any more and the pages no longer need pb-32.
+  //
+  // For sticky to work the bar must be the LAST CHILD of the scrolling
+  // element and no ancestor may clip overflow. It is the last child of
+  // <main> on every page. Move it and it silently stops sticking.
+  //
+  // mt-auto is why every page turned into `flex min-h-svh flex-col`.
+  // On a page shorter than the screen there is nothing to stick to, and
+  // without it the bar would sit halfway up under the content.
+  //
+  // Whether this fully kills the shake is a phone question. A headless
+  // browser has no collapsing toolbar to shake against, so only a real
+  // phone can answer it.
   return (
     <nav
       className={
         inline
           ? ""
-          : "fixed inset-x-0 bottom-0 z-40 px-4 pb-[calc(0.625rem+env(safe-area-inset-bottom))]"
+          : "sticky bottom-0 z-40 -mx-4 mt-auto px-4 pt-4 pb-[calc(0.625rem+env(safe-area-inset-bottom))] sm:-mx-6 sm:px-6"
       }
     >
       <div
