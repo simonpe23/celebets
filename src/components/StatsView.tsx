@@ -383,21 +383,56 @@ export default function StatsView({
                 cover. Same six facts, one object instead of two. */}
             <section className={`${CARD} p-4`}>
               <h2 className="text-lg font-bold">Sports breakdown</h2>
-              <div className="mt-3 divide-y divide-neutral-300/60 dark:divide-neutral-800">
+
+              {/* A HEADER ROW, because Pick ROI is a percentage sitting
+                  next to a record, and a record is a percentage-shaped
+                  thing too: 6-6 is 50%. The owner read "6-6  +4.2%" as
+                  a contradiction, and he was right to. Naming the three
+                  columns once, above the list, is what stops the eye
+                  reading the percentage as a win rate. */}
+              <div className="mt-3 flex items-center justify-between gap-2 border-b border-neutral-300/60 pb-2 dark:border-neutral-800">
+                <MicroLabel>Sport</MicroLabel>
+                <div className="flex shrink-0 items-center gap-2">
+                  {/* The record column has no label. "11-5" needs no
+                      telling, and RECORD next to PICK ROI ran the two
+                      into one phrase at this width. Pick ROI is the
+                      only column that has to be named, because it is
+                      the only one that can be misread. */}
+                  <span className="w-10" />
+                  <span className="w-[72px] text-right">
+                    <MicroLabel>Pick ROI</MicroLabel>
+                  </span>
+                  <span className="w-[76px] text-right">
+                    <MicroLabel>Profit</MicroLabel>
+                  </span>
+                </div>
+              </div>
+
+              <div className="divide-y divide-neutral-300/60 dark:divide-neutral-800">
                 {breakdown.map((row) => (
                   <div
                     key={row.sport}
-                    className="flex items-center justify-between gap-3 py-2.5"
+                    className="flex items-center justify-between gap-2 py-2.5"
                   >
                     <p className="truncate text-sm font-semibold">
                       {SPORT_EMOJI[row.sport]} {row.sport}
                     </p>
-                    <div className="flex shrink-0 items-center gap-4">
-                      <p className="text-xs tabular-nums text-neutral-400">
+                    <div className="flex shrink-0 items-center gap-2">
+                      <p className="w-10 text-right text-xs tabular-nums text-neutral-400">
                         {row.wins}-{row.losses}
                       </p>
+                      {/* Muted, not green or red. The money column is
+                          the one that shouts; two coloured numbers on
+                          one row and neither wins. A dash means the
+                          sport has too few picks, or too many picks
+                          with no odds stored, to answer honestly. */}
+                      <p className="w-[72px] font-money text-right text-xs tabular-nums text-neutral-500 dark:text-neutral-400">
+                        {row.pickRoi === null
+                          ? "-"
+                          : `${row.pickRoi > 0 ? "+" : ""}${row.pickRoi.toFixed(1)}%`}
+                      </p>
                       <p
-                        className={`w-24 font-money text-right text-sm font-bold tabular-nums ${profitColor(
+                        className={`w-[76px] font-money text-right text-sm font-bold tabular-nums ${profitColor(
                           row.profit
                         )}`}
                       >
@@ -408,8 +443,11 @@ export default function StatsView({
                 ))}
               </div>
               <p className="mt-3 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
-                Record counts every settled pick. Winnings split by odds,
-                losses charged to the pick that lost the ticket.
+                Record counts every settled pick. Profit splits a
+                parlay&apos;s winnings by odds and charges a loss to the pick
+                that lost the ticket. Pick ROI ignores all of that: it is
+                what each pick would have returned bet on its own. Needs
+                five picks with odds.
               </p>
             </section>
 
@@ -462,7 +500,7 @@ export default function StatsView({
                                 : `${pctLabel(row.wins, picks)} right (${row.wins} of ${picks})`}
                             </p>
                             <p
-                              className={`w-20 font-money text-right text-sm font-bold tabular-nums ${profitColor(
+                              className={`w-[76px] font-money text-right text-sm font-bold tabular-nums ${profitColor(
                                 row.profit
                               )}`}
                             >
@@ -487,7 +525,7 @@ export default function StatsView({
                               : `${pctLabel(row.betsWon, row.betsTotal)} (${row.betsWon} of ${row.betsTotal})`}
                           </p>
                           <p
-                            className={`w-20 font-money text-right text-sm font-bold tabular-nums ${profitColor(
+                            className={`w-[76px] font-money text-right text-sm font-bold tabular-nums ${profitColor(
                               row.profit
                             )}`}
                           >
@@ -522,7 +560,7 @@ export default function StatsView({
                           {row.wins}-{row.losses}
                         </p>
                         <p
-                          className={`w-20 font-money text-right text-sm font-bold tabular-nums ${profitColor(
+                          className={`w-[76px] font-money text-right text-sm font-bold tabular-nums ${profitColor(
                             row.profit
                           )}`}
                         >
