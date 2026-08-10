@@ -392,64 +392,69 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
       )}
 
       {compact ? (
-        /* The four ways in, side by side, from the owner's mockup.
-           Paste leads because it is the fastest, Connect accounts is a
-           promise (idea 13), so it wears a Soon badge instead of dying
-           silently when tapped. */
+        /* The four ways in. Connect your accounts leads on one full
+           width row, the three that work today sit under it as equal
+           thirds. Ruled by the owner, August 2026: connecting an
+           account is the door he wants front and centre, and it ships
+           soon.
+           The old shape was two big tiles over two small ones, which
+           put Paste and Upload at the top and buried Connect in a
+           corner beside Manual entry. */
         <>
-          {/* Two big tiles for the ways people actually capture a bet,
-              and two small ones underneath for the rest. Ruled by the
-              owner: manual entry and connect accounts are barely
-              tapped, so four equal tiles spent the card's best space on
-              its least used doors. */}
-          <div className="mt-3 grid grid-cols-2 gap-2">
+          {/* Biggest by size, quietest by colour. The owner chose this
+              over a filled button: the feature does not work yet, and
+              a big violet control that does nothing when tapped reads
+              as broken rather than as coming. Grey text plus the badge
+              says "not yet" before a finger ever lands on it, so it is
+              a div, not a disabled button. */}
+          <div className="mt-3 flex items-center justify-center gap-2 rounded-xl border border-neutral-200 px-3 py-4 text-[14px] font-semibold text-neutral-400 dark:border-white/10 dark:text-neutral-600">
+            <span className="text-[#22C55E]">
+              <LinkIcon className="h-5 w-5" />
+            </span>
+            Connect your accounts
+            <span className="rounded-full bg-[#22C55E]/15 px-2 py-0.5 text-[10px] font-bold text-[#22C55E]">
+              Coming Soon
+            </span>
+          </div>
+
+          {/* The three that work, equal thirds. Equal because they are
+              equally real: whichever one suits you is the right one.
+              Paste keeps the brand border, so it still reads as the
+              recommended way in without a badge saying so. Two
+              highlighted tiles in one card cancel each other out. */}
+          <div className="mt-2 grid grid-cols-3 gap-2">
             <button
               type="button"
               disabled={importing}
               onClick={pasteSlip}
-              className="relative flex flex-col items-center gap-2 rounded-xl border border-brand-mark px-2 py-2.5 text-[13px] font-semibold active:bg-brand-mark/10 disabled:opacity-50"
+              className="flex flex-col items-center justify-start gap-1.5 rounded-xl border border-brand-mark px-1 py-3 text-center text-[12px] font-semibold leading-tight active:bg-brand-mark/10 disabled:opacity-50"
             >
               <span className="text-brand-mark">
                 <ClipboardIcon className="h-5 w-5" />
               </span>
               Paste bet slip
-              <span className="rounded-full bg-brand-mark/12 px-2 py-0.5 text-[10px] font-bold text-brand-mark">
-                Recommended
-              </span>
             </button>
             <button
               type="button"
               disabled={importing}
               onClick={() => fileInputRef.current?.click()}
-              className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 px-2 py-2.5 text-[13px] font-semibold active:bg-neutral-50 disabled:opacity-50 dark:border-white/10"
+              className="flex flex-col items-center justify-start gap-1.5 rounded-xl border border-neutral-200 px-1 py-3 text-center text-[12px] font-semibold leading-tight active:bg-neutral-50 disabled:opacity-50 dark:border-white/10"
             >
               <span className="text-[#3B82F6]">
                 <CameraIcon className="h-5 w-5" />
               </span>
-              Upload screenshot
+              Upload image
             </button>
-          </div>
-
-          <div className="mt-2 grid grid-cols-2 gap-2">
             <button
               type="button"
               onClick={() => setManualOpen(true)}
-              className="flex items-center justify-center gap-2 rounded-xl border border-neutral-200 px-2 py-2.5 text-[13px] font-semibold active:bg-neutral-50 dark:border-white/10"
+              className="flex flex-col items-center justify-start gap-1.5 rounded-xl border border-neutral-200 px-1 py-3 text-center text-[12px] font-semibold leading-tight active:bg-neutral-50 dark:border-white/10"
             >
               <span className="text-[#F97316]">
                 <PencilIcon className="h-5 w-5" />
               </span>
-              Manual entry
+              Manually enter
             </button>
-            <div className="flex items-center justify-center gap-2 rounded-xl border border-neutral-200 px-2 py-2.5 text-[13px] font-semibold text-neutral-400 dark:border-white/10 dark:text-neutral-600">
-              <span className="text-[#22C55E]">
-                <LinkIcon className="h-5 w-5" />
-              </span>
-              Connect
-              <span className="rounded-full bg-[#22C55E]/15 px-1.5 py-0.5 text-[9px] font-bold text-[#22C55E]">
-                Coming Soon
-              </span>
-            </div>
           </div>
         </>
       ) : (
