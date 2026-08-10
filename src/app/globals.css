@@ -38,10 +38,10 @@
      `mark` has a dark counterpart below, because the deep shade is
      nearly invisible against the navy page.
      --------------------------------------------------------------- */
-  --brand-top: #2563EB;
-  --brand-bottom: #1D4ED8;
-  --brand-press: #1E40AF;
-  --brand-mark: #2563EB;
+  --brand-top: #F9735B;
+  --brand-bottom: #EA5A45;
+  --brand-press: #C94534;
+  --brand-mark: #F9735B;
 }
 
 @theme inline {
@@ -77,7 +77,7 @@
   /* The deep shade disappears against the navy page, so the mark
      lifts. The button gradient does not: it is a filled surface
      with white on it and reads fine either way. */
-  --brand-mark: #60A5FA;
+  --brand-mark: #FF8F7A;
 }
 
 body {
