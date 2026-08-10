@@ -358,6 +358,15 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
     setLegs((prev) => prev.filter((_, i) => i !== index));
   }
 
+  // The three capture tiles on the Track card. ONE string, used by all
+  // three, so they can never drift apart the way they did when each
+  // button carried its own copy.
+  const TILE =
+    "flex flex-col items-center justify-start gap-1.5 rounded-xl px-1 py-3 " +
+    "text-center text-[12px] font-semibold leading-tight disabled:opacity-50 " +
+    "border border-neutral-300 active:bg-neutral-100 " +
+    "dark:border-white/20 dark:active:bg-white/5";
+
   const inputClass =
     "mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-brand-mark focus:ring-2 focus:ring-brand-mark/30 dark:border-white/15 dark:bg-[#0E1228] dark:text-neutral-100";
 
@@ -417,17 +426,18 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
             </span>
           </div>
 
-          {/* The three that work, equal thirds. Equal because they are
-              equally real: whichever one suits you is the right one.
-              Paste keeps the brand border, so it still reads as the
-              recommended way in without a badge saying so. Two
-              highlighted tiles in one card cancel each other out. */}
+          {/* The three that work, equal thirds, and IDENTICAL. Paste
+              used to carry the brand border. The owner cut it: a
+              coloured edge around one of three doors means "this one
+              is special" and nothing here is. The three are equally
+              real, whichever one suits you is the right one, so they
+              share one class string rather than three near copies. */}
           <div className="mt-2 grid grid-cols-3 gap-2">
             <button
               type="button"
               disabled={importing}
               onClick={pasteSlip}
-              className="flex flex-col items-center justify-start gap-1.5 rounded-xl border border-brand-mark px-1 py-3 text-center text-[12px] font-semibold leading-tight active:bg-brand-mark/10 disabled:opacity-50"
+              className={TILE}
             >
               <span className="text-brand-mark">
                 <ClipboardIcon className="h-5 w-5" />
@@ -438,7 +448,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
               type="button"
               disabled={importing}
               onClick={() => fileInputRef.current?.click()}
-              className="flex flex-col items-center justify-start gap-1.5 rounded-xl border border-neutral-200 px-1 py-3 text-center text-[12px] font-semibold leading-tight active:bg-neutral-50 disabled:opacity-50 dark:border-white/10"
+              className={TILE}
             >
               <span className="text-[#3B82F6]">
                 <CameraIcon className="h-5 w-5" />
@@ -448,7 +458,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
             <button
               type="button"
               onClick={() => setManualOpen(true)}
-              className="flex flex-col items-center justify-start gap-1.5 rounded-xl border border-neutral-200 px-1 py-3 text-center text-[12px] font-semibold leading-tight active:bg-neutral-50 dark:border-white/10"
+              className={TILE}
             >
               <span className="text-[#F97316]">
                 <PencilIcon className="h-5 w-5" />
