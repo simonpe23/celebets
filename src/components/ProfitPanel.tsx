@@ -58,6 +58,10 @@ interface Props {
   // number and the line that draws it share one surface instead of
   // floating as separate things with a gap between them.
   header?: React.ReactNode;
+  // Rendered UNDER the chart, inside the panel. The stats live here so
+  // the chart does not have to be tall to fill the first screen: a big
+  // empty box is what the owner called dead space.
+  footer?: React.ReactNode;
 }
 
 function CalendarIcon() {
@@ -91,6 +95,7 @@ export default function ProfitPanel({
   onCustomTo,
   onScrub,
   header,
+  footer,
 }: Props) {
   const custom = period === "custom";
 
@@ -196,6 +201,8 @@ export default function ProfitPanel({
           onScrub={onScrub}
         />
       )}
+
+      {footer}
     </section>
   );
 }

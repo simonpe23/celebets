@@ -210,7 +210,11 @@ for (const file of files) {
       around.includes("font-money") ||
       around.includes("HeroMoney") ||
       // StatTile takes the value as a prop and carries the face itself.
-      around.includes("StatTile")
+      around.includes("StatTile") ||
+      // So does Fact, the six numbers on the Performance chart panel.
+      // Both are the same shape: a label, a value, the face applied
+      // once inside the component rather than at every call site.
+      around.includes("<Fact")
     ) {
       return;
     }

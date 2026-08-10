@@ -8,7 +8,6 @@ import HeadlineProfit from "@/components/HeadlineProfit";
 import InsightCard from "@/components/InsightCard";
 import KeyInsights from "@/components/KeyInsights";
 import SnapshotCard from "@/components/SnapshotCard";
-import StatTile from "@/components/StatTile";
 import TabBar from "@/components/TabBar";
 import ProfitPanel, { type Period } from "@/components/ProfitPanel";
 import {
@@ -60,6 +59,38 @@ function shortDate(iso: string): string {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "";
   return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
+}
+
+// One of the six facts under the chart. `border` draws the divider on
+// its left, which is how a 3 by 2 grid gets columns without drawing a
+// line down the outside edge of the panel.
+function Fact({
+  label,
+  value,
+  tone,
+  border = false,
+}: {
+  label: string;
+  value: string;
+  tone?: string;
+  border?: boolean;
+}) {
+  return (
+    <div
+      className={`text-center ${
+        border ? "border-l border-neutral-900/10 dark:border-white/10" : ""
+      }`}
+    >
+      <MicroLabel>{label}</MicroLabel>
+      <p
+        className={`mt-0.5 font-money text-[17px] font-bold tabular-nums ${
+          tone ?? "text-neutral-900 dark:text-white"
+        }`}
+      >
+        {value}
+      </p>
+    </div>
+  );
 }
 
 function pctLabel(wins: number, total: number): string {
@@ -264,7 +295,7 @@ export default function StatsView({
             onCustomTo={setCustomTo}
             onScrub={setScrub}
             header={
-              <div className="mt-3">
+              <div className="mt-2">
                 {/* No ROI pill here. Ruled by the owner, August 2026:
                     it says the same thing as the ROI tile a little
                     further down, and two of them cost the chart the
@@ -275,61 +306,69 @@ export default function StatsView({
                   roi={null}
                   scrub={scrub}
                 />
-
-                {/* The record, on the panel under the headline, so the
-                    three facts that qualify the number sit with it. */}
-                <div className="mt-4 grid grid-cols-3 divide-x divide-neutral-900/10 border-t border-neutral-900/10 pt-3 dark:divide-white/10 dark:border-white/10">
-                  <div className="text-center">
-                    <MicroLabel>
-                      {sport === null ? "Bets" : "Picks"}
-                    </MicroLabel>
-                    <p className={`mt-0.5 font-money text-[17px] font-bold tabular-nums text-neutral-900 dark:text-white`}>
-                      {heroWins + heroLosses}
-                    </p>
-                  </div>
-                  <div className="text-center">
-                    <MicroLabel>Record</MicroLabel>
-                    <p className={`mt-0.5 font-money text-[17px] font-bold tabular-nums text-neutral-900 dark:text-white`}>
-                      {heroWins}-{heroLosses}
-                    </p>
-                  </div>
-                  <div className="text-center">
-                    <MicroLabel>Hit rate</MicroLabel>
-                    <p className={`mt-0.5 font-money text-[17px] font-bold tabular-nums text-neutral-900 dark:text-white`}>
-                      {pctLabel(heroWins, heroWins + heroLosses)}
-                    </p>
-                  </div>
-                </div>
               </div>
+            }
+            footer={
+              /* THE SIX NUMBERS SIT UNDER THE CHART, ON THE PANEL.
+                 The owner: a tall chart is "so much white, ugly, not
+                 exciting, dead space", and he was right. A running
+                 profit line goes bottom left to top right, so the
+                 taller the box, the bigger the empty triangle above
+                 it. Stretching one element is not how you fill a
+                 screen. Facts are.
+                 The three money tiles used to be a separate card below
+                 the panel; they are the same six facts either way, and
+                 up here they cost no extra height because they replace
+                 the emptiness. */
+              <>
+              <div className="mt-1 grid grid-cols-3 gap-y-3 border-t border-neutral-900/10 pt-3 dark:border-white/10">
+                <Fact label={sport === null ? "Bets" : "Picks"} value={`${heroWins + heroLosses}`} />
+                <Fact label="Record" value={`${heroWins}-${heroLosses}`} border />
+                <Fact label="Hit rate" value={pctLabel(heroWins, heroWins + heroLosses)} border />
+                <Fact label="Staked" value={formatMoney(round2(t.staked))} />
+                <Fact label="Returned" value={formatMoney(round2(t.returned))} border />
+                <Fact
+                  label="ROI"
+                  value={heroRoi === null ? "-" : `${heroRoi.toFixed(1)}%`}
+                  tone={profitColor(heroRoi ?? 0)}
+                  border
+                />
+              </div>
+
+              {/* THE SPORT FILTER LIVES ON THE PANEL, under the numbers
+                  it filters. It used to sit on the page below the
+                  panel, where it landed half behind the tab bar at
+                  rest and no chart height could fix that: the bar is
+                  fixed to the screen, so on a taller phone the row just
+                  comes back up to meet it. Inside the panel there is
+                  nothing tappable after it, and the next thing down is
+                  a card, which reads as "more below" rather than as
+                  broken.
+                  The scrollbar is hidden because iOS draws a grey bar
+                  straight through the chips while you swipe. */}
+              <div className={`-mx-4 mt-4 flex gap-2 overflow-x-auto px-4 pb-1 ${NO_SCROLLBAR}`}>
+                <button
+                  type="button"
+                  onClick={() => setSport(null)}
+                  className={pillClass(sport === null)}
+                >
+                  All sports
+                </button>
+                {SPORTS.map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => setSport(s)}
+                    className={pillClass(sport === s)}
+                  >
+                    {SPORT_EMOJI[s]} {s}
+                  </button>
+                ))}
+              </div>
+              </>
             }
           />
 
-          {/* One filter row, as pressable pills.
-              The scrollbar is hidden. iOS draws a grey bar across the
-              bottom of this row while you swipe it, and it sat right
-              through the chips: the owner sent a screenshot of it
-              cutting a filter button in half. Nothing is lost, because
-              a row of chips that clearly runs off the edge already
-              says it scrolls. */}
-          <div className={`-mx-4 mt-5 flex gap-2 overflow-x-auto px-4 pb-1 sm:-mx-6 sm:px-6 ${NO_SCROLLBAR}`}>
-            <button
-              type="button"
-              onClick={() => setSport(null)}
-              className={pillClass(sport === null)}
-            >
-              All sports
-            </button>
-            {SPORTS.map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => setSport(s)}
-                className={pillClass(sport === s)}
-              >
-                {SPORT_EMOJI[s]} {s}
-              </button>
-            ))}
-          </div>
         </section>
 
         {filtered.length === 0 ? (
@@ -338,20 +377,10 @@ export default function StatsView({
           </p>
         ) : (
           <>
-            {/* The tiles. With no sport chosen they speak in money and
-                bets. With a sport chosen they speak in that sport's
-                picks, because a parlay's stake covers several sports
-                and cannot be split. */}
-            <section className="grid grid-cols-3 gap-2">
-              <StatTile label="Staked" value={formatMoney(round2(t.staked))} />
-              <StatTile label="Returned" value={formatMoney(round2(t.returned))} />
-              <StatTile
-                label="ROI"
-                value={heroRoi === null ? "-" : `${heroRoi.toFixed(1)}%`}
-                tone={profitColor(heroRoi ?? 0)}
-              />
-            </section>
-
+            {/* Staked, Returned and ROI used to be three cards here.
+                They moved up onto the panel, under the chart, where
+                they fill the space the chart was being stretched to
+                cover. Same six facts, one object instead of two. */}
             <section className={`${CARD} p-4`}>
               <h2 className="text-lg font-bold">Sports breakdown</h2>
               <div className="mt-3 divide-y divide-neutral-300/60 dark:divide-neutral-800">

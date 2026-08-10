@@ -175,7 +175,10 @@ export default function ProfitChart({
   const values = points.map((p) => p.value);
   const rawMax = Math.max(...values, 0);
   const rawMin = Math.min(...values, 0);
-  const pad = Math.max((rawMax - rawMin) * 0.18, 1);
+  // 8% headroom, not 18%. The padding is empty space by definition,
+  // and at 18% nearly a fifth of the chart was blank before the line
+  // even started. The line now fills its box.
+  const pad = Math.max((rawMax - rawMin) * 0.08, 1);
   const max = rawMax + pad;
   const min = rawMin - pad;
 
@@ -272,7 +275,7 @@ export default function ProfitChart({
           an iPhone SE to a Pro Max, in a browser and full screen.
           Re-measure that sweep if anything above the chart changes
           height, because 314 is the sum of those pieces. */}
-      <div className="relative mt-4 h-[clamp(220px,calc(100dvh-314px),640px)] select-none">
+      <div className="relative mt-2 h-[clamp(180px,calc(100dvh-470px),260px)] select-none">
         <div
           ref={(el) => {
             plotRef.current = el;
