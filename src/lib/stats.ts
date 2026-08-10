@@ -145,58 +145,12 @@ export interface SportRow {
   wins: number;
   losses: number;
   profit: number;
-  // PICK ROI. "If I had bet the same amount on each of these picks on
-  // its own, what would I have made?" Null when it cannot be answered
-  // honestly; see pickRoi() for the three rules.
-  //
-  // It exists because the money column has to invent something: a
-  // parlay's stake covers several sports and there is no true answer
-  // for how much of it was Tennis. This number never splits a dollar.
-  // Every pick carries its own odds and its own result, so nothing is
-  // shared out and nothing is guessed.
-  pickRoi: number | null;
-}
-
-// One pick's result if it had been the only thing on the ticket, in
-// units of one stake. A winner pays its odds minus the stake, a loser
-// costs the stake.
-function unitResult(odds: number, won: boolean): number {
-  return won ? odds - 1 : -1;
-}
-
-interface PickTally {
-  units: number;
-  counted: number;
-  missing: number;
-}
-
-// THE THREE RULES THAT KEEP THIS HONEST. A number nobody can trust is
-// worse than no number, so each rule refuses rather than guesses.
-//
-// 1. A pick with no odds is skipped. Odds are only stored when a
-//    Chance % was entered, so a parlay leg can genuinely have none.
-// 2. If more than a fifth of a sport's picks have no odds, the whole
-//    sport returns null. A percentage built on half the data looks
-//    exactly as confident as one built on all of it.
-// 3. Under five picks, null. Below that a percentage is noise, and it
-//    is the same floor the insights already use.
-function pickRoi(t: PickTally): number | null {
-  const total = t.counted + t.missing;
-  if (t.counted < 5) return null;
-  if (total > 0 && t.missing / total > 0.2) return null;
-  return (t.units / t.counted) * 100;
 }
 
 // Per-sport record and money over a set of settled bets.
 export function sportRows(bets: BetWithLegs[]): SportRow[] {
   const map = new Map<Sport, SportRow>(
-    SPORTS.map((sport) => [
-      sport,
-      { sport, wins: 0, losses: 0, profit: 0, pickRoi: null },
-    ])
-  );
-  const tally = new Map<Sport, PickTally>(
-    SPORTS.map((sport) => [sport, { units: 0, counted: 0, missing: 0 }])
+    SPORTS.map((sport) => [sport, { sport, wins: 0, losses: 0, profit: 0 }])
   );
 
   for (const bet of bets) {
@@ -206,57 +160,21 @@ export function sportRows(bets: BetWithLegs[]): SportRow[] {
       // bet's outcome (they are the same pick, bought several times).
       const leg = bet.legs[0];
       const row = map.get(leg.sport);
-      const pick = tally.get(leg.sport);
-      if (!row || !pick) continue;
+      if (!row) continue;
       const result = effectiveResult(bet, leg);
       if (result === "won") row.wins += pickCount(bet);
       if (result === "lost") row.losses += pickCount(bet);
       row.profit += shares[0] ?? 0;
-
-      // Each buy is its own pick at its own price, the same rule the
-      // odds groups use: that buy's payout divided by its amount.
-      if (result !== "pending") {
-        const buys = bet.bet_buys ?? [];
-        if (buys.length > 0) {
-          for (const buy of buys) {
-            const odds = Number(buy.payout) / Number(buy.amount);
-            if (odds > 1) {
-              pick.units += unitResult(odds, result === "won");
-              pick.counted += 1;
-            } else {
-              pick.missing += 1;
-            }
-          }
-        } else if (leg.odds !== null && Number(leg.odds) > 1) {
-          pick.units += unitResult(Number(leg.odds), result === "won");
-          pick.counted += 1;
-        } else {
-          pick.missing += 1;
-        }
-      }
     } else {
       bet.legs.forEach((leg, i) => {
         const row = map.get(leg.sport);
-        const pick = tally.get(leg.sport);
-        if (!row || !pick) return;
+        if (!row) return;
         const result = effectiveResult(bet, leg);
         if (result === "won") row.wins += 1;
         if (result === "lost") row.losses += 1;
         row.profit += shares[i];
-
-        if (result === "pending") return;
-        if (leg.odds !== null && Number(leg.odds) > 1) {
-          pick.units += unitResult(Number(leg.odds), result === "won");
-          pick.counted += 1;
-        } else {
-          pick.missing += 1;
-        }
       });
     }
-  }
-
-  for (const row of map.values()) {
-    row.pickRoi = pickRoi(tally.get(row.sport) as PickTally);
   }
 
   return [...map.values()];
@@ -292,11 +210,9 @@ export function sportTypeRows(
   bets: BetWithLegs[],
   sport: Sport
 ): SportRow[] {
-  // Singles vs parlays does not show Pick ROI, so it is left null
-  // here rather than computed and thrown away.
   const rows: SportRow[] = [
-    { sport, wins: 0, losses: 0, profit: 0, pickRoi: null },
-    { sport, wins: 0, losses: 0, profit: 0, pickRoi: null },
+    { sport, wins: 0, losses: 0, profit: 0 },
+    { sport, wins: 0, losses: 0, profit: 0 },
   ];
 
   for (const bet of bets) {
