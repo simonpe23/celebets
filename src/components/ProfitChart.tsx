@@ -250,11 +250,19 @@ export default function ProfitChart({
           edges of a padded panel; with no panel in light mode it just
           pushed the axis labels past the page margin and clipped
           them. */}
-      {/* 260px, up from 200. The owner: the chart is the hero of the
-          page, and the top third was reading as empty. The height came
-          out of the ROI pill and the tagline above it, so the page
-          below the chart did not move. */}
-      <div className="relative mt-4 h-[260px] select-none">
+      {/* 340px, up from 200. The owner: the chart is the hero of the
+          page, and the top third was reading as empty.
+          The exact number is not taste, it is measured. The tab bar is
+          fixed to the bottom of the viewport, so on the SHORT viewport
+          (393x659, an iPhone with Safari's toolbars showing) the sport
+          filter row used to sit half behind it at rest. 200px and
+          260px both left it half covered; 340px pushes it clean below
+          the fold, so the first screen is the panel and nothing else.
+          On a full screen phone the row then clears the bar by 81px.
+          If this height changes, re-measure both viewports. My first
+          fix looked right in a 393x852 screenshot and was still broken
+          on his actual phone. */}
+      <div className="relative mt-4 h-[340px] select-none">
         <div
           ref={(el) => {
             plotRef.current = el;
