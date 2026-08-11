@@ -76,6 +76,15 @@ const ALLOWED_HEX = new Set([
   "#0E0E14", // ink, on a light chart panel
   "#FFFFFF", // svg strokes and the theme-color meta tag
   "#0A0A0A", // theme-color meta tag
+  // The drawn phone in PhoneMock.tsx. These are the colours of a
+  // physical object, not of the app: a titanium body and the status
+  // bar text on top of it. They are deliberately outside the palette,
+  // because a phone in a product shot is a prop, not a surface.
+  "#4a4a55", // the lit edge of the phone's band
+  "#20202a", // the middle of the band, turning away from the light
+  "#3a3a46", // the far edge, catching a little bounce
+  "#F2F2F5", // status bar text on a dark screenshot
+  "#14141A", // status bar text on a light one
   "#4285F4", // Google logo, fixed by Google's brand rules
   "#34A853", // Google logo
   "#FBBC05", // Google logo
