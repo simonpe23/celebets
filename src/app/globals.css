@@ -60,6 +60,9 @@
   --land-deep: #0A0F26;   /* dark section, the near end */
   --land-lilac: #EEEBFA;  /* the coming soon card, light */
   --land-plum: #151034;   /* the coming soon card, dark */
+  --land-wash: #FBFAFE;   /* the hero and footer on a light theme, a
+                             white with a breath of violet in it, so the
+                             beams have something to sit in */
 }
 
 @theme inline {
@@ -91,6 +94,7 @@
   --color-land-deep: var(--land-deep);
   --color-land-lilac: var(--land-lilac);
   --color-land-plum: var(--land-plum);
+  --color-land-wash: var(--land-wash);
 }
 
 [data-theme="dark"] {

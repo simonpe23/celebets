@@ -16,41 +16,30 @@ export default function InsightChip({
   headline,
   value,
   tone = "up",
-  // The chip sits on a navy band in the hero and on a page that follows
-  // the theme further down. A navy card on a white section reads as a
-  // hole cut in the page, so it needs both.
-  onDark = true,
   className = "",
 }: {
   label: string;
   headline: string;
   value: string;
   tone?: "up" | "down";
-  onDark?: boolean;
   className?: string;
 }) {
-  const money = onDark
-    ? tone === "up"
-      ? "text-emerald-400"
-      : "text-red-400"
-    : tone === "up"
-      ? "text-emerald-600"
-      : "text-red-600";
-
-  const surface = onDark
-    ? "border-white/[0.09] bg-[#0E1228]/90 shadow-[0_24px_60px_-20px_rgba(4,8,27,0.9)]"
-    : "border-neutral-900/[0.08] bg-white/95 shadow-[0_24px_60px_-24px_rgba(16,19,34,0.45)]";
+  // It follows the theme in CSS rather than by a prop. It used to take
+  // an onDark boolean, and the moment the hero stopped being navy in
+  // both themes every call site had to be told which band it was
+  // standing on. A card that reads its own surroundings cannot be put
+  // on the wrong one.
+  const money =
+    tone === "up"
+      ? "text-emerald-600 dark:text-emerald-400"
+      : "text-red-600 dark:text-red-400";
 
   return (
     <div
-      className={`w-[240px] rounded-2xl border p-4 backdrop-blur-md ${surface} ${className}`}
+      className={`w-[240px] rounded-2xl border border-neutral-900/[0.08] bg-white/90 p-4 shadow-[0_24px_60px_-24px_rgba(16,19,34,0.4)] backdrop-blur-md dark:border-white/[0.09] dark:bg-[#0E1228]/90 dark:shadow-[0_24px_60px_-20px_rgba(4,8,27,0.9)] ${className}`}
     >
-      <MicroLabel onDark={onDark}>{label}</MicroLabel>
-      <p
-        className={`mt-2 text-[13px] font-semibold leading-snug ${
-          onDark ? "text-white/90" : "text-neutral-800"
-        }`}
-      >
+      <MicroLabel>{label}</MicroLabel>
+      <p className="mt-2 text-[13px] font-semibold leading-snug text-neutral-800 dark:text-white/90">
         {headline}
       </p>
       <p className={`mt-2 font-money text-[22px] font-semibold tabular-nums ${money}`}>

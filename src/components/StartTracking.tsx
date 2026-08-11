@@ -19,11 +19,10 @@ import GoogleButton from "@/components/GoogleButton";
 // confirmation link, both of which exist for good reasons. The genuine
 // one click is the Google button underneath, which is already wired up.
 // Apple is deliberately absent until the owner has a developer account.
-export default function StartTracking({
-  onDark = false,
-}: {
-  onDark?: boolean;
-}) {
+// It follows the theme in CSS, not by a prop, for the same reason the
+// insight card does: the hero is light on a light theme now, so no call
+// site can know which band it is standing on.
+export default function StartTracking() {
   const router = useRouter();
   const [email, setEmail] = useState("");
 
@@ -48,11 +47,7 @@ export default function StartTracking({
           placeholder="you@email.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className={`min-w-0 flex-1 rounded-xl border px-4 text-base outline-none transition-colors ${
-            onDark
-              ? "border-white/15 bg-white/[0.06] text-white placeholder:text-white/40 focus:border-brand-mark"
-              : "border-neutral-300 bg-white text-neutral-900 placeholder:text-neutral-400 focus:border-brand-top"
-          }`}
+          className="min-w-0 flex-1 rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none transition-colors placeholder:text-neutral-400 focus:border-brand-top dark:border-white/15 dark:bg-white/[0.06] dark:text-white dark:placeholder:text-white/40 dark:focus:border-brand-mark"
           style={{ height: 52 }}
         />
         <button

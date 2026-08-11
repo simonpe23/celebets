@@ -22,10 +22,23 @@ import InsightChip from "@/components/landing/InsightChip";
 // 4. WHITE BLOCKS. Every light surface is a tinted gradient with a
 //    hairline, never #FFFFFF on #F7F7FB.
 //
-// THE PAGE IS DARK AT BOTH ENDS IN BOTH THEMES, on purpose. A landing
-// page is a poster, not a tool: it does not owe the reader their theme
-// preference, and the hero is the one place the product gets to look
-// like an evening game. The middle is the part that follows the theme.
+// LIGHT MODE IS A LIGHT PAGE, ALL THE WAY THROUGH. The version before
+// this kept a navy hero and a navy footer in both themes, and the owner
+// was right about what that meant: "dark mode and light mode can not
+// have sections that look the same." A pale page with two black bands
+// bolted into it is not a light page, it is a dark page with a hole in
+// the middle.
+//
+// So every band, every card, the sign up field, the insight cards and
+// the screen shots inside the phones all follow the theme. Not by a
+// prop: a prop means each call site has to know which surface it is
+// standing on, and that is exactly the thing that went wrong. They read
+// their own surroundings through dark: variants instead.
+//
+// The light side is not the dark one lightened. Same idea, opposite
+// physics: on navy the beams ADD light, on white they have to deepen
+// it, so they run violet at low opacity and read as coloured haze
+// rather than as lamps.
 
 const PILLARS = [
   { title: "Track", body: "Every bet, any app." },
@@ -107,6 +120,7 @@ function PhoneTrio({ base, priority = false }: { base: number; priority?: boolea
     <div className="flex items-end justify-center">
       <PhoneMock
         src="/shots/track-dark.png"
+        srcLight="/shots/track-light.png"
         alt="The Track page, showing a tracking balance and the ways to log a bet"
         width={outer}
         angle={20}
@@ -116,6 +130,7 @@ function PhoneTrio({ base, priority = false }: { base: number; priority?: boolea
       />
       <PhoneMock
         src="/shots/performance-dark.png"
+        srcLight="/shots/performance-light.png"
         alt="The Performance page, showing profit over time"
         width={base}
         glow
@@ -124,6 +139,7 @@ function PhoneTrio({ base, priority = false }: { base: number; priority?: boolea
       />
       <PhoneMock
         src="/shots/research-dark.png"
+        srcLight="/shots/research-light.png"
         alt="The Research page"
         width={outer}
         angle={-20}
@@ -162,10 +178,10 @@ export default function LandingPage() {
 
         <div className="relative mx-auto w-full max-w-6xl px-5 pt-6 sm:px-8">
           <header className="flex items-center justify-between">
-            <Wordmark className="text-xl" onDark />
+            <Wordmark className="text-xl" />
             <Link
               href="/login"
-              className="rounded-xl border border-white/15 bg-white/[0.06] px-4 py-2 text-sm font-bold text-white/90 backdrop-blur-sm transition-colors hover:bg-white/[0.12]"
+              className="rounded-xl border border-neutral-900/10 bg-white/70 px-4 py-2 text-sm font-bold text-neutral-700 backdrop-blur-sm transition-colors hover:bg-white dark:border-white/15 dark:bg-white/[0.06] dark:text-white/90 dark:hover:bg-white/[0.12]"
             >
               Log in
             </Link>
@@ -173,18 +189,18 @@ export default function LandingPage() {
 
           <div className="flex flex-col items-center pt-10 text-center sm:pt-20 lg:pt-24">
             <h1
-              className={`${DISPLAY} text-[2.85rem] leading-[0.9] text-white sm:text-[4.75rem] lg:text-[6rem]`}
+              className={`${DISPLAY} text-[2.85rem] leading-[0.9] text-neutral-900 dark:text-white sm:text-[4.75rem] lg:text-[6rem]`}
             >
               Know Your{" "}
               {/* One gradient word, so the headline has a place for the
                   eye to land. The brand colour earns its keep here
                   because nothing on this band is a control. */}
-              <span className="bg-gradient-to-r from-brand-lift via-brand-glow to-brand-top bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-brand-mark via-brand-top to-brand-press bg-clip-text text-transparent dark:from-brand-lift dark:via-brand-glow dark:to-brand-top">
                 Game.
               </span>
             </h1>
 
-            <p className="mt-4 max-w-xl text-[17px] font-semibold leading-snug text-white/75 sm:mt-6 sm:text-xl">
+            <p className="mt-4 max-w-xl text-[17px] font-semibold leading-snug text-neutral-600 dark:text-white/75 sm:mt-6 sm:text-xl">
               Track Every Bet. Discover Patterns. Find Your Edge.
             </p>
 
@@ -192,27 +208,27 @@ export default function LandingPage() {
                 it. As a three line block in its own section it was, in
                 the owner's words, "an ugly block of text no one wants
                 to read". It is the sentence you read second. */}
-            <p className="mt-3 max-w-lg text-[13px] leading-relaxed text-white/45 sm:mt-4 sm:text-[15px]">
+            <p className="mt-3 max-w-lg text-[13px] leading-relaxed text-neutral-500 dark:text-neutral-400 sm:mt-4 sm:text-[15px]">
               Celebet is the sports betting companion that helps you track your
               bets, uncover patterns, and improve your results.
             </p>
 
             <div className="mt-7 flex w-full justify-center sm:mt-9">
-              <StartTracking onDark />
+              <StartTracking />
             </div>
 
             {/* The three pillars, in one row on every size above a
                 phone. No wrapping: each title is one word. */}
-            <ul className="mt-9 grid w-full max-w-3xl grid-cols-3 gap-3 border-t border-white/10 pt-7 sm:mt-14 sm:gap-6 sm:pt-10">
+            <ul className="mt-9 grid w-full max-w-3xl grid-cols-3 gap-3 border-t border-neutral-900/10 pt-7 dark:border-white/10 sm:mt-14 sm:gap-6 sm:pt-10">
               {PILLARS.map(({ title, body }) => (
                 <li key={title} className="flex flex-col items-center gap-2 sm:gap-3">
-                  <span className="text-brand-glow">
+                  <span className="text-brand-top dark:text-brand-glow">
                     <PillarIcon title={title} />
                   </span>
-                  <span className="text-sm font-bold text-white sm:text-base">
+                  <span className="text-sm font-bold text-neutral-900 dark:text-white sm:text-base">
                     {title}
                   </span>
-                  <span className="-mt-1 text-xs leading-snug text-white/55 sm:-mt-1.5 sm:text-sm">
+                  <span className="-mt-1 text-xs leading-snug text-neutral-500 dark:text-neutral-400 sm:-mt-1.5 sm:text-sm">
                     {body}
                   </span>
                 </li>
@@ -309,8 +325,6 @@ export default function LandingPage() {
                 alt="Profit over time, with staked, returned and ROI"
                 width={268}
                 angle={-10}
-                chrome="#F7F7FB"
-                onDark={false}
                 className="dark:hidden"
               />
               <PhoneMock
@@ -323,7 +337,6 @@ export default function LandingPage() {
               />
               <InsightChip
                 className="absolute -left-6 bottom-10 hidden dark:hidden sm:block"
-                onDark={false}
                 label="Trending"
                 headline="Three weeks in a row of better results."
                 value="+$2,119"
@@ -345,7 +358,7 @@ export default function LandingPage() {
           is fine. The same sentence unlabelled would be a lie. */}
       <section className="relative mx-auto w-full max-w-6xl px-5 pb-20 sm:px-8 sm:pb-28">
         <div className="relative overflow-hidden rounded-3xl border border-neutral-900/[0.08] bg-gradient-to-br from-white via-white to-land-lilac px-6 py-12 text-center dark:border-white/[0.08] dark:from-[#0E1228] dark:via-[#0C1125] dark:to-land-plum sm:px-12 sm:py-16">
-          <Grain opacity={0.05} />
+          <Grain />
           <div className="relative">
             <span className="inline-block rounded-full bg-[#22C55E]/15 px-3 py-1">
               <MicroLabel className="!text-[#22C55E]">Coming soon</MicroLabel>
@@ -368,45 +381,45 @@ export default function LandingPage() {
         <Beams className="opacity-70" />
         <div className="relative mx-auto flex w-full max-w-6xl flex-col items-center px-5 py-20 text-center sm:px-8 sm:py-28">
           <h2
-            className={`${DISPLAY} text-[2.75rem] leading-[0.92] text-white sm:text-[4rem]`}
+            className={`${DISPLAY} text-[2.75rem] leading-[0.92] text-neutral-900 dark:text-white sm:text-[4rem]`}
           >
             Know Your{" "}
-            <span className="bg-gradient-to-r from-brand-lift to-brand-glow bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-brand-mark to-brand-top bg-clip-text text-transparent dark:from-brand-lift dark:to-brand-glow">
               Game.
             </span>
           </h2>
-          <p className="mt-5 max-w-md text-base font-semibold text-white/65 sm:text-lg">
+          <p className="mt-5 max-w-md text-base font-semibold text-neutral-600 dark:text-white/65 sm:text-lg">
             Track Every Bet. Discover Patterns. Find Your Edge.
           </p>
           <div className="mt-9 flex w-full justify-center">
-            <StartTracking onDark />
+            <StartTracking />
           </div>
         </div>
       </StadiumBand>
 
-      <footer className="bg-[#04081B] px-5 pb-10 pt-12 text-white sm:px-8">
+      <footer className="bg-land-wash px-5 pb-10 pt-12 text-neutral-900 dark:bg-[#04081B] dark:text-white sm:px-8">
         <div className="mx-auto w-full max-w-6xl">
-          <div className="flex flex-col items-center gap-5 border-b border-white/[0.08] pb-8 sm:flex-row sm:justify-between">
-            <Wordmark className="text-base" onDark />
-            <nav className="flex items-center gap-7 text-sm font-semibold text-white/60">
-              <Link href="/terms" className="transition-colors hover:text-white">
+          <div className="flex flex-col items-center gap-5 border-b border-neutral-900/[0.08] pb-8 dark:border-white/[0.08] sm:flex-row sm:justify-between">
+            <Wordmark className="text-base" />
+            <nav className="flex items-center gap-7 text-sm font-semibold text-neutral-500 dark:text-neutral-400">
+              <Link href="/terms" className="transition-colors hover:text-neutral-900 dark:hover:text-white">
                 Terms
               </Link>
-              <Link href="/privacy" className="transition-colors hover:text-white">
+              <Link href="/privacy" className="transition-colors hover:text-neutral-900 dark:hover:text-white">
                 Privacy
               </Link>
               <a
                 href="https://instagram.com/gocelebet"
                 target="_blank"
                 rel="noreferrer"
-                className="transition-colors hover:text-white"
+                className="transition-colors hover:text-neutral-900 dark:hover:text-white"
               >
                 @gocelebet
               </a>
             </nav>
           </div>
 
-          <div className="mt-8 space-y-2 text-center text-xs leading-relaxed text-white/40">
+          <div className="mt-8 space-y-2 text-center text-xs leading-relaxed text-neutral-400 dark:text-white/40">
             <p>
               This platform is meant for entertainment purposes only. If you or
               someone you know has a gambling problem and wants help, call 1-800

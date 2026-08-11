@@ -48,6 +48,12 @@ function BatteryIcon({ size }: { size: number }) {
 // drawn.
 export default function PhoneMock({
   src,
+  // The same screen shot in the app's light theme. When it is given,
+  // BOTH are rendered and CSS shows one, so the phones follow the page
+  // instead of staying navy on a white section. Two <img> tags rather
+  // than one swapped in JavaScript, because the right one has to be
+  // correct in the very first frame the browser paints.
+  srcLight,
   alt,
   width = 260,
   // Degrees of turn. 0 is straight on. Positive turns the phone so its
@@ -59,10 +65,6 @@ export default function PhoneMock({
   // The screen glow, for a dark section. Off on a light one, where a
   // coloured halo behind a phone reads as a smudge.
   glow = false,
-  // The colour of the app page behind the status bar. It has to match
-  // the screenshot or the phone gets a stripe across the top.
-  chrome = "#04081B",
-  onDark = true,
   priority = false,
   className = "",
   // Only ever the negative margin that overlaps a neighbour. Kept as a
@@ -71,13 +73,12 @@ export default function PhoneMock({
   style,
 }: {
   src: string;
+  srcLight?: string;
   alt: string;
   width?: number;
   angle?: number;
   lift?: number;
   glow?: boolean;
-  chrome?: string;
-  onDark?: boolean;
   priority?: boolean;
   className?: string;
   style?: React.CSSProperties;
@@ -102,7 +103,7 @@ export default function PhoneMock({
       {glow && (
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -inset-8 -z-10 rounded-[50%] bg-brand-mark/25 blur-3xl"
+          className="pointer-events-none absolute -inset-8 -z-10 rounded-[50%] bg-brand-top/15 blur-3xl dark:bg-brand-mark/25"
         />
       )}
 
@@ -129,12 +130,10 @@ export default function PhoneMock({
               app's own page colour is what keeps it from reading as a
               band across the top. */}
           <div
-            className="relative flex items-center justify-between px-[7%] font-semibold"
+            className="relative flex items-center justify-between bg-[#F7F7FB] px-[7%] font-semibold text-[#14141A] dark:bg-[#04081B] dark:text-[#F2F2F5]"
             style={{
-              background: chrome,
               height: width * 0.135,
               fontSize: width * 0.052,
-              color: onDark ? "#F2F2F5" : "#14141A",
             }}
           >
             <span>9:41</span>
@@ -149,13 +148,25 @@ export default function PhoneMock({
             </span>
           </div>
 
+          {srcLight && (
+            <Image
+              src={srcLight}
+              alt={alt}
+              width={786}
+              height={1704}
+              priority={priority}
+              className="w-full object-cover object-top dark:hidden"
+              style={{ height: `calc(100% - ${width * 0.135}px)` }}
+            />
+          )}
           <Image
             src={src}
-            alt={alt}
+            alt={srcLight ? "" : alt}
+            aria-hidden={srcLight ? true : undefined}
             width={786}
             height={1704}
             priority={priority}
-            className="w-full object-cover object-top"
+            className={`w-full object-cover object-top ${srcLight ? "hidden dark:block" : ""}`}
             style={{ height: `calc(100% - ${width * 0.135}px)` }}
           />
 
