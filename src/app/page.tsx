@@ -28,21 +28,9 @@ import InsightChip from "@/components/landing/InsightChip";
 // like an evening game. The middle is the part that follows the theme.
 
 const PILLARS = [
-  {
-    title: "Track",
-    body: "Every bet, any app.",
-    detail: "Paste a slip, upload a screenshot, or type it in a few seconds.",
-  },
-  {
-    title: "Analyze",
-    body: "What pays, what leaks.",
-    detail: "Profit and ROI by sport, by odds, by singles against parlays.",
-  },
-  {
-    title: "Improve",
-    body: "Patterns from your own numbers.",
-    detail: "Your strongest sport and your worst habit, found for you.",
-  },
+  { title: "Track", body: "Every bet, any app." },
+  { title: "Analyze", body: "What pays, what leaks." },
+  { title: "Improve", body: "Patterns from your own numbers." },
 ];
 
 const TRUTHS = [
@@ -60,9 +48,18 @@ const TRUTHS = [
   },
 ];
 
-// The four key features. Line marks, ink weight, because a coloured
-// icon set on a landing page competes with the one button that matters.
-function KeyIcon({ name }: { name: string }) {
+// Track, Analyze, Improve. One mark each, in the lifted brand purple,
+// because these three ARE the product and the hero has to say so in the
+// first two seconds.
+//
+// The four generic labels that used to sit here are gone. One of them,
+// "Powerful Analytics", wrapped onto two lines and the owner asked for
+// it in one; the honest fix was not a narrower column but noticing that
+// Track All Bets, Powerful Analytics, Find Patterns and Improve Results
+// say nothing that Track, Analyze and Improve do not say better.
+// "Powerful Analytics" survives as the eyebrow further down the page,
+// where it introduces the section it names.
+function PillarIcon({ title }: { title: string }) {
   const common = {
     viewBox: "0 0 24 24",
     fill: "none",
@@ -70,51 +67,53 @@ function KeyIcon({ name }: { name: string }) {
     strokeWidth: 1.6,
     strokeLinecap: "round" as const,
     strokeLinejoin: "round" as const,
-    className: "h-[22px] w-[22px]",
+    className: "h-6 w-6",
     "aria-hidden": true,
   };
-  if (name === "Track All Bets")
+  if (title === "Track")
     return (
       <svg {...common}>
         <rect x="4" y="3" width="16" height="18" rx="2.5" />
         <path d="M8.5 9h7M8.5 13h7M8.5 17h4" />
       </svg>
     );
-  if (name === "Powerful Analytics")
+  if (title === "Analyze")
     return (
       <svg {...common}>
         <path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />
       </svg>
     );
-  if (name === "Find Patterns")
-    return (
-      <svg {...common}>
-        <path d="M3 16l5-6 4 4 4-7 5 5" />
-        <circle cx="8" cy="10" r="1.4" />
-        <circle cx="16" cy="7" r="1.4" />
-      </svg>
-    );
   return (
     <svg {...common}>
-      <path d="M12 20V7M12 7l-5 5M12 7l5 5" />
-      <path d="M4 4h16" />
+      <path d="M3 16l5-6 4 4 4-7 5 5" />
+      <circle cx="8" cy="10" r="1.4" />
+      <circle cx="16" cy="7" r="1.4" />
     </svg>
   );
 }
-
-const KEYS = [
-  "Track All Bets",
-  "Powerful Analytics",
-  "Find Patterns",
-  "Improve Results",
-];
 
 const DISPLAY = "font-display font-extrabold tracking-[-0.03em]";
 
 export default function LandingPage() {
   return (
     <main className="overflow-x-hidden bg-land-page text-neutral-900 dark:bg-[#04081B] dark:text-white">
-      {/* ================= ONE. THE HERO ================= */}
+      {/* ================= ONE. THE HERO =================
+          CENTRED, NOT SPLIT. The owner on the split version: "it's the
+          same template and design... composition and page is utterly
+          ugly", plus the centre phone was cut off at the top.
+
+          Both had one cause. A two column hero gives the phones half a
+          screen, so they were squeezed, lifted out of their own section
+          to fit, and crowded by the text beside them. Centring the
+          words and putting the phones underneath at full size gives
+          them the whole width, which is the only thing that was ever
+          going to fix the cramping.
+
+          The section that used to sit below this one, three cards
+          repeating Track, Analyze and Improve, is gone. The owner:
+          "hideous. it's not needed." Those three are now symbols in the
+          hero, where they tell a stranger what this is before they
+          scroll at all. */}
       <StadiumBand>
         <Beams />
 
@@ -129,145 +128,109 @@ export default function LandingPage() {
             </Link>
           </header>
 
-          <div className="grid items-center gap-12 pt-14 pb-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-6 lg:pt-20 lg:pb-28">
-            <div className="min-w-0 text-white">
-              <h1
-                className={`${DISPLAY} text-[3.5rem] leading-[0.88] sm:text-[4.5rem] lg:text-[5.25rem]`}
-              >
-                Know Your
-                <br />
-                {/* One gradient word. The headline needs a place for the
-                    eye to land, and the brand colour earns its keep here
-                    because nothing on this band is a control. */}
-                <span className="bg-gradient-to-r from-brand-lift via-brand-glow to-brand-top bg-clip-text text-transparent">
-                  Game.
-                </span>
-              </h1>
+          <div className="flex flex-col items-center pt-16 text-center sm:pt-20 lg:pt-24">
+            <h1
+              className={`${DISPLAY} text-[3.25rem] leading-[0.88] text-white sm:text-[4.75rem] lg:text-[6rem]`}
+            >
+              Know Your{" "}
+              {/* One gradient word, so the headline has a place for the
+                  eye to land. The brand colour earns its keep here
+                  because nothing on this band is a control. */}
+              <span className="bg-gradient-to-r from-brand-lift via-brand-glow to-brand-top bg-clip-text text-transparent">
+                Game.
+              </span>
+            </h1>
 
-              <p className="mt-6 max-w-md text-lg font-semibold leading-snug text-white/70 sm:text-xl">
-                Track Every Bet. Discover Patterns. Find Your Edge.
-              </p>
+            <p className="mt-6 max-w-xl text-lg font-semibold leading-snug text-white/75 sm:text-xl">
+              Track Every Bet. Discover Patterns. Find Your Edge.
+            </p>
 
-              <div className="mt-9">
-                <StartTracking onDark />
-              </div>
+            {/* Small, centred, and under the promise rather than above
+                it. As a three line block in its own section it was, in
+                the owner's words, "an ugly block of text no one wants
+                to read". It is the sentence you read second. */}
+            <p className="mt-4 max-w-lg text-sm leading-relaxed text-white/45 sm:text-[15px]">
+              Celebet is the sports betting companion that helps you track your
+              bets, uncover patterns, and improve your results.
+            </p>
 
-              <ul className="mt-11 grid grid-cols-2 gap-x-6 gap-y-6 border-t border-white/10 pt-8 sm:grid-cols-4 lg:gap-x-4">
-                {KEYS.map((name) => (
-                  <li key={name} className="flex flex-col gap-2.5">
-                    <span className="text-brand-glow">
-                      <KeyIcon name={name} />
-                    </span>
-                    <span className="text-sm font-semibold leading-snug text-white/85">
-                      {name}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+            <div className="mt-9 flex w-full justify-center">
+              <StartTracking onDark />
             </div>
 
-            {/* The phones, with two of the app's own insight cards
-                floating off them. The cards are the reason to look:
-                they say what the product is for at a size you can
-                actually read. Hidden below lg, where they would land on
-                top of the phones. */}
-            {/* min-w-0 is load bearing. A grid column's minimum width
-                is auto, meaning "as wide as my contents", and the phone
-                cluster is 439px intrinsically. Without this the column
-                grew to fit it, the grid grew with the column, and the
-                headline in the OTHER column ran off the screen. The
-                page's overflow-x-hidden then clipped the evidence, so
-                measuring document scrollWidth said everything was fine
-                while the sub headline read "Find You". */}
-            <div className="relative w-full min-w-0">
-              <div className="w-full overflow-hidden">
-                <div className="flex origin-center scale-[0.72] items-center justify-center sm:scale-90 lg:scale-[0.92] lg:justify-end xl:scale-100">
-                  <PhoneMock
-                    src="/shots/track-dark.png"
-                    alt="The Track page, showing a tracking balance and the ways to log a bet"
-                    width={175}
-                    angle={22}
-                    lift={-16}
-                    className="-mr-8 opacity-85"
-                  />
-                  <PhoneMock
-                    src="/shots/performance-dark.png"
-                    alt="The Performance page, showing profit over time"
-                    width={232}
-                    lift={26}
-                    glow
-                    priority
-                    className="z-10"
-                  />
-                  <PhoneMock
-                    src="/shots/research-dark.png"
-                    alt="The Research page"
-                    width={175}
-                    angle={-22}
-                    lift={-16}
-                    className="-ml-8 opacity-85"
-                  />
-                </div>
-              </div>
+            {/* The three pillars, in one row on every size above a
+                phone. No wrapping: each title is one word. */}
+            <ul className="mt-14 grid w-full max-w-3xl grid-cols-1 gap-8 border-t border-white/10 pt-10 sm:grid-cols-3 sm:gap-6">
+              {PILLARS.map(({ title, body }) => (
+                <li key={title} className="flex flex-col items-center gap-3">
+                  <span className="text-brand-glow">
+                    <PillarIcon title={title} />
+                  </span>
+                  <span className="text-base font-bold text-white">{title}</span>
+                  <span className="-mt-1.5 text-sm text-white/55">{body}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
 
-              {/* ONE card, not two. Two of them in this space covered
-                  the phones they were pointing at, which is the whole
-                  failure mode of a floating callout. It sits low and
-                  left, over the dimmed outer phone, so the centre
-                  screen stays completely readable. */}
-              <InsightChip
-                className="absolute -left-4 bottom-2 hidden w-[220px] lg:block"
-                label="Biggest strength"
-                headline="Football is your best sport this month."
-                value="+$757.00"
+        {/* THE PHONES, FULL WIDTH AND UNDERNEATH.
+            They keep their own row so nothing crops them. The old
+            version lifted the centre phone 26px to stagger it, which
+            pushed it straight out through the top of the section: the
+            owner sent a screenshot of it sliced off. The stagger is
+            done by dropping the OUTER two now, never by raising the
+            middle one, so the tallest thing in the group always sits
+            inside its own box. */}
+        {/* pb, not a bleed. Running the phones off the bottom edge only
+            works when the cut lands somewhere meaningless; here it
+            sliced the left phone through the middle of a card and read
+            as a mistake rather than as a crop. */}
+        <div className="relative mx-auto mt-16 w-full max-w-6xl px-5 pb-20 sm:mt-20 sm:px-8 sm:pb-24">
+          <div className="relative flex justify-center">
+            <div className="flex origin-bottom scale-[0.66] items-end justify-center sm:scale-90 lg:scale-100">
+              <PhoneMock
+                src="/shots/track-dark.png"
+                alt="The Track page, showing a tracking balance and the ways to log a bet"
+                width={218}
+                angle={20}
+                lift={-34}
+                className="-mr-10 opacity-85"
+              />
+              <PhoneMock
+                src="/shots/performance-dark.png"
+                alt="The Performance page, showing profit over time"
+                width={276}
+                glow
+                priority
+                className="z-10"
+              />
+              <PhoneMock
+                src="/shots/research-dark.png"
+                alt="The Research page"
+                width={218}
+                angle={-20}
+                lift={-34}
+                className="-ml-10 opacity-85"
               />
             </div>
+
+            <InsightChip
+              className="absolute bottom-16 left-0 z-20 hidden w-[225px] xl:block"
+              label="Biggest strength"
+              headline="Football is your best sport this month."
+              value="+$757.00"
+            />
+            <InsightChip
+              className="absolute bottom-16 right-0 z-20 hidden w-[225px] xl:block"
+              label="Biggest leak"
+              headline="Basketball player props keep costing you."
+              value="-$440.00"
+              tone="down"
+            />
           </div>
         </div>
       </StadiumBand>
-
-      {/* ================= TWO. WHAT IT IS =================
-          The tone the owner asked for. Light mode is a tinted gradient
-          with a hairline, never white on off-white, which is what made
-          the first version read as blank blocks. */}
-      <section className="relative border-y border-neutral-900/[0.07] bg-gradient-to-b from-white to-land-tint dark:border-white/[0.07] dark:from-land-deep dark:to-[#04081B]">
-        <div className="relative mx-auto w-full max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
-          <p
-            className={`${DISPLAY} max-w-3xl text-[1.75rem] leading-[1.15] sm:text-[2.5rem]`}
-          >
-            Celebet is the sports betting companion that helps you track your
-            bets, uncover patterns, and improve your results.
-          </p>
-
-          <div className="mt-14 grid gap-4 sm:grid-cols-3 sm:gap-5">
-            {PILLARS.map(({ title, body, detail }, i) => (
-              <div
-                key={title}
-                className="group relative overflow-hidden rounded-2xl border border-neutral-900/[0.08] bg-white p-6 shadow-[0_16px_40px_-28px_rgba(16,19,34,0.55)] dark:border-white/[0.08] dark:bg-white/[0.035]"
-              >
-                {/* A brand glow in the corner, fading out. One per card,
-                    strongest on the first, so the row has a direction
-                    rather than being three identical boxes. */}
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-brand-top/10 blur-2xl dark:bg-brand-mark/20"
-                  style={{ opacity: 1 - i * 0.25 }}
-                />
-                <p className="relative font-money text-[13px] font-semibold tabular-nums text-neutral-400 dark:text-white/35">
-                  0{i + 1}
-                </p>
-                <p className={`relative mt-4 text-2xl ${DISPLAY}`}>{title}</p>
-                <p className="relative mt-2 text-sm font-semibold text-neutral-700 dark:text-white/80">
-                  {body}
-                </p>
-                <p className="relative mt-3 text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
-                  {detail}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ================= THREE. THE PROOF ================= */}
       <section className="relative overflow-hidden bg-land-page dark:bg-[#04081B]">
