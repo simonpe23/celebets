@@ -65,6 +65,10 @@ export default function PhoneMock({
   onDark = true,
   priority = false,
   className = "",
+  // Only ever the negative margin that overlaps a neighbour. Kept as a
+  // style rather than a class because the overlap is a fraction of the
+  // width, and Tailwind cannot generate a class from a number.
+  style,
 }: {
   src: string;
   alt: string;
@@ -76,6 +80,7 @@ export default function PhoneMock({
   onDark?: boolean;
   priority?: boolean;
   className?: string;
+  style?: React.CSSProperties;
 }) {
   // An iPhone is 19.5 by 9, and every measurement below is a fraction
   // of the width, so one number scales the whole thing.
@@ -91,6 +96,7 @@ export default function PhoneMock({
         width,
         transform: `perspective(1600px) rotateY(${angle}deg) translateY(${-lift}px)`,
         transformStyle: "preserve-3d",
+        ...style,
       }}
     >
       {glow && (

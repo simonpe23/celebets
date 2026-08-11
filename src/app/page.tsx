@@ -92,6 +92,49 @@ function PillarIcon({ title }: { title: string }) {
   );
 }
 
+// The three phones. Sized, never transform scaled.
+//
+// A CSS transform leaves the element's original box behind in the
+// layout, so scaling the group to 0.66 on a phone left over 200px of
+// dead air above it. Passing smaller widths leaves nothing to be empty.
+// One number drives it: the outer two are 79% of the centre and overlap
+// it by 14%, which holds the arrangement at any size.
+function PhoneTrio({ base, priority = false }: { base: number; priority?: boolean }) {
+  const outer = Math.round(base * 0.79);
+  const overlap = Math.round(base * 0.14);
+  const drop = Math.round(base * 0.12);
+  return (
+    <div className="flex items-end justify-center">
+      <PhoneMock
+        src="/shots/track-dark.png"
+        alt="The Track page, showing a tracking balance and the ways to log a bet"
+        width={outer}
+        angle={20}
+        lift={-drop}
+        className="opacity-85"
+        style={{ marginRight: -overlap }}
+      />
+      <PhoneMock
+        src="/shots/performance-dark.png"
+        alt="The Performance page, showing profit over time"
+        width={base}
+        glow
+        priority={priority}
+        className="z-10"
+      />
+      <PhoneMock
+        src="/shots/research-dark.png"
+        alt="The Research page"
+        width={outer}
+        angle={-20}
+        lift={-drop}
+        className="opacity-85"
+        style={{ marginLeft: -overlap }}
+      />
+    </div>
+  );
+}
+
 const DISPLAY = "font-display font-extrabold tracking-[-0.03em]";
 
 export default function LandingPage() {
@@ -128,9 +171,9 @@ export default function LandingPage() {
             </Link>
           </header>
 
-          <div className="flex flex-col items-center pt-16 text-center sm:pt-20 lg:pt-24">
+          <div className="flex flex-col items-center pt-10 text-center sm:pt-20 lg:pt-24">
             <h1
-              className={`${DISPLAY} text-[3.25rem] leading-[0.88] text-white sm:text-[4.75rem] lg:text-[6rem]`}
+              className={`${DISPLAY} text-[2.85rem] leading-[0.9] text-white sm:text-[4.75rem] lg:text-[6rem]`}
             >
               Know Your{" "}
               {/* One gradient word, so the headline has a place for the
@@ -141,7 +184,7 @@ export default function LandingPage() {
               </span>
             </h1>
 
-            <p className="mt-6 max-w-xl text-lg font-semibold leading-snug text-white/75 sm:text-xl">
+            <p className="mt-4 max-w-xl text-[17px] font-semibold leading-snug text-white/75 sm:mt-6 sm:text-xl">
               Track Every Bet. Discover Patterns. Find Your Edge.
             </p>
 
@@ -149,25 +192,29 @@ export default function LandingPage() {
                 it. As a three line block in its own section it was, in
                 the owner's words, "an ugly block of text no one wants
                 to read". It is the sentence you read second. */}
-            <p className="mt-4 max-w-lg text-sm leading-relaxed text-white/45 sm:text-[15px]">
+            <p className="mt-3 max-w-lg text-[13px] leading-relaxed text-white/45 sm:mt-4 sm:text-[15px]">
               Celebet is the sports betting companion that helps you track your
               bets, uncover patterns, and improve your results.
             </p>
 
-            <div className="mt-9 flex w-full justify-center">
+            <div className="mt-7 flex w-full justify-center sm:mt-9">
               <StartTracking onDark />
             </div>
 
             {/* The three pillars, in one row on every size above a
                 phone. No wrapping: each title is one word. */}
-            <ul className="mt-14 grid w-full max-w-3xl grid-cols-1 gap-8 border-t border-white/10 pt-10 sm:grid-cols-3 sm:gap-6">
+            <ul className="mt-9 grid w-full max-w-3xl grid-cols-3 gap-3 border-t border-white/10 pt-7 sm:mt-14 sm:gap-6 sm:pt-10">
               {PILLARS.map(({ title, body }) => (
-                <li key={title} className="flex flex-col items-center gap-3">
+                <li key={title} className="flex flex-col items-center gap-2 sm:gap-3">
                   <span className="text-brand-glow">
                     <PillarIcon title={title} />
                   </span>
-                  <span className="text-base font-bold text-white">{title}</span>
-                  <span className="-mt-1.5 text-sm text-white/55">{body}</span>
+                  <span className="text-sm font-bold text-white sm:text-base">
+                    {title}
+                  </span>
+                  <span className="-mt-1 text-xs leading-snug text-white/55 sm:-mt-1.5 sm:text-sm">
+                    {body}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -186,33 +233,16 @@ export default function LandingPage() {
             works when the cut lands somewhere meaningless; here it
             sliced the left phone through the middle of a card and read
             as a mistake rather than as a crop. */}
-        <div className="relative mx-auto mt-16 w-full max-w-6xl px-5 pb-20 sm:mt-20 sm:px-8 sm:pb-24">
+        <div className="relative mx-auto mt-10 w-full max-w-6xl px-5 pb-14 sm:mt-20 sm:px-8 sm:pb-24">
           <div className="relative flex justify-center">
-            <div className="flex origin-bottom scale-[0.66] items-end justify-center sm:scale-90 lg:scale-100">
-              <PhoneMock
-                src="/shots/track-dark.png"
-                alt="The Track page, showing a tracking balance and the ways to log a bet"
-                width={218}
-                angle={20}
-                lift={-34}
-                className="-mr-10 opacity-85"
-              />
-              <PhoneMock
-                src="/shots/performance-dark.png"
-                alt="The Performance page, showing profit over time"
-                width={276}
-                glow
-                priority
-                className="z-10"
-              />
-              <PhoneMock
-                src="/shots/research-dark.png"
-                alt="The Research page"
-                width={218}
-                angle={-20}
-                lift={-34}
-                className="-ml-10 opacity-85"
-              />
+            <div className="sm:hidden">
+              <PhoneTrio base={158} priority />
+            </div>
+            <div className="hidden sm:block lg:hidden">
+              <PhoneTrio base={230} />
+            </div>
+            <div className="hidden lg:block">
+              <PhoneTrio base={276} />
             </div>
 
             <InsightChip
