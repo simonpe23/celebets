@@ -250,8 +250,23 @@ for (const file of files) {
 // with no user-visible gain.
 const BANNED_WORDS = /\b(wallet|deposits?|withdrawals?|withdraw|bankroll)\b/i;
 
+// The landing page and the legal pages are exempt. The rule is about
+// the words the PRODUCT uses about itself, so that a tracking balance
+// is never called a wallet. Marketing copy is the owner's own writing
+// and "protect your bankroll" is his sentence, and a privacy policy has
+// to be able to say what it does not collect.
+
+// The landing page and the legal pages are exempt, for the reason
+// above them.
+const VOCAB_EXEMPT = [
+  "src/app/page.tsx",
+  "src/app/terms/page.tsx",
+  "src/app/privacy/page.tsx",
+];
+
 for (const file of files) {
   if (SKIP.some((dir) => file.includes(`/${dir}/`))) continue;
+  if (VOCAB_EXEMPT.includes(file)) continue;
   const lines = readFileSync(file, "utf8").split("\n");
 
   lines.forEach((line, i) => {

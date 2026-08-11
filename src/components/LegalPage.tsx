@@ -1,0 +1,59 @@
+import Link from "next/link";
+import Wordmark from "@/components/Wordmark";
+
+// The frame the two legal pages share. One column, ordinary reading
+// type, and a way back. Nothing to design here: the job is that a
+// person can read it and a reviewer can find a clause.
+export default function LegalPage({
+  title,
+  updated,
+  children,
+}: {
+  title: string;
+  updated: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <main className="min-h-svh px-5 py-10 sm:px-6">
+      <div className="mx-auto w-full max-w-2xl">
+        <Link href="/" className="inline-block">
+          <Wordmark className="text-xl" />
+        </Link>
+
+        <h1 className="mt-8 text-2xl font-bold tracking-tight">{title}</h1>
+        <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
+          Last updated {updated}
+        </p>
+
+        <div className="mt-8 space-y-6 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
+          {children}
+        </div>
+
+        <p className="mt-12 text-sm">
+          <Link href="/" className="font-semibold text-neutral-600 dark:text-neutral-300">
+            ‹ Back to Celebet
+          </Link>
+        </p>
+      </div>
+    </main>
+  );
+}
+
+// A heading inside a legal page. Kept here so the two pages cannot
+// drift apart.
+export function Clause({
+  heading,
+  children,
+}: {
+  heading: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="space-y-2">
+      <h2 className="text-base font-bold text-neutral-900 dark:text-white">
+        {heading}
+      </h2>
+      {children}
+    </section>
+  );
+}

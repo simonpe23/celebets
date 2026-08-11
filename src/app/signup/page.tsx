@@ -1,15 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import Disclaimer from "@/components/Disclaimer";
 import GoogleButton from "@/components/GoogleButton";
 
-export default function SignUpPage() {
+// The landing page carries the email here in the address, so someone
+// who typed it there does not have to type it twice. Nothing else about
+// this page changed: a password and a confirmation link are still
+// required, because both exist for good reasons.
+function SignUpForm() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const params = useSearchParams();
+  const [email, setEmail] = useState(params.get("email") ?? "");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [needsConfirmation, setNeedsConfirmation] = useState(false);
@@ -136,5 +141,15 @@ export default function SignUpPage() {
         <Disclaimer />
       </div>
     </main>
+  );
+}
+
+// useSearchParams needs a Suspense boundary or the whole route opts out
+// of static rendering, which the build fails on.
+export default function SignUpPage() {
+  return (
+    <Suspense>
+      <SignUpForm />
+    </Suspense>
   );
 }
