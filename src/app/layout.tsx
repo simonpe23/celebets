@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import {
+  Archivo,
   Geist,
   Geist_Mono,
   IBM_Plex_Sans,
@@ -38,6 +39,23 @@ const plex = IBM_Plex_Sans({
   variable: "--font-plex",
   subsets: ["latin"],
   weight: ["500", "600", "700"],
+});
+
+// THE DISPLAY FACE, AND IT IS FOR THE LANDING PAGE ONLY.
+//
+// The owner on the first landing page: "font is ugly". He was right,
+// and it was not the typeface, it was that there was only one. A poster
+// needs a voice louder than its body text, and Geist Bold at 60px is
+// still just Geist. Archivo at 800 is a tight grotesk that goes heavy
+// without going novelty, which is the register of his reference.
+//
+// THE APP IS UNTOUCHED. Words are still Geist, numbers are still Inter
+// Tight, and design-check rule 8 still fails the build if either moves.
+// This variable is used by src/app/page.tsx and nothing else.
+const display = Archivo({
+  variable: "--font-display",
+  subsets: ["latin"],
+  weight: ["700", "800", "900"],
 });
 
 const instrument = Instrument_Serif({
@@ -101,7 +119,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${brand.variable} ${interTight.variable} ${plex.variable} ${instrument.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${brand.variable} ${interTight.variable} ${plex.variable} ${instrument.variable} ${display.variable} antialiased`}
       >
         {children}
       </body>

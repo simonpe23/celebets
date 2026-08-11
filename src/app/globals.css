@@ -42,6 +42,24 @@
   --brand-bottom: #4915AD;
   --brand-press: #3D0F94;
   --brand-mark: #7C3AED;
+  /* Two fixed lifts of the brand, for surfaces that are ALWAYS dark
+     whatever the theme: the landing page's hero and closing bands.
+     brand-mark cannot be used there, because it flips to the deep
+     #7C3AED on a light theme and disappears against the navy. */
+  --brand-glow: #9A57FC;
+  --brand-lift: #C4A6FF;
+
+  /* THE LANDING PAGE'S OWN SURFACES.
+     A poster is not a tool, so it has tints the app does not: the
+     sections need to step off each other, and the owner's whole
+     complaint about the first version was that they did not.
+     Named here rather than typed into the page, for the same reason
+     every other colour is: one place to change, nothing left behind. */
+  --land-page: #F5F5FA;   /* the light page, a shade under the app's */
+  --land-tint: #EFEEF7;   /* light section, the far end of its gradient */
+  --land-deep: #0A0F26;   /* dark section, the near end */
+  --land-lilac: #EEEBFA;  /* the coming soon card, light */
+  --land-plum: #151034;   /* the coming soon card, dark */
 }
 
 @theme inline {
@@ -59,11 +77,20 @@
   --font-money: var(--font-inter-tight);
   --font-plex: var(--font-plex);
   --font-instrument: var(--font-instrument);
+  /* Landing page headlines only. See the note in layout.tsx. */
+  --font-display: var(--font-display);
   --color-cream: var(--brand-cream);
   --color-brand-top: var(--brand-top);
   --color-brand-bottom: var(--brand-bottom);
   --color-brand-press: var(--brand-press);
   --color-brand-mark: var(--brand-mark);
+  --color-brand-glow: var(--brand-glow);
+  --color-brand-lift: var(--brand-lift);
+  --color-land-page: var(--land-page);
+  --color-land-tint: var(--land-tint);
+  --color-land-deep: var(--land-deep);
+  --color-land-lilac: var(--land-lilac);
+  --color-land-plum: var(--land-plum);
 }
 
 [data-theme="dark"] {
