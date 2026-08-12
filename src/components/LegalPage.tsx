@@ -1,16 +1,21 @@
 import Link from "next/link";
 import Wordmark from "@/components/Wordmark";
 
-// The frame the two legal pages share. One column, ordinary reading
-// type, and a way back. Nothing to design here: the job is that a
-// person can read it and a reviewer can find a clause.
+// The frame the footer pages share (Terms, Privacy, About). One
+// column, ordinary reading type, and a way back. Nothing to design
+// here: the job is that a person can read it and a reviewer can find
+// a clause.
+//
+// `updated` is optional. A legal page has to say when it last changed,
+// because the reader is agreeing to a version. About is not a version
+// of anything, and a date on it would only ever look stale.
 export default function LegalPage({
   title,
   updated,
   children,
 }: {
   title: string;
-  updated: string;
+  updated?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -21,9 +26,11 @@ export default function LegalPage({
         </Link>
 
         <h1 className="mt-8 text-2xl font-bold tracking-tight">{title}</h1>
-        <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
-          Last updated {updated}
-        </p>
+        {updated ? (
+          <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
+            Last updated {updated}
+          </p>
+        ) : null}
 
         <div className="mt-8 space-y-6 text-sm leading-relaxed text-neutral-700 dark:text-neutral-300">
           {children}

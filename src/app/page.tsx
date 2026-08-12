@@ -485,6 +485,9 @@ export default function LandingPage() {
             <Link href="/privacy" className="transition-colors hover:text-neutral-900 dark:hover:text-white">
               Privacy
             </Link>
+            <Link href="/about" className="transition-colors hover:text-neutral-900 dark:hover:text-white">
+              About
+            </Link>
           </nav>
 
           <a
