@@ -130,6 +130,10 @@ function PhoneTrio({ base, priority = false }: { base: number; priority?: boolea
 const DISPLAY = "font-display font-extrabold tracking-[-0.025em]";
 const SHELL = "mx-auto w-full max-w-6xl px-5 sm:px-8";
 
+// TEMPORARY, for the owner's A/B on the feature row. Remove the losing
+// branch once he picks.
+const FEATURE_LAYOUT: "beside" | "centred" = "beside";
+
 export default function LandingPage() {
   return (
     <main className="overflow-x-hidden bg-white text-neutral-900 dark:bg-[#04081B] dark:text-white">
@@ -265,19 +269,40 @@ export default function LandingPage() {
       {/* ================= THREE FEATURES ================= */}
       <section className={`${SHELL} border-t border-neutral-900/[0.07] py-16 dark:border-white/[0.07]`}>
         <div className="grid gap-12 sm:grid-cols-3 sm:gap-10">
-          {FEATURES.map(({ title, body }) => (
-            <div key={title}>
-              <div className="flex items-center gap-4">
+          {FEATURES.map(({ title, body }) =>
+            FEATURE_LAYOUT === "centred" ? (
+              // Everything centred in its column, so the row is
+              // symmetrical by construction and no icon can hang off
+              // the left edge.
+              <div key={title} className="flex flex-col items-center text-center">
+                <span className="flex h-[64px] w-[64px] shrink-0 items-center justify-center rounded-2xl bg-brand-top/[0.08] text-brand-top dark:bg-brand-mark/[0.14] dark:text-brand-mark">
+                  <FeatureIcon title={title} />
+                </span>
+                <span className="mt-5 block text-[20px] font-bold">{title}</span>
+                <p className="mt-3 max-w-[290px] text-[15px] leading-relaxed text-neutral-500 dark:text-neutral-400">
+                  {body}
+                </p>
+              </div>
+            ) : (
+              // The mockup's own arrangement: the icon is its own left
+              // column, and the title and the body share the column
+              // beside it, so the body is indented to the title rather
+              // than dropping back under the icon.
+              <div key={title} className="flex gap-4">
                 <span className="flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-2xl bg-brand-top/[0.08] text-brand-top dark:bg-brand-mark/[0.14] dark:text-brand-mark">
                   <FeatureIcon title={title} />
                 </span>
-                <span className="text-[20px] font-bold">{title}</span>
+                <div className="min-w-0">
+                  <span className="block text-[19px] font-bold leading-snug">
+                    {title}
+                  </span>
+                  <p className="mt-2 text-[15px] leading-relaxed text-neutral-500 dark:text-neutral-400">
+                    {body}
+                  </p>
+                </div>
               </div>
-              <p className="mt-4 text-[15px] leading-relaxed text-neutral-500 dark:text-neutral-400">
-                {body}
-              </p>
-            </div>
-          ))}
+            )
+          )}
         </div>
       </section>
 

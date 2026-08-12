@@ -49,9 +49,13 @@ export function BookRow() {
 // The tiles beside the coming soon block, like a row of app icons. A
 // rounded square each with the book's initial, and a plus for the
 // rest. Placeholder tiles until real, licensed app icons exist.
+//
+// They spread to fill their column rather than clustering in the
+// middle of it. Centred, the row left a wedge of empty page down the
+// right hand side and the whole section read as shunted left.
 export function BookTiles() {
   return (
-    <div className="flex flex-wrap items-center justify-center gap-3.5">
+    <div className="flex w-full flex-wrap items-center justify-center gap-3.5 sm:justify-between">
       {BOOKS.map((name) => (
         <span
           key={name}
