@@ -1,41 +1,15 @@
-"use client";
-
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
 import Disclaimer from "@/components/Disclaimer";
-import GoogleButton from "@/components/GoogleButton";
+import LoginForm from "@/components/LoginForm";
 import BackHome from "@/components/BackHome";
 
+// The log in PAGE. It stays alive now that the landing page opens a
+// panel instead: emailed links, bookmarks and anyone who already has
+// the address keep working. The panel is a faster front door, not a
+// replacement.
+//
+// The form itself lives in LoginForm so this page and the panel share
+// one copy of it.
 export default function LoginPage() {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-      return;
-    }
-
-    router.push("/app");
-    router.refresh();
-  }
-
   return (
     <main className="relative flex min-h-dvh flex-col justify-center px-6 py-12">
       <BackHome />
@@ -47,71 +21,7 @@ export default function LoginPage() {
           Log in to your account
         </p>
 
-        <div className="mt-8">
-          <GoogleButton />
-        </div>
-
-        <form onSubmit={handleSubmit} className="mt-4 space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-semibold">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              inputMode="email"
-              autoComplete="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-brand-mark focus:ring-2 focus:ring-brand-mark/30 dark:border-white/15 dark:bg-[#161D38] dark:text-neutral-100"
-            />
-          </div>
-
-          <div>
-            <div className="flex items-baseline justify-between">
-              <label htmlFor="password" className="block text-sm font-semibold">
-                Password
-              </label>
-              <Link
-                href="/forgot-password"
-                className="text-sm font-semibold text-brand-mark"
-              >
-                Forgot password?
-              </Link>
-            </div>
-            <input
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-brand-mark focus:ring-2 focus:ring-brand-mark/30 dark:border-white/15 dark:bg-[#161D38] dark:text-neutral-100"
-            />
-          </div>
-
-          {error && (
-            <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
-              {error}
-            </p>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="h-12 w-full rounded-xl bg-brand-top text-base font-semibold text-white active:bg-brand-bottom disabled:opacity-60"
-          >
-            {loading ? "Logging in..." : "Log in"}
-          </button>
-        </form>
-
-        <p className="mt-6 text-center text-sm text-neutral-500 dark:text-neutral-400">
-          No account yet?{" "}
-          <Link href="/signup" className="font-semibold text-brand-mark">
-            Sign up
-          </Link>
-        </p>
+        <LoginForm />
 
         <Disclaimer />
       </div>
