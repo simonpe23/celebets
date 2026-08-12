@@ -56,10 +56,15 @@ How this file works:
     and a new warm-up period, the Instagram handle, and the trademark
     line for Peak Street 6 LLC.
 
-    DO IT BEFORE MORE TESTERS ARRIVE. Every extra user is another
-    person holding the old link and the old email sender. The cost of
-    this grows with the user count, so the cheapest day to do it is
-    the soonest day he has a name.
+    THERE ARE NO ACTIVE USERS. The owner, August 2026: 3 or 4 signups
+    and nobody using it. That removes most of the caution above:
+    - The localStorage migration is not needed. Nobody has a saved
+      theme worth carrying over, so the key can simply be renamed.
+    - No stale bookmarks, no old links in circulation, no inboxes
+      holding mail from the old sender.
+    So the rename is a rename, not a migration. It stays cheap only
+    while that is true: the cost grows with every real user, so the
+    cheapest day to do it is the soonest day he has a name.
 
 16. Login and sign up as drop-down panels on the landing page, instead
     of their own pages. Tapping Login or Sign up opens a panel over
