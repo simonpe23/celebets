@@ -130,10 +130,6 @@ function PhoneTrio({ base, priority = false }: { base: number; priority?: boolea
 const DISPLAY = "font-display font-extrabold tracking-[-0.025em]";
 const SHELL = "mx-auto w-full max-w-6xl px-5 sm:px-8";
 
-// TEMPORARY, for the owner's A/B on the feature row. Remove the losing
-// branch once he picks.
-const FEATURE_LAYOUT: "beside" | "centred" = "beside";
-
 export default function LandingPage() {
   return (
     <main className="overflow-x-hidden bg-white text-neutral-900 dark:bg-[#04081B] dark:text-white">
@@ -268,41 +264,37 @@ export default function LandingPage() {
 
       {/* ================= THREE FEATURES ================= */}
       <section className={`${SHELL} border-t border-neutral-900/[0.07] py-16 dark:border-white/[0.07]`}>
-        <div className="grid gap-12 sm:grid-cols-3 sm:gap-10">
-          {FEATURES.map(({ title, body }) =>
-            FEATURE_LAYOUT === "centred" ? (
-              // Everything centred in its column, so the row is
-              // symmetrical by construction and no icon can hang off
-              // the left edge.
-              <div key={title} className="flex flex-col items-center text-center">
-                <span className="flex h-[64px] w-[64px] shrink-0 items-center justify-center rounded-2xl bg-brand-top/[0.08] text-brand-top dark:bg-brand-mark/[0.14] dark:text-brand-mark">
-                  <FeatureIcon title={title} />
+        {/* THE ROW IS ONE OBJECT AND IT IS CENTRED ON THE PAGE.
+            The owner: "if the entire row was a clock, in my mockup it's
+            centered. in v5 and v6 it's not."
+            He was right and my measurement had been answering the wrong
+            question. The GRID was centred: three equal columns, equal
+            margins either side. But the blocks inside it were flush to
+            the left of their columns, and the copy in the third block is
+            shorter than the copy in the first, so the ink ran out ~38px
+            before the right margin while touching the left one exactly.
+            A centred box full of left-shifted content still reads
+            left-shifted.
+            The fix is mx-auto with a width cap on each block: every
+            block now sits centred in its own equal column, so the
+            leftmost and rightmost ink are symmetric by construction and
+            stay that way whatever the copy does. */}
+        <div className="grid gap-12 sm:grid-cols-3 sm:gap-8">
+          {FEATURES.map(({ title, body }) => (
+            <div key={title} className="mx-auto flex w-full max-w-[330px] gap-4">
+              <span className="flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-2xl bg-brand-top/[0.08] text-brand-top dark:bg-brand-mark/[0.14] dark:text-brand-mark">
+                <FeatureIcon title={title} />
+              </span>
+              <div className="min-w-0">
+                <span className="block text-[19px] font-bold leading-snug">
+                  {title}
                 </span>
-                <span className="mt-5 block text-[20px] font-bold">{title}</span>
-                <p className="mt-3 max-w-[290px] text-[15px] leading-relaxed text-neutral-500 dark:text-neutral-400">
+                <p className="mt-2 text-[15px] leading-relaxed text-neutral-500 dark:text-neutral-400">
                   {body}
                 </p>
               </div>
-            ) : (
-              // The mockup's own arrangement: the icon is its own left
-              // column, and the title and the body share the column
-              // beside it, so the body is indented to the title rather
-              // than dropping back under the icon.
-              <div key={title} className="flex gap-4">
-                <span className="flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-2xl bg-brand-top/[0.08] text-brand-top dark:bg-brand-mark/[0.14] dark:text-brand-mark">
-                  <FeatureIcon title={title} />
-                </span>
-                <div className="min-w-0">
-                  <span className="block text-[19px] font-bold leading-snug">
-                    {title}
-                  </span>
-                  <p className="mt-2 text-[15px] leading-relaxed text-neutral-500 dark:text-neutral-400">
-                    {body}
-                  </p>
-                </div>
-              </div>
-            )
-          )}
+            </div>
+          ))}
         </div>
       </section>
 
