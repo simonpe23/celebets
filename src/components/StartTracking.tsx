@@ -32,12 +32,18 @@ export default function StartTracking({
 
   return (
     <div className="w-full max-w-md">
+      {/* The heights are classes, not flex tricks. The first mobile
+          build put flex-1 on the input: in the stacked column that is
+          the VERTICAL axis, so it silently overrode the input's height
+          and the owner got a thin input under a fat button. flex-1 now
+          exists only from sm up, where the axis is horizontal and it
+          means width. On a phone both controls are the same 54px. */}
       <form
         onSubmit={(e) => {
           e.preventDefault();
           router.push(`/signup?email=${encodeURIComponent(email.trim())}`);
         }}
-        className="flex flex-col gap-2 sm:flex-row"
+        className="flex flex-col gap-2.5 sm:flex-row sm:gap-2"
       >
         <label htmlFor="landing-email" className="sr-only">
           Email address
@@ -51,13 +57,11 @@ export default function StartTracking({
           placeholder="you@email.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="min-w-0 flex-1 rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none transition-colors placeholder:text-neutral-400 focus:border-brand-top dark:border-white/15 dark:bg-white/[0.06] dark:text-white dark:placeholder:text-white/40 dark:focus:border-brand-mark"
-          style={{ height: 52 }}
+          className="h-[54px] w-full min-w-0 rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none transition-colors placeholder:text-neutral-400 focus:border-brand-top dark:border-white/15 dark:bg-white/[0.06] dark:text-white dark:placeholder:text-white/40 dark:focus:border-brand-mark sm:h-[52px] sm:flex-1"
         />
         <button
           type="submit"
-          className="shrink-0 rounded-xl bg-gradient-to-b from-brand-top to-brand-bottom px-6 text-base font-bold text-white shadow-lg shadow-brand-top/25 active:from-brand-bottom active:to-brand-press"
-          style={{ height: 52 }}
+          className="h-[54px] w-full shrink-0 rounded-xl bg-gradient-to-b from-brand-top to-brand-bottom px-6 text-base font-bold text-white shadow-lg shadow-brand-top/25 active:from-brand-bottom active:to-brand-press sm:h-[52px] sm:w-auto"
         >
           {label}
         </button>

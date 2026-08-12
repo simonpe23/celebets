@@ -30,17 +30,22 @@ export function Eyebrow({
 }
 
 // The reassurance line under a sign up button. A tick and three words.
+//
+// On a phone the three run smaller and tighter so they hold ONE row:
+// the owner caught them breaking two-and-one, which read as ragged. If
+// a very narrow screen still has to wrap, justify-center keeps the
+// spill line centred instead of hanging left.
 export function TrustRow({ items }: { items: string[] }) {
   return (
-    <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
+    <ul className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-2 sm:justify-start sm:gap-x-6">
       {items.map((item) => (
         <li
           key={item}
-          className="flex items-center gap-2 text-[14px] font-semibold text-neutral-500 dark:text-neutral-400"
+          className="flex items-center gap-1 whitespace-nowrap text-[12px] font-semibold text-neutral-500 dark:text-neutral-400 sm:gap-2 sm:text-[14px]"
         >
           <svg
             viewBox="0 0 20 20"
-            className="h-[18px] w-[18px] shrink-0 text-[#22C55E]"
+            className="h-[15px] w-[15px] shrink-0 text-[#22C55E] sm:h-[18px] sm:w-[18px]"
             fill="currentColor"
             aria-hidden="true"
           >
