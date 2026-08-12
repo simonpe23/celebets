@@ -34,7 +34,7 @@ export function BookRow() {
       {BOOKS.map((name) => (
         <span
           key={name}
-          className="font-display text-[22px] font-extrabold tracking-tight text-neutral-800 dark:text-neutral-200"
+          className="font-display text-[24px] font-extrabold tracking-tight text-neutral-800 dark:text-neutral-200"
         >
           {name}
         </span>
@@ -60,12 +60,12 @@ export function BookTiles() {
         <span
           key={name}
           title={name}
-          className="flex h-[74px] w-[74px] items-center justify-center rounded-[18px] border border-neutral-900/[0.07] bg-white font-display text-[26px] font-extrabold text-neutral-700 dark:text-neutral-200 shadow-[0_12px_28px_-16px_rgba(16,19,34,0.45)] dark:border-white/[0.08] dark:bg-white/[0.05]"
+          className="flex h-[80px] w-[80px] items-center justify-center rounded-[20px] border border-neutral-900/[0.07] bg-white font-display text-[28px] font-extrabold text-neutral-700 dark:text-neutral-200 shadow-[0_12px_28px_-16px_rgba(16,19,34,0.45)] dark:border-white/[0.08] dark:bg-white/[0.05]"
         >
           {name[0]}
         </span>
       ))}
-      <span className="flex h-[74px] w-[74px] items-center justify-center rounded-[18px] border border-dashed border-brand-top/30 bg-brand-top/[0.05] text-3xl font-bold text-brand-top dark:border-brand-mark/30 dark:bg-brand-mark/[0.08] dark:text-brand-mark">
+      <span className="flex h-[80px] w-[80px] items-center justify-center rounded-[20px] border border-dashed border-brand-top/30 bg-brand-top/[0.05] text-3xl font-bold text-brand-top dark:border-brand-mark/30 dark:bg-brand-mark/[0.08] dark:text-brand-mark">
         +
       </span>
     </div>

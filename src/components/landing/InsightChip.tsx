@@ -42,10 +42,10 @@ export default function InsightChip({
       className={`w-[240px] rounded-2xl border border-neutral-900/[0.08] bg-white/95 p-5 shadow-[0_24px_60px_-24px_rgba(16,19,34,0.4)] backdrop-blur-md dark:border-white/[0.09] dark:bg-[#0E1228]/95 dark:shadow-[0_24px_60px_-20px_rgba(4,8,27,0.9)] ${className}`}
     >
       <MicroLabel>{label}</MicroLabel>
-      <p className="mt-2.5 text-[15px] font-semibold leading-snug text-neutral-800 dark:text-white/90">
+      <p className="mt-2.5 text-[16px] font-semibold leading-snug text-neutral-800 dark:text-white/90">
         {headline}
       </p>
-      <p className={`mt-3 font-money text-[24px] font-semibold tabular-nums ${money}`}>
+      <p className={`mt-3 font-money text-[26px] font-semibold tabular-nums ${money}`}>
         {value}
       </p>
     </div>

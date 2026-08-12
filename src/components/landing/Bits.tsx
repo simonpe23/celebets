@@ -64,14 +64,14 @@ export function CheckItem({
 }) {
   return (
     <li className="flex gap-4">
-      <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-[1.5px] border-brand-top/35 text-brand-top dark:border-brand-mark/40 dark:text-brand-mark">
-        <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2.6} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-[1.5px] border-brand-top/35 text-brand-top dark:border-brand-mark/40 dark:text-brand-mark">
+        <svg viewBox="0 0 20 20" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth={2.6} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <path d="M4.5 10.5 8 14l7.5-8" />
         </svg>
       </span>
       <span>
-        <span className="block text-[17px] font-bold">{title}</span>
-        <span className="mt-1 block text-[15px] leading-relaxed text-neutral-500 dark:text-neutral-400">
+        <span className="block text-[18px] font-bold">{title}</span>
+        <span className="mt-1 block text-[16px] leading-relaxed text-neutral-500 dark:text-neutral-400">
           {body}
         </span>
       </span>

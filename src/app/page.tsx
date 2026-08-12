@@ -63,7 +63,7 @@ function FeatureIcon({ title }: { title: string }) {
     strokeWidth: 1.7,
     strokeLinecap: "round" as const,
     strokeLinejoin: "round" as const,
-    className: "h-7 w-7",
+    className: "h-8 w-8",
     "aria-hidden": true,
   };
   if (title === "Track Every Bet")
@@ -128,7 +128,17 @@ function PhoneTrio({ base, priority = false }: { base: number; priority?: boolea
 }
 
 const DISPLAY = "font-display font-extrabold tracking-[-0.025em]";
-const SHELL = "mx-auto w-full max-w-6xl px-5 sm:px-8";
+
+// THE CONTAINER IS THE MOCKUP'S, NOT TAILWIND'S. v7's audit found the
+// single biggest gap between the mockup and v6 was not any one
+// element: the mockup's content spans about 90 percent of a 1440
+// screen (roughly 70px margins) while max-w-6xl spans 76 percent
+// (176px margins). Every element inside was therefore a step smaller
+// and every section had a quarter more empty page around it, which is
+// exactly the owner's complaint: too small, too much dead white space,
+// less serious. Widening the frame is what makes the rest read at the
+// mockup's weight.
+const SHELL = "mx-auto w-full max-w-[1300px] px-5 sm:px-10";
 
 export default function LandingPage() {
   return (
@@ -140,12 +150,17 @@ export default function LandingPage() {
           starts above the viewport and fades to zero alpha cannot draw
           an edge anywhere. */}
       <div className="relative isolate">
+        {/* Lighter than v6, on the mockup's evidence: its hero reads as
+            a WHITE page with lavender pooling around the phones, while
+            v6 tinted the whole top of the page including the corner
+            behind the wordmark. The wash now centres on the phone side
+            and the far left stays close to paper. */}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 -z-10 dark:hidden"
           style={{
             background:
-              "radial-gradient(1150px 780px at 70% -140px, rgba(124,58,237,0.17), rgba(124,58,237,0.06) 50%, rgba(124,58,237,0) 72%), radial-gradient(760px 560px at 14% -200px, rgba(85,37,198,0.07), rgba(85,37,198,0) 70%)",
+              "radial-gradient(1000px 700px at 74% -160px, rgba(124,58,237,0.14), rgba(124,58,237,0.05) 50%, rgba(124,58,237,0) 70%), radial-gradient(700px 500px at 10% -260px, rgba(85,37,198,0.04), rgba(85,37,198,0) 68%)",
           }}
         />
         <div
@@ -184,12 +199,12 @@ export default function LandingPage() {
         {/* ================= HERO ================= */}
         <section className="relative">
           <div className={`${SHELL} relative`}>
-            <div className="grid items-center gap-12 pb-14 pt-6 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-8 lg:pb-16 lg:pt-8">
+            <div className="grid items-center gap-12 pb-14 pt-6 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:gap-8 lg:pb-16 lg:pt-8">
               <div className="min-w-0 text-center lg:text-left">
                 <Eyebrow>The smarter way to bet</Eyebrow>
 
                 <h1
-                  className={`${DISPLAY} mt-5 text-[3.4rem] leading-[0.98] sm:text-[4.2rem] lg:text-[4.6rem] xl:text-[5.1rem]`}
+                  className={`${DISPLAY} mt-5 text-[3.4rem] leading-[0.98] sm:text-[4.3rem] lg:text-[5.2rem] xl:text-[6rem]`}
                 >
                   Know
                   <br />
@@ -199,12 +214,12 @@ export default function LandingPage() {
                   </span>
                 </h1>
 
-                <p className="mt-7 text-[21px] font-bold leading-[1.3] text-neutral-800 dark:text-neutral-100 sm:text-[25px]">
+                <p className="mt-7 text-[21px] font-bold leading-[1.3] text-neutral-800 dark:text-neutral-100 sm:text-[26px]">
                   Track every bet. Discover patterns.
                   <br className="hidden sm:block" /> Find your edge.
                 </p>
 
-                <p className="mx-auto mt-5 max-w-[480px] text-[16px] leading-relaxed text-neutral-500 dark:text-neutral-400 sm:text-[17px] lg:mx-0">
+                <p className="mx-auto mt-5 max-w-[520px] text-[16px] leading-relaxed text-neutral-500 dark:text-neutral-400 sm:text-[18px] lg:mx-0">
                   Celebet is the sports betting companion that helps you track
                   your bets, uncover patterns, and improve your results.
                 </p>
@@ -218,12 +233,17 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              <div className="relative w-full min-w-0">
+              {/* The cluster runs a step past the content margin on the
+                  right, as the mockup's does: its right phone stops
+                  about 40px short of the SCREEN edge, not the content
+                  edge. That bleed is part of why the mockup's hero
+                  feels big. */}
+              <div className="relative w-full min-w-0 xl:-mr-16">
                 {/* The light pooling behind the phones. A blurred disc,
                     not a beam: it has no edge to catch a container. */}
                 <div
                   aria-hidden="true"
-                  className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[120%] w-[110%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-top/[0.10] blur-[90px] dark:bg-brand-mark/[0.18]"
+                  className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[120%] w-[110%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-top/[0.09] blur-[90px] dark:bg-brand-mark/[0.18]"
                 />
                 <div className="sm:hidden">
                   <PhoneTrio base={165} priority />
@@ -232,14 +252,14 @@ export default function LandingPage() {
                   <PhoneTrio base={225} />
                 </div>
                 <div className="hidden lg:block xl:hidden">
-                  <PhoneTrio base={244} />
+                  <PhoneTrio base={250} />
                 </div>
                 <div className="hidden xl:block">
-                  <PhoneTrio base={296} priority />
+                  <PhoneTrio base={330} priority />
                 </div>
 
                 <InsightChip
-                  className="absolute -right-5 bottom-14 z-30 hidden w-[210px] xl:block"
+                  className="absolute -right-2 bottom-16 z-30 hidden w-[230px] xl:block"
                   label="Biggest loss"
                   headline="Basketball 3-legger keeps costing you."
                   value="-$440.00"
@@ -287,23 +307,22 @@ export default function LandingPage() {
 
             THE TWO WIDTHS BELOW ARE MEASURED, NOT CHOSEN. Every
             combination of row width and block width was rendered and
-            the ink either side of the row measured; 1040 and 320 are
-            the pair that lands the left and right gaps on exactly 203px
-            each. They also wrap all three sentences to two lines rather
-            than three, which is the mockup. If the copy in FEATURES
-            changes, re-run the sweep rather than nudging by eye: the
-            balance depends on where the third sentence breaks. */}
-        <div className="mx-auto grid max-w-[1040px] gap-12 sm:grid-cols-3 sm:gap-8">
+            the ink either side of the row measured; the pair below is
+            the one that lands the two gaps equal at v7's wider frame
+            and type. If the copy in FEATURES changes, re-run sweep.mjs
+            rather than nudging by eye: the balance depends on where
+            the third sentence breaks. */}
+        <div className="mx-auto grid max-w-[1100px] gap-12 sm:grid-cols-3 sm:gap-8">
           {FEATURES.map(({ title, body }) => (
-            <div key={title} className="mx-auto flex w-full max-w-[320px] gap-4">
-              <span className="flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-2xl bg-brand-top/[0.08] text-brand-top dark:bg-brand-mark/[0.14] dark:text-brand-mark">
+            <div key={title} className="mx-auto flex w-full max-w-[350px] gap-4">
+              <span className="flex h-[64px] w-[64px] shrink-0 items-center justify-center rounded-2xl bg-brand-top/[0.08] text-brand-top dark:bg-brand-mark/[0.14] dark:text-brand-mark">
                 <FeatureIcon title={title} />
               </span>
               <div className="min-w-0">
-                <span className="block text-[19px] font-bold leading-snug">
+                <span className="block text-[21px] font-bold leading-snug">
                   {title}
                 </span>
-                <p className="mt-2 text-[15px] leading-relaxed text-neutral-500 dark:text-neutral-400">
+                <p className="mt-2 text-[16px] leading-relaxed text-neutral-500 dark:text-neutral-400">
                   {body}
                 </p>
               </div>
@@ -318,19 +337,19 @@ export default function LandingPage() {
           <div>
             <Eyebrow>Powerful Analytics</Eyebrow>
             <h2
-              className={`${DISPLAY} mt-5 text-[2.6rem] leading-[1] sm:text-[3.4rem]`}
+              className={`${DISPLAY} mt-5 text-[2.8rem] leading-[1] sm:text-[4.1rem]`}
             >
               See What
               <br />
               Others{" "}
               <span className="text-brand-top dark:text-brand-mark">Miss.</span>
             </h2>
-            <p className="mt-5 max-w-[440px] text-[16px] leading-relaxed text-neutral-500 dark:text-neutral-400 sm:text-[17px]">
+            <p className="mt-5 max-w-[500px] text-[16px] leading-relaxed text-neutral-500 dark:text-neutral-400 sm:text-[18px]">
               Turn your betting history into actionable insights and make better
               decisions.
             </p>
 
-            <ul className="mt-10 space-y-6">
+            <ul className="mt-10 space-y-7">
               {CHECKS.map((c) => (
                 <CheckItem key={c.title} {...c} />
               ))}
@@ -359,11 +378,11 @@ export default function LandingPage() {
                 src="/shots/performance-dark.png"
                 srcLight="/shots/performance-light.png"
                 alt="Profit over time, with staked, returned and ROI"
-                width={330}
+                width={344}
               />
             </div>
             <InsightChip
-              className="absolute -right-7 bottom-24 z-30 hidden w-[210px] lg:block"
+              className="absolute -right-4 bottom-28 z-30 hidden w-[230px] lg:block"
               label="Trending"
               headline="3 weeks in a row of better results."
               value="+$2,119"
@@ -380,11 +399,11 @@ export default function LandingPage() {
           <div>
             <Eyebrow tone="soon">Coming soon</Eyebrow>
             <h2
-              className={`${DISPLAY} mt-5 text-[2.1rem] leading-[1.08] sm:text-[2.6rem]`}
+              className={`${DISPLAY} mt-5 text-[2.2rem] leading-[1.08] sm:text-[3rem]`}
             >
               Sync from 30+ sportsbooks and daily fantasy sites.
             </h2>
-            <p className="mt-5 max-w-[460px] text-[16px] leading-relaxed text-neutral-500 dark:text-neutral-400 sm:text-[17px]">
+            <p className="mt-5 max-w-[500px] text-[16px] leading-relaxed text-neutral-500 dark:text-neutral-400 sm:text-[18px]">
               Connect your accounts and your bets arrive on their own. Until
               then, paste a bet slip or add one by hand in a few seconds.
             </p>
@@ -392,7 +411,7 @@ export default function LandingPage() {
 
           <div className="flex flex-col items-center gap-5">
             <BookTiles />
-            <p className="text-[14px] font-semibold text-neutral-500 dark:text-neutral-400">
+            <p className="text-[15px] font-semibold text-neutral-500 dark:text-neutral-400">
               More coming soon
             </p>
           </div>
@@ -405,19 +424,19 @@ export default function LandingPage() {
             height, more width." The right column shrank and the
             vertical padding came down, so the panel reads as a wide
             band rather than a tall block. */}
-        <div className="relative overflow-hidden rounded-[26px] border border-brand-top/10 bg-gradient-to-br from-cta-1 via-cta-2 to-cta-3 px-7 py-11 dark:border-white/[0.08] dark:from-cta-dark-1 dark:via-cta-dark-2 dark:to-cta-dark-3 sm:px-14 sm:py-12">
+        <div className="relative overflow-hidden rounded-[28px] border border-brand-top/10 bg-gradient-to-br from-cta-1 via-cta-2 to-cta-3 px-7 py-11 dark:border-white/[0.08] dark:from-cta-dark-1 dark:via-cta-dark-2 dark:to-cta-dark-3 sm:px-16 sm:py-12 lg:px-24">
           <Grain />
-          <div className="relative grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.55fr)]">
+          <div className="relative grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.5fr)]">
             <div className="text-center lg:text-left">
               <h2
-                className={`${DISPLAY} text-[2.4rem] leading-[1.02] sm:text-[2.8rem]`}
+                className={`${DISPLAY} text-[2.5rem] leading-[1.02] sm:text-[3.25rem]`}
               >
                 Ready to Get an{" "}
                 <span className="text-brand-top dark:text-brand-mark">
                   Edge?
                 </span>
               </h2>
-              <p className="mx-auto mt-4 max-w-lg text-[16px] leading-relaxed text-neutral-600 dark:text-neutral-400 lg:mx-0">
+              <p className="mx-auto mt-4 max-w-xl text-[16px] leading-relaxed text-neutral-600 dark:text-neutral-400 sm:text-[17px] lg:mx-0">
                 Join thousands of bettors who track smarter, win more, and
                 protect their bankroll.
               </p>
@@ -432,13 +451,13 @@ export default function LandingPage() {
             {/* The angled phone, bleeding out of the panel's lower right
                 exactly as in the mockup. Hidden below lg, where there is
                 no room for it to bleed into. */}
-            <div className="relative hidden h-[280px] lg:block">
-              <div className="absolute -bottom-[70px] -right-3 rotate-[9deg]">
+            <div className="relative hidden h-[300px] lg:block">
+              <div className="absolute -bottom-[84px] -right-10 rotate-[9deg]">
                 <PhoneMock
                   src="/shots/performance-dark.png"
                   srcLight="/shots/performance-light.png"
                   alt="Profit over time"
-                  width={205}
+                  width={232}
                 />
               </div>
             </div>
@@ -449,9 +468,9 @@ export default function LandingPage() {
       {/* ================= FOOTER ================= */}
       <footer className={`${SHELL} border-t border-neutral-900/[0.07] pb-10 pt-10 dark:border-white/[0.07]`}>
         <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-between">
-          <Wordmark className="text-[22px]" />
+          <Wordmark className="text-[24px]" />
 
-          <nav className="flex items-center gap-8 text-[15px] font-semibold text-neutral-500 dark:text-neutral-400">
+          <nav className="flex items-center gap-8 text-[16px] font-semibold text-neutral-500 dark:text-neutral-400">
             <Link href="/terms" className="transition-colors hover:text-neutral-900 dark:hover:text-white">
               Terms
             </Link>
