@@ -1,8 +1,10 @@
 // The small repeated pieces of the landing page, in one file so none of
 // them can drift from its twin. Built to the owner's mockup.
 
-// The little rounded label above a headline. Two tones: brand for a
-// section that exists, green for one that does not yet.
+// The small label above a headline. Bare uppercase text, no pill: the
+// owner cut the rounded background in v6 ("redesign it with no rounded
+// corners or just write it without any sharp background"). Two tones:
+// brand for a section that exists, green for one that does not yet.
 export function Eyebrow({
   children,
   tone = "brand",
@@ -12,15 +14,15 @@ export function Eyebrow({
 }) {
   const skin =
     tone === "brand"
-      ? "bg-brand-top/[0.08] text-brand-top dark:bg-brand-mark/[0.14] dark:text-brand-mark"
+      ? "text-brand-top dark:text-brand-mark"
       // emerald-700 as a class, not a hex. #16A34A and #15803D are
       // both reserved for the app's one green BUTTON, and a rule that
       // bends for a label is not a rule. The outcome green is too pale
-      // to read as 11px text on its own tint.
-      : "bg-[#22C55E]/15 text-emerald-700 dark:bg-[#22C55E]/15 dark:text-[#22C55E]";
+      // to read as small text on a light page.
+      : "text-emerald-700 dark:text-[#22C55E]";
   return (
     <span
-      className={`inline-block rounded-full px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.12em] ${skin}`}
+      className={`block text-[13px] font-bold uppercase tracking-[0.16em] ${skin}`}
     >
       {children}
     </span>
@@ -30,15 +32,15 @@ export function Eyebrow({
 // The reassurance line under a sign up button. A tick and three words.
 export function TrustRow({ items }: { items: string[] }) {
   return (
-    <ul className="flex flex-wrap items-center gap-x-5 gap-y-2">
+    <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
       {items.map((item) => (
         <li
           key={item}
-          className="flex items-center gap-1.5 text-[13px] text-neutral-500 dark:text-neutral-400"
+          className="flex items-center gap-2 text-[14px] font-semibold text-neutral-500 dark:text-neutral-400"
         >
           <svg
             viewBox="0 0 20 20"
-            className="h-4 w-4 shrink-0 text-[#22C55E]"
+            className="h-[18px] w-[18px] shrink-0 text-[#22C55E]"
             fill="currentColor"
             aria-hidden="true"
           >
@@ -61,15 +63,15 @@ export function CheckItem({
   body: string;
 }) {
   return (
-    <li className="flex gap-3.5">
-      <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-[1.5px] border-brand-top/35 text-brand-top dark:border-brand-mark/40 dark:text-brand-mark">
-        <svg viewBox="0 0 20 20" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={2.6} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <li className="flex gap-4">
+      <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-[1.5px] border-brand-top/35 text-brand-top dark:border-brand-mark/40 dark:text-brand-mark">
+        <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2.6} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <path d="M4.5 10.5 8 14l7.5-8" />
         </svg>
       </span>
       <span>
-        <span className="block text-[15px] font-bold">{title}</span>
-        <span className="mt-0.5 block text-sm text-neutral-500 dark:text-neutral-400">
+        <span className="block text-[17px] font-bold">{title}</span>
+        <span className="mt-1 block text-[15px] leading-relaxed text-neutral-500 dark:text-neutral-400">
           {body}
         </span>
       </span>

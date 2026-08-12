@@ -85,9 +85,11 @@ export default function PhoneMock({
 }) {
   // An iPhone is 19.5 by 9, and every measurement below is a fraction
   // of the width, so one number scales the whole thing.
+  // The band was 0.035 of the width and the owner asked of v6 "are the
+  // borders too wide?". They were: a real titanium edge is nearer this.
   const height = Math.round((width * 852) / 393);
   const radius = width * 0.145;
-  const band = Math.max(2, width * 0.035);
+  const band = Math.max(2, width * 0.026);
   const innerRadius = radius - band;
 
   return (

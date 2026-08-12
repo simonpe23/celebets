@@ -88,8 +88,9 @@
   --font-money: var(--font-inter-tight);
   --font-plex: var(--font-plex);
   --font-instrument: var(--font-instrument);
-  /* Landing page headlines only. See the note in layout.tsx. */
-  --font-display: var(--font-display);
+  /* Landing page headlines only: Inter Tight at weight 800, the same
+     family as the money face above but a heavier cut. See layout.tsx. */
+  --font-display: var(--font-inter-tight);
   --color-cream: var(--brand-cream);
   --color-brand-top: var(--brand-top);
   --color-brand-bottom: var(--brand-bottom);

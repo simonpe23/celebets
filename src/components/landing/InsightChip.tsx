@@ -34,15 +34,18 @@ export default function InsightChip({
       ? "text-emerald-600 dark:text-emerald-400"
       : "text-red-600 dark:text-red-400";
 
+  // The proportions are the owner's: "more of a square. You have the
+  // wrong shape." At its default width the three rows and their air
+  // land close to a square, not a wide strip.
   return (
     <div
-      className={`w-[240px] rounded-2xl border border-neutral-900/[0.08] bg-white/90 p-4 shadow-[0_24px_60px_-24px_rgba(16,19,34,0.4)] backdrop-blur-md dark:border-white/[0.09] dark:bg-[#0E1228]/90 dark:shadow-[0_24px_60px_-20px_rgba(4,8,27,0.9)] ${className}`}
+      className={`w-[240px] rounded-2xl border border-neutral-900/[0.08] bg-white/95 p-5 shadow-[0_24px_60px_-24px_rgba(16,19,34,0.4)] backdrop-blur-md dark:border-white/[0.09] dark:bg-[#0E1228]/95 dark:shadow-[0_24px_60px_-20px_rgba(4,8,27,0.9)] ${className}`}
     >
       <MicroLabel>{label}</MicroLabel>
-      <p className="mt-2 text-[13px] font-semibold leading-snug text-neutral-800 dark:text-white/90">
+      <p className="mt-2.5 text-[15px] font-semibold leading-snug text-neutral-800 dark:text-white/90">
         {headline}
       </p>
-      <p className={`mt-2 font-money text-[22px] font-semibold tabular-nums ${money}`}>
+      <p className={`mt-3 font-money text-[24px] font-semibold tabular-nums ${money}`}>
         {value}
       </p>
     </div>
