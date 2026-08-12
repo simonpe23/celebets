@@ -25,6 +25,42 @@ How this file works:
 
 ## NOW (small, fits the current app, high value per effort)
 
+21. RENAME THE APP. The owner, August 2026: "Celebet does not work."
+    No new name or domain chosen yet, so this is parked until he has
+    one. Recorded now so the decision is not lost.
+
+    THE CODE IS THE EASY HALF, and it is genuinely easy: 88 mentions
+    across 43 files, and most are the visible word in a heading or a
+    piece of copy. Half a day, one careful pass, plus new artwork
+    (wordmark, og.png, favicon) which is a design job, not a code one.
+
+    THE THREE THINGS THAT NEED CARE, none of them hard, all of them
+    silent if missed:
+    - `celebet-theme` in localStorage (Settings.tsx). Renaming that
+      key logs every existing user out of their theme choice, back to
+      System. Fix: read the old key when the new one is missing, so
+      the choice carries over.
+    - The chart's SVG gradient ids (`celebet-line`, `celebet-area`,
+      `celebet-bloom`, `celebet-glow` in ProfitChart.tsx) are internal
+      references, not names. They may be left alone or renamed, but
+      the id and its `url(#...)` must move together or the chart loses
+      its colour with no error.
+    - `tracking_since` and `tracking_reset_tx` in auth metadata are
+      not branded, so they are safe. Worth stating so nobody renames
+      them for tidiness.
+
+    THE HARD HALF IS OUTSIDE THE CODE, and it is where the risk and
+    the cost sit: a new domain, DNS at Hostinger, Vercel, Supabase
+    Site URL and redirect URLs (miss one and password reset links die
+    silently), Resend sender domain with fresh DKIM/SPF/DMARC records
+    and a new warm-up period, the Instagram handle, and the trademark
+    line for Peak Street 6 LLC.
+
+    DO IT BEFORE MORE TESTERS ARRIVE. Every extra user is another
+    person holding the old link and the old email sender. The cost of
+    this grows with the user count, so the cheapest day to do it is
+    the soonest day he has a name.
+
 16. Login and sign up as drop-down panels on the landing page, instead
     of their own pages. Tapping Login or Sign up opens a panel over
     the landing page holding the email and password fields, the
