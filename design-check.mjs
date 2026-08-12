@@ -370,6 +370,42 @@ for (const lock of FONT_LOCK) {
   }
 }
 
+// 9. THE HAND CURSOR.
+//
+// Tailwind v4 stopped giving a <button> the pointer cursor, so every
+// button in the app showed an arrow and looked dead on a laptop. The
+// fix is one rule in globals.css, and this check exists because the
+// bug is invisible in a screenshot: a cursor never appears in one.
+//
+// Two halves. The rule has to be there, and nobody should be pasting
+// cursor-pointer onto individual buttons, because a button that needs
+// its own copy is a button the global rule missed.
+{
+  const css = readFileSync("src/app/globals.css", "utf8");
+  if (!/button:not\(:disabled\)[\s\S]{0,120}cursor:\s*pointer/.test(css)) {
+    note(
+      "src/app/globals.css",
+      1,
+      "buttons have lost the hand cursor. Tailwind v4 does not add it, this file must"
+    );
+  }
+
+  for (const file of files) {
+    if (SKIP.some((dir) => file.includes(`/${dir}/`))) continue;
+    readFileSync(file, "utf8")
+      .split("\n")
+      .forEach((line, i) => {
+        if (line.trim().startsWith("//")) return;
+        if (/\bcursor-pointer\b/.test(line))
+          note(
+            file,
+            i + 1,
+            "cursor-pointer is global in globals.css, a per-button copy will drift"
+          );
+      });
+  }
+}
+
 if (problems.length === 0) {
   console.log("Design check passed.");
 } else {

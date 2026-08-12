@@ -144,3 +144,22 @@ input,
 a {
   touch-action: manipulation;
 }
+
+/* THE HAND CURSOR ON EVERY BUTTON.
+ *
+ * Tailwind v4 dropped the pointer cursor browsers have always given a
+ * <button>, so all 74 buttons in the app showed a plain arrow while
+ * every link beside them showed a hand. On a laptop that reads as
+ * "this is not clickable". The owner found it on the landing page sign
+ * up, where the button sits right under a link.
+ *
+ * ONE RULE HERE, NOT A CLASS ON EACH BUTTON. A cursor-pointer class is
+ * a thing to forget on the seventy-fifth button, and forgetting it
+ * looks exactly like this bug.
+ *
+ * A disabled button keeps the arrow on purpose: a hand promises
+ * something that will not happen. */
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]) {
+  cursor: pointer;
+}
