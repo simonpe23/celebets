@@ -199,7 +199,11 @@ export default function LandingPage() {
         {/* ================= HERO ================= */}
         <section className="relative">
           <div className={`${SHELL} relative`}>
-            <div className="grid items-center gap-12 pb-14 pt-6 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] lg:gap-8 lg:pb-16 lg:pt-8">
+            {/* The column gap and the bottom padding are the owner's:
+                "space between know your game and the phones is too
+                tight... space between the phone and the trusted by
+                block is too tight." */}
+            <div className="grid items-center gap-12 pb-14 pt-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-12 lg:pb-36 lg:pt-8">
               <div className="min-w-0 text-center lg:text-left">
                 <Eyebrow>The smarter way to bet</Eyebrow>
 
@@ -238,7 +242,7 @@ export default function LandingPage() {
                   about 40px short of the SCREEN edge, not the content
                   edge. That bleed is part of why the mockup's hero
                   feels big. */}
-              <div className="relative w-full min-w-0 xl:-mr-16">
+              <div className="relative w-full min-w-0 xl:-mr-24">
                 {/* The light pooling behind the phones. A blurred disc,
                     not a beam: it has no edge to catch a container. */}
                 <div
@@ -255,7 +259,7 @@ export default function LandingPage() {
                   <PhoneTrio base={250} />
                 </div>
                 <div className="hidden xl:block">
-                  <PhoneTrio base={330} priority />
+                  <PhoneTrio base={310} priority />
                 </div>
 
                 <InsightChip
@@ -271,8 +275,12 @@ export default function LandingPage() {
         </section>
       </div>
 
-      {/* ================= THE BOOKS ================= */}
-      <section className={`${SHELL} pb-16 pt-2`}>
+      {/* ================= THE BOOKS =================
+          The strip sits midway between the phones above it and the
+          feature row below it, by the owner's ruling. The paddings
+          here and the hero's pb were measured to land its centre
+          there, so change them as a pair or not at all. */}
+      <section className={`${SHELL} pb-12 pt-0`}>
         <div className="flex flex-col items-center gap-7 sm:flex-row sm:gap-14">
           <p className="shrink-0 text-center text-[12px] font-bold uppercase leading-[1.9] tracking-[0.15em] text-brand-top dark:text-brand-mark sm:text-left">
             Trusted by bettors
