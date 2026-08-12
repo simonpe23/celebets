@@ -79,6 +79,31 @@ How this file works:
 
 ## SOON (after the NOW items)
 
+22. THE GOOGLE SIGN IN SCREEN SAYS THE WRONG NAME. Google login works
+    (set up August 2026) but its consent screen reads "Sign in to
+    wqhitxtowfhylzpfxkpw.supabase.co" instead of the app's name. The
+    owner, correctly: "everyone who reads this will be scared."
+
+    WHY. Google shows the root domain of the callback URL, and the
+    callback lives on Supabase's domain. It is not something the code
+    can change, and not something Supabase can fix from their side:
+    it is a confirmed open issue on their tracker (supabase#33387).
+
+    THE TWO FIXES, and both are needed for the name to show:
+    - Supabase's Custom Domain add-on, about $10 a month, billed by
+      the hour and NOT covered by the spend cap. Points auth at
+      something like auth.<ourdomain>.com, so the screen reads a
+      domain the user recognises instead of a random string.
+    - Google brand verification, free but slow (days to weeks, wants
+      a demo video and proof of domain ownership). This is what
+      replaces the domain with the app NAME and logo.
+
+    DO IT AFTER THE RENAME, NOT BEFORE. Verification reviews the app
+    name, the domain and the logo, and all three are changing. Doing
+    it now means doing it twice and paying for a custom domain on a
+    domain that is being retired. Before any real marketing push,
+    after the new name is live.
+
 15. Full visual redesign. The owner wants a fresher, more modern look
     with more imagery, inspired by the competitor Pikkit
     (https://www.pikkit.com): dark theme, big bold headlines, product
