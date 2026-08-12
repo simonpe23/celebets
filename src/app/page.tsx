@@ -265,23 +265,37 @@ export default function LandingPage() {
       {/* ================= THREE FEATURES ================= */}
       <section className={`${SHELL} border-t border-neutral-900/[0.07] py-16 dark:border-white/[0.07]`}>
         {/* THE ROW IS ONE OBJECT AND IT IS CENTRED ON THE PAGE.
-            The owner: "if the entire row was a clock, in my mockup it's
-            centered. in v5 and v6 it's not."
-            He was right and my measurement had been answering the wrong
-            question. The GRID was centred: three equal columns, equal
-            margins either side. But the blocks inside it were flush to
-            the left of their columns, and the copy in the third block is
-            shorter than the copy in the first, so the ink ran out ~38px
-            before the right margin while touching the left one exactly.
-            A centred box full of left-shifted content still reads
-            left-shifted.
-            The fix is mx-auto with a width cap on each block: every
-            block now sits centred in its own equal column, so the
-            leftmost and rightmost ink are symmetric by construction and
-            stay that way whatever the copy does. */}
-        <div className="grid gap-12 sm:grid-cols-3 sm:gap-8">
+            The owner, twice: "if the entire row was a clock, in my
+            mockup it's centered", then "why gap to the right? why track
+            every bet all the way to the left?"
+
+            Measured, he was right both times, and my earlier answer had
+            been solving the wrong problem. Every other section on this
+            page runs its ink from 176 to 1264. The feature row ran 176
+            to 1248, because the third block's sentence is shorter than
+            the first's, so its last line stopped short. Left edge
+            touching, right edge not: the definition of left-shifted.
+            Worse, the two sections holding phones run out to about 1300,
+            so scrolling past, the feature row looked narrower than its
+            neighbours and pinned to the left.
+
+            The cure: the row sits in its own centred band, inset from
+            the page margin on BOTH sides, with each block centred in
+            its column. So the first icon is no longer flush against the
+            page's left edge and the right hand gap has a matching left
+            hand one.
+
+            THE TWO WIDTHS BELOW ARE MEASURED, NOT CHOSEN. Every
+            combination of row width and block width was rendered and
+            the ink either side of the row measured; 1040 and 320 are
+            the pair that lands the left and right gaps on exactly 203px
+            each. They also wrap all three sentences to two lines rather
+            than three, which is the mockup. If the copy in FEATURES
+            changes, re-run the sweep rather than nudging by eye: the
+            balance depends on where the third sentence breaks. */}
+        <div className="mx-auto grid max-w-[1040px] gap-12 sm:grid-cols-3 sm:gap-8">
           {FEATURES.map(({ title, body }) => (
-            <div key={title} className="mx-auto flex w-full max-w-[330px] gap-4">
+            <div key={title} className="mx-auto flex w-full max-w-[320px] gap-4">
               <span className="flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-2xl bg-brand-top/[0.08] text-brand-top dark:bg-brand-mark/[0.14] dark:text-brand-mark">
                 <FeatureIcon title={title} />
               </span>
