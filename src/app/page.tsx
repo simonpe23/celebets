@@ -3,7 +3,6 @@ import PhoneMock from "@/components/PhoneMock";
 import StartTracking from "@/components/StartTracking";
 import Wordmark from "@/components/Wordmark";
 import { Grain } from "@/components/landing/Atmosphere";
-import AuthTriggers from "@/components/landing/AuthTriggers";
 import { CheckItem, DotGrid, Eyebrow, TrustRow } from "@/components/landing/Bits";
 import InsightChip from "@/components/landing/InsightChip";
 import { BookRow, BookTiles } from "@/components/landing/Sportsbooks";
@@ -181,7 +180,20 @@ export default function LandingPage() {
             unfinished. */}
         <header className={`${SHELL} relative flex items-center justify-between py-5`}>
           <Wordmark className="text-[24px]" />
-          <AuthTriggers />
+          <div className="flex items-center gap-2.5">
+            <Link
+              href="/login"
+              className="rounded-xl border border-neutral-900/10 px-5 py-2.5 text-[15px] font-bold text-neutral-700 transition-colors hover:bg-neutral-900/[0.04] dark:border-white/15 dark:text-white/90 dark:hover:bg-white/[0.06]"
+            >
+              Log in
+            </Link>
+            <Link
+              href="/signup"
+              className="rounded-xl bg-gradient-to-b from-brand-top to-brand-bottom px-5 py-2.5 text-[15px] font-bold text-white shadow-lg shadow-brand-top/25 transition-opacity hover:opacity-95"
+            >
+              Start Tracking
+            </Link>
+          </div>
         </header>
 
         {/* ================= HERO ================= */}
