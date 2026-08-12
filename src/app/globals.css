@@ -63,6 +63,14 @@
   --land-wash: #FBFAFE;   /* the hero and footer on a light theme, a
                              white with a breath of violet in it, so the
                              beams have something to sit in */
+  /* The closing panel, three stops each way. A single flat lilac read
+     as a sticker on the page; a gradient gives it a light source. */
+  --cta-1: #F4F1FE;
+  --cta-2: #F8F6FF;
+  --cta-3: #EFEAFD;
+  --cta-dark-1: #141033;
+  --cta-dark-2: #0E1228;
+  --cta-dark-3: #1B1046;
 }
 
 @theme inline {
@@ -95,6 +103,12 @@
   --color-land-lilac: var(--land-lilac);
   --color-land-plum: var(--land-plum);
   --color-land-wash: var(--land-wash);
+  --color-cta-1: var(--cta-1);
+  --color-cta-2: var(--cta-2);
+  --color-cta-3: var(--cta-3);
+  --color-cta-dark-1: var(--cta-dark-1);
+  --color-cta-dark-2: var(--cta-dark-2);
+  --color-cta-dark-3: var(--cta-dark-3);
 }
 
 [data-theme="dark"] {

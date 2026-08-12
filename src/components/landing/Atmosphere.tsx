@@ -36,7 +36,7 @@ export function Beams({ className = "" }: { className?: string }) {
       aria-hidden="true"
       className={
         "pointer-events-none absolute inset-0 overflow-hidden " +
-        "[--beam-a:rgba(124,58,237,0.22)] [--beam-b:rgba(85,37,198,0.08)] " +
+        "[--beam-a:rgba(124,58,237,0.34)] [--beam-b:rgba(85,37,198,0.12)] " +
         "dark:[--beam-a:rgba(154,87,252,0.55)] dark:[--beam-b:rgba(85,37,198,0.18)] " +
         className
       }

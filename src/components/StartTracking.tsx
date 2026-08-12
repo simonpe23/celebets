@@ -22,7 +22,11 @@ import GoogleButton from "@/components/GoogleButton";
 // It follows the theme in CSS, not by a prop, for the same reason the
 // insight card does: the hero is light on a light theme now, so no call
 // site can know which band it is standing on.
-export default function StartTracking() {
+export default function StartTracking({
+  label = "Start Tracking",
+}: {
+  label?: string;
+}) {
   const router = useRouter();
   const [email, setEmail] = useState("");
 
@@ -55,11 +59,11 @@ export default function StartTracking() {
           className="shrink-0 rounded-xl bg-gradient-to-b from-brand-top to-brand-bottom px-6 text-base font-bold text-white shadow-lg shadow-brand-top/25 active:from-brand-bottom active:to-brand-press"
           style={{ height: 52 }}
         >
-          Start Tracking
+          {label}
         </button>
       </form>
 
-      <div className="mt-3">
+      <div className="mt-3 empty:hidden">
         <GoogleButton large />
       </div>
     </div>

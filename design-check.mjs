@@ -157,9 +157,13 @@ for (const file of files) {
     }
 
     // 4b. Green stopped being the action color in August 2026. Purple
-    // #58287F is the button you press. The one green button left is
-    // Won on a pending pick, which is an outcome, not an action.
-    if (/#16A34A|#15803D/.test(line) && short !== "LiveBets.tsx") {
+    // is the button you press. The one green button left is Won on a
+    // pending pick, which is an outcome, not an action.
+    //
+    // Comments are exempt, the same as rule 4 above. A note explaining
+    // why a colour may not be used has to be able to name it, and this
+    // rule failed the build on its own explanation.
+    if (!isComment && /#16A34A|#15803D/.test(line) && short !== "LiveBets.tsx") {
       note(file, n, "green #16A34A outside the Won button, actions are purple");
     }
 
