@@ -54,11 +54,30 @@ const instrument = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://gocelebet.com"),
   title: "Celebet",
   description: "Track your sports bets and see exactly how you perform",
   appleWebApp: {
     title: "Celebet",
     statusBarStyle: "default",
+  },
+  // The card that shows when the address is pasted into a chat or a
+  // feed. The image is public/og.png, drawn from the landing design by
+  // /preview/og plus ogshot.mjs; regenerate it there if the design
+  // moves rather than editing the PNG.
+  openGraph: {
+    title: "Celebet",
+    description: "Track every bet. Discover patterns. Find your edge.",
+    url: "https://gocelebet.com",
+    siteName: "Celebet",
+    type: "website",
+    images: [{ url: "/og.png", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Celebet",
+    description: "Track every bet. Discover patterns. Find your edge.",
+    images: ["/og.png"],
   },
 };
 
