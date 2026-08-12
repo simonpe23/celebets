@@ -44,6 +44,22 @@ export async function middleware(request: NextRequest) {
     return supabaseResponse;
   }
 
+  // THE LEGAL PAGES ARE PUBLIC TO EVERYONE, ALWAYS.
+  //
+  // They were missing from the list below, so the login gate bounced
+  // every logged-out visitor who tapped Terms or Privacy in the landing
+  // page footer straight to /login. It looked fine to anyone already
+  // logged in, which is exactly why it survived: the owner only found
+  // it when Google asked for the URLs and they were dead.
+  //
+  // They are also kept out of isAuthPage on purpose, so a logged-IN
+  // user is not redirected away to /app when they want to read the
+  // terms they agreed to.
+  const isPublicPage =
+    pathname.startsWith("/terms") || pathname.startsWith("/privacy");
+
+  if (isPublicPage) return supabaseResponse;
+
   // Pages reachable without being logged in.
   const isAuthPage =
     pathname.startsWith("/login") ||
