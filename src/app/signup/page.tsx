@@ -6,6 +6,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import Disclaimer from "@/components/Disclaimer";
 import GoogleButton from "@/components/GoogleButton";
+import BackHome from "@/components/BackHome";
 
 // The landing page carries the email here in the address, so someone
 // who typed it there does not have to type it twice. Nothing else about
@@ -47,7 +48,8 @@ function SignUpForm() {
 
   if (needsConfirmation) {
     return (
-      <main className="flex min-h-dvh flex-col justify-center px-6 py-12">
+      <main className="relative flex min-h-dvh flex-col justify-center px-6 py-12">
+        <BackHome />
         <div className="mx-auto w-full max-w-sm text-center">
           <h1 className="text-2xl font-bold">Check your email</h1>
           <p className="mt-3 text-sm text-neutral-500 dark:text-neutral-400">
@@ -67,7 +69,8 @@ function SignUpForm() {
   }
 
   return (
-    <main className="flex min-h-dvh flex-col justify-center px-6 py-12">
+    <main className="relative flex min-h-dvh flex-col justify-center px-6 py-12">
+      <BackHome />
       <div className="mx-auto w-full max-w-sm">
         <h1 className="text-center text-3xl font-bold tracking-tight">
           Celebet

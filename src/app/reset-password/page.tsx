@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import Disclaimer from "@/components/Disclaimer";
+import BackHome from "@/components/BackHome";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -89,7 +90,8 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <main className="flex min-h-dvh flex-col justify-center px-6 py-12">
+    <main className="relative flex min-h-dvh flex-col justify-center px-6 py-12">
+      <BackHome />
       <div className="mx-auto w-full max-w-sm">
         <h1 className="text-center text-3xl font-bold tracking-tight">
           Celebet

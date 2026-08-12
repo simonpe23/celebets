@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import Disclaimer from "@/components/Disclaimer";
+import BackHome from "@/components/BackHome";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -33,7 +34,8 @@ export default function ForgotPasswordPage() {
 
   if (sent) {
     return (
-      <main className="flex min-h-dvh flex-col justify-center px-6 py-12">
+      <main className="relative flex min-h-dvh flex-col justify-center px-6 py-12">
+        <BackHome />
         <div className="mx-auto w-full max-w-sm text-center">
           <h1 className="text-2xl font-bold">Check your email</h1>
           <p className="mt-3 text-sm text-neutral-500 dark:text-neutral-400">
@@ -53,7 +55,8 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <main className="flex min-h-dvh flex-col justify-center px-6 py-12">
+    <main className="relative flex min-h-dvh flex-col justify-center px-6 py-12">
+      <BackHome />
       <div className="mx-auto w-full max-w-sm">
         <h1 className="text-center text-3xl font-bold tracking-tight">
           Celebet
