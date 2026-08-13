@@ -47,18 +47,39 @@ the spec; the SVGs here were fitted to them by measurement (the
 generator's comments say how). If the mark ever changes, re-measure
 rather than eyeball.
 
-## The font, and one open decision
+## The font: a real conflict you must decide
 
-The brand sheet names Satoshi (free from fontshare.com). Fontshare is
-unreachable from the build sandbox, so these files are set in Poppins
-SemiBold and Medium, which is also the app's existing wordmark font.
-The two are close but not identical.
+**The generator uses real Satoshi.** The owner sent the variable font
+on 13 August; Bold (700) and Medium (500) are instantiated from it and
+committed in `tools/`. An earlier version of this file wrongly said
+Poppins. That was stale text, not what the code did, and it is
+corrected here.
 
-To move to Satoshi: download Satoshi-Bold.ttf and Satoshi-Medium.ttf
-from fontshare.com, drop them next to `tools/genbrand.py`, point
-FONT_BOLD and FONT_MED at them, and rerun. Everything regenerates,
-including the notch position on the l, which follows the font
-automatically.
+**But the reference renders are NOT set in Satoshi.** Proven by
+comparing letterforms against `reference/logo_whitebg.png`:
+
+- The reference's `a` is SINGLE-storey: a circle with a straight stem,
+  like Futura or Poppins.
+- Satoshi's `a` is DOUBLE-storey, with a bowl and an arch above it, at
+  every weight from 300 to 900.
+
+Two different letters. No weight, size or spacing setting bridges
+that. The brand sheet says Satoshi because the image generator wrote
+the word "Satoshi" as part of the picture; it did not typeset anything
+in Satoshi, because AI image tools draw letter-shaped forms rather
+than using real fonts.
+
+So there is a genuine either/or, and it is a brand decision:
+
+| Choice | Result |
+| --- | --- |
+| Keep **Satoshi** | Matches the written brand sheet. Does not match the look of the renders. |
+| Switch to a **geometric single-storey** face (Poppins, Jost, Questrial) | Matches the renders' letterforms. Contradicts the sheet's stated font. |
+
+Poppins SemiBold is the closest match to the renders of the three
+tested. Switching is a two-line change: point FONT_BOLD and FONT_MED
+at the file and rerun. Every measurement, including where the l's tip
+is cut, is read from the font at runtime, so nothing else moves.
 
 ## Regenerating
 
