@@ -1,36 +1,38 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
-    <linearGradient id="ifront" x1="300" y1="60" x2="440" y2="450" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#A855F7"/>
-      <stop offset="0.5" stop-color="#8B3DFF"/>
+    <linearGradient id="ifront" x1="300" y1="60" x2="430" y2="445" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#C084FC"/>
+      <stop offset="0.35" stop-color="#A855F7"/>
+      <stop offset="0.65" stop-color="#8B3DFF"/>
       <stop offset="1" stop-color="#3B82F6"/>
     </linearGradient>
-    <linearGradient id="iback" x1="290" y1="80" x2="140" y2="340" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#8B3DFF"/>
+    <linearGradient id="iback" x1="280" y1="130" x2="150" y2="345" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9B45F5"/>
       <stop offset="1" stop-color="#5B21B6"/>
     </linearGradient>
-    <linearGradient id="idotg" x1="95" y1="375" x2="150" y2="455" gradientUnits="userSpaceOnUse">
+    <linearGradient id="idotg" x1="92" y1="380" x2="146" y2="455" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#A855F7"/>
       <stop offset="1" stop-color="#8B3DFF"/>
     </linearGradient>
+
     <filter id="ifold" x="-40%" y="-40%" width="180%" height="180%">
-      <feDropShadow dx="-7" dy="7" stdDeviation="9" flood-color="#1B0A3C" flood-opacity="0.45"/>
+      <feDropShadow dx="-5" dy="6" stdDeviation="7" flood-color="#1B0A3C" flood-opacity="0.38"/>
     </filter>
     <filter id="isoft" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="20"/>
+      <feGaussianBlur stdDeviation="16"/>
     </filter></defs>
   <rect width="512" height="512" fill="#05050B"/>
   <g transform="translate(63,64) scale(0.72)">
-    <g filter="url(#isoft)" opacity="0.6">
-      <path d="M237.4 125.6 L294.6 154.4 L191.6 340.4 L134.4 311.6 Z" fill="url(#iback)" stroke="url(#iback)" stroke-width="22" stroke-linejoin="round"/>
-      <circle cx="114" cy="426" r="42" fill="url(#idotg)" stroke="url(#idotg)" stroke-width="6"/>
-      <path d="M232 122 L316 74 L452 424 L368 424 Z" fill="url(#ifront)" stroke="url(#ifront)" stroke-width="30" stroke-linejoin="round"/>
+    <g filter="url(#isoft)" opacity="0.5">
+      <path d="M261 110 L310.7 143.5 L176.5 342.5 L126.8 309 Z" fill="url(#iback)" stroke="url(#iback)" stroke-width="20" stroke-linejoin="round"/>
+      <circle cx="99" cy="405" r="40" fill="url(#idotg)" stroke="url(#idotg)" stroke-width="6"/>
+      <path d="M254 106 L314 72 L452 424 L370 424 Z" fill="url(#ifront)" stroke="url(#ifront)" stroke-width="36" stroke-linejoin="round"/>
     </g>
     <g>
-      <path d="M237.4 125.6 L294.6 154.4 L191.6 340.4 L134.4 311.6 Z" fill="url(#iback)" stroke="url(#iback)" stroke-width="22" stroke-linejoin="round"/>
-      <circle cx="114" cy="426" r="42" fill="url(#idotg)" stroke="url(#idotg)" stroke-width="6"/>
+      <path d="M261 110 L310.7 143.5 L176.5 342.5 L126.8 309 Z" fill="url(#iback)" stroke="url(#iback)" stroke-width="20" stroke-linejoin="round"/>
+      <circle cx="99" cy="405" r="40" fill="url(#idotg)" stroke="url(#idotg)" stroke-width="6"/>
       <g filter="url(#ifold)">
-        <path d="M232 122 L316 74 L452 424 L368 424 Z" fill="url(#ifront)" stroke="url(#ifront)" stroke-width="30" stroke-linejoin="round"/>
+        <path d="M254 106 L314 72 L452 424 L370 424 Z" fill="url(#ifront)" stroke="url(#ifront)" stroke-width="36" stroke-linejoin="round"/>
       </g>
     </g></g>
 </svg>

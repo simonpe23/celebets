@@ -48,45 +48,48 @@ os.makedirs(OUT, exist_ok=True)
 # under the fold at a matching angle and is cut square to its own
 # direction. The dot continues the back leg's line, a data point
 # falling out of the A.
-ROUND = 30  # round-join stroke width; corners get half this as radius
+ROUND = 36  # round-join stroke width; corners get half this as radius
 
 
 def mark_defs(p):
     return f"""
-    <linearGradient id="{p}front" x1="300" y1="60" x2="440" y2="450" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="{P_LILAC}"/>
-      <stop offset="0.5" stop-color="{P_VIOLET}"/>
+    <linearGradient id="{p}front" x1="300" y1="60" x2="430" y2="445" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#C084FC"/>
+      <stop offset="0.35" stop-color="{P_LILAC}"/>
+      <stop offset="0.65" stop-color="{P_VIOLET}"/>
       <stop offset="1" stop-color="{P_BLUE}"/>
     </linearGradient>
-    <linearGradient id="{p}back" x1="290" y1="80" x2="140" y2="340" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="{P_VIOLET}"/>
+    <linearGradient id="{p}back" x1="280" y1="130" x2="150" y2="345" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9B45F5"/>
       <stop offset="1" stop-color="{P_DEEP}"/>
     </linearGradient>
-    <linearGradient id="{p}dotg" x1="95" y1="375" x2="150" y2="455" gradientUnits="userSpaceOnUse">
+    <linearGradient id="{p}dotg" x1="92" y1="380" x2="146" y2="455" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="{P_LILAC}"/>
       <stop offset="1" stop-color="{P_VIOLET}"/>
     </linearGradient>
+
     <filter id="{p}fold" x="-40%" y="-40%" width="180%" height="180%">
-      <feDropShadow dx="-7" dy="7" stdDeviation="9" flood-color="#1B0A3C" flood-opacity="0.45"/>
+      <feDropShadow dx="-5" dy="6" stdDeviation="7" flood-color="#1B0A3C" flood-opacity="0.38"/>
     </filter>
     <filter id="{p}soft" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="20"/>
+      <feGaussianBlur stdDeviation="16"/>
     </filter>"""
 
 
 # The back leg: perpendicular end caps, so its bottom cut slopes with
 # the stroke. Corners from centreline (275,90) to (165,322), half
 # width 40 (plus the round stroke it grows to ~53).
-BACK = "M237.4 125.6 L294.6 154.4 L191.6 340.4 L134.4 311.6 Z"
-# The front leg: fold seam at the top, horizontal foot on the ground.
-FRONT = "M232 122 L316 74 L452 424 L368 424 Z"
-DOT = 'cx="114" cy="426" r="42"'
+BACK = "M261 110 L310.7 143.5 L176.5 342.5 L126.8 309 Z"
+# The front leg: fold seam at the top, horizontal foot on the ground,
+# and a slight taper: narrower at the apex than at the foot.
+FRONT = "M254 106 L314 72 L452 424 L370 424 Z"
+DOT = 'cx="99" cy="405" r="40"'
 
 
 def mark_group(p, glow=False):
     """The artwork. glow=True adds the blurred colored copy below."""
     stroke = f'stroke-width="{ROUND}" stroke-linejoin="round"'
-    bstroke = 'stroke-width="22" stroke-linejoin="round"'
+    bstroke = 'stroke-width="20" stroke-linejoin="round"'
     art = f"""
     <g>
       <path d="{BACK}" fill="url(#{p}back)" stroke="url(#{p}back)" {bstroke}/>
@@ -98,7 +101,7 @@ def mark_group(p, glow=False):
     if not glow:
         return art
     return f"""
-    <g filter="url(#{p}soft)" opacity="0.6">
+    <g filter="url(#{p}soft)" opacity="0.5">
       <path d="{BACK}" fill="url(#{p}back)" stroke="url(#{p}back)" {bstroke}/>
       <circle {DOT} fill="url(#{p}dotg)" stroke="url(#{p}dotg)" stroke-width="6"/>
       <path d="{FRONT}" fill="url(#{p}front)" stroke="url(#{p}front)" {stroke}/>
@@ -126,7 +129,7 @@ def svg(viewbox, body):
 
 
 # Mark bounds after stroke growth: x 64..465, y 48..437 with the dot.
-MARK_VB = "42 39 452 452"
+MARK_VB = "35 23 456 456"
 
 write("symbol.svg", svg(MARK_VB, f"<defs>{mark_defs('s')}</defs>{mark_group('s')}"))
 
@@ -189,9 +192,9 @@ STEM_R = lx + 18.6
 # The diagonal cut through the stem, leaning like the mark's fold.
 # Everything above this line is ERASED from the l, then the flag
 # floats above it with a visible gap, exactly as in the owner's sheet.
-CUT_YL = -56.0   # cut height at the stem's left edge
-CUT_YR = -63.0   # higher at the right edge
-GAP = 5.0
+CUT_YL = -64.0   # cut height at the stem's left edge
+CUT_YR = -69.0   # higher at the right edge
+GAP = 2.0
 
 
 def word_defs(p):
@@ -211,15 +214,16 @@ def word_defs(p):
 
 
 def flag():
-    # The flag: same width as the stem plus a lean to the right, its
-    # base parallel to the cut, floating GAP above it, rising past the
-    # ascender the way the sheet's does.
-    x0, x1 = STEM_L, STEM_R + 7.5
+    # The flag continues the stem: same width plus a small overhang to
+    # the right, base flush on the slice bar a hairline, rising 24
+    # above it with a slight lean. The stem plus flag reads as one
+    # tall letter with a purple tip.
+    x0, x1 = STEM_L, STEM_R + 6.0
     base_l = CUT_YL - GAP
-    base_r = CUT_YR - GAP - 3.5
+    base_r = CUT_YR - GAP - 2.7
     top_l = base_l - 24
     top_r = base_r - 24
-    lean = 6.5
+    lean = 5.0
     return (f'M{x0:.1f} {base_l:.1f} L{x1:.1f} {base_r:.1f} '
             f'L{x1 + lean:.1f} {top_r:.1f} L{x0 + lean:.1f} {top_l:.1f} Z')
 
@@ -231,7 +235,7 @@ def wordmark_body(p, ink_expr):
   <path d="{flag()}" fill="url(#{p}flag)"/>"""
 
 
-WORD_VB = f"-6 -100 {WORD_W + 20:.0f} 110"
+WORD_VB = f"-6 -104 {WORD_W + 20:.0f} 114"
 write("wordmark-dark.svg", svg(WORD_VB, wordmark_body("wd", "url(#wdink)")))
 write("wordmark-light.svg", svg(WORD_VB, wordmark_body("wl", INK_DARK)))
 
@@ -239,7 +243,7 @@ write("wordmark-light.svg", svg(WORD_VB, wordmark_body("wl", INK_DARK)))
 def lockup_body(p, ink_expr):
     return f"""
   <defs>{mark_defs(p)}{word_defs(p)}</defs>
-  <g transform="translate(-47,-152) scale(0.34)">{mark_group(p)}</g>
+  <g transform="translate(-40,-152) scale(0.34)">{mark_group(p)}</g>
   <g transform="translate(158,0)">
     <path d="{word['d']}" fill="{ink_expr}" mask="url(#{p}cut)"/>
     <path d="{flag()}" fill="url(#{p}flag)"/>
