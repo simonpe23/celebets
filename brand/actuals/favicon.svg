@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="flegs" x1="120" y1="60" x2="470" y2="450" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#A855F7"/>
+      <stop offset="0.45" stop-color="#8B3DFF"/>
+      <stop offset="1" stop-color="#3B82F6"/>
+    </linearGradient>
+    <linearGradient id="fdot" x1="104" y1="356" x2="196" y2="452" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#A855F7"/>
+      <stop offset="1" stop-color="#8B3DFF"/>
+    </linearGradient>
+    <linearGradient id="fring" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#A855F7"/>
+      <stop offset="1" stop-color="#3B82F6"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="#05050B"/>
+  <g transform="translate(74,58) scale(0.74)">
+  <g>
+    <path d="M236 86 L312 64 L464 442 L388 442 Z" fill="url(#flegs)"/>
+    <path d="M236 86 L304 66 L268 156 Z" fill="#5B21B6" opacity="0.85"/>
+    <path d="M236 86 L304 66 L190 318 L118 318 Z" fill="url(#fdot)"/>
+    <circle cx="148" cy="408" r="44" fill="url(#fdot)"/>
+  </g></g>
+</svg>
