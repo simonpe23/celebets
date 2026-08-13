@@ -1,39 +1,41 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1254 1254">
   <defs>
-    <linearGradient id="ufront" x1="300" y1="60" x2="420" y2="440" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#C9A0FF"/>
-      <stop offset="0.30" stop-color="#A855F7"/>
-      <stop offset="0.62" stop-color="#8B3DFF"/>
-      <stop offset="1" stop-color="#3B82F6"/>
+    <linearGradient id="ufront" x1="626" y1="350" x2="905" y2="895" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F56EFC"/>
+      <stop offset="0.28" stop-color="#DF51FC"/>
+      <stop offset="0.52" stop-color="#A640FA"/>
+      <stop offset="0.78" stop-color="#3A4AFA"/>
+      <stop offset="1" stop-color="#0B70FC"/>
     </linearGradient>
-    <linearGradient id="uback" x1="290" y1="145" x2="150" y2="335" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#4A1A93"/>
-      <stop offset="0.35" stop-color="#5B21B6"/>
-      <stop offset="1" stop-color="#7C3AED"/>
+    <linearGradient id="uback" x1="618" y1="385" x2="450" y2="690" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9A1FF6"/>
+      <stop offset="1" stop-color="#6C1BF3"/>
     </linearGradient>
-    <linearGradient id="udotg" x1="80" y1="356" x2="136" y2="416" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#A855F7"/>
-      <stop offset="1" stop-color="#7C3AED"/>
+    <linearGradient id="udotg" x1="340" y1="750" x2="490" y2="905" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#C932FC"/>
+      <stop offset="1" stop-color="#5A22FA"/>
+    </linearGradient>
+    <linearGradient id="uring" x1="166" y1="170" x2="1088" y2="1084" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F45FFC"/>
+      <stop offset="0.55" stop-color="#B44CF9"/>
+      <stop offset="1" stop-color="#4E93FA"/>
     </linearGradient>
     <filter id="usoft" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="16"/>
+      <feGaussianBlur stdDeviation="26"/>
     </filter>
-    <linearGradient id="uring" x1="60" y1="40" x2="460" y2="480" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#C026D3"/>
-      <stop offset="0.5" stop-color="#8B3DFF"/>
-      <stop offset="1" stop-color="#2E7DF6"/>
-    </linearGradient>
-    <filter id="ugr" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur stdDeviation="8"/>
+    <filter id="ursoft" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="18"/>
     </filter>
-  </defs>
-  <rect width="512" height="512" fill="#FFFFFF"/>
-  <rect x="56" y="56" width="400" height="400" rx="108" fill="none" stroke="url(#uring)" stroke-width="13" filter="url(#ugr)" opacity="0.3"/>
-  <rect x="56" y="56" width="400" height="400" rx="108" fill="none" stroke="url(#uring)" stroke-width="9"/>
-  <g transform="translate(112,119) scale(0.545)">
-    <g>
-      <path d="M252.8 121.4 L307.2 158.6 L177.2 348.6 L122.8 311.4 Z" fill="url(#uback)" stroke="url(#uback)" stroke-width="26" stroke-linejoin="round"/>
-      <circle cx="108.0" cy="386.0" r="38.0" fill="url(#udotg)"/>
-      <path d="M226.0 110.6 L304.0 79.4 L441.8 424.0 L351.3 424.0 Z" fill="url(#ufront)" stroke="url(#ufront)" stroke-width="34" stroke-linejoin="round"/>
-    </g></g>
+    <filter id="ufold" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="11"/>
+    </filter></defs>
+  <rect width="1254" height="1254" fill="#FFFFFF"/>
+  
+    <rect x="166" y="170" width="922" height="914" rx="224" fill="none" stroke="url(#uring)" stroke-width="28" filter="url(#ursoft)" opacity="0.3"/>
+    <rect x="166" y="170" width="922" height="914" rx="224" fill="none" stroke="url(#uring)" stroke-width="24"/>
+  <g>
+      <path d="M576.3 399.6 L627.7 428.4 L492.7 669.4 L441.3 640.6 Z" fill="url(#uback)" stroke="url(#uback)" stroke-width="80" stroke-linejoin="round"/>
+      <circle cx="414" cy="827" r="95" fill="url(#udotg)"/>
+      
+      <path d="M601.4 403.2 L650.6 376.8 L914.6 866.8 L865.4 893.2 Z" fill="url(#ufront)" stroke="url(#ufront)" stroke-width="100" stroke-linejoin="round"/></g>
 </svg>

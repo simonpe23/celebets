@@ -32,14 +32,20 @@ light backgrounds (dark text).
 
 ## Colors
 
-From the owner's brand sheet, August 2026:
+MEASURED from the owner's reference renders in `reference/`, 13 August
+2026. These supersede the older guideline chips, because the renders
+the owner approved run hotter:
 
-- `#A855F7` lilac (gradient start)
-- `#8B3DFF` violet (gradient middle)
-- `#3B82F6` blue (gradient end)
-- `#5B21B6` deep violet (the fold shadow in the mark)
-- `#F8FAFC` near-white ink on dark
-- `#05050B` near-black ink and the dark surface
+- Front bar fade: `#F56EFC` magenta, `#A640FA` violet, `#0B70FC` blue
+- Back bar fade: `#9A1FF6` to `#6C1BF3`
+- Dot: `#C932FC` to `#5A22FA`
+- Ring: `#F45FFC` through `#B44CF9` to `#4E93FA`
+- Ink: `#F8FAFC` on dark, `#05050B` on light, backgrounds pure black
+
+The `reference/` folder holds the owner's original renders. They are
+the spec; the SVGs here were fitted to them by measurement (the
+generator's comments say how). If the mark ever changes, re-measure
+rather than eyeball.
 
 ## The font, and one open decision
 
