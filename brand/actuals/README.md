@@ -16,7 +16,7 @@ logo down with it. So:
 | Marketing page hero, posters, big social images | `logo-full-dark.svg` / `logo-full-light.svg` (600px wide or more, never smaller) |
 | Website header, email header, most everyday use | `logo-dark.svg` / `logo-light.svg` |
 | When the name appears without the mark | `wordmark-dark.svg` / `wordmark-light.svg` |
-| Tiny spaces: avatars, app icon, favicon | `symbol.svg`, `symbol-tile.svg`, the favicon and app icon files |
+| Tiny spaces: avatars, app icon, favicon | `symbol.svg`, `symbol-tile-dark.svg` / `symbol-tile-light.svg`, the favicon and app icon files |
 | Link previews in chats and feeds | `og-card.png` (1200 by 630) |
 
 `-dark` means FOR dark backgrounds (light text). `-light` means for

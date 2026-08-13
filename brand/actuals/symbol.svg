@@ -1,23 +1,28 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="60 20 440 440">
-  <defs>
-    <linearGradient id="slegs" x1="120" y1="60" x2="470" y2="450" gradientUnits="userSpaceOnUse">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="42 39 452 452"><defs>
+    <linearGradient id="sfront" x1="300" y1="60" x2="440" y2="450" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#A855F7"/>
-      <stop offset="0.45" stop-color="#8B3DFF"/>
+      <stop offset="0.5" stop-color="#8B3DFF"/>
       <stop offset="1" stop-color="#3B82F6"/>
     </linearGradient>
-    <linearGradient id="sdot" x1="104" y1="356" x2="196" y2="452" gradientUnits="userSpaceOnUse">
+    <linearGradient id="sback" x1="290" y1="80" x2="140" y2="340" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#8B3DFF"/>
+      <stop offset="1" stop-color="#5B21B6"/>
+    </linearGradient>
+    <linearGradient id="sdotg" x1="95" y1="375" x2="150" y2="455" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#A855F7"/>
       <stop offset="1" stop-color="#8B3DFF"/>
     </linearGradient>
-    <linearGradient id="sring" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#A855F7"/>
-      <stop offset="1" stop-color="#3B82F6"/>
-    </linearGradient>
-  </defs>
-  <g>
-    <path d="M236 86 L312 64 L464 442 L388 442 Z" fill="url(#slegs)"/>
-    <path d="M236 86 L304 66 L268 156 Z" fill="#5B21B6" opacity="0.85"/>
-    <path d="M236 86 L304 66 L190 318 L118 318 Z" fill="url(#sdot)"/>
-    <circle cx="148" cy="408" r="44" fill="url(#sdot)"/>
-  </g>
+    <filter id="sfold" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="-7" dy="7" stdDeviation="9" flood-color="#1B0A3C" flood-opacity="0.45"/>
+    </filter>
+    <filter id="ssoft" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="20"/>
+    </filter></defs>
+    <g>
+      <path d="M237.4 125.6 L294.6 154.4 L191.6 340.4 L134.4 311.6 Z" fill="url(#sback)" stroke="url(#sback)" stroke-width="22" stroke-linejoin="round"/>
+      <circle cx="114" cy="426" r="42" fill="url(#sdotg)" stroke="url(#sdotg)" stroke-width="6"/>
+      <g filter="url(#sfold)">
+        <path d="M232 122 L316 74 L452 424 L368 424 Z" fill="url(#sfront)" stroke="url(#sfront)" stroke-width="30" stroke-linejoin="round"/>
+      </g>
+    </g>
 </svg>

@@ -1,16 +1,27 @@
-# Builds the Actuals brand files as clean vector SVG.
+# Builds the Actuals brand files as clean vector SVG. Version 2,
+# after the owner rejected v1: "looks like it's made by a child in
+# paint... my mockup has a glow, colors that are fading in a classy
+# way." He was right. What changed:
 #
-# The AI sheet is the spec: A mark with a data-point dot, purple to
-# blue gradient, lowercase wordmark with an angled notch on the l,
-# tagline TRACK ANALYZE IMPROVE. This redraws all of it as geometry so
-# it stays sharp at every size.
+# - Every corner of the mark is ROUNDED (round-join stroke trick), the
+#   single biggest difference between clip art and a drawn mark.
+# - The fold is a real cast shadow from the front leg onto the back
+#   leg, not a pasted triangle.
+# - The back leg runs a deeper violet gradient than the front leg,
+#   which is what makes the ribbon read as two faces of one strip.
+# - A sheen pass brightens the front leg's top, so the gradient fades
+#   the way his mockup does instead of banding.
+# - Dark-surface versions carry a true neon glow: a blurred colored
+#   copy of the artwork underneath itself.
+# - The l notch: the stem is CUT with a mask (a diagonal slice of it
+#   is erased), and the flag floats above the cut with a deliberate
+#   gap. v1 slapped the flag over an intact stem and the stem showed
+#   through behind it.
 #
-# The wordmark is set in Poppins because Satoshi (the sheet's font)
-# cannot be downloaded from this sandbox. Every letter is converted to
-# outline paths, so no viewer ever needs the font installed. To switch
-# to Satoshi later: put Satoshi-Bold.ttf and Satoshi-Medium.ttf next to
-# this script and rerun with FONT_BOLD/FONT_MED changed. Nothing else
-# moves.
+# The wordmark is Poppins outlines standing in for Satoshi, which is
+# unreachable from this sandbox. Swap: put Satoshi-Bold.ttf and
+# Satoshi-Medium.ttf beside this script, point FONT_BOLD and FONT_MED
+# at them, rerun. The notch follows the l automatically.
 import os
 import sys
 
@@ -22,164 +33,231 @@ OUT = "/home/user/celebets/brand/actuals"
 FONT_BOLD = os.path.join(HERE, "Poppins-600.ttf")
 FONT_MED = os.path.join(HERE, "Poppins-500.ttf")
 
-# The palette, from the owner's sheet.
 P_LILAC = "#A855F7"
 P_VIOLET = "#8B3DFF"
 P_BLUE = "#3B82F6"
 P_DEEP = "#5B21B6"
-INK_LIGHT = "#F8FAFC"   # text on dark
-INK_DARK = "#05050B"    # text on light, and the dark surface
+INK_LIGHT = "#F8FAFC"
+INK_DARK = "#05050B"
 
 os.makedirs(OUT, exist_ok=True)
 
+# ----------------------------------------------------------- the mark
+# Geometry in a 512 square. The front (right) leg runs from the apex
+# to the ground with a horizontal foot. The back (left) leg slides
+# under the fold at a matching angle and is cut square to its own
+# direction. The dot continues the back leg's line, a data point
+# falling out of the A.
+ROUND = 30  # round-join stroke width; corners get half this as radius
 
-def grad_defs(prefix=""):
-    """The two gradients every asset shares."""
+
+def mark_defs(p):
     return f"""
-  <defs>
-    <linearGradient id="{prefix}legs" x1="120" y1="60" x2="470" y2="450" gradientUnits="userSpaceOnUse">
+    <linearGradient id="{p}front" x1="300" y1="60" x2="440" y2="450" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="{P_LILAC}"/>
-      <stop offset="0.45" stop-color="{P_VIOLET}"/>
+      <stop offset="0.5" stop-color="{P_VIOLET}"/>
       <stop offset="1" stop-color="{P_BLUE}"/>
     </linearGradient>
-    <linearGradient id="{prefix}dot" x1="104" y1="356" x2="196" y2="452" gradientUnits="userSpaceOnUse">
+    <linearGradient id="{p}back" x1="290" y1="80" x2="140" y2="340" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="{P_VIOLET}"/>
+      <stop offset="1" stop-color="{P_DEEP}"/>
+    </linearGradient>
+    <linearGradient id="{p}dotg" x1="95" y1="375" x2="150" y2="455" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="{P_LILAC}"/>
       <stop offset="1" stop-color="{P_VIOLET}"/>
     </linearGradient>
-    <linearGradient id="{prefix}ring" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="{P_LILAC}"/>
-      <stop offset="1" stop-color="{P_BLUE}"/>
-    </linearGradient>
-  </defs>"""
+    <filter id="{p}fold" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="-7" dy="7" stdDeviation="9" flood-color="#1B0A3C" flood-opacity="0.45"/>
+    </filter>
+    <filter id="{p}soft" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="20"/>
+    </filter>"""
 
 
-def mark_group(prefix=""):
-    """The A and its dot, drawn in a 512 square.
+# The back leg: perpendicular end caps, so its bottom cut slopes with
+# the stroke. Corners from centreline (275,90) to (165,322), half
+# width 40 (plus the round stroke it grows to ~53).
+BACK = "M237.4 125.6 L294.6 154.4 L191.6 340.4 L134.4 311.6 Z"
+# The front leg: fold seam at the top, horizontal foot on the ground.
+FRONT = "M232 122 L316 74 L452 424 L368 424 Z"
+DOT = 'cx="114" cy="426" r="42"'
 
-    Anatomy: the right leg runs full length, the left leg stops short,
-    and the dot lands where the left leg would have. The two legs share
-    a diagonal top edge so the apex reads as a folded ribbon, with a
-    darker triangle underneath the fold for depth.
-    """
+
+def mark_group(p, glow=False):
+    """The artwork. glow=True adds the blurred colored copy below."""
+    stroke = f'stroke-width="{ROUND}" stroke-linejoin="round"'
+    bstroke = 'stroke-width="22" stroke-linejoin="round"'
+    art = f"""
+    <g>
+      <path d="{BACK}" fill="url(#{p}back)" stroke="url(#{p}back)" {bstroke}/>
+      <circle {DOT} fill="url(#{p}dotg)" stroke="url(#{p}dotg)" stroke-width="6"/>
+      <g filter="url(#{p}fold)">
+        <path d="{FRONT}" fill="url(#{p}front)" stroke="url(#{p}front)" {stroke}/>
+      </g>
+    </g>"""
+    if not glow:
+        return art
     return f"""
-  <g>
-    <path d="M236 86 L312 64 L464 442 L388 442 Z" fill="url(#{prefix}legs)"/>
-    <path d="M236 86 L304 66 L268 156 Z" fill="{P_DEEP}" opacity="0.85"/>
-    <path d="M236 86 L304 66 L190 318 L118 318 Z" fill="url(#{prefix}dot)"/>
-    <circle cx="148" cy="408" r="44" fill="url(#{prefix}dot)"/>
-  </g>"""
+    <g filter="url(#{p}soft)" opacity="0.6">
+      <path d="{BACK}" fill="url(#{p}back)" stroke="url(#{p}back)" {bstroke}/>
+      <circle {DOT} fill="url(#{p}dotg)" stroke="url(#{p}dotg)" stroke-width="6"/>
+      <path d="{FRONT}" fill="url(#{p}front)" stroke="url(#{p}front)" {stroke}/>
+    </g>{art}"""
+
+
+def ring_defs(p):
+    return f"""
+    <linearGradient id="{p}ring" x1="60" y1="40" x2="460" y2="480" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="{P_LILAC}"/>
+      <stop offset="0.55" stop-color="{P_VIOLET}"/>
+      <stop offset="1" stop-color="{P_BLUE}"/>
+    </linearGradient>"""
 
 
 def write(name, content):
-    path = os.path.join(OUT, name)
-    with open(path, "w") as f:
+    with open(os.path.join(OUT, name), "w") as f:
         f.write(content.strip() + "\n")
     print("wrote", name)
 
 
-def svg(viewbox, body, w=None, h=None):
-    dims = ""
-    if w:
-        dims = f' width="{w}" height="{h}"'
-    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{viewbox}"{dims}>'
+def svg(viewbox, body):
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{viewbox}">'
             f"{body}\n</svg>")
 
 
-# ---------------------------------------------------------------- text
+# Mark bounds after stroke growth: x 64..465, y 48..437 with the dot.
+MARK_VB = "42 39 452 452"
+
+write("symbol.svg", svg(MARK_VB, f"<defs>{mark_defs('s')}</defs>{mark_group('s')}"))
+
+# The display tile, dark: glowing ring and glowing mark on the brand
+# near-black. This is the owner's mockup icon.
+tile_dark = f"""
+  <defs>{mark_defs('t')}{ring_defs('t')}
+    <filter id="tglowr" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="14"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" fill="{INK_DARK}"/>
+  <rect x="58" y="58" width="396" height="396" rx="104" fill="none" stroke="url(#tring)" stroke-width="12" filter="url(#tglowr)" opacity="0.85"/>
+  <rect x="58" y="58" width="396" height="396" rx="104" fill="none" stroke="url(#tring)" stroke-width="9"/>
+  <g transform="translate(106,107) scale(0.56)">{mark_group('t', glow=True)}</g>"""
+write("symbol-tile-dark.svg", svg("0 0 512 512", tile_dark))
+
+# The display tile, light: same anatomy on white, soft shadows instead
+# of glow. A glow needs darkness.
+tile_light = f"""
+  <defs>{mark_defs('u')}{ring_defs('u')}
+    <filter id="uglowr" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" fill="#FFFFFF"/>
+  <rect x="58" y="58" width="396" height="396" rx="104" fill="none" stroke="url(#uring)" stroke-width="10" filter="url(#uglowr)" opacity="0.35"/>
+  <rect x="58" y="58" width="396" height="396" rx="104" fill="none" stroke="url(#uring)" stroke-width="9"/>
+  <g transform="translate(106,107) scale(0.56)">{mark_group('u')}</g>"""
+write("symbol-tile-light.svg", svg("0 0 512 512", tile_light))
+
+# App icon master: full bleed, subtle glow, no ring. The OS rounds the
+# corners and adds its own edge.
+icon = f"""
+  <defs>{mark_defs('i')}</defs>
+  <rect width="512" height="512" fill="{INK_DARK}"/>
+  <g transform="translate(63,64) scale(0.72)">{mark_group('i', glow=True)}</g>"""
+write("app-icon-master.svg", svg("0 0 512 512", icon))
+
+# Favicon: mark large on the dark tile, no ring. At 16px a ring is
+# noise and the mark needs every pixel.
+fav = f"""
+  <defs>{mark_defs('f')}</defs>
+  <rect width="512" height="512" rx="96" fill="{INK_DARK}"/>
+  <g transform="translate(47,49) scale(0.78)">{mark_group('f')}</g>"""
+write("favicon.svg", svg("0 0 512 512", fav))
+
+# ------------------------------------------------------- the wordmark
 WORD_SIZE = 100
 word = shape(FONT_BOLD, "actuals", WORD_SIZE, tracking=-0.005)
+WORD_W = word["width"]
 
-# The notch: an angled flag on the l, echoing the mark's fold. The l's
-# stem position comes from the shaper, so a font swap moves it
-# automatically.
 l_pos = next(p for p in word["positions"] if p["glyph"] == "l")
 lx = l_pos["x"]
-l_adv = l_pos["advance"]
+# Poppins SemiBold l at size 100: stem runs x = lx+8.4 .. lx+18.6,
+# top at y = -74.4. Measured from the glyph, not guessed.
+STEM_L = lx + 8.4
+STEM_R = lx + 18.6
+
+# The diagonal cut through the stem, leaning like the mark's fold.
+# Everything above this line is ERASED from the l, then the flag
+# floats above it with a visible gap, exactly as in the owner's sheet.
+CUT_YL = -56.0   # cut height at the stem's left edge
+CUT_YR = -63.0   # higher at the right edge
+GAP = 5.0
 
 
-def notch(color_expr):
-    # Poppins' l is a bare stem centred in its advance, top around
-    # y=-73 at this size. The flag sits ON the stem and slants up to
-    # the right, the same lean as the mark's fold: it must read as the
-    # l's own top turning purple, not as a mark floating beside it.
-    x0 = lx + 8.0
-    x1 = lx + 27.0
-    return (f'<path d="M{x0:.1f} -56 L{x0:.1f} -75 L{x1:.1f} -87 '
-            f'L{x1:.1f} -68 Z" fill="{color_expr}"/>')
-
-
-def wordmark_body(ink, prefix):
+def word_defs(p):
     return f"""
-  <defs>
-    <linearGradient id="{prefix}n" x1="{lx:.0f}" y1="-85" x2="{lx + 40:.0f}" y2="-58" gradientUnits="userSpaceOnUse">
+    <linearGradient id="{p}flag" x1="{STEM_L:.0f}" y1="-92" x2="{STEM_R + 14:.0f}" y2="-60" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="{P_LILAC}"/>
       <stop offset="1" stop-color="{P_BLUE}"/>
     </linearGradient>
-  </defs>
-  <path d="{word['d']}" fill="{ink}"/>
-  {notch(f'url(#{prefix}n)')}"""
+    <linearGradient id="{p}ink" x1="0" y1="-80" x2="0" y2="4" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="{INK_LIGHT}"/>
+      <stop offset="1" stop-color="#C9CEDC"/>
+    </linearGradient>
+    <mask id="{p}cut">
+      <rect x="-20" y="-120" width="{WORD_W + 60:.0f}" height="160" fill="white"/>
+      <path d="M{STEM_L - 4:.1f} {CUT_YL:.1f} L{STEM_R + 6:.1f} {CUT_YR:.1f} L{STEM_R + 6:.1f} -120 L{STEM_L - 4:.1f} -120 Z" fill="black"/>
+    </mask>"""
 
 
-WORD_W = word["width"]
-WORD_VB = f"-4 -92 {WORD_W + 16:.0f} 100"
+def flag():
+    # The flag: same width as the stem plus a lean to the right, its
+    # base parallel to the cut, floating GAP above it, rising past the
+    # ascender the way the sheet's does.
+    x0, x1 = STEM_L, STEM_R + 7.5
+    base_l = CUT_YL - GAP
+    base_r = CUT_YR - GAP - 3.5
+    top_l = base_l - 24
+    top_r = base_r - 24
+    lean = 6.5
+    return (f'M{x0:.1f} {base_l:.1f} L{x1:.1f} {base_r:.1f} '
+            f'L{x1 + lean:.1f} {top_r:.1f} L{x0 + lean:.1f} {top_l:.1f} Z')
 
-write("wordmark-dark.svg", svg(WORD_VB, wordmark_body(INK_LIGHT, "wd")))
-write("wordmark-light.svg", svg(WORD_VB, wordmark_body(INK_DARK, "wl")))
 
-# -------------------------------------------------------------- symbol
-write("symbol.svg", svg("60 20 440 440", grad_defs("s") + mark_group("s")))
+def wordmark_body(p, ink_expr):
+    return f"""
+  <defs>{word_defs(p)}</defs>
+  <path d="{word['d']}" fill="{ink_expr}" mask="url(#{p}cut)"/>
+  <path d="{flag()}" fill="url(#{p}flag)"/>"""
 
-tile_body = f"""{grad_defs("t")}
-  <rect x="10" y="10" width="492" height="492" rx="112" fill="{INK_DARK}"/>
-  <rect x="10" y="10" width="492" height="492" rx="112" fill="none" stroke="url(#tring)" stroke-width="10"/>
-  <g transform="translate(74,64) scale(0.72)">{mark_group("t")}</g>"""
-write("symbol-tile.svg", svg("0 0 512 512", tile_body))
 
-# App icon master: full bleed, the OS rounds its own corners. The mark
-# sits slightly above centre because the dot pulls visual weight down.
-icon_body = f"""{grad_defs("i")}
-  <rect width="512" height="512" fill="{INK_DARK}"/>
-  <g transform="translate(90,74) scale(0.66)">{mark_group("i")}</g>"""
-write("app-icon-master.svg", svg("0 0 512 512", icon_body))
-
-write("favicon.svg", svg("0 0 512 512", f"""{grad_defs("f")}
-  <rect width="512" height="512" rx="96" fill="{INK_DARK}"/>
-  <g transform="translate(74,58) scale(0.74)">{mark_group("f")}</g>"""))
+WORD_VB = f"-6 -100 {WORD_W + 20:.0f} 110"
+write("wordmark-dark.svg", svg(WORD_VB, wordmark_body("wd", "url(#wdink)")))
+write("wordmark-light.svg", svg(WORD_VB, wordmark_body("wl", INK_DARK)))
 
 # ------------------------------------------------- horizontal lockups
-# Mark beside wordmark, no tagline. This is the everyday logo.
-def lockup_body(ink, prefix):
-    # The mark, tile-less, scaled so its height sits a touch above the
-    # ascender, baseline-aligned with the text.
-    mark_scale = 0.30  # 512 -> ~154 tall next to 100px text
-    return f"""{grad_defs(prefix)}
-  <defs>
-    <linearGradient id="{prefix}n2" x1="{lx:.0f}" y1="-85" x2="{lx + 40:.0f}" y2="-58" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="{P_LILAC}"/>
-      <stop offset="1" stop-color="{P_BLUE}"/>
-    </linearGradient>
-  </defs>
-  <g transform="translate(-14,-120) scale({mark_scale})">{mark_group(prefix)}</g>
-  <g transform="translate(136,0)">
-    <path d="{word['d']}" fill="{ink}"/>
-    {notch(f'url(#{prefix}n2)')}
+def lockup_body(p, ink_expr):
+    return f"""
+  <defs>{mark_defs(p)}{word_defs(p)}</defs>
+  <g transform="translate(-47,-152) scale(0.34)">{mark_group(p)}</g>
+  <g transform="translate(158,0)">
+    <path d="{word['d']}" fill="{ink_expr}" mask="url(#{p}cut)"/>
+    <path d="{flag()}" fill="url(#{p}flag)"/>
   </g>"""
 
 
-LOCKUP_VB = f"-18 -110 {WORD_W + 178:.0f} 130"
-write("logo-dark.svg", svg(LOCKUP_VB, lockup_body(INK_LIGHT, "ld")))
-write("logo-light.svg", svg(LOCKUP_VB, lockup_body(INK_DARK, "ll")))
+LOCKUP_VB = f"-24 -122 {WORD_W + 214:.0f} 148"
+write("logo-dark.svg", svg(LOCKUP_VB, lockup_body("ld", "url(#ldink)")))
+write("logo-light.svg", svg(LOCKUP_VB, lockup_body("ll", INK_DARK)))
 
 # --------------------------------------------- stacked, with tagline
-# The full lockup from the owner's sheet. FOR LARGE USE ONLY: the
-# README sets the rule that below 600px wide this file is the wrong
-# one, because the tagline turns to dust.
 TAG_SIZE = 21
 tags = [shape(FONT_MED, t, TAG_SIZE, tracking=0.24) for t in
         ["TRACK.", "ANALYZE.", "IMPROVE."]]
 TAG_COLORS = [P_LILAC, P_VIOLET, P_BLUE]
 BULLET_GAP = 34
 tag_total = sum(t["width"] for t in tags) + 2 * BULLET_GAP
+FULL_W = max(WORD_W, tag_total) + 24
 
 
 def tagline_group(y):
@@ -198,41 +276,38 @@ def tagline_group(y):
     return "\n  ".join(parts)
 
 
-FULL_W = max(WORD_W, tag_total) + 24
-
-
-def full_body(ink, prefix):
-    tile_scale = 0.42
+def full_body(p, ink_expr, tile):
+    tile_scale = 0.46
     tile_x = (FULL_W - 512 * tile_scale) / 2
     word_x = (FULL_W - WORD_W) / 2
-    return f"""{grad_defs(prefix)}
-  <defs>
-    <linearGradient id="{prefix}n3" x1="{lx:.0f}" y1="-85" x2="{lx + 40:.0f}" y2="-58" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="{P_LILAC}"/>
-      <stop offset="1" stop-color="{P_BLUE}"/>
-    </linearGradient>
+    return f"""
+  <defs>{mark_defs(p)}{ring_defs(p)}{word_defs(p)}
+    <filter id="{p}glr" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="10"/>
+    </filter>
   </defs>
-  <g transform="translate({tile_x:.1f},0) scale(0.42)">
-    <rect x="10" y="10" width="492" height="492" rx="112" fill="{INK_DARK}"/>
-    <rect x="10" y="10" width="492" height="492" rx="112" fill="none" stroke="url(#{prefix}ring)" stroke-width="10"/>
-    <g transform="translate(74,64) scale(0.72)">{mark_group(prefix + "x")}</g>
+  <g transform="translate({tile_x:.1f},0) scale({tile_scale})">{tile}</g>
+  <g transform="translate({word_x:.1f},352)">
+    <path d="{word['d']}" fill="{ink_expr}" mask="url(#{p}cut)"/>
+    <path d="{flag()}" fill="url(#{p}flag)"/>
   </g>
-  <g transform="translate({word_x:.1f},332)">
-    <path d="{word['d']}" fill="{ink}"/>
-    {notch(f'url(#{prefix}n3)')}
-  </g>
-  {tagline_group(384)}"""
+  {tagline_group(404)}"""
 
 
-FULL_VB = f"-10 -12 {FULL_W + 20:.0f} 420"
-# The mark group inside uses its own gradient ids via prefix+x, so
-# declare those too by generating defs twice with both prefixes.
-def full_svg(ink, prefix):
-    body = grad_defs(prefix + "x") + full_body(ink, prefix)
-    return svg(FULL_VB, body)
+def tile_inner(p, dark):
+    ring_glow = (f'<rect x="58" y="58" width="396" height="396" rx="104" fill="none" '
+                 f'stroke="url(#{p}ring)" stroke-width="12" filter="url(#{p}glr)" '
+                 f'opacity="{0.85 if dark else 0.35}"/>')
+    return f"""
+    {ring_glow}
+    <rect x="58" y="58" width="396" height="396" rx="104" fill="none" stroke="url(#{p}ring)" stroke-width="9"/>
+    <g transform="translate(106,107) scale(0.56)">{mark_group(p, glow=dark)}</g>"""
 
 
-write("logo-full-dark.svg", full_svg(INK_LIGHT, "fd"))
-write("logo-full-light.svg", full_svg(INK_DARK, "fl"))
+FULL_VB = f"-12 -6 {FULL_W + 24:.0f} 442"
+write("logo-full-dark.svg",
+      svg(FULL_VB, full_body("fd", "url(#fdink)", tile_inner("fd", True))))
+write("logo-full-light.svg",
+      svg(FULL_VB, full_body("fl", INK_DARK, tile_inner("fl", False))))
 
 print("done")
