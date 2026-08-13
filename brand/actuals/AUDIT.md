@@ -11,12 +11,13 @@ knowing exactly why rather than trying a fifth time.**
 
 Two hard limits, neither of them about effort:
 
-1. **I cannot open the mockup as a file.** The PNGs arrive as pictures
-   in a conversation. I can look at them, but I cannot load them,
-   sample their pixels, measure their angles, or auto-trace them. So
-   every coordinate here is reconstructed by eye from a description
-   of what I see. That is a fundamentally lower-precision process than
-   what a designer does with the actual file open in Illustrator.
+1. **The mockup has to be ATTACHED as a file, not pasted inline.**
+   This was stated wrongly in an earlier draft and corrected on 13
+   August: files the owner attaches DO land on disk and can be opened,
+   measured and sampled. That is how the Satoshi font arrived. Images
+   pasted inline into the conversation do not. Until the mockup PNG is
+   attached the same way, every coordinate here is reconstructed by
+   eye, which is far lower precision than measuring the real pixels.
 2. **The mockup is a 3D render, not vector art.** It has soft
    volumetric lighting, subtle bevels on every edge, and light
    wrapping around forms. SVG can approximate that with gradients and
@@ -41,22 +42,16 @@ from specific mistakes:
 
 ## What is still different, and why
 
-**The font.** The mockup's brand sheet names Satoshi. Satoshi is
-distributed only from fontshare.com, which this build sandbox cannot
-reach; four separate sources were tried and all are blocked. These
-files use Outfit, which is much closer to Satoshi than the Poppins
-used earlier, but it is not Satoshi.
+**The font: SOLVED, 13 August.** The owner attached Satoshi as a file
+and the wordmark is now set in real Satoshi. It arrived as a variable
+font, so Bold (700) and Medium (500) are instantiated from it with
+fontTools; both live in `tools/`.
 
-Worth knowing: the mockup's own lettering is probably not Satoshi
-either. AI image generators do not typeset with real fonts, they draw
-letter-shaped forms. So matching the mockup's wordmark exactly means
-matching something that is not a font at all. Using real Satoshi is
-the right goal, not matching the render.
-
-FIX: the owner downloads Satoshi from fontshare.com, the two TTF files
-go beside `tools/genbrand.py`, FONT_BOLD and FONT_MED point at them,
-rerun. Every measurement is taken from the font at runtime, including
-where the l's tip is cut, so nothing needs hand adjusting.
+Worth knowing anyway: the mockup's own lettering is probably not
+Satoshi. AI image generators do not typeset with real fonts, they draw
+letter-shaped forms. So the wordmark here may differ slightly from the
+render while being MORE correct, because it is the actual typeface the
+brand sheet specifies.
 
 **Surface quality.** The render's bars have soft bevelled edges and
 light that wraps around the form. The vector bars have flat gradients

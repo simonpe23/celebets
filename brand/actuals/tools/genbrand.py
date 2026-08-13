@@ -22,14 +22,16 @@
 #    it. Nothing can stick out, because nothing exists outside the
 #    letters.
 #
-# 4. "Wrong font, why?" Satoshi is on fontshare.com, which this
-#    sandbox cannot reach (verified against three mirrors). Poppins
-#    was a poor stand-in. Outfit is much closer to Satoshi's
-#    geometry. THE REAL FIX IS THE OWNER SENDING THE TTF: drop
-#    Satoshi-Bold.ttf and Satoshi-Medium.ttf beside this script,
-#    point FONT_BOLD and FONT_MED at them, rerun. Every measurement
-#    below is taken from the font at runtime, so nothing needs
-#    adjusting by hand.
+# 4. "Wrong font, why?" Fixed for real: the owner sent Satoshi as a
+#    file. It is a VARIABLE font, so Bold (700) and Medium (500) are
+#    instantiated from it with fontTools rather than downloaded.
+#    Regenerate those two with:
+#      from fontTools.varLib.instancer import instantiateVariableFont
+#      instantiateVariableFont(TTFont("SatoshiVariable.ttf"),
+#                              {"wght": 700}).save("Satoshi-Bold.ttf")
+#    Every measurement below is read from the font at runtime,
+#    including where the l's tip is cut, so a font change needs no
+#    hand editing anywhere.
 import os
 import sys
 
@@ -41,8 +43,8 @@ from textpath import shape
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = "/home/user/celebets/brand/actuals"
-FONT_BOLD = os.path.join(HERE, "Outfit.ttf")
-FONT_MED = os.path.join(HERE, "Outfit.ttf")
+FONT_BOLD = os.path.join(HERE, "Satoshi-Bold.ttf")
+FONT_MED = os.path.join(HERE, "Satoshi-Medium.ttf")
 
 P_LILAC = "#A855F7"
 P_VIOLET = "#8B3DFF"
