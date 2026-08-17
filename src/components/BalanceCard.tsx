@@ -74,7 +74,7 @@ export default function BalanceCard({
         ? "text-red-600 dark:text-red-400"
         : "text-neutral-500 dark:text-neutral-400";
 
-  // Celebet never holds money. The balance is a number the user tracks
+  // Actuals never holds money. The balance is a number the user tracks
   // against, so nothing here is a deposit or a withdrawal. Under the
   // hood a change is still stored as a transaction, which keeps net
   // profit and the whole history untouched.
@@ -85,7 +85,7 @@ export default function BalanceCard({
       return;
     }
 
-    // "Set new" means the user typed the total they want, so Celebet
+    // "Set new" means the user typed the total they want, so Actuals
     // works out the difference itself.
     let delta = direction === "up" ? value : -value;
     if (mode === "set") delta = value - balance;

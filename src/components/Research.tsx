@@ -8,10 +8,10 @@ import { CARD, CARD_LINK, INNER } from "@/lib/ui";
 //
 // Research happens BEFORE a bet. It is active: the user goes looking.
 // That is what separates it from insights, which happen AFTER a bet and
-// which Celebet surfaces on its own. The owner drew that line himself
+// which Actuals surfaces on its own. The owner drew that line himself
 // and it is why insights live inside Performance and not here.
 //
-// Nothing on this page is built yet. Every door needs data Celebet does
+// Nothing on this page is built yet. Every door needs data Actuals does
 // not have: squads, lines, weather, a model. Soon badges rather than
 // dead links, ruled by the owner in August 2026.
 //
@@ -173,7 +173,7 @@ export default function Research({ activeHref }: { activeHref?: string }) {
               Looking for your own numbers?
             </span>
             <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
-              Everything Celebet has noticed lives in Performance.
+              Everything Actuals has noticed lives in Performance.
             </span>
           </span>
           <Link href="/insights" className={CARD_LINK}>

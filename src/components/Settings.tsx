@@ -86,7 +86,20 @@ export default function Settings({
   // rendering a guess would light the wrong chip for a moment.
   const [theme, setTheme] = useState<Theme | null>(null);
   useEffect(() => {
-    const saved = localStorage.getItem("celebet-theme") as Theme | null;
+    // The key was "celebet-theme" before the rename. Read the old one
+    // when the new one is missing and carry the choice over, or every
+    // existing user silently falls back to System. The raw script in
+    // layout.tsx does the same thing before first paint, and the two
+    // must stay in step.
+    let saved = localStorage.getItem("actuals-theme") as Theme | null;
+    if (!saved) {
+      const old = localStorage.getItem("celebet-theme") as Theme | null;
+      if (old) {
+        localStorage.setItem("actuals-theme", old);
+        localStorage.removeItem("celebet-theme");
+        saved = old;
+      }
+    }
     setTheme(saved ?? "system");
   }, []);
 
@@ -102,7 +115,7 @@ export default function Settings({
 
   function chooseTheme(next: Theme) {
     setTheme(next);
-    localStorage.setItem("celebet-theme", next);
+    localStorage.setItem("actuals-theme", next);
     apply(next);
   }
 
@@ -427,7 +440,7 @@ export default function Settings({
                 Only do this if you are genuinely starting a new budget.
                 Hiding a losing run can make you look more profitable
                 than you really are, which is the opposite of what
-                Celebet is for.
+                Actuals is for.
               </p>
 
               <div className={`${INNER} mt-3 px-3 py-3`}>

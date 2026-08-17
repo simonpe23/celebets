@@ -55,10 +55,10 @@ const instrument = Instrument_Serif({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://gocelebet.com"),
-  title: "Celebet",
+  title: "Actuals",
   description: "Track your sports bets and see exactly how you perform",
   appleWebApp: {
-    title: "Celebet",
+    title: "Actuals",
     statusBarStyle: "default",
   },
   // The card that shows when the address is pasted into a chat or a
@@ -66,16 +66,16 @@ export const metadata: Metadata = {
   // /preview/og plus ogshot.mjs; regenerate it there if the design
   // moves rather than editing the PNG.
   openGraph: {
-    title: "Celebet",
+    title: "Actuals",
     description: "Track every bet. Discover patterns. Find your edge.",
     url: "https://gocelebet.com",
-    siteName: "Celebet",
+    siteName: "Actuals",
     type: "website",
     images: [{ url: "/og.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Celebet",
+    title: "Actuals",
     description: "Track every bet. Discover patterns. Find your edge.",
     images: ["/og.png"],
   },
@@ -100,7 +100,18 @@ export const viewport: Viewport = {
 const THEME_SCRIPT = `
 (function () {
   try {
-    var saved = localStorage.getItem("celebet-theme");
+    var saved = localStorage.getItem("actuals-theme");
+    if (!saved) {
+      // Carried over from before the rename. Settings does the same
+      // migration after mount; the two must stay in step, because two
+      // rules for one attribute is how the theme flash comes back.
+      var old = localStorage.getItem("celebet-theme");
+      if (old) {
+        localStorage.setItem("actuals-theme", old);
+        localStorage.removeItem("celebet-theme");
+        saved = old;
+      }
+    }
     var dark =
       saved === "dark" ||
       ((!saved || saved === "system") &&

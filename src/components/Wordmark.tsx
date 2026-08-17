@@ -1,12 +1,26 @@
-// The Celebet wordmark: "cele" in the text color, "bet" in the brand
-// purple with a soft gradient through it for depth. Uses Poppins,
-// standing in for Circular Std until a licence for that font is bought.
-// onDark is for the landing page's hero and footer, which are navy in
-// BOTH themes. Without it the "cele" half follows the theme and turns
-// near-black on a navy band, so on a light phone the wordmark simply
-// vanished. The "bet" half needs the lifted purple there too, because
-// brand-mark drops to the deep #7C3AED on a light theme and goes muddy
-// against the navy.
+// The Actuals wordmark: the name as plain text, one colour, following
+// the theme. Near-black on light, white on dark.
+//
+// It used to be "cele" in the text colour and "bet" in a purple
+// gradient. That split was the whole design and it does not survive
+// the rename, so this is a rebuild, not a find and replace.
+//
+// NO ARTWORK HERE ON PURPOSE. The owner split the rebrand from the
+// logo work in August 2026 ("this is too much going on at the same
+// time"), so the mark, the favicon and the link preview image are a
+// separate job. See IDEAS.md item 25. Text is the safe placeholder:
+// it is sharp at every size, it needs no dark mode variant, and it
+// cannot render as a white box on a dark page the way the current
+// PNGs would.
+//
+// The typeface is unchanged. font-brand is the app's existing brand
+// face and swapping it is a product decision the owner has to make,
+// not something a rename is allowed to do quietly.
+//
+// onDark is for a surface that is navy in BOTH themes, like the
+// landing hero or footer. Without it the text follows the theme and
+// turns near-black on a navy band, which is how the old wordmark
+// vanished on a light phone.
 export default function Wordmark({
   className = "text-2xl",
   onDark = false,
@@ -16,20 +30,11 @@ export default function Wordmark({
 }) {
   return (
     <span
-      className={`font-brand font-semibold lowercase tracking-tight ${className}`}
+      className={`font-brand font-semibold tracking-tight ${
+        onDark ? "text-white" : "text-neutral-900 dark:text-white"
+      } ${className}`}
     >
-      <span className={onDark ? "text-white" : "text-neutral-900 dark:text-white"}>
-        cele
-      </span>
-      <span
-        className={`bg-clip-text text-transparent ${
-          onDark
-            ? "bg-gradient-to-br from-brand-lift to-brand-glow"
-            : "bg-gradient-to-br from-brand-mark via-brand-top to-brand-press"
-        }`}
-      >
-        bet
-      </span>
+      Actuals
     </span>
   );
 }

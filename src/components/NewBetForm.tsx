@@ -402,7 +402,7 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
       </div>
       {!compact && (
         <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
-          Paste a screenshot of your bet slip and Celebet fills the rest in.
+          Paste a screenshot of your bet slip and Actuals fills the rest in.
         </p>
       )}
 

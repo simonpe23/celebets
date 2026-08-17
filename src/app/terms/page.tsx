@@ -1,14 +1,14 @@
 import LegalPage, { Clause } from "@/components/LegalPage";
 
 export const metadata = {
-  title: "Terms of Use | Celebet",
-  description: "The agreement between you and Celebet.",
+  title: "Terms of Use | Actuals",
+  description: "The agreement between you and Actuals.",
 };
 
 // A FIRST DRAFT FOR THE OWNER TO REVIEW. Not legal advice.
 //
 // The load-bearing clauses for this particular product, and why:
-//   - Celebet takes no bets and holds no money. Say it first and say it
+//   - Actuals takes no bets and holds no money. Say it first and say it
 //     plainly, because the whole category invites the opposite
 //     assumption and that assumption is the one that creates liability.
 //   - The numbers are computed from what the user typed. If they typed
@@ -26,27 +26,27 @@ export default function TermsPage() {
     <LegalPage title="Terms of Use" updated="11 August 2026">
       <p>
         These terms are the agreement between you and Peak Street 6 LLC for the
-        use of Celebet. By creating an account you accept them. They are written
+        use of Actuals. By creating an account you accept them. They are written
         to be read, not to be survived.
       </p>
 
-      <Clause heading="What Celebet is">
+      <Clause heading="What Actuals is">
         <p>
-          Celebet is a record keeping and analysis tool for bets you place
+          Actuals is a record keeping and analysis tool for bets you place
           somewhere else. It is a notebook that can do arithmetic.
         </p>
       </Clause>
 
-      <Clause heading="What Celebet is not">
+      <Clause heading="What Actuals is not">
         <p>
-          Celebet is not a sportsbook, a betting exchange, or a broker. It does
+          Actuals is not a sportsbook, a betting exchange, or a broker. It does
           not accept bets, place bets, settle bets, or hold, transfer or process
           money of any kind. No real money moves through this product. Balances
           shown in the app are numbers you have typed, kept so the app can do
           the sums.
         </p>
         <p>
-          Celebet does not give betting advice, tips, picks or predictions.
+          Actuals does not give betting advice, tips, picks or predictions.
           Insights describe what has already happened in your own record. Past
           results tell you nothing reliable about a future event.
         </p>
@@ -60,7 +60,7 @@ export default function TermsPage() {
         </p>
         <p>
           You are responsible for following the gambling laws that apply to you.
-          Celebet does not check them for you.
+          Actuals does not check them for you.
         </p>
       </Clause>
 
@@ -81,7 +81,7 @@ export default function TermsPage() {
 
       <Clause heading="Accuracy">
         <p>
-          Every figure in Celebet is calculated from what you entered. Enter a
+          Every figure in Actuals is calculated from what you entered. Enter a
           stake wrongly and the profit is wrong, and the app has no way to know.
           Some figures also rest on a stated rule rather than a fact: where a
           parlay covers several sports, its stake and its result are divided
@@ -98,7 +98,7 @@ export default function TermsPage() {
 
       <Clause heading="Availability">
         <p>
-          Celebet is provided as it is. We do not promise it will be available
+          Actuals is provided as it is. We do not promise it will be available
           without interruption or free of faults, and features may change or be
           withdrawn. Keep your own record of anything you cannot afford to lose.
         </p>
@@ -114,7 +114,7 @@ export default function TermsPage() {
 
       <Clause heading="Ending it">
         <p>
-          You may stop using Celebet at any time and ask us to delete your
+          You may stop using Actuals at any time and ask us to delete your
           account. We may close an account that breaks these terms. If we do, we
           will tell you why.
         </p>
@@ -122,7 +122,7 @@ export default function TermsPage() {
 
       <Clause heading="Gambling help">
         <p>
-          Celebet is for entertainment. If betting has stopped being
+          Actuals is for entertainment. If betting has stopped being
           entertainment, call 1-800-GAMBLER, free and confidential, 24 hours a
           day. A tool that shows you your losses more clearly is not a substitute
           for help.
@@ -132,7 +132,7 @@ export default function TermsPage() {
       <Clause heading="Changes">
         <p>
           When these terms change, the date at the top changes with them.
-          Continuing to use Celebet after a change means you accept it.
+          Continuing to use Actuals after a change means you accept it.
         </p>
       </Clause>
 

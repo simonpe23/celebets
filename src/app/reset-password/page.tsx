@@ -94,7 +94,7 @@ export default function ResetPasswordPage() {
       <BackHome />
       <div className="mx-auto w-full max-w-sm">
         <h1 className="text-center text-3xl font-bold tracking-tight">
-          Celebet
+          Actuals
         </h1>
         <p className="mt-2 text-center text-sm text-neutral-500 dark:text-neutral-400">
           Pick a new password

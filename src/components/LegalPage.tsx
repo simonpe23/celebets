@@ -38,7 +38,7 @@ export default function LegalPage({
 
         <p className="mt-12 text-sm">
           <Link href="/" className="font-semibold text-neutral-600 dark:text-neutral-300">
-            ‹ Back to Celebet
+            ‹ Back to Actuals
           </Link>
         </p>
       </div>

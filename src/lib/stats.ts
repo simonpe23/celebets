@@ -854,7 +854,7 @@ export function pickInsights(pool: Insight[], count = 4): string[] {
 // THE FRESH START LINE.
 //
 // A user who wants to "start over" does not want their bets deleted.
-// They want their record to begin again. So Celebet stores a date, and
+// They want their record to begin again. So Actuals stores a date, and
 // everything before it stops counting toward profit while staying in
 // the history.
 //

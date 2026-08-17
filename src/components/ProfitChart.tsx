@@ -316,7 +316,7 @@ export default function ProfitChart({
           >
             <defs>
               <linearGradient
-                id="celebet-line"
+                id="actuals-line"
                 gradientUnits="userSpaceOnUse"
                 x1="0"
                 y1="0"
@@ -330,7 +330,7 @@ export default function ProfitChart({
               </linearGradient>
 
               <linearGradient
-                id="celebet-area"
+                id="actuals-area"
                 gradientUnits="userSpaceOnUse"
                 x1="0"
                 y1="0"
@@ -350,7 +350,7 @@ export default function ProfitChart({
               {/* Two blurs: a wide bloom and a tight one, which is what
                   makes the line read as lit rather than drawn. */}
               <filter
-                id="celebet-bloom"
+                id="actuals-bloom"
                 x="-25%"
                 y="-50%"
                 width="150%"
@@ -359,7 +359,7 @@ export default function ProfitChart({
                 <feGaussianBlur stdDeviation="7" />
               </filter>
               <filter
-                id="celebet-glow"
+                id="actuals-glow"
                 x="-25%"
                 y="-50%"
                 width="150%"
@@ -369,7 +369,7 @@ export default function ProfitChart({
               </filter>
             </defs>
 
-            <path d={area} fill="url(#celebet-area)" />
+            <path d={area} fill="url(#actuals-area)" />
 
             <line
               x1="0"
@@ -389,30 +389,30 @@ export default function ProfitChart({
               <path
                 d={line}
                 fill="none"
-                stroke="url(#celebet-line)"
+                stroke="url(#actuals-line)"
                 strokeWidth="8"
                 strokeOpacity="0.45"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 vectorEffect="non-scaling-stroke"
-                filter="url(#celebet-bloom)"
+                filter="url(#actuals-bloom)"
               />
               <path
                 d={line}
                 fill="none"
-                stroke="url(#celebet-line)"
+                stroke="url(#actuals-line)"
                 strokeWidth="4"
                 strokeOpacity="0.6"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 vectorEffect="non-scaling-stroke"
-                filter="url(#celebet-glow)"
+                filter="url(#actuals-glow)"
               />
             </g>
             <path
               d={line}
               fill="none"
-              stroke="url(#celebet-line)"
+              stroke="url(#actuals-line)"
               strokeWidth="2.5"
               strokeLinecap="round"
               strokeLinejoin="round"
