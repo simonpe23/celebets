@@ -1,4 +1,4 @@
-# Celebet: the mockup build plan
+# Actuals: the mockup build plan
 
 Written August 2026, from the four mockups (mobile and web, dark and
 light). This file is the shared to do list. Nothing here is approved
@@ -27,7 +27,7 @@ already covers a push in practice, by cashing out at the stake, and the
 calculations are known to be right. This removes the only database
 migration phase 1 would have needed.
 
-**No American odds.** The mockups show +175 and -125. Celebet keeps
+**No American odds.** The mockups show +175 and -125. Actuals keeps
 what it has: you enter a chance percentage and the exact payout, and a
 bet reads "Aug 6, 2026, $99.97 at 3.32". American odds may become a
 setting later, once a settings page exists. Not now.

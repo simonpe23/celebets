@@ -407,9 +407,9 @@ Written down as given. Not built. Mockups are coming next.
 THE SPLIT THAT MAKES IT WORK. Insights and Research are opposite
 ends of one timeline:
 - Research happens BEFORE a bet. It is active. The user goes looking.
-- Insights happen AFTER a bet. Celebet surfaced them on its own.
+- Insights happen AFTER a bet. Actuals surfaced them on its own.
 
-AN INSIGHT is something Celebet discovered. Not something the user
+AN INSIGHT is something Actuals discovered. Not something the user
 asked for, not something an AI researched. It comes from the user's
 own data. Examples given by the owner:
 - You have won 63% of bets between 1.01 and 1.80 odds.
@@ -454,7 +454,7 @@ THE ONE LINE SUMMARY:
 
 BUILT, August 2026. Research is a shell: a search field and six doors
 (Who is playing, Team and player trends, Compare odds, Weather, What
-the community thinks, Ask CeleBOT). Every one needs data Celebet does
+the community thinks, Ask CeleBOT). Every one needs data Actuals does
 not have, so none of them work and the section says "Coming to
 Research" rather than wearing six identical Soon badges. The icons are
 ink: a color would say the door works. They earn one when they ship.
@@ -538,8 +538,9 @@ Decisions locked in during this build:
   vercel.app address, all with /** wildcards. New domains must be
   added here or reset links silently fall back to the home page.
 - Disclaimer component shows on login, signup, reset, and home:
-  entertainment only, 1-800 GAMBLER, adults only, plus the
-  Celebet trademark line for Peak Street 6 LLC.
+  entertainment only, 1-800 GAMBLER, adults only, plus the line
+  "Actuals is a part of Peak Street 6 LLC". That replaced a trademark
+  claim at the rename, on the owner's wording: the mark is not filed.
 - Testers each create their own account. The old demo account is
   only for people who want a quick peek.
 
@@ -553,7 +554,8 @@ Decisions locked in during this build:
 
 ## Product facts
 
-- App: Celebet, a mobile-first manual sports bet tracker.
+- App: Actuals, a mobile-first manual sports bet tracker. Renamed
+  from Celebet in August 2026.
 - Live at gocelebet.com (Hostinger domain, Hostinger keeps DNS,
   pointed at Vercel). The vercel.app address still works too.
 - The owner has an Instagram account for finding test users.
@@ -604,8 +606,12 @@ Decisions locked in during this build:
   is reached from Track.
 
 THEME. System, Light or Dark, stored in localStorage under
-`celebet-theme`. System is the default and stores nothing, so anyone
+`actuals-theme`. System is the default and stores nothing, so anyone
 who never opens Settings keeps following their phone forever.
+- The key was `celebet-theme` before the rename. Both readers, the raw
+  script in layout.tsx and Settings after mount, fall back to the old
+  key once, copy it across and delete it. They have to stay identical:
+  two rules for one attribute is how the theme flash comes back.
 - The whole app keys off `data-theme` on <html>. globals.css declares
   `@custom-variant dark (&:where([data-theme="dark"], ...))`, so a
   media query alone can no longer decide anything. That swap was the
@@ -625,7 +631,7 @@ balance so a user could start over, and deleting their bets is not
 that. His words: "i think data is still valuable despite wanting a
 fresh reset of your tracking."
 
-So Celebet draws a LINE instead. `tracking_since` goes into the auth
+So Actuals draws a LINE instead. `tracking_since` goes into the auth
 user's metadata (no migration), and `sinceLine()` in src/lib/stats.ts
 keeps a bet if it was NOT already settled before that date.
 - That one rule carries pending bets over, which the owner wanted: a
