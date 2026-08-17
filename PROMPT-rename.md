@@ -12,9 +12,16 @@ This file has THREE parts. Only PART 2 gets copied.
 
 Written August 2026, for the day the name is settled.
 
-Before you paste anything, fill in the six blanks marked
+Before you paste anything, fill in the two blanks marked
 `<<< DECIDE >>>` inside Part 2. Type your answer on the `My answer:`
 line under each one. Nothing else in Part 2 needs editing.
+
+It was six blanks. Four of them were logo questions, and on 17 August
+the owner cut the whole logo topic out of the rename: "can we skip the
+logo for now, this is too much going on at the same time." Right call.
+The rename now ships as a pure text and code job, the wordmark becomes
+plain text that follows the theme, and the artwork is a separate piece
+of work for a calmer day.
 
 Then open a fresh session and paste Part 2 in one go.
 
@@ -95,44 +102,44 @@ ALREADY DECIDED, do not ask me about any of these:
   login and link previews.
 - The demo account email stays as it is. I have to change that myself.
 - Do not touch the Track page redesign. Track v9.3 is a separate deploy.
+- NO LOGO WORK IN THIS JOB. I have decided to keep the rebrand and the
+  artwork apart, because the logo has cost more time than everything
+  else put together and I do not want it blocking the rename.
+  So, specifically:
+  - src/components/Wordmark.tsx: rebuild it as plain text, "Actuals",
+    in the app's display font, one colour, no gradient and no split.
+    It must follow the theme, near-black on light and white on dark.
+    The old "cele" and "bet" two-colour split is deleted, not renamed.
+  - The app header stays text only. Do NOT put the A mark in it.
+  - Do NOT touch the favicon, og.png, or any file under brand/. The
+    six PNGs in brand/actuals/new logo actuals/ are stored for later
+    and are not app assets: four of them have a solid background baked
+    in, and the only transparent wordmark is dark ink, so there is no
+    dark mode version. Leave all of it alone.
+  - This means the favicon and the link preview image still say
+    Celebet after the deploy. That is a known, accepted mismatch and
+    it is not a bug. Do not try to fix it and do not flag it.
+- The docs: update the lines in CLAUDE.md, README.md and ROADMAP.md
+  that state what the product currently IS (the name, the domain, the
+  description). Leave every historical note alone, including anything
+  dated, anything describing a past decision, and IDEAS.md item 21
+  itself. Those are a record of what happened and renaming history is
+  a lie. If a line is ambiguous, leave it and list it for me at the end.
 - Branching: work on claude/celebets-home-redesign-wip, and when every
   DONE MEANS item passes, merge it into claude/celebets-v1-build-fhio4a
   and push, which deploys to Vercel. You have my permission to push to
   the live branch for this task only.
 
-<<< DECIDE 1 >>> THE WORDMARK. src/components/Wordmark.tsx is built
-around splitting "cele" and "bet" into two colours. Actuals has no
-such split, so this component has to be rebuilt, not find-replaced.
-Pick one:
-  (a) Plain text "Actuals" in the display font, one colour, no
-      gradient. Simplest and it always works.
-  (b) The A mark from brand/actuals/ beside the word.
-  (c) The wordmark SVGs already in brand/actuals/.
+<<< DECIDE 1 >>> THE TRADEMARK LINE. The disclaimer currently says
+Celebet is a trademark of Peak Street 6 LLC. Change it to say Actuals,
+or drop the line until the mark is actually filed?
 My answer: ______
 
-<<< DECIDE 2 >>> THE TRADEMARK LINE. The disclaimer says Celebet is a
-trademark of Peak Street 6 LLC. Change it to Actuals, or remove the
-line until the mark is actually filed?
-My answer: ______
-
-<<< DECIDE 3 >>> THE HEADER. Does the app header get the A mark now,
-or stay text only until the Track redesign ships?
-My answer: ______
-
-<<< DECIDE 4 >>> ARTWORK. Regenerate favicon and og.png as Actuals
-from brand/actuals/, or leave the old Celebet artwork in place until
-I approve new versions?
-My answer: ______
-
-<<< DECIDE 5 >>> THE TESTERS. Deploying this means the live site says
-Actuals while the address is still gocelebet.com. My 3 or 4 testers
-will see that. Deploy anyway, or hold the merge and just push the wip
-branch for me to review?
-My answer: ______
-
-<<< DECIDE 6 >>> THE DOCS. Rename Celebet inside CLAUDE.md, IDEAS.md,
-ROADMAP.md and README.md too, or leave the notes alone since they are
-a history of decisions?
+<<< DECIDE 2 >>> THE TESTERS. Deploying this means the live site says
+Actuals while the address is still gocelebet.com, and the favicon
+still shows the old artwork. My 3 or 4 testers will see that. Deploy
+anyway, or hold the merge and just push the wip branch for me to look
+at first?
 My answer: ______
 
 IF I DIDN'T DECIDE SOMETHING: make the call yourself, pick the option
