@@ -1,4 +1,4 @@
-# Celebet
+# Actuals
 
 A mobile-first web app for manually tracking sports bets: wallet, profit and loss, and performance statistics.
 
