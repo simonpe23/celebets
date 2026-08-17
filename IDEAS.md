@@ -108,6 +108,49 @@ How this file works:
     while that is true: the cost grows with every real user, so the
     cheapest day to do it is the soonest day he has a name.
 
+25. THE ARTWORK SWAP. Do this AFTER the rename (item 21) has shipped.
+    The owner deliberately split the two on 17 August: "can we skip
+    the logo for now, this is too much going on at the same time."
+    Good instinct, and it costs nothing to defer, because artwork
+    files are leaves. Nothing in the app depends on what is inside
+    them, so swapping them later cannot break logic. This is the one
+    part of the rebrand that is safe to leave half done.
+
+    WHAT GETS REPLACED, the whole list:
+    - src/components/Wordmark.tsx, which the rename leaves as plain
+      theme-following text. Artwork replaces the text, or the text
+      stays and the mark sits beside it.
+    - the app header on Track, currently text only
+    - public/og.png, the link preview card
+    - the favicon set: .ico plus the 16, 32 and 48 pixel PNGs and the
+      SVG
+    - the app icon, for when the phone home screen install ships
+
+    WHAT THE OWNER HAS TO PROVIDE FIRST, and this is the whole
+    blocker. The six PNGs uploaded on 17 August cannot be used as
+    they are:
+    - four of them (logo-white bg, logo-black bg, symbol-white bg,
+      symbol-black bg) have the background baked in as a solid
+      rectangle. Dropped into the app they render as a white or black
+      box sitting on the page.
+    - logo-transparent bg is genuinely transparent but the word
+      "actuals" is near-black, rgb(40,23,109). It is invisible on the
+      dark theme. There is no white version of the wordmark.
+    - the tagline TRACK. ANALYZE. IMPROVE. is baked into the wordmark
+      file, and at header size it turns to mush. Same problem the
+      owner raised about the old brand kit.
+    So the ask is one clean export per theme: transparent background,
+    no tagline, one with dark ink and one with white ink. With those
+    two files the swap is under an hour.
+
+    THE TWO GOTCHAS, both about caching, neither serious:
+    - a favicon is cached hard by browsers. The owner will keep seeing
+      the old one long after it is replaced. Ship it with a new
+      filename rather than overwriting, and it appears immediately.
+    - og.png is cached by every chat app and social platform that has
+      ever seen the link. Same fix, a new filename, plus re-sharing
+      the link once to warm it.
+
 16. Login and sign up as drop-down panels on the landing page, instead
     of their own pages. Tapping Login or Sign up opens a panel over
     the landing page holding the email and password fields, the
