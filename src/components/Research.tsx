@@ -75,7 +75,7 @@ const DOORS = [
     ),
   },
   {
-    title: "Ask CeleBOT",
+    title: "Ask ActualsBOT",
     detail: "A question in plain words, answered from the same data.",
     icon: (
       <>

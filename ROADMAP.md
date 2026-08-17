@@ -104,7 +104,7 @@ field in the form and in the slip parser.
 3. **Web layout.** Two columns, top nav, responsive down to the phone.
 4. **Performance page**, rebuilt per the flow doc in CLAUDE.md, with
    Today's Insight first.
-5. **Research tab**, shell only until CeleBOT exists.
+5. **Research tab**, shell only until ActualsBOT exists.
 
 No database migration is needed for any of the five phases above. That
 became true the moment Push was ruled out. Event start time (3d) is the

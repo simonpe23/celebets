@@ -406,6 +406,56 @@ for (const lock of FONT_LOCK) {
   }
 }
 
+// 10. THE OLD BRAND.
+//
+// Added August 2026, straight after the rename, because the owner found
+// the leftovers himself on the live site. That is the failure this file
+// exists to prevent.
+//
+// Two got through. "Ask CeleBOT" survived because the search was for
+// "celebet" and the bot is spelled cele-BOT, so it never matched. The
+// Instagram handle survived because it was a judgement call nobody had
+// been asked to make.
+//
+// So this rule matches the STEM, not the word. Anything starting "cele"
+// fails unless it is on the list below, and the list is short on
+// purpose: each entry is a real thing in the world that still carries
+// the old name, not a piece of copy somebody forgot.
+{
+  const BRAND_OK = [
+    // The theme key migration. Both readers have to name the old key or
+    // every existing user is thrown back to System.
+    "celebet-theme",
+    // The real Instagram account and the real domain. These change when
+    // the owner registers the new handle and moves DNS, not before, and
+    // renaming them early points live links at nothing.
+    "gocelebet",
+  ];
+
+  for (const file of files) {
+    if (SKIP.some((dir) => file.includes(`/${dir}/`))) continue;
+    readFileSync(file, "utf8")
+      .split("\n")
+      .forEach((line, i) => {
+        if (!/cele/i.test(line)) return;
+        // Comments are exempt, the same as rules 4 and 4b. A note
+        // explaining what a thing used to be called has to be able to
+        // say the old name, and nobody reads a comment on the website.
+        const t = line.trim();
+        if (t.startsWith("//") || t.startsWith("*") || t.startsWith("/*")) return;
+        // Strip the allowed strings, then see if any "cele" is left.
+        let rest = line;
+        for (const ok of BRAND_OK) {
+          rest = rest.split(new RegExp(ok, "gi")).join("");
+        }
+        if (/cele/i.test(rest)) {
+          const hit = rest.match(/\S*cele\S*/i)?.[0] ?? "cele";
+          note(file, i + 1, `old brand name left behind: ${hit}`);
+        }
+      });
+  }
+}
+
 if (problems.length === 0) {
   console.log("Design check passed.");
 } else {

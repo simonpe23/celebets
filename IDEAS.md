@@ -139,11 +139,11 @@ How this file works:
 
 ## THE BIG ONE (own bucket, needs its own project)
 
-14. CeleBOT, a prediction market research assistant. DISCOVERY is
+14. ActualsBOT, a prediction market research assistant. DISCOVERY is
     the main feature, rating is secondary. The user arrives with
     nothing and asks about today's games: who is pitching, who is
     injured, which lines look mispriced, where the math points.
-    CeleBOT must therefore know the whole board for a day, not just
+    ActualsBOT must therefore know the whole board for a day, not just
     the games in one bet. Secondary feature: paste or describe your
     current thinking and get it rated (implied probability from the
     payout, an estimate per leg, the gap, expected value, a rating,
@@ -154,7 +154,7 @@ How this file works:
     data and matches the owner's examples), a "today's board" view,
     and a chat grounded in that day's fetched data. Rating then
     comes nearly free from the same data.
-    CeleBOT should log its own predictions and show its track
+    ActualsBOT should log its own predictions and show its track
     record, so its opinions can be judged instead of trusted.
     Hard requirement from the owner: it can NEVER hallucinate.
     Every claim must come from real fetched data about the actual
@@ -185,7 +185,7 @@ How this file works:
       page iteration.
     - Market: "Ohtani pitches tonight, LA wins 5 of 6 when he
       pitches." Needs paid external sports data and must obey the
-      never-hallucinate rule. That is CeleBOT territory (idea 14)
+      never-hallucinate rule. That is ActualsBOT territory (idea 14)
       and waits for it.
     From the owner's home page discussion (August 2026). Not
     approved for building.
@@ -214,7 +214,7 @@ How this file works:
     - How does a user connect their account, and how do they revoke it?
     - Does a written bet need the user to confirm it in the app first?
     - Is this a paid tier, or free for everyone?
-    - Does it overlap with CeleBOT (idea 14), or is CeleBOT the one
+    - Does it overlap with ActualsBOT (idea 14), or is ActualsBOT the one
       that answers questions and this one only serves the data?
 
 5. Native app in the App Store. Interim step available much earlier:

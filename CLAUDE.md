@@ -420,7 +420,7 @@ own data. Examples given by the owner:
 
 RESEARCH is the user looking for information before betting:
 who is pitching tonight, is LeBron playing, Dodgers trends, compare
-odds, the weather, what the community thinks, ask CeleBOT.
+odds, the weather, what the community thinks, ask ActualsBOT.
 
 THREE TABS, AND ONLY THREE. Track, Performance, Research. Insights
 does NOT get a tab. It becomes a layer inside Performance, the way
@@ -454,7 +454,7 @@ THE ONE LINE SUMMARY:
 
 BUILT, August 2026. Research is a shell: a search field and six doors
 (Who is playing, Team and player trends, Compare odds, Weather, What
-the community thinks, Ask CeleBOT). Every one needs data Actuals does
+the community thinks, Ask ActualsBOT). Every one needs data Actuals does
 not have, so none of them work and the section says "Coming to
 Research" rather than wearing six identical Soon badges. The icons are
 ink: a color would say the door works. They earn one when they ship.
