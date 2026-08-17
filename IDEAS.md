@@ -262,17 +262,35 @@ How this file works:
       half, because it needs a rule format the user can express
       without writing code.
 
-    Open questions for the owner, none decided:
-    - How does a bet join a season: matched automatically by the
-      season's filters, or tagged by hand when logging it?
-    - Can one bet belong to several seasons at once?
-    - Is the rule a real machine-checked thing, or just a note the
-      user writes to hold themselves to it? The note version is a
-      tenth of the work and still changes behaviour.
-    - What does the app do when you break the rule: say nothing and
-      report it later, or warn at the moment you log the bet?
-    - Does a broken rule count against a "discipline" score, and does
-      the owner want a score at all, or is that too much like a game?
+    DECIDED, August 2026: SEASONS OVERLAP. Several run at once and one
+    bet can belong to several of them. The owner's own two examples
+    demand it: a Man Utd season runs all year while a cash out at
+    +$100 season runs a single weekend, and a Friday Man Utd bet sits
+    in both. So the join is many to many (a bet_seasons table), never
+    a season_id column on bets. Worth knowing early: it is the one
+    decision here that is expensive to reverse later.
+
+    STILL OPEN, and the owner has parked them until this is actually
+    scheduled ("save these questions for later, we're not building
+    this feature yet"). Do not assume answers when the time comes,
+    ask again:
+    - How does a bet join a season: a Season field on the bet form
+      defaulted to the active season, entering the season first and
+      logging from inside it, or the app pre-tagging from filters?
+    - Is the rule machine checked or just a note the user writes?
+      Checking the two rules he named is cheap, because stake and
+      payout are already stored. A note is a tenth of the work and
+      still changes behaviour. A full rule builder is a different
+      project.
+    - Does a season carry its own money (a budget, which would absorb
+      idea 17) or is it purely a lens on the existing record?
+    - What happens the moment you break a rule: silence and a report
+      later, or a warning as you log the bet?
+    - Is there a discipline score at all, or does that make it feel
+      like a game?
+    - Optional, offered and not decided: a self declared target count
+      ("38 games") so the season can show "31 of 38 logged" without
+      any fixture data.
 
 ## THE BIG ONE (own bucket, needs its own project)
 
