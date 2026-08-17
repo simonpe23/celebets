@@ -25,6 +25,48 @@ How this file works:
 
 ## NOW (small, fits the current app, high value per effort)
 
+23. TRACK PAGE V9.3, approved as a direction by the owner, August
+    2026, NOT deployed. Waiting on the rename, because the draft's
+    header carries the Actuals A mark.
+
+    WHERE IT LIVES: `src/app/preview/track-sharp/page.tsx`, seen at
+    /preview/track-sharp, which draws the light and dark phones side
+    by side. The file is force-added to git: /src/app/preview/ is in
+    .gitignore, so without `git add -f` this work dies with the
+    container. It is still gitignored for Tailwind's purposes, which
+    is why every style in it is inline.
+
+    HOW IT GOT HERE, so the loop is not repeated. Nine versions. v1
+    to v8 progressively replaced the live design and the owner
+    rejected all of them: "the original design is still the best
+    version I have seen so far." v9 threw the redesign away and
+    rebuilt from the live page's own language (src/lib/ui.ts CARD,
+    INNER, BTN, 17px bold sentence-case headings inside cards), then
+    layered on ONLY what he had praised along the way.
+
+    WHAT V9.3 CHANGES against the live page, the whole list:
+    - the Actuals A mark in the header, no emoji and no bell
+    - the tracking balance is a FULL BLEED band: it reaches both
+      screen edges, chart included, with a hairline above and below.
+      Everything under it stays an inset card.
+    - the chart is wider and taller, with the Today/Week/Month/Year
+      strip under it and Set balance top right
+    - Performance Snapshot: four values across one row, no
+      sparklines, no emoji
+    - insight of the day: brighter crisper golds (#F59E0B light,
+      #FBBF24 dark, trophy #FCD34D to #D97706), the halo cut right
+      back, no amber ring around the card
+    - bigger tabular Inter Tight numbers throughout
+
+    WHAT HE RULED OUT, do not reintroduce:
+    - a purple Connect your accounts button. It stays the live
+      outlined row with the green icon and the green Coming Soon
+      pill. "Too much purple with the purple bg."
+    - uppercase section band headings, full-bleed bands for every
+      section, the boxed three-cell keypad (all v8)
+    - a glowing trophy orb, an amber wash behind the insight text
+    - tighter spacing in Track a bet: the gaps match the live card
+
 21. RENAME THE APP. The owner, August 2026: "Celebet does not work."
     No new name or domain chosen yet, so this is parked until he has
     one. Recorded now so the decision is not lost.
