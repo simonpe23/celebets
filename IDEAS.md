@@ -204,6 +204,60 @@ How this file works:
       season), or is it strictly one at a time?
     - Where do they live: a picker on Performance, or their own page?
 
+    THE SECOND LAYER, added by the owner August 2026, and it is the
+    part with the real value. A season is not only a stretch of time.
+    It is a COMMITMENT you make and then get measured against.
+
+    His two examples, kept in his words because they are different
+    kinds of rule:
+    - "I'm gonna bet $100 on every Manchester United game this PL
+      season."
+    - "I'm gonna cash out on every bet this weekend as soon as I've
+      made $100, whatever the end result. As soon as the cash out
+      option says I've made $100, I do it."
+
+    Why he wants it: "it'll help bettors committing to certain
+    behaviors and avoiding random actions." That reframes the whole
+    app. Every competitor answers "what did I win?". This answers
+    "did I do what I said I would, and did it work?". A filter on the
+    all time record, never a replacement for it.
+
+    THE TWO RULE TYPES ARE NOT EQUALLY BUILDABLE, and this is the
+    thing to settle before any of it is designed:
+    - ENTRY rules ("bet $100 on every Man Utd game") ask whether you
+      MISSED a game. Celebet cannot know that. It only sees bets that
+      were logged, so it has no fixture list to compare against.
+      Measuring "you bet on 31 of 38" needs a sports data feed, which
+      is idea 8's cost problem. Without one, the honest version is
+      "of the Man Utd bets you logged, 28 of 31 were $100."
+    - EXIT rules ("cash out at +$100") are fully checkable TODAY from
+      our own data: cash out already stores the amount received, and
+      payout minus stake is the profit at that moment. No new data
+      source, no external dependency.
+      So exit rules are the place to start if this ships in stages.
+
+    A STAGED BUILD, if the owner wants it small first:
+    - stage 1, the filter: a season is a name, a window, and optional
+      filters (sport, category, a text match on the pick). Every
+      number on Performance recomputes inside it. No rules yet. This
+      is mostly presentation over existing bets plus one small table.
+    - stage 2, the commitment: the season carries a stated rule and a
+      kept-or-not score. This is the differentiator and the harder
+      half, because it needs a rule format the user can express
+      without writing code.
+
+    Open questions for the owner, none decided:
+    - How does a bet join a season: matched automatically by the
+      season's filters, or tagged by hand when logging it?
+    - Can one bet belong to several seasons at once?
+    - Is the rule a real machine-checked thing, or just a note the
+      user writes to hold themselves to it? The note version is a
+      tenth of the work and still changes behaviour.
+    - What does the app do when you break the rule: say nothing and
+      report it later, or warn at the moment you log the bet?
+    - Does a broken rule count against a "discipline" score, and does
+      the owner want a score at all, or is that too much like a game?
+
 ## THE BIG ONE (own bucket, needs its own project)
 
 14. CeleBOT, a prediction market research assistant. DISCOVERY is
