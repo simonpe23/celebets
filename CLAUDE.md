@@ -30,6 +30,55 @@ The owner has no coding experience. These rules are permanent.
   the old way: the owner pastes the SQL in the Supabase SQL Editor
   with click-by-click instructions.
 
+### Long autonomous runs (added August 2026, at the owner's request)
+
+The owner wants to hand over a whole task, go to work, and come back
+to it finished. That works, but only for work with a finish line a
+machine can check.
+
+- CAN run for hours alone: anything provable without him. Does it
+  build, do the types pass, does design-check pass, does scrubtest
+  pass, do the numbers add up. Claude re-runs and re-fixes until green.
+- CANNOT be finished alone: taste. "Does this look right" has no test.
+  The Track page took nine versions and the logo five, both for that
+  reason. A day of unattended work on an aesthetic he dislikes is
+  worse than three short rounds.
+- So: on any visual task, take ONE cheap screenshot checkpoint early,
+  even inside an autonomous run. It costs him two minutes and can save
+  a day.
+
+The rules above still hold inside a long run, with one change: the
+prompt itself supplies the approvals. "Never build until the owner
+approves" is satisfied by an approved brief, and "make no assumptions
+on product decisions" is satisfied by the ALREADY DECIDED block. When
+something genuinely undecided appears, follow the prompt's fallback
+rule rather than stopping. If there is no fallback rule, finish
+everything that does not depend on the answer, then ask.
+
+THE PROMPT SHAPE the owner and Claude agreed to use:
+
+    BUILD: <the thing>
+    DONE MEANS: <checkable list>
+    ALREADY DECIDED: <every question Claude would otherwise ask>
+    IF I DIDN'T DECIDE SOMETHING: <make the call and log it | skip it>
+    DON'T TOUCH: <areas>
+    CHECKPOINT: <none | one screenshot at X, then keep going>
+    WHEN DONE: commit, push, tell me what to test
+
+Five things a long run needs from the owner, or it stalls:
+1. A definition of done Claude can test without him.
+2. Product decisions made up front. Each undecided one is a stop.
+3. A rule for the unknowns he could not pre-decide.
+4. Permission to commit and push as it goes, so a container recycle
+   cannot eat the work.
+5. No dependency on things only he can do. A dashboard click, an API
+   key, or a domain purchase stops the run dead. Those belong in a
+   separate list of his own tasks, not in the build.
+
+Write progress to the repo continuously, never only to chat: this
+session is a remote container and long conversations get summarised.
+Anything that matters belongs in a commit or a file.
+
 ## UI rules (permanent, added August 2026 after wasting the owner's time)
 
 The owner should never have to catch a typography or spacing
