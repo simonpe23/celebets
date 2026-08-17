@@ -15,6 +15,13 @@ The owner has no coding experience. These rules are permanent.
   Tasks for the owner must be their own clearly marked bullet.
 - Never use em dashes anywhere: not in code, comments, UI copy, commit
   messages, or documentation. Use commas, periods, colons, or parentheses.
+- When giving the owner something to COPY, mark exactly where it starts
+  and where it ends, in plain words he can see. Added August 2026 after
+  PROMPT-rename.md mixed notes for him with the text he was meant to
+  paste, and he could not tell which was which. A code fence is not a
+  marker: he does not read markdown syntax. Split the file into
+  labelled parts, say "copy only part 2", and put a visible COPY FROM
+  HERE and STOP COPYING HERE around it.
 
 ## Workflow rules
 

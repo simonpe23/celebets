@@ -1,18 +1,58 @@
-# The rename prompt, ready to paste
+# The rename prompt
 
-Written August 2026, for the day the name is settled. Paste the block
-below into a fresh session. It is built to the prompt shape in
-CLAUDE.md, and it is deliberately complete: every blank filled here is
-a place Claude would otherwise stop and wait.
+This file has THREE parts. Only PART 2 gets copied.
 
-Six blanks are marked `<<< DECIDE >>>`. Nothing else needs your input.
-
-Facts it is built on, measured in the repo on 17 August 2026:
-135 mentions of "celebet" across 49 files.
+- PART 1: notes for you. Do not copy.
+- PART 2: the prompt. Copy this, all of it, nothing else.
+- PART 3: your own checklist for later. Do not copy.
 
 ---
 
-```
+# PART 1: notes for you (DO NOT COPY ANY OF THIS)
+
+Written August 2026, for the day the name is settled.
+
+Before you paste anything, fill in the six blanks marked
+`<<< DECIDE >>>` inside Part 2. Type your answer on the `My answer:`
+line under each one. Nothing else in Part 2 needs editing.
+
+Then open a fresh session and paste Part 2 in one go.
+
+Built to the prompt shape in CLAUDE.md, against the repo as measured
+on 17 August 2026: 135 mentions of "celebet" across 49 files.
+
+## The order, and why the domain is not first
+
+Buying the domain and moving to it are two different jobs.
+
+1. PICK THE NAME. The only real blocker. Part 2 says Actuals; if the
+   answer is Seasons, Part 2 needs rewriting first.
+2. BUY the domain and grab the Instagram handle the same day. About
+   twelve dollars, and it stops the name being taken while you think.
+   Point it at nothing yet.
+3. PASTE PART 2. It ships on gocelebet.com and cannot break the
+   address.
+4. MOVE the domain, using Part 3.
+
+Why the code rename goes before the move: every genuinely dangerous
+step is in the move (login redirects, password reset email, DNS). If
+both happen in one window and login breaks, there is no way to tell
+whether it was DNS or one of 135 code edits. Renaming first means the
+app is already proven, so the move is debugged on its own.
+
+The reverse order is also worse for your testers. A site called
+Celebet living at actualshq.com is more confusing than Actuals living
+at gocelebet.com.
+
+When the move happens, KEEP gocelebet.com ALIVE as a redirect. Old
+links, your testers' bookmarks and any saved logins all point there.
+
+---
+
+# PART 2: THE PROMPT
+
+## ▼▼▼ COPY EVERYTHING FROM THIS LINE ▼▼▼
+
 BUILD: Rename the app from Celebet to Actuals, everywhere in the code,
 and deploy it. This is the code and copy rename only. The domain stays
 gocelebet.com for now and moves later, so nothing you do can break the
@@ -111,51 +151,23 @@ not, carry on.
 WHEN DONE: commit, push, and give me a short list of what to test on my
 phone, plus the list of things I still have to do myself in Supabase,
 Vercel, Hostinger and Resend.
-```
+
+## ▲▲▲ STOP COPYING AT THIS LINE ▲▲▲
 
 ---
 
-## The order, and why the domain is not first
-
-The owner asked whether to buy and move the domain before running this
-prompt. Buying and moving are two different jobs and they sit in
-different places.
-
-1. PICK THE NAME. The only real blocker. This prompt says Actuals; if
-   the answer is Seasons, the prompt needs rewriting first.
-2. BUY the domain and grab the Instagram handle the same day. About
-   twelve dollars, and it stops the name being taken while he thinks.
-   Point it at nothing yet.
-3. RUN THIS PROMPT. It ships on gocelebet.com and cannot break the
-   address.
-4. MOVE the domain, using the checklist below.
-
-Why the code rename goes before the move: every genuinely dangerous
-step is in the move (login redirects, password reset email, DNS). If
-both happen in one window and login breaks, there is no way to tell
-whether it was DNS or one of 135 code edits. Renaming first means the
-app is already proven, so the move is debugged on its own.
-
-The reverse order is also worse for the testers. A site called Celebet
-living at actualshq.com is more confusing than Actuals living at
-gocelebet.com.
-
-When the move happens, KEEP gocelebet.com ALIVE as a redirect. Old
-links, the testers' bookmarks and any saved logins all point there.
-
-## What this prompt cannot do, and why that is fine
+# PART 3: your own checklist (DO NOT COPY ANY OF THIS)
 
 Claude cannot click a dashboard. These stay yours, and none of them
-block the code rename:
+block the code rename. Do them in this order, and only after the code
+rename is live and working on the old address.
 
-- Buy the domain and point Hostinger DNS at Vercel.
-- Add the new domain in Vercel.
-- Supabase: new Site URL and redirect URLs, with `/**` wildcards.
-- Resend: verify the new sending domain, then DKIM, SPF and DMARC at
-  Hostinger, then update the SMTP password in Supabase.
-- Google Cloud: the consent screen branding (IDEAS.md item 22).
-- Instagram handle.
+1. Buy the domain and point Hostinger DNS at Vercel.
+2. Add the new domain in Vercel, keeping gocelebet.com as a redirect.
+3. Supabase: new Site URL and redirect URLs, with `/**` wildcards.
+4. Resend: verify the new sending domain, then DKIM, SPF and DMARC at
+   Hostinger, then update the SMTP password in Supabase.
+5. Google Cloud: the consent screen branding (IDEAS.md item 22).
+6. Instagram handle.
 
-Do them in that order, and only after the code rename is live and
-working on the old address. Ask Claude for click-by-click steps for
-any of them.
+Ask Claude for click-by-click steps for any of them.
