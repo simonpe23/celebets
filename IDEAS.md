@@ -222,19 +222,35 @@ How this file works:
     "did I do what I said I would, and did it work?". A filter on the
     all time record, never a replacement for it.
 
-    THE TWO RULE TYPES ARE NOT EQUALLY BUILDABLE, and this is the
-    thing to settle before any of it is designed:
-    - ENTRY rules ("bet $100 on every Man Utd game") ask whether you
-      MISSED a game. Celebet cannot know that. It only sees bets that
-      were logged, so it has no fixture list to compare against.
-      Measuring "you bet on 31 of 38" needs a sports data feed, which
-      is idea 8's cost problem. Without one, the honest version is
-      "of the Man Utd bets you logged, 28 of 31 were $100."
-    - EXIT rules ("cash out at +$100") are fully checkable TODAY from
-      our own data: cash out already stores the amount received, and
-      payout minus stake is the profit at that moment. No new data
-      source, no external dependency.
-      So exit rules are the place to start if this ships in stages.
+    A SEASON IS DECLARED BEFORE YOU BET, AND BETS ARE TAGGED INTO IT.
+    The owner corrected me on this and it matters, because it removes
+    what I had written down as a blocker. I had assumed the app would
+    check "did you bet on all 38 Man Utd games" against real fixtures,
+    which would need a sports data feed it does not have. That is not
+    the design. His words: "Seasons is meant to be a thing you build
+    or you set before you start placing bets... with each bet I have
+    to be able to log that somehow, that this belongs to this season.
+    Or once I'm in the app I can click on my different seasons and
+    say, now I'm going to log a bet for this particular season."
+    So the season is a container the user opts into, the rules are
+    the user's own, and both of his examples are equally buildable
+    with no external data.
+
+    WHY IT MATTERS, in his words, and this is the product's whole
+    reason to exist: "the problem with sports betting is that you
+    just casually bet without looking at the data, without following
+    any rules, and that ends up being more like gambling... a lot of
+    bettors lose a lot of money just because they're sloppy and they
+    just want to have some fun on a boring Friday night. But if you
+    set rules for yourself, then you've got to follow it."
+    That is a responsible-gambling feature that is also the product's
+    sharpest differentiator, which is a rare combination.
+
+    THE ONE THING THE APP STILL CANNOT SEE is a game you skipped.
+    Nothing is broken by that, but if the owner wants a "did I show
+    up" number, the cheap version is to let him state the target when
+    he creates the season ("38 games"), and show 31 of 38 logged. Self
+    declared, no fixture feed, no cost. Offered, not decided.
 
     A STAGED BUILD, if the owner wants it small first:
     - stage 1, the filter: a season is a name, a window, and optional
