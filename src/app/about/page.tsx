@@ -1,8 +1,8 @@
 import LegalPage, { Clause } from "@/components/LegalPage";
 
 export const metadata = {
-  title: "About | Celebet",
-  description: "Why Celebet exists, what it does, and what it is not.",
+  title: "About | Actuals",
+  description: "Why Actuals exists, what it does, and what it is not.",
 };
 
 // THE ABOUT PAGE. Third link in the landing page footer, beside Terms
@@ -24,9 +24,9 @@ export const metadata = {
 // connecting ships, this page changes with it.
 export default function AboutPage() {
   return (
-    <LegalPage title="About Celebet">
+    <LegalPage title="About Actuals">
       <p>
-        Celebet is a betting record that tells you the truth. You log what you
+        Actuals is a betting record that tells you the truth. You log what you
         bet, and it shows you what that betting has actually done, in numbers
         you can check.
       </p>
@@ -39,7 +39,7 @@ export default function AboutPage() {
         </p>
         <p>
           Most bettors have a rough idea of how they are doing, and the rough
-          idea is usually kinder than the arithmetic. Celebet does the
+          idea is usually kinder than the arithmetic. Actuals does the
           arithmetic. It was built for people who would rather know.
         </p>
       </Clause>
@@ -53,7 +53,7 @@ export default function AboutPage() {
         <p>
           <strong>Performance.</strong> Profit over time, ROI, hit rate, your
           record by sport, by odds range, singles against parlays. Alongside the
-          charts are insights: things Celebet noticed in your own record and
+          charts are insights: things Actuals noticed in your own record and
           brought to you, such as which odds range you win in or where your
           losses are concentrated.
         </p>
@@ -66,7 +66,7 @@ export default function AboutPage() {
 
       <Clause heading="What it is not">
         <p>
-          Celebet is not a sportsbook. It does not accept bets, place bets or
+          Actuals is not a sportsbook. It does not accept bets, place bets or
           settle them, and no real money passes through it. The balance in the
           app is a number you typed so the app can do the sums.
         </p>
@@ -89,7 +89,7 @@ export default function AboutPage() {
 
       <Clause heading="Who builds it">
         <p>
-          Celebet is made by Peak Street 6 LLC, a small team, and it is early. If
+          Actuals is made by Peak Street 6 LLC, a small team, and it is early. If
           something is wrong, missing or annoying, we would rather hear it than
           not. Find us on Instagram at{" "}
           <a
@@ -104,7 +104,7 @@ export default function AboutPage() {
 
       <Clause heading="One honest note">
         <p>
-          Celebet is for entertainment, and a clearer view of your betting is
+          Actuals is for entertainment, and a clearer view of your betting is
           not a strategy for winning at it. Seeing your real numbers can be
           uncomfortable, and that is rather the point. If betting has stopped
           being entertainment, call 1-800-GAMBLER. It is free, confidential and
