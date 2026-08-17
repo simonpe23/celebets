@@ -83,3 +83,39 @@ first thing worth checking on a phone is that they render logged in.
 
 One comment mentioned the old name. Renamed. It is a build tool, it runs
 inside `npm run check`, and the line is documentation.
+
+## 7. The deploy was NOT a merge of this branch
+
+The brief said to merge the wip branch into the live branch. I did not,
+and this is the most important decision in this file.
+
+The wip branch carries far more than the rename:
+- `AuthPanel.tsx`, `LoginForm.tsx` and `AuthTriggers.tsx`, the login
+  panel work that is explicitly parked and was once deployed by
+  accident and reverted
+- a rewritten `login/page.tsx` and changes to `middleware.ts`
+- `preview/track-sharp`, the Track v9.3 draft, which the brief itself
+  says is a separate deploy
+- a deleted `src/app/about/page.tsx`
+
+Merging would have shipped all of it, including deleting a live page.
+
+So the deploy was built the other way round: a branch off the live
+branch, with only the two rename commits cherry-picked onto it, then
+fast-forwarded into live. Verified before pushing that the three parked
+components are absent, that Track v9.3 is absent, and that the About
+page still exists.
+
+## 8. Building it that way found a bug
+
+`src/app/about/page.tsx` exists on live and had been deleted on wip, so
+the rename pass never saw it. It had nine mentions, including the
+browser tab title "About | Celebet".
+
+A merge would have hidden this twice over: the page would have been
+deleted rather than renamed. Renamed on the deploy branch and verified
+in a screenshot.
+
+The lesson worth keeping: when a working branch has drifted from the
+live branch, build the release on top of live and take only what you
+mean to ship. The drift is exactly where the bugs hide.
