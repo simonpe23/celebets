@@ -1,8 +1,8 @@
 import LegalPage, { Clause } from "@/components/LegalPage";
 
 export const metadata = {
-  title: "Privacy Policy | Celebet",
-  description: "What Celebet collects, why, and what it never does.",
+  title: "Privacy Policy | Actuals",
+  description: "What Actuals collects, why, and what it never does.",
 };
 
 // A FIRST DRAFT, WRITTEN FROM WHAT THE APP ACTUALLY DOES.
@@ -30,14 +30,14 @@ export default function PrivacyPage() {
   return (
     <LegalPage title="Privacy Policy" updated="11 August 2026">
       <p>
-        Celebet is a personal betting record. It works best when you are honest
+        Actuals is a personal betting record. It works best when you are honest
         with it, so it is only fair that we are straightforward about what we
         hold. This page explains what we collect, why, and what we do not do.
       </p>
 
       <Clause heading="Who we are">
         <p>
-          Celebet is operated by Peak Street 6 LLC. You can reach us on
+          Actuals is operated by Peak Street 6 LLC. You can reach us on
           Instagram at{" "}
           <a
             href="https://instagram.com/gocelebet"
@@ -69,7 +69,7 @@ export default function PrivacyPage() {
       <Clause heading="What we do not collect">
         <p>
           We do not ask for your date of birth, your address, your government
-          identification, or any payment details. Celebet never touches real
+          identification, or any payment details. Actuals never touches real
           money, so it never needs your bank or your card.
         </p>
         <p>
@@ -82,7 +82,7 @@ export default function PrivacyPage() {
       <Clause heading="Who else sees it">
         <p>
           Nobody buys your data from us, because we do not sell it. There is no
-          advertising on Celebet and no third party tracking or analytics
+          advertising on Actuals and no third party tracking or analytics
           product embedded in it.
         </p>
         <p>Three companies necessarily handle data on our behalf:</p>
@@ -104,7 +104,7 @@ export default function PrivacyPage() {
         <p>
           Your records are protected by row level security in the database,
           which means the rules that decide who may read a row live in the
-          database itself rather than in the app. Another Celebet user cannot
+          database itself rather than in the app. Another Actuals user cannot
           reach your bets even if the app has a bug.
         </p>
       </Clause>
@@ -133,7 +133,7 @@ export default function PrivacyPage() {
 
       <Clause heading="Children">
         <p>
-          Celebet is for adults only and is not directed at anyone under 18. We
+          Actuals is for adults only and is not directed at anyone under 18. We
           do not knowingly hold data from anyone under 18. If you believe a
           minor has created an account, tell us and we will remove it.
         </p>

@@ -243,7 +243,7 @@ for (const file of files) {
 
 // 7. THE VOCABULARY CHECK.
 //
-// Celebet never holds money, so it never speaks like a bank. The owner
+// Actuals never holds money, so it never speaks like a bank. The owner
 // ruled out this vocabulary: "No wallet. No deposit. No withdraw.
 // That's finance language. The feature is about tracking performance,
 // not banking." The words are Tracking Balance, Set Tracking Balance,

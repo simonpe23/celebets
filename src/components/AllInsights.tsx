@@ -6,11 +6,11 @@ import { buildInsightPool, buildSportInsightPool } from "@/lib/stats";
 import { SPORT_EMOJI, type BetWithLegs, type Sport } from "@/lib/types";
 import { CARD, INNER } from "@/lib/ui";
 
-// Every statement Celebet can currently make about the user's settled
+// Every statement Actuals can currently make about the user's settled
 // bets. This is the "Show all" behind the insights sheet.
 //
 // It used to be the Research tab, which was wrong: insights happen
-// AFTER a bet and Celebet surfaces them on its own, while Research
+// AFTER a bet and Actuals surfaces them on its own, while Research
 // happens BEFORE a bet and the user goes looking. The owner drew that
 // line himself. The tab bar lights Performance here, because that is
 // the area this belongs to.

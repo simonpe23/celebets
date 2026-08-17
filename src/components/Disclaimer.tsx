@@ -4,11 +4,11 @@ export default function Disclaimer() {
       <p>
         This platform is meant for entertainment purposes only. If you or
         someone you know has a gambling problem and wants help, call 1-800
-        GAMBLER. Celebet is intended for adult use only.
+        GAMBLER. Actuals is intended for adult use only.
       </p>
       <p>
-        Celebet&trade; and is a trademark of Peak Street 6 LLC. All other trade
-        names and trademarks are the property of their respective holders.
+        Actuals is a part of Peak Street 6 LLC. All other trade names and
+        trademarks are the property of their respective holders.
       </p>
     </footer>
   );

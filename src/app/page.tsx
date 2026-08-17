@@ -212,7 +212,7 @@ export default function LandingPage() {
                 </p>
 
                 <p className="mx-auto mt-5 max-w-[520px] text-[16px] leading-relaxed text-neutral-500 dark:text-neutral-400 sm:text-[18px] lg:mx-0">
-                  Celebet is the sports betting companion that helps you track
+                  Actuals is the sports betting companion that helps you track
                   your bets, uncover patterns, and improve your results.
                 </p>
 
@@ -479,7 +479,7 @@ export default function LandingPage() {
             href="https://instagram.com/gocelebet"
             target="_blank"
             rel="noreferrer"
-            aria-label="Celebet on Instagram"
+            aria-label="Actuals on Instagram"
             className="flex h-10 w-10 items-center justify-center rounded-xl text-neutral-500 transition-colors hover:bg-neutral-900/[0.05] hover:text-neutral-700 dark:text-neutral-400 dark:hover:bg-white/[0.06] dark:hover:text-white"
           >
             <svg viewBox="0 0 24 24" className="h-[22px] w-[22px]" fill="none" stroke="currentColor" strokeWidth={1.8} aria-hidden="true">
@@ -494,9 +494,9 @@ export default function LandingPage() {
           <p>
             This platform is meant for entertainment purposes only. If you or
             someone you know has a gambling problem and wants help, call 1-800
-            GAMBLER. Celebet is intended for adult use only.
+            GAMBLER. Actuals is intended for adult use only.
           </p>
-          <p>Celebet&trade; is a trademark of Peak Street 6 LLC.</p>
+          <p>Actuals is a part of Peak Street 6 LLC.</p>
         </div>
       </footer>
     </main>

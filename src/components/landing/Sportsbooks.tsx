@@ -8,7 +8,7 @@
 // What is written here is still narrower than the mockup, for one
 // reason that is not about taste. FanDuel, DraftKings, Caesars and
 // BetMGM are other companies' registered trademarks. Setting their
-// LOGOS on this page would imply those companies endorse Celebet, which
+// LOGOS on this page would imply those companies endorse Actuals, which
 // is the kind of claim that gets a domain reported rather than merely
 // doubted. The names as plain type, under a line that says bettors come
 // FROM those books rather than that those books back us, says the same

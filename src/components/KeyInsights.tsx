@@ -96,7 +96,7 @@ export default function KeyInsights({ bets }: { bets: BetWithLegs[] }) {
 
       {rows.length === 0 ? (
         <p className="mt-3 text-sm text-neutral-500 dark:text-neutral-400">
-          Not enough settled bets yet. Celebet needs five settled picks in
+          Not enough settled bets yet. Actuals needs five settled picks in
           a sport or a category before it will call anything a strength or
           a weakness.
         </p>

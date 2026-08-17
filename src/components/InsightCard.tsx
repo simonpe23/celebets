@@ -6,7 +6,7 @@ import { buildInsightPool } from "@/lib/stats";
 import type { BetWithLegs } from "@/lib/types";
 import { ACCENT, CARD, CARD_LINK } from "@/lib/ui";
 
-// Insight of the day. One thing Celebet noticed in the user's own
+// Insight of the day. One thing Actuals noticed in the user's own
 // data, surfaced on its own: the user did not ask, and no AI went
 // researching. It is the only line on the Track page that concludes
 // instead of reporting.
@@ -68,7 +68,7 @@ export default function InsightCard({
             <path d="M12 2l2.2 5.8L20 10l-5.8 2.2L12 18l-2.2-5.8L4 10l5.8-2.2L12 2Z" />
           </svg>
           {/* No AI badge. Removed by the owner, August 2026. The
-              sparkle already says Celebet noticed this on its own, and
+              sparkle already says Actuals noticed this on its own, and
               the badge was a second label for the same idea. */}
           <span className="whitespace-nowrap text-sm font-bold">
             {linked ? "Insight of the day" : "Today's Insight"}
