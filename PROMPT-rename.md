@@ -115,6 +115,34 @@ Vercel, Hostinger and Resend.
 
 ---
 
+## The order, and why the domain is not first
+
+The owner asked whether to buy and move the domain before running this
+prompt. Buying and moving are two different jobs and they sit in
+different places.
+
+1. PICK THE NAME. The only real blocker. This prompt says Actuals; if
+   the answer is Seasons, the prompt needs rewriting first.
+2. BUY the domain and grab the Instagram handle the same day. About
+   twelve dollars, and it stops the name being taken while he thinks.
+   Point it at nothing yet.
+3. RUN THIS PROMPT. It ships on gocelebet.com and cannot break the
+   address.
+4. MOVE the domain, using the checklist below.
+
+Why the code rename goes before the move: every genuinely dangerous
+step is in the move (login redirects, password reset email, DNS). If
+both happen in one window and login breaks, there is no way to tell
+whether it was DNS or one of 135 code edits. Renaming first means the
+app is already proven, so the move is debugged on its own.
+
+The reverse order is also worse for the testers. A site called Celebet
+living at actualshq.com is more confusing than Actuals living at
+gocelebet.com.
+
+When the move happens, KEEP gocelebet.com ALIVE as a redirect. Old
+links, the testers' bookmarks and any saved logins all point there.
+
 ## What this prompt cannot do, and why that is fine
 
 Claude cannot click a dashboard. These stay yours, and none of them
