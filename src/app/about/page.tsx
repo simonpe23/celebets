@@ -93,10 +93,10 @@ export default function AboutPage() {
           something is wrong, missing or annoying, we would rather hear it than
           not. Find us on Instagram at{" "}
           <a
-            href="https://instagram.com/gocelebet"
+            href="https://instagram.com/actualshq"
             className="font-semibold text-neutral-900 underline dark:text-white"
           >
-            @gocelebet
+            @actualshq
           </a>
           .
         </p>

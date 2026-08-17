@@ -40,10 +40,10 @@ export default function PrivacyPage() {
           Actuals is operated by Peak Street 6 LLC. You can reach us on
           Instagram at{" "}
           <a
-            href="https://instagram.com/gocelebet"
+            href="https://instagram.com/actualshq"
             className="font-semibold text-neutral-900 underline dark:text-white"
           >
-            @gocelebet
+            @actualshq
           </a>
           .
         </p>

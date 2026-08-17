@@ -491,7 +491,7 @@ export default function LandingPage() {
           </nav>
 
           <a
-            href="https://instagram.com/gocelebet"
+            href="https://instagram.com/actualshq"
             target="_blank"
             rel="noreferrer"
             aria-label="Actuals on Instagram"
