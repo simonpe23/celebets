@@ -49,6 +49,9 @@ actuals.cc will work. Password reset will not, yet.
 - [ ] Only once that passes, change **Site URL** to
       `https://actuals.cc`.
 
+DONE, 18 August 2026. Tested and verified by the owner: signup, email
+confirmation and password reset all work on actuals.cc.
+
 ## PHASE 3: email. Do this on its own day.
 
 - [ ] **Resend:** add actuals.cc as a sending domain.
@@ -80,6 +83,13 @@ preview.
       becomes actuals.cc, and the card is regenerated.
 - [ ] Docs: CLAUDE.md and IDEAS.md still describe gocelebet.com as the
       live address.
+
+DONE, 18 August 2026. metadataBase, the openGraph url, the card's
+address and the docs all say actuals.cc.
+
+The card's ARTWORK is still the old logo and stays that way until the
+new logo files arrive. Only the address on it was corrected, because it
+had been left reading actualshq.com, a domain the owner does not own.
 
 ## PHASE 5: finish up.
 

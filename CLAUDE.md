@@ -61,7 +61,7 @@ brand name left on screen.
 It starts its own dev server when none is running and stops it after,
 because a check that needs three commands is a check that gets skipped.
 Point it at a real address to test a deploy: `npm run sitecheck --
-https://www.gocelebet.com`. That fails from inside Claude's sandbox,
+https://actuals.cc`. That fails from inside Claude's sandbox,
 whose proxy blocks the domain, but it works from the owner's machine.
 
 When something reaches the owner that a machine could have caught, the
@@ -579,7 +579,7 @@ Decisions locked in during this build:
 
 - App: Actuals, a mobile-first manual sports bet tracker. Renamed
   from Celebet in August 2026.
-- Live at gocelebet.com (Hostinger domain, Hostinger keeps DNS,
+- Live at actuals.cc (Hostinger domain, Hostinger keeps DNS,
   pointed at Vercel). The vercel.app address still works too.
 - The owner has an Instagram account for finding test users.
 - Stack: Next.js App Router, TypeScript, Tailwind, Supabase with RLS,

@@ -54,7 +54,7 @@ const instrument = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://gocelebet.com"),
+  metadataBase: new URL("https://actuals.cc"),
   title: "Actuals",
   description: "Track your sports bets and see exactly how you perform",
   appleWebApp: {
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Actuals",
     description: "Track every bet. Discover patterns. Find your edge.",
-    url: "https://gocelebet.com",
+    url: "https://actuals.cc",
     siteName: "Actuals",
     type: "website",
     images: [{ url: "/og.png", width: 1200, height: 630 }],

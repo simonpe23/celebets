@@ -17,7 +17,7 @@ import { chromium } from "playwright";
 
 // Takes a port for a dev server, or a full address for the real site:
 //   node sitecheck.mjs 3105
-//   node sitecheck.mjs https://www.gocelebet.com
+//   node sitecheck.mjs https://actuals.cc
 // Run it against the live site after every deploy. That is the version
 // the owner actually looks at.
 const ARG = process.argv[2] ?? "3105";
