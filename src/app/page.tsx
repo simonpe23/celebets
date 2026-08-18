@@ -179,7 +179,7 @@ export default function LandingPage() {
             links at the top of a page is the fastest way to look
             unfinished. */}
         <header className={`${SHELL} relative flex items-center justify-between py-5`}>
-          <Wordmark className="text-[32px]" />
+          <Wordmark className="text-[24px] lg:text-[32px]" />
           <div className="flex items-center gap-2.5">
             <Link
               href="/login"
@@ -476,7 +476,7 @@ export default function LandingPage() {
       {/* ================= FOOTER ================= */}
       <footer className={`${SHELL} border-t border-neutral-900/[0.07] pb-10 pt-10 dark:border-white/[0.07]`}>
         <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-between">
-          <Wordmark className="text-[32px]" />
+          <Wordmark className="text-[24px] lg:text-[32px]" />
 
           <nav className="flex items-center gap-8 text-[16px] font-semibold text-neutral-500 dark:text-neutral-400">
             <Link href="/terms" className="transition-colors hover:text-neutral-900 dark:hover:text-white">

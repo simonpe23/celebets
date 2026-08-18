@@ -25,7 +25,11 @@ export default function Wordmark({
   className?: string;
   onDark?: boolean;
 }) {
-  const img = "h-[1.05em] w-auto align-middle";
+  // max-w-none: in a tight flex row an image with a fixed height
+  // gets its width squeezed and DISTORTS, silently. This happened in
+  // the landing header on phones the day the logo grew. Overflowing
+  // visibly is better than warping invisibly.
+  const img = "h-[1.05em] w-auto max-w-none shrink-0 align-middle";
   return (
     <span className={`inline-flex items-center ${className}`}>
       {onDark ? (
