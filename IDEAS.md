@@ -66,6 +66,49 @@ How this file works:
     while that is true: the cost grows with every real user, so the
     cheapest day to do it is the soonest day he has a name.
 
+26. THE AUTH FLOW REDESIGN. Under active discussion, August 2026, not
+    approved for building. The owner: "we have to clarify 2 things:
+    the sign up flow, the log in flow." One entrance, two flows.
+
+    THE PROBLEM, in his words: five places to click on the landing
+    (email field, its button, the Google button, the header CTA, Log
+    in) "and it's not always clear where i should click when i want
+    to sign in vs sign up." He has been confused by his own page.
+
+    AGREED IN DISCUSSION, pending his final go:
+    - The hero drops the email field and becomes three actions:
+      Start Tracking. It's Free / Continue with Google / "Already
+      have an account? Log in". The header keeps Log in.
+    - THE BUTTON NEVER CHANGES, THE HEADLINE DOES. His insight, from
+      Asana's login screen: "Continue with Google" is accurate for
+      both signup and login, and the headline above it ("Log in to
+      your account" vs "Create your account") is what tells the user
+      which mode they are in. Google's brand rules also only permit
+      a few fixed phrasings on a G button, so free-form button copy
+      is out anyway.
+    - Never label anything "Sign up": Start Tracking is the product's
+      verb.
+
+    REJECTED: the "smart Continue" from another chat he consulted,
+    where typing an email reveals whether an account exists. On a
+    betting app that lets anyone check whether a partner, boss or
+    landlord gambles. An email-enumeration leak dressed as UX.
+    Supabase blocks it deliberately.
+
+    THE OPEN FORK, his call, unanswered: passwords or codes for new
+    users.
+    - Code flow (passwordless): type email, get a six-digit code,
+      enter it, in. Identical for new and returning users, so the
+      signup/login question stops existing, and it leaks nothing.
+      Slack and Notion pattern, native in Supabase. Costs: an email
+      round trip per new device, and it leans on the days-old
+      actuals.cc sender reputation, so it should wait until the
+      domain has warmed up.
+    - No detection: Start Tracking opens one account screen (email,
+      password, Google). Dumb, clean, ships in a week.
+    When built, fold in idea 16 below: the account screen becomes the
+    panel over the landing.
+
 16. Login and sign up as drop-down panels on the landing page, instead
     of their own pages. Tapping Login or Sign up opens a panel over
     the landing page holding the email and password fields, the
