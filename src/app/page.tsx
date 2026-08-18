@@ -179,7 +179,7 @@ export default function LandingPage() {
             links at the top of a page is the fastest way to look
             unfinished. */}
         <header className={`${SHELL} relative flex items-center justify-between py-5`}>
-          <Wordmark className="text-[24px]" />
+          <Wordmark className="text-[32px]" />
           <div className="flex items-center gap-2.5">
             <Link
               href="/login"
@@ -203,12 +203,12 @@ export default function LandingPage() {
                 "space between know your game and the phones is too
                 tight... space between the phone and the trusted by
                 block is too tight." */}
-            <div className="grid items-center gap-12 pb-14 pt-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-12 lg:pb-36 lg:pt-8">
+            <div className="grid items-center gap-12 pb-14 pt-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-12 lg:pb-32 lg:pt-4">
               <div className="min-w-0 text-center lg:text-left">
                 <Eyebrow>The smarter way to bet</Eyebrow>
 
                 <h1
-                  className={`${DISPLAY} mt-5 text-[3.4rem] leading-[0.98] sm:text-[4.3rem] lg:text-[5.2rem] xl:text-[6rem]`}
+                  className={`${DISPLAY} mt-5 text-[3.4rem] leading-[0.98] sm:text-[4.3rem] lg:text-[5rem] xl:text-[5.4rem]`}
                 >
                   Know
                   <br />
@@ -256,10 +256,10 @@ export default function LandingPage() {
                   <PhoneTrio base={225} />
                 </div>
                 <div className="hidden lg:block xl:hidden">
-                  <PhoneTrio base={250} />
+                  <PhoneTrio base={232} />
                 </div>
                 <div className="hidden xl:block">
-                  <PhoneTrio base={310} priority />
+                  <PhoneTrio base={272} priority />
                 </div>
 
                 <InsightChip
@@ -476,7 +476,7 @@ export default function LandingPage() {
       {/* ================= FOOTER ================= */}
       <footer className={`${SHELL} border-t border-neutral-900/[0.07] pb-10 pt-10 dark:border-white/[0.07]`}>
         <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-between">
-          <Wordmark className="text-[24px]" />
+          <Wordmark className="text-[32px]" />
 
           <nav className="flex items-center gap-8 text-[16px] font-semibold text-neutral-500 dark:text-neutral-400">
             <Link href="/terms" className="transition-colors hover:text-neutral-900 dark:hover:text-white">
