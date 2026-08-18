@@ -19,13 +19,22 @@ built from the address the browser is already on
 
 ## PHASE 1: point the domain. Nothing changes for users.
 
-- [ ] **Hostinger:** point actuals.cc at Vercel. An A record on `@` to
-      `76.76.21.21`, and a CNAME on `www` to `cname.vercel-dns.com`.
-      That is the same pair gocelebet.com already uses.
+- [ ] **Hostinger:** point actuals.cc at Vercel. Take the exact records
+      from Vercel's own domain panel rather than copying them from
+      here. Vercel is expanding its IP range, so the values move:
+      in August 2026 it wanted an A record on `@` to `216.198.79.1`
+      and a per-domain CNAME on `www`, while the older
+      `76.76.21.21` and `cname.vercel-dns.com` still worked and only
+      produced a "DNS Change Recommended" warning.
+      Changing between them is safe at any time. Both answer during
+      propagation, so the site never drops.
 - [ ] **Vercel:** add actuals.cc as a domain on the project. Add
       www.actuals.cc too and let Vercel redirect one to the other.
 - [ ] Wait until it loads with a padlock. DNS can take an hour, SSL is
       issued automatically once DNS resolves.
+
+DONE, 18 August 2026. actuals.cc and www.actuals.cc both resolve to
+Vercel and the app answers on them.
 
 At this point the app answers on BOTH addresses. Logging in on
 actuals.cc will work. Password reset will not, yet.
