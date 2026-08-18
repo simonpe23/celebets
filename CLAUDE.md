@@ -42,7 +42,8 @@ compare two identical things.
 
 Run `npm run check` before every screenshot. It is design-check, tsc, a
 real production build, AND sitecheck.mjs, which loads all 36 pages in
-both themes and reads what actually rendered. Never show the owner a
+both themes and reads what actually rendered, plus the public pages
+again at laptop width. Never show the owner a
 screenshot while it is failing.
 
 SITECHECK EXISTS BECAUSE OF THE RENAME, August 2026. The owner spent
@@ -106,6 +107,14 @@ the comparison is worthless and the owner cannot decide anything. So:
 - When a change has a pattern (a color, a font, a size), add a rule
   to design-check.mjs so the machine catches the next one, not the
   owner. The money font rule is the worked example.
+
+THE PHONE RULE (added August 2026, in the owner's words: "this app
+is for phones also. if any preview is made, it has to be double
+checked for phone as well. thats your job, not mine.") Every preview
+of anything gets checked at phone width AND laptop width before he
+sees it. The squashed-logo bug is the reason: a header change was
+previewed at 1512px only, shipped, and the owner found the logo
+warped on his own phone. A layout change is never one screen width.
 
 Before showing any UI change:
 

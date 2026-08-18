@@ -93,13 +93,24 @@ const browser = await chromium.launch({
   executablePath: "/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
 });
 
+// Phone first, because the app is for phones: every page, both
+// themes. Then the public pages again at laptop width, where the
+// landing layout is completely different. The squashed-logo bug
+// lived exactly in that gap: correct at one width, warped at the
+// other.
+const PASSES = [
+  { width: 393, height: 852, label: "phone", paths: null },
+  { width: 1512, height: 800, label: "laptop", paths: PUBLIC },
+];
+
 for (const theme of ["light", "dark"]) {
+  for (const pass of PASSES) {
   const ctx = await browser.newContext({
-    viewport: { width: 393, height: 852 },
+    viewport: { width: pass.width, height: pass.height },
     colorScheme: theme,
   });
 
-  for (const path of [...RENDERED, ...GATED]) {
+  for (const path of pass.paths ?? [...RENDERED, ...GATED]) {
     const page = await ctx.newPage();
     const errors = [];
     const failedRequests = [];
@@ -122,7 +133,7 @@ for (const theme of ["light", "dark"]) {
       }
     });
 
-    const where = `${path}  (${theme})`;
+    const where = `${path}  (${theme}, ${pass.label})`;
     let res;
     try {
       res = await page.goto(BASE + path, { waitUntil: "networkidle", timeout: 30000 });
@@ -174,6 +185,30 @@ for (const theme of ["light", "dark"]) {
       );
       for (const src of brokenImgs) note(where, `image did not load: ${src}`);
 
+      // An image squeezed out of shape by its layout. A flex row
+      // compresses a fixed-height image sideways rather than
+      // overflowing, so the distortion is silent: this exact failure
+      // shipped the squashed logo to the owner's phone.
+      const warped = await page.$$eval("img", (imgs) =>
+        imgs
+          .filter((i) => i.complete && i.naturalWidth > 0)
+          .map((i) => {
+            // object-cover and friends CROP to the box, they never
+            // warp, and the phone mockups use exactly that. Only the
+            // default fill mode stretches.
+            if (getComputedStyle(i).objectFit !== "fill") return null;
+            const r = i.getBoundingClientRect();
+            if (r.width < 8 || r.height < 8) return null;
+            const want = i.naturalWidth / i.naturalHeight;
+            const got = r.width / r.height;
+            return Math.abs(got - want) / want > 0.04
+              ? `${i.getAttribute("src")} drawn ${got.toFixed(2)}:1, file is ${want.toFixed(2)}:1`
+              : null;
+          })
+          .filter(Boolean)
+      );
+      for (const m of warped) note(where, `image squeezed out of shape: ${m}`);
+
       const altBrand = await page.$$eval("img[alt]", (imgs) =>
         imgs.map((i) => i.getAttribute("alt")).filter((a) => /cele/i.test(a ?? ""))
       );
@@ -186,13 +221,14 @@ for (const theme of ["light", "dark"]) {
     await page.close();
   }
   await ctx.close();
+  }
 }
 
 await browser.close();
 stopServer();
 
 if (problems.length === 0) {
-  console.log(`Site check passed. ${(RENDERED.length + GATED.length) * 2} page loads, nothing broken.`);
+  console.log(`Site check passed. ${(RENDERED.length + GATED.length + PUBLIC.length) * 2} page loads, nothing broken.`);
 } else {
   console.log(`Site check found ${problems.length} problem(s):\n`);
   for (const p of problems) console.log("  " + p + "\n");
