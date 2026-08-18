@@ -52,7 +52,7 @@ actuals.cc will work. Password reset will not, yet.
 DONE, 18 August 2026. Tested and verified by the owner: signup, email
 confirmation and password reset all work on actuals.cc.
 
-## PHASE 3: email. Do this on its own day.
+## PHASE 3: email. Start it when you are not in a hurry.
 
 - [ ] **Resend:** add actuals.cc as a sending domain.
 - [ ] **Hostinger:** add the DKIM, SPF and DMARC records Resend gives
@@ -65,9 +65,19 @@ confirmation and password reset all work on actuals.cc.
 - [ ] Send yourself a password reset and check it arrives, and that it
       is not in spam.
 
-A brand new sending domain has no reputation. Expect the first few
-days to be less reliable, and do not send anything bulk until it has
-warmed up.
+Why this one wants its own slot, rather than being squeezed between
+other changes:
+- There is waiting in it. You add the records, then Resend verifies
+  them, and that takes anywhere from minutes to hours. It cannot be
+  hurried.
+- Do it alone. If a reset email stops arriving afterwards you want one
+  suspect, not three.
+- A brand new sending domain has no reputation, so the first few emails
+  are the most likely to land in spam. Send nothing bulk until it has
+  warmed up.
+
+It does not need a whole day. It needs an unhurried hour and a real
+test at the end.
 
 ## PHASE 4: the code. Claude does this, about ten minutes.
 
