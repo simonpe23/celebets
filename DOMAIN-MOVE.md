@@ -117,10 +117,15 @@ had been left reading actualshq.com, a domain the owner does not own.
       actuals.cc, rather than serving the site itself. Old links, your
       testers' bookmarks and anything you have already posted keep
       working.
-- [ ] **Google Cloud, OAuth consent screen:** the app domain and the
-      links to your privacy policy and terms still point at
-      gocelebet.com. Move them. The OAuth client itself needs nothing:
-      its redirect URI points at Supabase, not at your domain.
+- [x] **Google Cloud, OAuth consent screen.** DONE 18 August 2026. App
+      name, home page, privacy and terms links all moved to actuals.cc.
+      The order matters: actuals.cc has to be added to Authorized
+      domains BEFORE Google will accept a link pointing at it.
+      The OAuth client itself needed nothing, because its redirect URI
+      points at Supabase rather than at the app's domain.
+      This does NOT fix the "sign in to wqhitxtowfhylzpfxkpw.supabase.co"
+      line on the Google popup. That comes from Supabase and needs a
+      paid custom domain plus brand verification. IDEAS.md item 22.
 - [ ] **Instagram:** the link in your bio.
 - [ ] Leave the old Supabase redirect URLs in place for a few weeks,
       then remove them. There is no rush and no cost to keeping them.
