@@ -6,6 +6,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import Disclaimer from "@/components/Disclaimer";
 import BackHome from "@/components/BackHome";
+import Wordmark from "@/components/Wordmark";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -93,8 +94,8 @@ export default function ResetPasswordPage() {
     <main className="relative flex min-h-dvh flex-col justify-center px-6 py-12">
       <BackHome />
       <div className="mx-auto w-full max-w-sm">
-        <h1 className="text-center text-3xl font-bold tracking-tight">
-          Actuals
+        <h1 className="flex justify-center text-3xl">
+          <Wordmark className="text-3xl" />
         </h1>
         <p className="mt-2 text-center text-sm text-neutral-500 dark:text-neutral-400">
           Pick a new password

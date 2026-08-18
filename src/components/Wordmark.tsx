@@ -1,26 +1,23 @@
-// The Actuals wordmark: the name as plain text, one colour, following
-// the theme. Near-black on light, white on dark.
+/* eslint-disable @next/next/no-img-element */
+// The Actuals wordmark, as the owner's own artwork (August 2026, from
+// brand/actuals/logos-final, cropped in public/brand). Two files, one
+// per theme, because ink baked into a PNG cannot follow a CSS colour:
+//   wordmark-dark.png   dark ink, for light surfaces
+//   wordmark-white.png  white ink, for dark surfaces
+// The versions WITH the tagline exist next to them and are for large
+// placements only (the link preview card). At header size the tagline
+// would render around six pixels tall, which is why it is cropped off
+// here.
 //
-// It used to be "cele" in the text colour and "bet" in a purple
-// gradient. That split was the whole design and it does not survive
-// the rename, so this is a rebuild, not a find and replace.
-//
-// NO ARTWORK HERE ON PURPOSE. The owner split the rebrand from the
-// logo work in August 2026 ("this is too much going on at the same
-// time"), so the mark, the favicon and the link preview image are a
-// separate job. See IDEAS.md item 25. Text is the safe placeholder:
-// it is sharp at every size, it needs no dark mode variant, and it
-// cannot render as a white box on a dark page the way the current
-// PNGs would.
-//
-// The typeface is unchanged. font-brand is the app's existing brand
-// face and swapping it is a product decision the owner has to make,
-// not something a rename is allowed to do quietly.
+// The image is sized in ems, so the callers' existing text-2xl /
+// text-xl classes keep working: the artwork height follows the font
+// size the caller sets, roughly matching the height the text version
+// had. Two <img> tags rather than one themed source, the same pattern
+// PhoneMock uses.
 //
 // onDark is for a surface that is navy in BOTH themes, like the
-// landing hero or footer. Without it the text follows the theme and
-// turns near-black on a navy band, which is how the old wordmark
-// vanished on a light phone.
+// landing hero once was. It pins the white artwork regardless of
+// theme.
 export default function Wordmark({
   className = "text-2xl",
   onDark = false,
@@ -28,13 +25,25 @@ export default function Wordmark({
   className?: string;
   onDark?: boolean;
 }) {
+  const img = "h-[1.05em] w-auto align-middle";
   return (
-    <span
-      className={`font-brand font-semibold tracking-tight ${
-        onDark ? "text-white" : "text-neutral-900 dark:text-white"
-      } ${className}`}
-    >
-      Actuals
+    <span className={`inline-flex items-center ${className}`}>
+      {onDark ? (
+        <img src="/brand/wordmark-white.png" alt="Actuals" className={img} />
+      ) : (
+        <>
+          <img
+            src="/brand/wordmark-dark.png"
+            alt="Actuals"
+            className={`${img} dark:hidden`}
+          />
+          <img
+            src="/brand/wordmark-white.png"
+            alt="Actuals"
+            className={`${img} hidden dark:block`}
+          />
+        </>
+      )}
     </span>
   );
 }

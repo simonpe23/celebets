@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import Disclaimer from "@/components/Disclaimer";
 import GoogleButton from "@/components/GoogleButton";
 import BackHome from "@/components/BackHome";
+import Wordmark from "@/components/Wordmark";
 
 // The landing page carries the email here in the address, so someone
 // who typed it there does not have to type it twice. Nothing else about
@@ -72,8 +73,8 @@ function SignUpForm() {
     <main className="relative flex min-h-dvh flex-col justify-center px-6 py-12">
       <BackHome />
       <div className="mx-auto w-full max-w-sm">
-        <h1 className="text-center text-3xl font-bold tracking-tight">
-          Actuals
+        <h1 className="flex justify-center text-3xl">
+          <Wordmark className="text-3xl" />
         </h1>
         <p className="mt-2 text-center text-sm text-neutral-500 dark:text-neutral-400">
           Create your account
