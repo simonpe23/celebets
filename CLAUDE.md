@@ -552,9 +552,9 @@ Decisions locked in during this build:
   Supabase sends (code exchange, tokens in the address bar, token
   hash) and /auth/confirm handles token-hash links. Both are exempt
   from the login gate in middleware.
-- Emails are sent through Resend from no-reply@gocelebet.com, wired
+- Emails are sent through Resend from no-reply@actuals.cc, wired
   into Supabase custom SMTP (host smtp.resend.com, username resend,
-  password = a Resend API key scoped to gocelebet.com). DNS records
+  password = a Resend API key scoped to actuals.cc). DNS records
   for DKIM, SPF, MX, and DMARC live at Hostinger.
 - Supabase URL configuration: Site URL https://gocelebet.com, and
   redirect URLs for gocelebet.com, www.gocelebet.com, and the

@@ -65,6 +65,16 @@ confirmation and password reset all work on actuals.cc.
 - [ ] Send yourself a password reset and check it arrives, and that it
       is not in spam.
 
+DONE, 18 August 2026. Verified by the owner: the reset email arrives
+from Actuals <no-reply@actuals.cc> and the link works.
+
+Two things that were not obvious on the way through:
+- The Resend API key had to be replaced, not reused. The old one was
+  scoped to gocelebet.com, so it could not send from the new domain.
+- The sender NAME is a plain text field in Supabase and has nothing to
+  do with the domain. It said Celebet long after the rename, and could
+  have been fixed on day one.
+
 Why this one wants its own slot, rather than being squeezed between
 other changes:
 - There is waiting in it. You add the records, then Resend verifies
