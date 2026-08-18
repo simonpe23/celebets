@@ -140,10 +140,10 @@ export default function TermsPage() {
         <p>
           Peak Street 6 LLC. Reach us on Instagram at{" "}
           <a
-            href="https://instagram.com/actualshq"
+            href="https://instagram.com/actuals.cc"
             className="font-semibold text-neutral-900 underline dark:text-white"
           >
-            @actualshq
+            @actuals.cc
           </a>
           .
         </p>
