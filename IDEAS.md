@@ -22,49 +22,16 @@ How this file works:
 - Also shipped unnumbered: cash out, add money with per-buy
   tracking, and the money-first bet flow (stake + To Collect,
   no odds inputs anywhere).
+21. RENAME THE APP: DONE, August 2026. Celebet became Actuals end to
+    end: code and copy, the actuals.cc domain, Supabase URLs, Resend
+    sender, Google consent screen, the Instagram handle, and the full
+    artwork swap (item 25, favicon, phone icon, wordmark, link
+    preview card). The one loose end is the gocelebet.com redirect in
+    Vercel, on the owner's list.
+
 
 ## NOW (small, fits the current app, high value per effort)
 
-21. RENAME THE APP. The owner, August 2026: "Celebet does not work."
-    No new name or domain chosen yet, so this is parked until he has
-    one. Recorded now so the decision is not lost.
-
-    THE CODE IS THE EASY HALF, and it is genuinely easy: 88 mentions
-    across 43 files, and most are the visible word in a heading or a
-    piece of copy. Half a day, one careful pass, plus new artwork
-    (wordmark, og.png, favicon) which is a design job, not a code one.
-
-    THE THREE THINGS THAT NEED CARE, none of them hard, all of them
-    silent if missed:
-    - `celebet-theme` in localStorage (Settings.tsx). Renaming that
-      key logs every existing user out of their theme choice, back to
-      System. Fix: read the old key when the new one is missing, so
-      the choice carries over.
-    - The chart's SVG gradient ids (`celebet-line`, `celebet-area`,
-      `celebet-bloom`, `celebet-glow` in ProfitChart.tsx) are internal
-      references, not names. They may be left alone or renamed, but
-      the id and its `url(#...)` must move together or the chart loses
-      its colour with no error.
-    - `tracking_since` and `tracking_reset_tx` in auth metadata are
-      not branded, so they are safe. Worth stating so nobody renames
-      them for tidiness.
-
-    THE HARD HALF IS OUTSIDE THE CODE, and it is where the risk and
-    the cost sit: a new domain, DNS at Hostinger, Vercel, Supabase
-    Site URL and redirect URLs (miss one and password reset links die
-    silently), Resend sender domain with fresh DKIM/SPF/DMARC records
-    and a new warm-up period, the Instagram handle, and the trademark
-    line for Peak Street 6 LLC.
-
-    THERE ARE NO ACTIVE USERS. The owner, August 2026: 3 or 4 signups
-    and nobody using it. That removes most of the caution above:
-    - The localStorage migration is not needed. Nobody has a saved
-      theme worth carrying over, so the key can simply be renamed.
-    - No stale bookmarks, no old links in circulation, no inboxes
-      holding mail from the old sender.
-    So the rename is a rename, not a migration. It stays cheap only
-    while that is true: the cost grows with every real user, so the
-    cheapest day to do it is the soonest day he has a name.
 
 26. THE AUTH FLOW REDESIGN. Under active discussion, August 2026, not
     approved for building. The owner: "we have to clarify 2 things:
@@ -95,8 +62,13 @@ How this file works:
     landlord gambles. An email-enumeration leak dressed as UX.
     Supabase blocks it deliberately.
 
-    THE OPEN FORK, his call, unanswered: passwords or codes for new
-    users.
+    DECIDED, 18 August 2026: THE CODE FLOW. The owner read both
+    options and chose passwordless codes. New users never get a
+    password. One consequence worth naming early: the forgot-password
+    machinery becomes dead code for new users, and if existing
+    accounts are migrated too, it can be deleted entirely.
+
+    The fork as it was presented, kept for the record:
     - Code flow (passwordless): type email, get a six-digit code,
       enter it, in. Identical for new and returning users, so the
       signup/login question stops existing, and it leaks nothing.
