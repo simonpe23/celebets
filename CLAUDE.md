@@ -40,9 +40,32 @@ local preview pages in src/app/preview never get new utility classes.
 Use inline styles there, or the preview silently falls back and you
 compare two identical things.
 
-Run `npm run check` before every screenshot. It is design-check plus
-tsc plus a real production build. Never show the owner a screenshot
-while it is failing.
+Run `npm run check` before every screenshot. It is design-check, tsc, a
+real production build, AND sitecheck.mjs, which loads all 36 pages in
+both themes and reads what actually rendered. Never show the owner a
+screenshot while it is failing.
+
+SITECHECK EXISTS BECAUSE OF THE RENAME, August 2026. The owner spent
+one minute on four pages and found five mistakes I had shipped. His
+words: "if I spend a minute and find 5 mistakes, what else is wrong?
+makes me even more stressed." Checking by eye does not scale, and
+making him the last line of defence is the failure.
+
+It reads the RENDERED page, which is the point: grep cannot see copy
+assembled at runtime, text inside a component, a page title, an alt
+attribute, or where a link actually goes. It catches a page that 500s,
+a page that 404s, an image that never loaded, a broken internal link,
+any console error, a login gate that stopped redirecting, and any old
+brand name left on screen.
+
+It starts its own dev server when none is running and stops it after,
+because a check that needs three commands is a check that gets skipped.
+Point it at a real address to test a deploy: `npm run sitecheck --
+https://www.gocelebet.com`. That fails from inside Claude's sandbox,
+whose proxy blocks the domain, but it works from the owner's machine.
+
+When something reaches the owner that a machine could have caught, the
+fix is a rule here or in design-check.mjs, not a promise to be careful.
 
 Do NOT run `node design-check.mjs` on its own. In August 2026 the
 owner got a session's worth of "Failed preview deployment" emails
