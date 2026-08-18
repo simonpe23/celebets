@@ -9,6 +9,14 @@ The owner has no coding experience. These rules are permanent.
   said answers are too long (August 2026). Cut the reasoning unless it
   changes a decision. Do not list every test that passed, just say it
   works. Do not restate what was asked.
+- ANSWER IN BULLETS, NOT PROSE. Repeated by the owner again on 18
+  August after a decision he disagreed with sat mid-paragraph and he
+  only found it a day later by rereading: "why do you keep burying
+  important stuff in the middle of walls of text? i wonder how many
+  times i've said that now." The test for every reply: could he skim
+  only the bold bullet openings and miss nothing that needs him?
+  Anything that needs his eyes goes FIRST, as its own bullet, never
+  after a comma.
 - Never compress several ideas into one long sentence.
 - Write in short bullets, not long text blocks.
 - Never bury an important note or a task in the middle of a text block.
