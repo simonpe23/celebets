@@ -103,6 +103,36 @@ export async function kalshiGetAll<T>(
   return out;
 }
 
+// The tickers the user currently holds a position in. Used by the
+// sync's discovery step: an open position is live money and belongs
+// to the record even when every fill predates the connect date, the
+// same ruling as the app's own fresh start line. Parsed defensively
+// (position vs position_fp) and a failure returns empty rather than
+// sinking the sync: this step only ADDS markets to the scope.
+export async function kalshiOpenTickers(
+  accessKey: string,
+  privateKeyPem: string
+): Promise<string[]> {
+  try {
+    const rows = await kalshiGetAll<Record<string, unknown>>(
+      accessKey,
+      privateKeyPem,
+      "/portfolio/positions",
+      "market_positions",
+      { count_filter: "position" }
+    );
+    return rows
+      .filter((r) => {
+        const held = Number(r.position ?? r.position_fp ?? 0);
+        return Number.isFinite(held) && held !== 0;
+      })
+      .map((r) => String(r.ticker ?? ""))
+      .filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
 // One market's public details, for its human title. Public endpoint,
 // but sent signed like everything else, which Kalshi accepts.
 export async function kalshiMarket(

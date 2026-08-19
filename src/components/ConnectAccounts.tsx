@@ -619,6 +619,25 @@ export default function ConnectAccounts({
         className={`${FIELD} py-3 font-mono text-xs leading-relaxed`}
       />
 
+      {/* What the button DOES, right above it. The owner, after
+          walking the whole form himself: "then I press connect. What
+          does that mean?" Nobody should press a button holding their
+          betting account's key without knowing exactly what happens
+          next. */}
+      <div className={`${INNER} mt-4 px-3 py-3`}>
+        <span className="block text-sm font-semibold">
+          What pressing Connect does
+        </span>
+        <ul className="mt-1.5 space-y-1 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
+          <li>Your open Kalshi bets appear in Actuals right away.</li>
+          <li>From now on, new Kalshi bets are tracked on their own.</li>
+          <li>
+            Your old, finished Kalshi history stays out. You can
+            import it later with one tap if you want it.
+          </li>
+        </ul>
+      </div>
+
       {error && (
         <p className="mt-3 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
           {error}
@@ -629,7 +648,7 @@ export default function ConnectAccounts({
         type="button"
         onClick={connect}
         disabled={busy || accessKey.trim() === "" || privateKey.trim() === ""}
-        className={`${BTN} mt-4 h-11 w-full`}
+        className={`${BTN} mt-3 h-11 w-full`}
       >
         {busy ? "Checking with Kalshi..." : "Connect Kalshi"}
       </button>

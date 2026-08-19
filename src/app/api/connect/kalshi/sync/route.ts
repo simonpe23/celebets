@@ -5,6 +5,7 @@ import {
   KalshiError,
   kalshiGetAll,
   kalshiMarket,
+  kalshiOpenTickers,
 } from "@/lib/kalshi";
 import {
   deriveBets,
@@ -66,7 +67,12 @@ export async function POST(request: Request) {
   const line = history === true ? null : (conn.connected_at as string);
 
   try {
-    // 1. Recent fills decide WHICH markets are in scope.
+    // 1. Which markets are in scope: everything with activity since
+    // the line, PLUS every currently open position. An open position
+    // is live money and belongs to the record even when all its fills
+    // predate the connect date, the same ruling as the app's own
+    // fresh start line. This is also what makes connecting feel like
+    // something: the user's open bets appear on the first sync.
     const recentFills = await kalshiGetAll<KalshiFill>(
       key,
       pem,
@@ -75,11 +81,12 @@ export async function POST(request: Request) {
       {},
       line ? { field: "created_time", iso: line } : undefined
     );
-    const inScope = new Set(
-      recentFills
+    const inScope = new Set([
+      ...recentFills
         .filter((f) => !line || f.created_time >= line)
-        .map((f) => f.ticker)
-    );
+        .map((f) => f.ticker),
+      ...(await kalshiOpenTickers(key, pem)),
+    ]);
 
     // Guard against a first sync of a very heavy account.
     const tickers = [...inScope].slice(0, 60);
