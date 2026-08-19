@@ -23,21 +23,33 @@ import type { Sport } from "./types";
 // settlement the sold part's revenue joins the payout, so the final
 // profit is exact even when the ride was unusual.
 
+// THE REAL SHAPES, read off the owner's own account (19 August 2026)
+// after the first build imported nothing. Kalshi's fills do not look
+// like the documentation this was first written against:
+//   count_fp             a STRING, and fractional: "106.26" contracts
+//   no_price_dollars     a STRING in DOLLARS: "0.3400", not cents
+//   fee_cost             charged per fill, real money, separate
+// The old names are kept as fallbacks so a future account answering
+// in the older shape still works. Everything is parsed through num(),
+// because every number here arrives as text.
 export type KalshiFill = {
   ticker: string;
   order_id?: string;
   side: "yes" | "no";
   action: "buy" | "sell";
-  count: number;
-  yes_price: number; // cents
-  no_price: number; // cents
+  count_fp?: string | number;
+  count?: string | number;
+  yes_price_dollars?: string | number;
+  no_price_dollars?: string | number;
+  yes_price?: string | number; // cents, older shape
+  no_price?: string | number;
+  fee_cost?: string | number;
   created_time: string;
 };
 
 export type KalshiSettlement = {
   ticker: string;
   market_result?: string;
-  revenue?: number; // cents, what Kalshi paid at settlement
   settled_time?: string;
 };
 
@@ -128,8 +140,36 @@ export function sportForTicker(ticker: string): Sport {
   return best ?? "Other";
 }
 
-function cents(fill: KalshiFill): number {
-  return fill.side === "yes" ? fill.yes_price : fill.no_price;
+// Every number on a Kalshi record can arrive as a string.
+function num(v: unknown): number {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : 0;
+}
+
+// Contracts on this fill. Fractional: Kalshi sells parts of a
+// contract, so this is not an integer.
+function contracts(f: KalshiFill): number {
+  return num(f.count_fp ?? f.count);
+}
+
+// What one contract cost or paid, in dollars.
+function priceDollars(f: KalshiFill): number {
+  const dollars = f.side === "yes" ? f.yes_price_dollars : f.no_price_dollars;
+  if (dollars !== undefined && dollars !== null) return num(dollars);
+  // The older documented shape: cents.
+  return num(f.side === "yes" ? f.yes_price : f.no_price) / 100;
+}
+
+// Kalshi's fee on this fill. It is money that left the account, so a
+// buy's stake includes it and a sell's proceeds are net of it. Without
+// this the app would report a profit the user never made.
+function fee(f: KalshiFill): number {
+  return num(f.fee_cost);
+}
+
+// What the fill cost (buy) or returned (sell), before fees.
+function gross(f: KalshiFill): number {
+  return contracts(f) * priceDollars(f);
 }
 
 // Fills merged per order: one market order can fill in many small
@@ -145,10 +185,12 @@ function mergeBuys(
   }
   return [...byOrder.values()]
     .map((group) => ({
-      amount: round2(
-        group.reduce((s, f) => s + (f.count * cents(f)) / 100, 0)
-      ),
-      payout: round2(group.reduce((s, f) => s + f.count, 0)),
+      // The stake is what left the account: the contracts' cost plus
+      // Kalshi's fee.
+      amount: round2(group.reduce((s, f) => s + gross(f) + fee(f), 0)),
+      // Every contract pays exactly $1 if it wins, so the contract
+      // count IS the To Collect.
+      payout: round2(group.reduce((s, f) => s + contracts(f), 0)),
       createdAt: group
         .map((f) => f.created_time)
         .sort()[0],
@@ -181,13 +223,14 @@ export function deriveBets(
     if (buys.length === 0) continue;
 
     const sellFills = marketFills.filter((f) => f.action === "sell");
+    // Net of fees, for the same reason a buy's stake includes them.
     const sellRevenue = round2(
-      sellFills.reduce((s, f) => s + (f.count * cents(f)) / 100, 0)
+      sellFills.reduce((s, f) => s + gross(f) - fee(f), 0)
     );
     const boughtCount = marketFills
       .filter((f) => f.action === "buy")
-      .reduce((s, f) => s + f.count, 0);
-    const soldCount = sellFills.reduce((s, f) => s + f.count, 0);
+      .reduce((s, f) => s + contracts(f), 0);
+    const soldCount = sellFills.reduce((s, f) => s + contracts(f), 0);
 
     const stake = round2(buys.reduce((s, b) => s + b.amount, 0));
     const toCollect = round2(buys.reduce((s, b) => s + b.payout, 0));
@@ -212,12 +255,12 @@ export function deriveBets(
       const won =
         (settlement.market_result ?? "").toLowerCase() === side;
       const heldAtSettle = Math.max(0, boughtCount - soldCount);
-      const settleRevenue =
-        typeof settlement.revenue === "number"
-          ? settlement.revenue / 100
-          : won
-            ? heldAtSettle
-            : 0;
+      // Computed from the fills, NOT from the settlement's own
+      // revenue field. On the owner's account that field read 0 on a
+      // market he had traded both ways, and its unit is undocumented;
+      // contracts held times the $1 a winning contract pays is
+      // determined entirely by data we can see and check.
+      const settleRevenue = won ? heldAtSettle : 0;
       status = won ? "won" : "lost";
       // A plain lost bet stores NO payout, matching the app's own
       // convention ("a plain lost bet has no payout"), and some
