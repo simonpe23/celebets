@@ -311,8 +311,16 @@ export default function LiveBets({ bets }: Props) {
                               <p className="truncate text-sm font-semibold">
                                 {leg.description ?? leg.subcategory ?? leg.sport}
                               </p>
+                              {/* A leg without odds shows its sport,
+                                  not "0.00". Kalshi parlays price the
+                                  combo rather than the picks, and a
+                                  pick claiming odds of zero reads as
+                                  broken. */}
                               <p className="truncate text-xs text-neutral-500 dark:text-neutral-400">
-                                {leg.subcategory ?? formatOdds(Number(leg.odds ?? 0))}
+                                {leg.subcategory ??
+                                  (leg.odds !== null
+                                    ? formatOdds(Number(leg.odds))
+                                    : leg.sport)}
                               </p>
                             </div>
                           </div>
