@@ -10,6 +10,26 @@ import {
 // A pick's result for the records. Picks that were still open when
 // the bet was cashed out inherit the cash out outcome: profit means
 // won picks, loss means lost picks.
+// Where a calendar period begins, on the clock of whoever calls it.
+// Weeks start on Monday. One function, used by the Performance page's
+// period chips AND the balance band's Today/Week/Month/Year strip, so
+// the same label can never mean two different date ranges.
+export function periodStart(
+  period: "today" | "week" | "month" | "year"
+): Date {
+  const now = new Date();
+  const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  if (period === "today") return startToday;
+  if (period === "week") {
+    const daysSinceMonday = (startToday.getDay() + 6) % 7;
+    const monday = new Date(startToday);
+    monday.setDate(startToday.getDate() - daysSinceMonday);
+    return monday;
+  }
+  if (period === "month") return new Date(now.getFullYear(), now.getMonth(), 1);
+  return new Date(now.getFullYear(), 0, 1);
+}
+
 export function effectiveResult(bet: BetWithLegs, leg: Leg): LegResult {
   if (leg.result !== "pending") return leg.result;
   if (bet.cashed_out && bet.status !== "pending") return bet.status;

@@ -1,59 +1,19 @@
 import Link from "next/link";
-import Sparkline from "@/components/Sparkline";
-import { round2 } from "@/lib/format";
+import { round2, shortSignedMoney } from "@/lib/format";
 import { sportRows, totals } from "@/lib/stats";
-import { SPORT_EMOJI, type BetWithLegs } from "@/lib/types";
+import { type BetWithLegs } from "@/lib/types";
 import { CARD, CARD_LINK } from "@/lib/ui";
 
-// The Performance Snapshot: four all time figures with the shape each
-// one made getting here. A taste of the Performance page, not a copy
-// of it, which is why every corner of the card leads there.
+// The Performance Snapshot: four all time figures, plain. v9.3
+// (August 2026) removed the mini sparklines and the sport emoji: four
+// clean values read faster than four values with four wiggles under
+// them, and the shapes live one tap away on Performance anyway.
 //
 // Best Sport shows profit, not ROI. Per sport ROI does not exist yet:
 // a parlay's stake covers several sports and there is no agreed rule
 // for splitting it (see CLAUDE.md). The mockup showed ROI there, and
 // showing a number we cannot compute honestly is worse than showing
 // the one we can.
-
-// Each point is the figure as it stood after that bet settled.
-function series(
-  bets: BetWithLegs[],
-  kind: "profit" | "roi" | "hitRate"
-): number[] {
-  const ordered = [...bets].sort(
-    (a, b) =>
-      new Date(a.settled_at ?? 0).getTime() -
-      new Date(b.settled_at ?? 0).getTime()
-  );
-
-  const out: number[] = [];
-  let wins = 0;
-  let decided = 0;
-  let staked = 0;
-  let returned = 0;
-
-  for (const bet of ordered) {
-    if (bet.status === "won") wins += 1;
-    if (bet.status === "won" || bet.status === "lost") decided += 1;
-    staked += Number(bet.stake);
-    returned += Number(bet.payout ?? 0);
-
-    if (kind === "profit") out.push(returned - staked);
-    else if (kind === "roi")
-      out.push(staked === 0 ? 0 : ((returned - staked) / staked) * 100);
-    else out.push(decided === 0 ? 0 : (wins / decided) * 100);
-  }
-  return out;
-}
-
-// Whole dollars, the mockup's density: "+$418", not "+$418.26". The
-// exact figure lives one tap away on Performance.
-function short(value: number): string {
-  const rounded = Math.round(value);
-  if (rounded === 0) return "$0";
-  const sign = rounded < 0 ? "-" : "+";
-  return `${sign}$${Math.abs(rounded).toLocaleString("en-US")}`;
-}
 
 const LABEL = "text-xs text-neutral-500 dark:text-neutral-400";
 
@@ -117,52 +77,28 @@ export default function SnapshotCard({
         <div className="pr-2">
           <p className={LABEL}>Net Profit</p>
           <p
-            className={`mt-1 font-money text-lg font-bold tabular-nums ${moneyTone(profit)}`}
+            className={`mt-1 font-money text-[17px] font-bold tabular-nums ${moneyTone(profit)}`}
           >
-            {short(profit)}
+            {shortSignedMoney(profit)}
           </p>
-          <div className="mt-2">
-            <Sparkline
-              points={series(settled, "profit")}
-              positive={profit >= 0}
-              className="h-5"
-              fill="none"
-            />
-          </div>
         </div>
 
         <div className="px-2">
           <p className={LABEL}>ROI</p>
           <p
-            className={`mt-1 font-money text-lg font-bold tabular-nums ${moneyTone(t.roi ?? 0)}`}
+            className={`mt-1 font-money text-[17px] font-bold tabular-nums ${moneyTone(t.roi ?? 0)}`}
           >
             {t.roi === null
               ? "-"
               : `${t.roi >= 0 ? "+" : ""}${t.roi.toFixed(1)}%`}
           </p>
-          <div className="mt-2">
-            <Sparkline
-              points={series(settled, "roi")}
-              positive={(t.roi ?? 0) >= 0}
-              className="h-5"
-              fill="none"
-            />
-          </div>
         </div>
 
         <div className="px-2">
           <p className={LABEL}>Win Rate</p>
-          <p className="mt-1 font-money text-lg font-bold tabular-nums">
+          <p className="mt-1 font-money text-[17px] font-bold tabular-nums">
             {hitRate === null ? "-" : `${hitRate}%`}
           </p>
-          <div className="mt-2">
-            <Sparkline
-              points={series(settled, "hitRate")}
-              tone="neutral"
-              className="h-5"
-              fill="none"
-            />
-          </div>
         </div>
 
         <div className="pl-2">
@@ -173,12 +109,12 @@ export default function SnapshotCard({
                   not wide enough for "American Football", and cutting a
                   sport's name to "Americ..." is worse than two lines. */}
               <p className="mt-1 text-sm font-bold leading-tight">
-                {SPORT_EMOJI[best.sport]} {best.sport}
+                {best.sport}
               </p>
               <p
-                className={`mt-1 font-money text-xs tabular-nums ${moneyTone(best.profit)}`}
+                className={`mt-0.5 font-money text-xs tabular-nums ${moneyTone(best.profit)}`}
               >
-                {short(best.profit)}
+                {shortSignedMoney(best.profit)}
               </p>
             </>
           ) : (

@@ -94,6 +94,12 @@ const ALLOWED_HEX = new Set([
 // The preview folder is local only and never ships.
 const SKIP = ["preview"];
 
+// Files that ARE artwork. The brand mark's gradient stops are the
+// owner's logo, drawn as inline svg so it stays crisp at header size.
+// Like PhoneMock's titanium, a logo is a prop, not a surface: its
+// colors answer to the artwork file, not to the palette. Rule 4 only.
+const ARTWORK_OK = ["BrandMark.tsx"];
+
 for (const file of files) {
   if (SKIP.some((dir) => file.includes(`/${dir}/`))) continue;
   const short = file.split("/").pop();
@@ -147,7 +153,10 @@ for (const file of files) {
     // retired values on purpose, so that the reason a color was
     // dropped survives next to the code.
     const isComment = line.trim().startsWith("//") || line.trim().startsWith("*");
-    for (const hex of isComment ? [] : (line.match(/#[0-9A-Fa-f]{6}/g) ?? [])) {
+    const isArtwork = ARTWORK_OK.includes(short);
+    for (const hex of isComment || isArtwork
+      ? []
+      : (line.match(/#[0-9A-Fa-f]{6}/g) ?? [])) {
       if (!ALLOWED_HEX.has(hex.toUpperCase().replace("#", "#"))) {
         const known = [...ALLOWED_HEX].some(
           (h) => h.toLowerCase() === hex.toLowerCase()

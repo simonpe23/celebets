@@ -24,14 +24,13 @@ export default function Greeting({ name }: { name: string | null }) {
     );
   }, []);
 
+  // No emoji. v9.3 (August 2026): the owner kept the plain header
+  // through every round of the redesign. truncate, because the line
+  // now shares a row with the mark and the avatar, and a long name
+  // must shorten rather than wrap the header to two lines.
   return (
-    <h2 className="min-h-7 text-[22px] font-bold leading-7">
-      {daypart === null ? "" : (
-        <>
-          {daypart}
-          {name ? `, ${name}` : ""} <span aria-hidden="true">👋</span>
-        </>
-      )}
+    <h2 className="min-h-7 truncate text-[22px] font-bold leading-7 tracking-[-0.01em]">
+      {daypart === null ? "" : `${daypart}${name ? `, ${name}` : ""}`}
     </h2>
   );
 }

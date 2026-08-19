@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import BrandMark from "@/components/BrandMark";
 import Disclaimer from "@/components/Disclaimer";
+import Greeting from "@/components/Greeting";
 import HomeDashboard from "@/components/HomeDashboard";
 import TabBar from "@/components/TabBar";
-import Wordmark from "@/components/Wordmark";
 import { netProfitOf, sinceLine } from "@/lib/stats";
 import type { BetWithLegs } from "@/lib/types";
 
@@ -93,30 +94,35 @@ export default async function HomePage() {
   const name = fullName ? fullName.split(" ")[0] : null;
 
   return (
-    <main className="flex min-h-svh flex-col px-4 pt-6 pb-2 sm:px-6">
+    <main className="relative flex min-h-svh flex-col px-4 pt-6 pb-2 sm:px-6">
+      {/* A whisper of the landing's purple at the very top of the
+          page, and nothing more (v9.3). Two divs because the wash is
+          a different purple per theme, like the landing's. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-64 dark:hidden"
+        style={{
+          background:
+            "radial-gradient(360px 200px at 80% -60px, rgba(124,58,237,0.10), transparent 70%)",
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 hidden h-64 dark:block"
+        style={{
+          background:
+            "radial-gradient(360px 200px at 80% -60px, rgba(154,87,252,0.14), transparent 70%)",
+        }}
+      />
       <div className="mx-auto w-full max-w-md space-y-4">
-        <header className="flex items-center justify-between">
-          <h1>
-            <Wordmark className="text-2xl" />
-          </h1>
-          <span className="flex items-center gap-3">
-            <span
-              className="text-neutral-500 dark:text-neutral-400"
-              aria-hidden="true"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-6 w-6"
-              >
-                <path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
-                <path d="M13.7 21a2 2 0 0 1-3.4 0" />
-              </svg>
-            </span>
+        {/* The v9.3 header: the A mark, the greeting, the avatar, one
+            row. No wordmark, no bell, no emoji: the owner kept this
+            shape through every round of the redesign. */}
+        <header className="flex items-center gap-2.5">
+          <BrandMark size={26} />
+          <div className="min-w-0 flex-1">
+            <Greeting name={name} />
+          </div>
           {/* The avatar opens Settings. It used to be the log out
               button, so one stray tap ended the session. Log out now
               lives at the foot of Settings. */}
@@ -124,11 +130,10 @@ export default async function HomePage() {
             href="/settings"
             title="Settings"
             aria-label="Settings"
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-top text-sm font-bold text-white"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-top text-[13px] font-bold text-white"
           >
             {(name ?? "C").charAt(0).toUpperCase()}
           </Link>
-          </span>
         </header>
 
         <HomeDashboard
@@ -141,7 +146,6 @@ export default async function HomePage() {
           hasBalance={allTransactions.length > 0}
           lastStake={lastStake}
           userId={user!.id}
-          name={name}
         />
 
         <Disclaimer />

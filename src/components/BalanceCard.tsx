@@ -7,8 +7,10 @@ import { createClient } from "@/lib/supabase/client";
 import HeroMoney from "@/components/HeroMoney";
 import Sparkline from "@/components/Sparkline";
 import MicroLabel from "@/components/MicroLabel";
-import { formatMoney, formatSignedMoney, parseMoney } from "@/lib/format";
-import { BTN, CARD } from "@/lib/ui";
+import { formatMoney, formatSignedMoney, parseMoney, round2, shortSignedMoney } from "@/lib/format";
+import { betProfit, periodStart } from "@/lib/stats";
+import type { BetWithLegs } from "@/lib/types";
+import { BTN } from "@/lib/ui";
 
 interface Props {
   balance: number;
@@ -24,15 +26,20 @@ interface Props {
   trackingSince?: string | null;
   betCount: number;
   userId: string;
-  // The balance over time, oldest first, drawn as the purple line in
-  // the corner of the card. Comes from the page so the card stays dumb.
+  // The balance over time, oldest first, drawn as the wide line across
+  // the band. Comes from the page so the card stays dumb.
   series?: number[];
+  // The settled bets the current record counts, for the period strip
+  // at the band's foot: Today, Week, Month, Year.
+  settledBets?: BetWithLegs[];
   // How the once-ever setup control is drawn. Setting a tracking
   // balance happens once and then almost never, so a full width
   // primary button spends the home page's best real estate on it.
-  // The owner's ruling: a small squared button, under Net profit.
-  //   under   the ruled shape, and the default
-  //   corner  the same button, up beside the label
+  // v9.3 put the small squared button beside the label, top right,
+  // which is now the default. The other shapes survive for
+  // /preview/buttons comparisons.
+  //   corner  the ruled shape, and the default
+  //   under   the same button, under the profit line
   //   link    a quiet text link, no button
   //   button  the old full width one, kept for comparison
   control?: "under" | "corner" | "link" | "button";
@@ -58,7 +65,8 @@ export default function BalanceCard({
   betCount,
   userId,
   series,
-  control = "under",
+  settledBets,
+  control = "corner",
 }: Props) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -138,94 +146,123 @@ export default function BalanceCard({
     </button>
   );
 
+  // Today, Week, Month, Year: the record's profit inside each period,
+  // by the settle date, the same boundaries Performance's chips use.
+  const strip = settledBets
+    ? (["today", "week", "month", "year"] as const).map((period) => {
+        const from = periodStart(period);
+        const profit = settledBets
+          .filter((b) => b.settled_at && new Date(b.settled_at) >= from)
+          .reduce((sum, b) => sum + betProfit(b), 0);
+        return {
+          label: period.charAt(0).toUpperCase() + period.slice(1),
+          profit: round2(profit),
+        };
+      })
+    : null;
+
+  const stripTone = (value: number) =>
+    value > 0
+      ? "text-emerald-600 dark:text-emerald-400"
+      : value < 0
+        ? "text-red-600 dark:text-red-400"
+        : "text-neutral-500 dark:text-neutral-400";
+
+  const label = (
+    <span className="flex items-center gap-1.5">
+      <MicroLabel>Tracking Balance</MicroLabel>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        className="h-3.5 w-3.5 text-neutral-400"
+        aria-hidden="true"
+      >
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 8h.01M12 11v5" strokeLinecap="round" />
+      </svg>
+    </span>
+  );
+
+  // THE BAND (v9.3, August 2026). On a phone this is not a card: it
+  // runs to both screen edges with a hairline above and below, and the
+  // chart touches both sides. The -mx-4 undoes the page's px-4. From
+  // sm up a full-bleed strip of a centred column looks unfinished, so
+  // it becomes the ordinary card again.
   return (
-    <section className={`${CARD} p-5`}>
+    <section className="-mx-4 overflow-hidden border-y border-neutral-900/[0.06] bg-white dark:border-white/[0.07] dark:bg-[#0E1228] sm:mx-0 sm:rounded-2xl sm:border-x">
       {hasBalance ? (
         <>
-          {control === "corner" && (
-            <div className="mb-1 flex items-start justify-between gap-3">
-              <span className="flex items-center gap-1.5">
-                <MicroLabel>Tracking Balance</MicroLabel>
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  className="h-3.5 w-3.5 text-neutral-400"
-                  aria-hidden="true"
-                >
-                  <circle cx="12" cy="12" r="9" />
-                  <path d="M12 8h.01M12 11v5" strokeLinecap="round" />
-                </svg>
-              </span>
-              {smallButton}
+          <div className="px-4 pt-3.5 sm:px-5">
+            <div className="flex items-center justify-between gap-3">
+              {label}
+              {control === "corner" && smallButton}
             </div>
-          )}
-          <div className="flex items-start justify-between gap-4">
-            <div className="min-w-0">
-              <span
-                className={`flex items-center gap-1.5 ${
-                  control === "corner" ? "hidden" : ""
-                }`}
-              >
-                <MicroLabel>Tracking Balance</MicroLabel>
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  className="h-3.5 w-3.5 text-neutral-400"
-                  aria-hidden="true"
-                >
-                  <circle cx="12" cy="12" r="9" />
-                  <path d="M12 8h.01M12 11v5" strokeLinecap="round" />
-                </svg>
-              </span>
-              <p
-                className={`mt-1 ${
-                  balance < 0 ? "text-red-600 dark:text-red-400" : ""
-                }`}
-              >
-                <HeroMoney
-                  value={balance}
-                  signed={false}
-                  className="text-[34px]"
-                />
-              </p>
-              <p className={`mt-1 text-[15px] font-bold ${profitColor}`}>
-                Net profit{" "}
+            <p
+              className={`mt-1.5 ${
+                balance < 0 ? "text-red-600 dark:text-red-400" : ""
+              }`}
+            >
+              <HeroMoney value={balance} signed={false} className="text-[40px]" />
+            </p>
+            <p className="mt-1.5 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+              <span className={`text-sm font-semibold ${profitColor}`}>
+                {netProfit > 0 ? "▲ " : netProfit < 0 ? "▼ " : ""}
                 <span className="font-money tabular-nums">
                   {formatSignedMoney(netProfit)}
                 </span>
-              </p>
-              {trackingSince && (
-                <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
-                  Since {shortDate(trackingSince)}
-                </p>
-              )}
-            </div>
-            {/* No negative margin: the end dot sits ON the last point,
-                so half of it used to hang outside the card. */}
-            {series && series.length > 1 && (
-              <div className="w-[44%] shrink-0 self-center pr-1">
-                {/* The balance line is money, so it is green when the
-                    balance is above where it started and red when it is
-                    below. It used to be purple, which said nothing. */}
-                <Sparkline
-                  points={series}
-                  positive={netProfit >= 0}
-                  endDot
-                  className="h-[92px]"
-                />
-              </div>
-            )}
+              </span>
+              <span className="text-[11.5px] text-neutral-500 dark:text-neutral-400">
+                {trackingSince
+                  ? `net profit since ${shortDate(trackingSince)}`
+                  : "net profit, all time"}
+              </span>
+            </p>
+            {control === "under" && <div className="mt-3">{smallButton}</div>}
           </div>
+
+          {/* The wide chart: the balance after every settled bet,
+              edge to edge, green above where it started and red
+              below, with the start level as a dashed line. */}
+          {series && series.length > 1 ? (
+            <div className="mt-2">
+              <Sparkline
+                points={series}
+                positive={netProfit >= 0}
+                baseline
+                className="h-20"
+              />
+            </div>
+          ) : (
+            <div className="h-3" />
+          )}
+
+          {strip && (
+            <div className="grid grid-cols-4 border-t border-neutral-900/[0.06] dark:border-white/[0.07]">
+              {strip.map((cell, i) => (
+                <div
+                  key={cell.label}
+                  className={`flex flex-col gap-1 pb-3 pt-2.5 ${
+                    i === 0 ? "pl-4 sm:pl-5" : "border-l border-neutral-900/[0.06] pl-3 dark:border-white/[0.07]"
+                  }`}
+                >
+                  <MicroLabel>{cell.label}</MicroLabel>
+                  <span
+                    className={`font-money text-sm font-semibold tabular-nums ${stripTone(cell.profit)}`}
+                  >
+                    {shortSignedMoney(cell.profit)}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
         </>
       ) : (
         /* Nobody has to set a balance. Until someone does, profit is the
            only honest headline: a balance of zero minus stakes would
            read as a loss the user never took. */
-        <>
+        <div className="px-4 py-4 sm:px-5">
           <MicroLabel>Net profit</MicroLabel>
           <p className="mt-1 break-words">
             <HeroMoney value={netProfit} className="text-[32px]" />
@@ -233,25 +270,28 @@ export default function BalanceCard({
           <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
             From {betCount} tracked {betCount === 1 ? "bet" : "bets"}.
           </p>
-        </>
+          <div className="mt-3">{smallButton}</div>
+        </div>
       )}
 
-      {control === "under" && <div className="mt-3">{smallButton}</div>}
-
       {control === "button" && (
-        <button type="button" onClick={openSheet} className={`${BTN} mt-4 h-11 w-full`}>
-          Set tracking balance
-        </button>
+        <div className="px-4 pb-4 sm:px-5">
+          <button type="button" onClick={openSheet} className={`${BTN} h-11 w-full`}>
+            Set tracking balance
+          </button>
+        </div>
       )}
 
       {control === "link" && (
-        <button
-          type="button"
-          onClick={openSheet}
-          className="mt-3 text-[13px] font-semibold text-brand-mark"
-        >
-          Set tracking balance
-        </button>
+        <div className="px-4 pb-4 sm:px-5">
+          <button
+            type="button"
+            onClick={openSheet}
+            className="text-[13px] font-semibold text-brand-mark"
+          >
+            Set tracking balance
+          </button>
+        </div>
       )}
 
       {open && (

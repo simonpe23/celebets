@@ -13,6 +13,7 @@ import ProfitPanel, { type Period } from "@/components/ProfitPanel";
 import {
   bucketRows,
   categoryRows,
+  periodStart,
   sportRows,
   sinceLine,
   sportTypeRows,
@@ -31,18 +32,18 @@ const PERIOD_LABELS: { key: Period; label: string }[] = [
   { key: "custom", label: "Custom" },
 ];
 
-function periodStart(period: Period): Date | null {
-  const now = new Date();
-  const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  if (period === "today") return startToday;
-  if (period === "week") {
-    const daysSinceMonday = (startToday.getDay() + 6) % 7;
-    const monday = new Date(startToday);
-    monday.setDate(startToday.getDate() - daysSinceMonday);
-    return monday;
+// The date maths lives in stats.ts, shared with the balance band's
+// period strip, so "Today" here and "Today" on Track always mean the
+// same range. This wrapper only adds the periods with no start.
+function startFor(period: Period): Date | null {
+  if (
+    period === "today" ||
+    period === "week" ||
+    period === "month" ||
+    period === "year"
+  ) {
+    return periodStart(period);
   }
-  if (period === "month") return new Date(now.getFullYear(), now.getMonth(), 1);
-  if (period === "year") return new Date(now.getFullYear(), 0, 1);
   return null;
 }
 
@@ -157,7 +158,7 @@ export default function StatsView({
     from = customFrom ? new Date(customFrom + "T00:00:00") : null;
     to = customTo ? new Date(customTo + "T23:59:59.999") : null;
   } else {
-    from = periodStart(period);
+    from = startFor(period);
   }
 
   const inPeriod = allSettled.filter((b) => {

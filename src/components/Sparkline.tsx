@@ -54,6 +54,7 @@ export default function Sparkline({
   className = "h-7",
   endDot = false,
   fill = "gradient",
+  baseline = false,
 }: {
   points: number[];
   positive?: boolean;
@@ -71,6 +72,11 @@ export default function Sparkline({
   // gradient fades away under the line, none is a bare line. There is
   // no flat fill: flat blocks read as panels.
   fill?: "gradient" | "none";
+  // A dashed line at the level the series started, so above-the-line
+  // reads as gained and below as lost (v9.3's balance band). Drawn as
+  // an HTML border, not an svg path: the svg is stretched, and a dash
+  // pattern stretched sideways becomes long smears.
+  baseline?: boolean;
 }) {
   if (points.length < 2) return null;
 
@@ -100,8 +106,17 @@ export default function Sparkline({
   const gid = `sg-${tone}-${values.length}-${Math.round(min * 7 + max * 13)}`;
   const last = pts[pts.length - 1];
 
+  const first = pts[0];
+
   return (
     <span className={`relative block w-full ${className}`}>
+      {baseline && (
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 border-t border-dashed border-neutral-900/[0.12] dark:border-white/[0.14]"
+          style={{ top: `${(first.y / H) * 100}%` }}
+        />
+      )}
       <svg
         viewBox={`0 0 ${W} ${H}`}
         preserveAspectRatio="none"

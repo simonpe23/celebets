@@ -12,6 +12,18 @@ export function formatSignedMoney(amount: number): string {
   return amount > 0 ? `+${usd.format(amount)}` : usd.format(amount);
 }
 
+// Whole dollars with a sign: "+$418", not "+$418.26". The dense form
+// for tight grids (the snapshot, the balance band's period strip),
+// where the exact figure lives one tap away. One function, because it
+// lived privately in SnapshotCard and the balance band would have been
+// the second copy.
+export function shortSignedMoney(value: number): string {
+  const rounded = Math.round(value);
+  if (rounded === 0) return "$0";
+  const sign = rounded < 0 ? "-" : "+";
+  return `${sign}$${Math.abs(rounded).toLocaleString("en-US")}`;
+}
+
 export function formatOdds(odds: number): string {
   return odds.toFixed(2);
 }

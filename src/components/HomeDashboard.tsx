@@ -1,5 +1,4 @@
 import BalanceCard from "@/components/BalanceCard";
-import Greeting from "@/components/Greeting";
 import InsightCard from "@/components/InsightCard";
 import LiveBets from "@/components/LiveBets";
 import BetHistory from "@/components/BetHistory";
@@ -22,8 +21,6 @@ interface Props {
   hasBalance: boolean;
   lastStake: string;
   userId: string;
-  // First name for the greeting, null when we do not know one.
-  name: string | null;
 }
 
 // The Track page, built to the owner's mockup (August 2026): greeting,
@@ -40,7 +37,6 @@ export default function HomeDashboard({
   hasBalance,
   lastStake,
   userId,
-  name,
 }: Props) {
   // Everything on this page speaks in the current period. The old
   // bets are not gone, they live in the history on Performance.
@@ -65,8 +61,8 @@ export default function HomeDashboard({
 
   return (
     <div className="space-y-4">
-      <Greeting name={name} />
-
+      {/* The greeting lives in the page header now, beside the brand
+          mark (v9.3): one row instead of a floating line. */}
       <BalanceCard
         balance={balance}
         netProfit={netProfit}
@@ -76,6 +72,7 @@ export default function HomeDashboard({
         userId={userId}
         trackingSince={trackingSince}
         series={hasBalance ? series : undefined}
+        settledBets={settled}
       />
 
       <NewBetForm lastStake={lastStake} compact />
