@@ -31,7 +31,7 @@ const PUBLIC = ["/", "/login", "/terms", "/privacy", "/about"];
 const OLD_AUTH = ["/signup", "/forgot-password", "/reset-password"];
 // These need a session. They must REDIRECT, not error: that is the
 // login gate working, and a 500 here would be a real bug.
-const GATED = ["/app", "/stats", "/settings", "/recommendations", "/insights", "/transactions"];
+const GATED = ["/app", "/stats", "/settings", "/recommendations", "/insights", "/transactions", "/connect"];
 
 // The logged in screens, reached without a session. They render the
 // SAME components with made up data, so this is how Track, Performance,
@@ -44,6 +44,7 @@ const PREVIEW = [
   "/preview/research",
   "/preview/insights",
   "/preview/auth",
+  "/preview/connect",
 ];
 
 // Anything matching this must not appear in rendered text or in a URL.

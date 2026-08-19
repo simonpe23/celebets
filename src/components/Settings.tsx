@@ -343,6 +343,21 @@ export default function Settings({
           <h2 className="text-[17px] font-bold">Your data</h2>
           <div className="mt-3 space-y-2">
             <Link
+              href="/connect"
+              className={`${INNER} flex items-center justify-between gap-3 px-3 py-3`}
+            >
+              <span className="min-w-0">
+                <span className="block text-sm font-semibold">
+                  Connected accounts
+                </span>
+                <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
+                  Link Kalshi so your bets can arrive on their own.
+                </span>
+              </span>
+              <span className={CARD_LINK}>Open ›</span>
+            </Link>
+
+            <Link
               href="/transactions"
               className={`${INNER} flex items-center justify-between gap-3 px-3 py-3`}
             >
