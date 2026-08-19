@@ -30,6 +30,14 @@ import {
 // stake would be missing its early buys. { history: true } drops the
 // date line entirely: the quiet full-history import.
 
+// A sync walks several Kalshi lists and a market per ticker; give it
+// room on deployments that allow more than the default.
+export const maxDuration = 60;
+
+// Opening the app more often than this does not re-ask Kalshi.
+// Manual presses of Sync now always go through.
+const AUTO_THROTTLE_MS = 3 * 60 * 1000;
+
 export async function POST(request: Request) {
   const supabase = await createClient();
   const {
@@ -38,13 +46,13 @@ export async function POST(request: Request) {
   if (!user)
     return NextResponse.json({ error: "Not logged in." }, { status: 401 });
 
-  const { history } = await request
+  const { history, auto } = await request
     .json()
-    .catch(() => ({ history: false }));
+    .catch(() => ({ history: false, auto: false }));
 
   const { data: conn } = await supabase
     .from("connected_accounts")
-    .select("access_key, encrypted_secret, connected_at")
+    .select("access_key, encrypted_secret, connected_at, last_synced_at")
     .eq("platform", "kalshi")
     .maybeSingle();
   if (!conn)
@@ -52,6 +60,24 @@ export async function POST(request: Request) {
       { error: "Kalshi is not connected." },
       { status: 404 }
     );
+
+  // The automatic sync on app open is throttled HERE, on the server,
+  // so three open tabs cannot triple-ask Kalshi. A skipped auto sync
+  // is a success with nothing in it, never an error.
+  if (
+    auto === true &&
+    conn.last_synced_at &&
+    Date.now() - new Date(conn.last_synced_at).getTime() < AUTO_THROTTLE_MS
+  ) {
+    return NextResponse.json({
+      ok: true,
+      skipped: true,
+      imported: 0,
+      updated: 0,
+      pending: 0,
+      total: 0,
+    });
+  }
 
   const key = conn.access_key;
   let pem: string;

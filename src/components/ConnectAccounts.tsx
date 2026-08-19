@@ -431,13 +431,13 @@ export default function ConnectAccounts({
           <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
             {IMPORTING_LIVE ? (
               <>
-                Bets you place on Kalshi from{" "}
+                Actuals syncs with Kalshi each time you open it. Bets
+                from{" "}
                 {status
                   ? shortDate(status.connected_at)
                   : "the day you connected"}{" "}
-                onward appear in Actuals on their own. Your Kalshi
-                history from before that stays out unless you ask for
-                it.
+                onward appear on their own; your Kalshi history from
+                before that stays out unless you ask for it.
               </>
             ) : (
               <>

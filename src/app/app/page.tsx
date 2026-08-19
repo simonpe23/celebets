@@ -4,6 +4,7 @@ import BrandMark from "@/components/BrandMark";
 import Disclaimer from "@/components/Disclaimer";
 import Greeting from "@/components/Greeting";
 import HomeDashboard from "@/components/HomeDashboard";
+import KalshiAutoSync from "@/components/KalshiAutoSync";
 import TabBar from "@/components/TabBar";
 import { netProfitOf, sinceLine } from "@/lib/stats";
 import type { BetWithLegs } from "@/lib/types";
@@ -164,6 +165,12 @@ export default async function HomePage() {
           lastStake={lastStake}
           userId={user!.id}
           connectedPlatforms={(connections ?? []).map((c) => c.platform)}
+        />
+
+        {/* Phase 4 of the sync project: opening Track syncs Kalshi by
+            itself, throttled server-side. */}
+        <KalshiAutoSync
+          connected={(connections ?? []).some((c) => c.platform === "kalshi")}
         />
 
         <Disclaimer />

@@ -164,6 +164,13 @@ How this file works:
     patched. Fresh start rule enforced: only markets with activity
     since the connect date come in, with all their fills, and the
     full history lives behind the quiet Import-everything question.
+    PHASE 4 BUILT the same day, awaiting the owner's live check:
+    opening Track syncs Kalshi by itself. The throttle (3 minutes)
+    lives in the sync route on the server so open tabs cannot hammer
+    Kalshi, manual Sync now always goes through, background failures
+    stay silent (the manual button is where errors get faces), and a
+    change shows one quiet line above the tab bar while the page
+    refreshes under it.
     KNOWN V1 EDGES, on purpose: a partial sell of a pending position
     shows full To Collect until settlement (final profit exact); a
     manually settled or deleted Kalshi bet is put back to Kalshi's
