@@ -321,8 +321,9 @@ export default function ConnectAccounts({
         <li>Name it anything. &quot;Actuals&quot; works.</li>
         <li>Leave the optional RSA public key box empty.</li>
         <li>
-          Permissions: ticking every box works. Ticking only the read
-          ones is even better: reading is all Actuals ever does.
+          Permissions: tick Read all data. Leave Full access OFF. A
+          key without it cannot trade or move money, ever, which is
+          exactly right: Actuals only reads.
         </li>
         <li>
           Press Create. Kalshi shows a Key ID and downloads the
