@@ -15,9 +15,17 @@ import { useRouter } from "next/navigation";
 // tab-hopping and reopening cannot hammer Kalshi. Failures are
 // silent by design: this is a background convenience, and the manual
 // Sync now button on the connect page is where errors get faces.
-export default function KalshiAutoSync({ connected }: { connected: boolean }) {
+export default function KalshiAutoSync({
+  connected,
+  // /preview only: show the line without syncing anything, so it can
+  // be screenshotted and design-checked.
+  demoNote = null,
+}: {
+  connected: boolean;
+  demoNote?: string | null;
+}) {
   const router = useRouter();
-  const [note, setNote] = useState<string | null>(null);
+  const [note, setNote] = useState<string | null>(demoNote);
 
   useEffect(() => {
     if (!connected) return;
