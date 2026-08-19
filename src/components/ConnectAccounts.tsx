@@ -172,7 +172,14 @@ export default function ConnectAccounts({
         parts.push(`Imported ${body.imported} ${body.imported === 1 ? "bet" : "bets"} from Kalshi`);
       if (body.updated > 0) parts.push(`updated ${body.updated}`);
       if (parts.length === 0) {
-        setSyncResult("Everything is already up to date.");
+        // "Up to date" is only true when there was something to be up
+        // to date WITH. Finding nothing at all is a different fact and
+        // the owner read the old wording as success.
+        setSyncResult(
+          body.total > 0
+            ? "Everything is already up to date."
+            : "No Kalshi bets found to import."
+        );
       } else {
         const pending =
           body.pending > 0 ? `, ${body.pending} still pending` : "";
