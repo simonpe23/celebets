@@ -200,6 +200,8 @@ export default function LiveBets({ bets }: Props) {
           {bets.map((bet) => {
             const stake = Number(bet.stake);
             const totalOdds = Number(bet.total_odds);
+            // What lands in the account if this wins, stake included.
+            const toCollect = round2(stake * totalOdds);
             const isParlay = bet.legs.length > 1;
             // The mockup opens parlays and closes singles.
             const open = toggled[bet.id] ?? isParlay;
@@ -252,13 +254,20 @@ export default function LiveBets({ bets }: Props) {
                     </span>
                   </span>
 
+                  {/* THE MONEY, NOT THE ODDS. The owner, August 2026,
+                      looking at an imported bet: "biggest digit is
+                      2.81, that shouldn't be the main info... it has
+                      to say total payout, if won." A pending bet's
+                      one interesting number is what it pays, and the
+                      odds are the arithmetic behind it, so they swap
+                      places. */}
                   <span className="flex shrink-0 items-center gap-2">
                     <span className="text-right">
                       <span className="block font-money text-[15px] font-bold tabular-nums">
-                        {formatOdds(totalOdds)}
+                        {formatMoney(toCollect)}
                       </span>
-                      <span className="block font-money text-xs tabular-nums text-neutral-500 dark:text-neutral-400">
-                        {formatMoney(stake)}
+                      <span className="block text-[11px] text-neutral-500 dark:text-neutral-400">
+                        {bet.status === "pending" ? "to collect" : "collected"}
                       </span>
                     </span>
                     <svg
@@ -581,16 +590,25 @@ export default function LiveBets({ bets }: Props) {
                         </>
                       ) : (
                         <>
-                          {bet.legs.length}{" "}
-                          {bet.legs.length === 1 ? "leg" : "legs"}
-                          {"  ·  "}
+                          {/* "to win" was ambiguous and the owner
+                              said so: is it the profit or the money
+                              back? Both numbers now say which they
+                              are, and the leg count only appears on
+                              a parlay, where it means something. */}
+                          {isParlay && (
+                            <>
+                              {bet.legs.length} legs
+                              {"  ·  "}
+                            </>
+                          )}
                           <span className="font-money tabular-nums">
                             {formatMoney(stake)}
                           </span>{" "}
-                          to win{" "}
+                          staked{"  ·  "}
                           <span className="font-money tabular-nums">
                             {formatMoney(round2(stake * (totalOdds - 1)))}
-                          </span>
+                          </span>{" "}
+                          profit if it wins
                         </>
                       )}
                     </p>

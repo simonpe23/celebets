@@ -124,7 +124,7 @@ export async function POST(request: Request) {
     // 4. Reconcile: replace what changed, leave what did not.
     const { data: existing } = await supabase
       .from("bets")
-      .select("id, external_id, status, stake, payout")
+      .select("id, external_id, status, stake, payout, legs (id)")
       .in(
         "external_id",
         drafts.map((d) => d.externalId)
@@ -138,7 +138,11 @@ export async function POST(request: Request) {
     for (const draft of drafts) {
       const old = byExternal.get(draft.externalId);
       if (old) {
+        // A bet with no picks is damaged, whatever its numbers say:
+        // it has no sport and no description. Always replace it.
+        const headless = ((old.legs ?? []) as unknown[]).length === 0;
         const same =
+          !headless &&
           old.status === draft.status &&
           Number(old.stake) === draft.stake &&
           Number(old.payout ?? 0) === Number(draft.payout ?? 0);
@@ -172,6 +176,10 @@ export async function POST(request: Request) {
         );
       }
 
+      // A bet and its pick have to arrive together. Postgres gives no
+      // transaction across these calls, so a failed pick takes its
+      // bet with it: a headless bet is worse than no bet, and one
+      // reached the owner's Track page reading "0 legs".
       const { error: legError } = await supabase.from("legs").insert({
         bet_id: inserted.id,
         sport: draft.sport,
@@ -180,6 +188,7 @@ export async function POST(request: Request) {
         result: draft.cashedOut ? "pending" : draft.status,
       });
       if (legError) {
+        await supabase.from("bets").delete().eq("id", inserted.id);
         return NextResponse.json(
           { error: `Could not save a pick: ${legError.message}` },
           { status: 500 }
@@ -195,6 +204,7 @@ export async function POST(request: Request) {
         }))
       );
       if (buyError) {
+        await supabase.from("bets").delete().eq("id", inserted.id);
         return NextResponse.json(
           { error: `Could not save a buy: ${buyError.message}` },
           { status: 500 }
