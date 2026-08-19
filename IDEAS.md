@@ -33,8 +33,9 @@ How this file works:
 ## NOW (small, fits the current app, high value per effort)
 
 
-26. THE AUTH FLOW REDESIGN. BUILT, August 2026, awaiting the owner's
-    deploy approval. One auth page at /login, no passwords anywhere:
+26. THE AUTH FLOW REDESIGN. SHIPPED and verified live by the owner,
+    August 2026, on his phone: Google, an emailed code, and the demo
+    door all tested. One auth page at /login, no passwords anywhere:
     Continue with Google, or type an email and a six-digit code
     arrives. The code entry swaps in on the same page and the sixth
     digit submits itself (his ask: "auto-submit as soon as the 6th
@@ -42,9 +43,8 @@ How this file works:
     "Create your account", Log in says "Welcome back". The landing
     hero and bottom card are one button each, per his five points.
     /signup, /forgot-password and /reset-password are deleted and
-    redirect to /login. Remaining: deploy, then the owner pastes two
-    Supabase email templates so the emails carry a code, then a live
-    test to his Gmail.
+    redirect to /login. The code email is the owner's option C, kept
+    in supabase/email-login-code.html.
 
     THE DEMO DOOR, added the same day for investors. The demo account
     cannot receive codes (nobody the owner shares it with reads its
@@ -55,8 +55,9 @@ How this file works:
     numbers, so it is built in our code, not theirs. Configured
     entirely by three Vercel settings (NEXT_PUBLIC_DEMO_EMAIL,
     DEMO_CODE, DEMO_PASSWORD, never in the repo); unset means the
-    door does not exist. The owner is renaming the demo account to
-    demo@actuals.cc himself.
+    door does not exist. The account was renamed to demo@actuals.cc
+    with supabase/demo-account-rename.sql, because the dashboard no
+    longer carries an email field. Verified live by the owner.
 
     The discussion record, kept below:
     The owner: "we have to clarify 2 things:
