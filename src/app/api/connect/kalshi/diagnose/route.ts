@@ -161,10 +161,15 @@ export async function GET() {
   // deep Kalshi's own lists actually reach. If the fills list simply
   // ENDS in June, the older record lives only in settlements, and the
   // import needs a second source, not a better filter.
+  // Orders is included because fills and settlements both END at the
+  // same minute (June 13), which smells like an account-wide data
+  // boundary on Kalshi's side. If orders reach past it, the older
+  // record can be rebuilt from executed orders instead.
   const depth: Record<string, unknown> = {};
   for (const [name, path, listKey, timeField] of [
     ["fills", "/portfolio/fills", "fills", "created_time"],
     ["settlements", "/portfolio/settlements", "settlements", "settled_time"],
+    ["orders", "/portfolio/orders", "orders", "created_time"],
   ] as const) {
     try {
       const { rows, done } = await kalshiGetPages<Record<string, unknown>>(
@@ -181,7 +186,7 @@ export async function GET() {
         count: rows.length,
         reachedEnd: done,
         oldest: oldest?.[timeField] ?? null,
-        oldestSample: name === "settlements" ? (oldest ?? null) : null,
+        oldestSample: name === "fills" ? null : (oldest ?? null),
       };
     } catch (e) {
       depth[name] = {
