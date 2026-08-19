@@ -308,16 +308,28 @@ export default function ConnectAccounts({
         Two minutes, one time. Easiest on a computer.
       </p>
 
+      {/* These steps are the owner's own walk through Kalshi's real
+          screens (19 August 2026), replacing a vaguer version written
+          from their docs. If Kalshi moves things, walk the flow again
+          and rewrite from the screen, not from memory. */}
       <ol className="mt-3 list-decimal space-y-1.5 pl-5 text-sm text-neutral-600 dark:text-neutral-300">
         <li>
-          Log in at kalshi.com, open your profile menu, then Settings.
+          Log in at kalshi.com, open the menu, then Account &amp;
+          Security. Or go straight to kalshi.com/account/profile.
         </li>
-        <li>Find the API Keys section and press Create.</li>
+        <li>Scroll down to the API Keys section and press Create key.</li>
+        <li>Name it anything. &quot;Actuals&quot; works.</li>
+        <li>Leave the optional RSA public key box empty.</li>
         <li>
-          Kalshi shows a Key ID and downloads a private key file. Keep
-          that file: Kalshi never shows it again.
+          Permissions: ticking every box works. Ticking only the read
+          ones is even better: reading is all Actuals ever does.
         </li>
-        <li>Paste both below.</li>
+        <li>
+          Press Create. Kalshi shows a Key ID and downloads the
+          private key file. Keep that file: Kalshi never shows it
+          again.
+        </li>
+        <li>Paste the Key ID and the file&apos;s contents below.</li>
       </ol>
 
       <label htmlFor="kalshi-key-id" className="mt-4 block text-sm font-semibold">
