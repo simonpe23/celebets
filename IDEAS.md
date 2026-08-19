@@ -115,6 +115,33 @@ How this file works:
 
 ## SOON (after the NOW items)
 
+27. WHAT TO STEAL FROM PIKKIT. Asked for by the owner, 19 August
+    2026: "I have other ideas that we can steal from Pikkit later.
+    Remind me of that." He has the app installed and has been using
+    it, so the ideas are in his head, not in a document.
+    HOW TO RUN IT: the owner walks Pikkit screen by screen and says
+    what he wants. Claude writes each one down as its own idea here
+    with a bucket, and nothing gets built from this note alone.
+    Already known from earlier sessions: Pikkit inspired the visual
+    redesign (idea 15), their BookSync onboarding shaped the connect
+    flow, and their Kalshi history import hits the same June wall we
+    do (idea 13), so being established does not make a competitor
+    right.
+
+28. IMPORT KALSHI'S OWN EXPORT FILE, the only known route to bets
+    from before the June 13 wall (idea 13). Kalshi lets a user
+    download their account history as a file; Actuals would accept
+    that upload and translate it the same way the API sync does.
+    Why it may be worth it: it is the difference between a user's
+    record starting when they found us and their record starting
+    when they started betting. Every insight gets deeper history.
+    What it needs first: a real export file from the owner's own
+    account, so the columns are read and never guessed (the API
+    taught that lesson three times in one day). Then a decision on
+    where the upload lives, and how a file row is matched against a
+    bet the API already imported so nothing doubles.
+    Not approved. Needs a plan and the owner's go, per the rules.
+
 15. Full visual redesign. The owner wants a fresher, more modern look
     with more imagery, inspired by the competitor Pikkit
     (https://www.pikkit.com): dark theme, big bold headlines, product
@@ -254,6 +281,26 @@ How this file works:
     Crypto sport move under Not Sports? Long term the owner wants
     BOTH: sync for Kalshi/Polymarket, screenshots for every other
     betting site (idea 12 built the mapping brain this reuses).
+    THE JUNE 13 WALL, settled 19 August 2026 by measurement, not by
+    guessing. The owner's history stopped at June 12 and two
+    continuation fixes changed nothing, so the diagnose endpoint
+    learned to walk each Kalshi list to its end and report how far
+    back it reaches. All THREE portfolio lists stop within half an
+    hour of each other on 13 June 2026 (fills 02:39, orders 02:39,
+    settlements 03:09), and Kalshi's own cursor says end of list on
+    each. Around that date Kalshi switched to fractional shares
+    (sizes like "306.37"), and their app-facing history appears to
+    start there. Their own app scrolls back to autumn 2025 on
+    internal access outside apps do not get.
+    CONFIRMED INDEPENDENTLY the same day: the owner checked Pikkit,
+    a funded competitor with the same feature, and their Kalshi
+    history import also dies around end of May / June. Nobody with
+    an API key can reach further. So the sync is correct and the
+    import already holds everything Kalshi serves.
+    What is left to decide: (A) say the horizon in the copy, so
+    "Import my full Kalshi history" stops promising everything;
+    (B) the owner asks Kalshi support whether older history will
+    ever be served; (C) idea 28, importing Kalshi's own export file.
 
 7. Personal touch: "Welcome Simon" on login. Needs a settings page
    with name, favorite team, favorite sport.
