@@ -238,6 +238,18 @@ How this file works:
     category level exactly is durable, with Other as the safety net.
     Phase 3 should also switch non-sport mapping from ticker-prefix
     guessing to Kalshi's own series category field, which is exact.
+    Full history re-imported clean after the fix, all bets in,
+    verified by the owner the same day.
+    THE DEPTH INSIDE A SPORT (the owner, same day): Kalshi has many
+    bet types per sport (over/under, spreads, player props like
+    "Brunson 20+ points"), far more than our curated SUBCATEGORIES.
+    The answer is the same shape as categories: our legs.subcategory
+    is already free text, already shown on cards, and Performance's
+    categoryRows already groups by it. Phase 3 writes Kalshi's own
+    series title into subcategory on import, so their whole bet-type
+    tree mirrors itself with no hand-kept list to fall behind. The
+    curated SUBCATEGORIES list stays what it always was: the picker
+    for manual entry only.
     Open questions, flagged for the filter phase: does the existing
     Crypto sport move under Not Sports? Long term the owner wants
     BOTH: sync for Kalshi/Polymarket, screenshots for every other
