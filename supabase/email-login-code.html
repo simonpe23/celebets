@@ -1,0 +1,66 @@
+<!--
+  THE LOGIN CODE EMAIL (option C, chosen by the owner August 2026).
+  Paste the whole file, minus this comment, into BOTH Supabase email
+  templates: Authentication, Emails, "Magic link or OTP" AND "Confirm
+  sign up". Subject on both: Your Actuals code
+
+  Both tabs matter. Supabase picks the template by whether the address
+  already has an account, so editing one leaves half the users with a
+  stock Supabase email.
+
+  Rules this file obeys, do not "modernise" them:
+  - Tables and inline styles only. Email clients have no flexbox, no
+    grid, no stylesheets, no CSS variables.
+  - No button and no login link. A big button in a login email is what
+    phishing looks like, and the app has nothing to catch such a link
+    any more. Digits only.
+  - The logo is an absolute https URL, and Gmail hides images from new
+    senders by default, so the alt text carries the brand on its own.
+  - {{ .Token }} is the code. Without it Supabase sends its stock
+    sign-in LINK instead, which nothing in the app can use.
+-->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#F7F7FB;padding:32px 16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <tr>
+    <td align="center">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:480px;background-color:#FFFFFF;border-radius:16px;border:1px solid #E9E9F0;">
+        <tr>
+          <td align="center" style="padding:36px 32px 0 32px;">
+            <img src="https://actuals.cc/brand/wordmark-dark.png" width="118" height="26" alt="Actuals" style="display:block;border:0;outline:none;text-decoration:none;" />
+          </td>
+        </tr>
+        <tr>
+          <td align="center" style="padding:30px 32px 0 32px;font-size:16px;line-height:24px;color:#171717;">
+            Here is your login code.
+          </td>
+        </tr>
+        <tr>
+          <td align="center" style="padding:22px 32px 0 32px;">
+            <table cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td style="background-color:#F3EEFE;border-radius:12px;padding:18px 28px;">
+                  <div style="font-size:36px;line-height:42px;font-weight:700;letter-spacing:10px;color:#4915AD;">{{ .Token }}</div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td align="center" style="padding:20px 32px 36px 32px;font-size:14px;line-height:22px;color:#737383;">
+            Type it on the login page. It expires in one hour<br />and can be used once.
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:0 32px;">
+            <div style="height:1px;background-color:#EDEDF2;font-size:0;line-height:0;">&nbsp;</div>
+          </td>
+        </tr>
+        <tr>
+          <td align="center" style="padding:20px 32px 28px 32px;font-size:13px;line-height:20px;color:#9A9AA8;">
+            If you did not ask for this, ignore this email.<br />
+            <a href="https://actuals.cc" style="color:#5525C6;text-decoration:none;font-weight:600;">actuals.cc</a>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
