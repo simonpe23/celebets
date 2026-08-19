@@ -79,11 +79,12 @@ export async function kalshiGetAll<T>(
   query: Record<string, string> = {},
   // Stop early once a page's oldest record predates this ISO time.
   // Lists come newest first, so everything after is older still.
-  stopBefore?: { field: string; iso: string }
+  stopBefore?: { field: string; iso: string },
+  maxPages = 25
 ): Promise<T[]> {
   const out: T[] = [];
   let cursor = "";
-  for (let page = 0; page < 25; page++) {
+  for (let page = 0; page < maxPages; page++) {
     const data = (await kalshiGet(accessKey, privateKeyPem, path, {
       ...query,
       limit: "200",
@@ -144,6 +145,56 @@ export type KalshiMarketDetails = {
   result?: string;
   mveLegs?: { market_ticker: string; side: string }[];
 };
+
+// Many markets in one call: GET /markets accepts a comma separated
+// tickers filter. This is what makes a full-history import survivable:
+// hundreds of markets become a handful of requests instead of one
+// request each, which is why the sync used to cap itself at 60
+// markets and silently import a fraction of a heavy account.
+//
+// The LIST shape is not guaranteed to carry mve_selected_legs the way
+// the single-market endpoint does, so parlays found here may still
+// need a follow-up kalshiMarket call for their legs.
+export async function kalshiMarketsBatch(
+  accessKey: string,
+  privateKeyPem: string,
+  tickers: string[]
+): Promise<KalshiMarketDetails[]> {
+  const out: KalshiMarketDetails[] = [];
+  for (let i = 0; i < tickers.length; i += 40) {
+    const batch = tickers.slice(i, i + 40);
+    try {
+      const rows = await kalshiGetAll<{
+        ticker: string;
+        title?: string;
+        event_ticker?: string;
+        result?: string;
+        mve_selected_legs?: { market_ticker?: string; side?: string }[];
+      }>(accessKey, privateKeyPem, "/markets", "markets", {
+        tickers: batch.join(","),
+      });
+      for (const m of rows) {
+        const legs = (m.mve_selected_legs ?? [])
+          .map((l) => ({
+            market_ticker: String(l.market_ticker ?? ""),
+            side: String(l.side ?? "yes"),
+          }))
+          .filter((l) => l.market_ticker !== "");
+        out.push({
+          ticker: m.ticker,
+          title: m.title,
+          event_ticker: m.event_ticker,
+          result: m.result,
+          ...(legs.length > 0 ? { mveLegs: legs } : {}),
+        });
+      }
+    } catch {
+      // One bad batch must not sink the sync: those markets simply
+      // keep their tickers as descriptions.
+    }
+  }
+  return out;
+}
 
 export async function kalshiMarket(
   accessKey: string,

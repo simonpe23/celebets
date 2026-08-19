@@ -5,6 +5,7 @@ import {
   KalshiError,
   kalshiGetAll,
   kalshiMarket,
+  kalshiMarketsBatch,
   kalshiOpenTickers,
 } from "@/lib/kalshi";
 import {
@@ -93,55 +94,74 @@ export async function POST(request: Request) {
   const line = history === true ? null : (conn.connected_at as string);
 
   try {
-    // 1. Which markets are in scope: everything with activity since
-    // the line, PLUS every currently open position. An open position
-    // is live money and belongs to the record even when all its fills
-    // predate the connect date, the same ruling as the app's own
-    // fresh start line. This is also what makes connecting feel like
-    // something: the user's open bets appear on the first sync.
-    const recentFills = await kalshiGetAll<KalshiFill>(
+    // 1. EVERY fill, once. The old shape fetched a recent window and
+    // then re-fetched fills one market at a time, which forced a cap
+    // of 60 markets per sync, and the owner's full-history import
+    // silently stopped at 59 bets out of hundreds. One paginated walk
+    // brings the whole trade history in a handful of requests (200 a
+    // page), and the grouping happens here instead of on Kalshi.
+    const allFills = await kalshiGetAll<KalshiFill>(
       key,
       pem,
       "/portfolio/fills",
       "fills",
       {},
-      line ? { field: "created_time", iso: line } : undefined
+      undefined,
+      60 // pages: room for 12,000 fills before truncation
     );
-    const inScope = new Set([
-      ...recentFills
-        .filter((f) => !line || f.created_time >= line)
-        .map((f) => f.ticker),
-      ...(await kalshiOpenTickers(key, pem)),
-    ]);
 
-    // Guard against a first sync of a very heavy account.
-    const tickers = [...inScope].slice(0, 60);
+    // 2. Which markets are in scope: everything with activity since
+    // the line, PLUS every currently open position. An open position
+    // is live money and belongs to the record even when all its fills
+    // predate the connect date, the same ruling as the app's own
+    // fresh start line. A full-history import takes everything.
+    const inScope = new Set(
+      line
+        ? [
+            ...allFills
+              .filter((f) => f.created_time >= line)
+              .map((f) => f.ticker),
+            ...(await kalshiOpenTickers(key, pem)),
+          ]
+        : allFills.map((f) => f.ticker)
+    );
+    // Fills of out-of-scope markets must not leak into the
+    // translation, or the fresh start line would mean nothing.
+    const fills = allFills.filter((f) => inScope.has(f.ticker));
 
-    // 2. For each market in scope, the FULL fill history, so a
-    // position that started before the line still has its whole
-    // stake. Plus settlements and titles.
-    const fills: KalshiFill[] = [];
+    // 3. The markets themselves, batched: titles, results, and which
+    // ones are parlays. A parlay's legs may be missing from the batch
+    // shape, so those markets get one follow-up call each, and their
+    // leg markets are fetched in small parallel groups for their own
+    // titles and results.
     const meta = new Map<string, KalshiMarketMeta>();
-    for (const ticker of tickers) {
-      const all = await kalshiGetAll<KalshiFill>(
-        key,
-        pem,
-        "/portfolio/fills",
-        "fills",
-        { ticker }
-      );
-      fills.push(...all);
-      const m = await kalshiMarket(key, pem, ticker);
-      if (m) meta.set(ticker, m);
+    for (const m of await kalshiMarketsBatch(key, pem, [...inScope])) {
+      meta.set(m.ticker, m);
+    }
 
-      // A parlay's picks are their own markets: fetch each for its
-      // human title and its result, so the legs read like picks and
-      // settle one by one, the way the app's own parlays do.
-      for (const leg of m?.mveLegs ?? []) {
-        if (meta.has(leg.market_ticker)) continue;
-        const lm = await kalshiMarket(key, pem, leg.market_ticker);
-        if (lm) meta.set(leg.market_ticker, lm);
-      }
+    const needLegs: string[] = [];
+    for (const ticker of inScope) {
+      const m = meta.get(ticker);
+      const looksMve = ticker.toUpperCase().includes("MVE");
+      if ((looksMve || !m) && !m?.mveLegs) needLegs.push(ticker);
+    }
+    for (let i = 0; i < needLegs.length; i += 8) {
+      const chunk = needLegs.slice(i, i + 8);
+      const found = await Promise.all(
+        chunk.map((t) => kalshiMarket(key, pem, t))
+      );
+      for (const m of found) if (m) meta.set(m.ticker, m);
+    }
+
+    const legTickers = [
+      ...new Set(
+        [...meta.values()]
+          .flatMap((m) => m.mveLegs ?? [])
+          .map((l) => l.market_ticker)
+      ),
+    ].filter((t) => !meta.has(t));
+    for (const m of await kalshiMarketsBatch(key, pem, legTickers)) {
+      meta.set(m.ticker, m);
     }
 
     const settlements = (
@@ -149,14 +169,17 @@ export async function POST(request: Request) {
         key,
         pem,
         "/portfolio/settlements",
-        "settlements"
+        "settlements",
+        {},
+        undefined,
+        60
       )
     ).filter((s) => inScope.has(s.ticker));
 
-    // 3. Translate.
+    // 4. Translate.
     const drafts = deriveBets(fills, settlements, meta);
 
-    // 4. Reconcile: replace what changed, leave what did not.
+    // 5. Reconcile: replace what changed, leave what did not.
     const { data: existing } = await supabase
       .from("bets")
       .select("id, external_id, status, stake, payout, legs (result)")
@@ -170,6 +193,8 @@ export async function POST(request: Request) {
 
     let imported = 0;
     let updated = 0;
+    const toWrite: typeof drafts = [];
+    const toDelete: string[] = [];
     for (const draft of drafts) {
       const old = byExternal.get(draft.externalId);
       if (old) {
@@ -193,72 +218,97 @@ export async function POST(request: Request) {
           Number(old.stake) === draft.stake &&
           Number(old.payout ?? 0) === Number(draft.payout ?? 0);
         if (same) continue;
-        await supabase.from("bets").delete().eq("id", old.id);
+        toDelete.push(old.id as string);
         updated++;
       } else {
         imported++;
       }
+      toWrite.push(draft);
+    }
 
-      const { data: inserted, error: betError } = await supabase
+    // 6. Write in bulk: one delete, one insert per table. The old
+    // per-bet loop was three round trips per bet, which on a full
+    // history import of hundreds of bets would outlive the request.
+    if (toDelete.length > 0) {
+      await supabase.from("bets").delete().in("id", toDelete);
+    }
+
+    if (toWrite.length > 0) {
+      const { data: insertedBets, error: betError } = await supabase
         .from("bets")
-        .insert({
-          user_id: user.id,
-          stake: draft.stake,
-          total_odds: draft.totalOdds,
-          status: draft.status,
-          placed_at: draft.placedAt,
-          settled_at: draft.settledAt,
-          payout: draft.payout,
-          cashed_out: draft.cashedOut,
-          source: "kalshi",
-          external_id: draft.externalId,
-        })
-        .select("id")
-        .single();
-      if (betError || !inserted) {
+        .insert(
+          toWrite.map((draft) => ({
+            user_id: user.id,
+            stake: draft.stake,
+            total_odds: draft.totalOdds,
+            status: draft.status,
+            placed_at: draft.placedAt,
+            settled_at: draft.settledAt,
+            payout: draft.payout,
+            cashed_out: draft.cashedOut,
+            source: "kalshi",
+            external_id: draft.externalId,
+          }))
+        )
+        .select("id, external_id");
+      if (betError || !insertedBets) {
         return NextResponse.json(
-          { error: `Could not save a bet: ${betError?.message}` },
+          { error: `Could not save the bets: ${betError?.message}` },
           { status: 500 }
         );
       }
+      const idByExternal = new Map(
+        insertedBets.map((b) => [b.external_id as string, b.id as string])
+      );
 
-      // A bet and its picks have to arrive together. Postgres gives
-      // no transaction across these calls, so a failed pick takes its
-      // bet with it: a headless bet is worse than no bet, and one
-      // reached the owner's Track page reading "0 legs".
+      // Bets and their picks have to arrive together. Postgres gives
+      // no transaction across these calls, so a failed pick insert
+      // takes every bet of this run with it: a headless bet is worse
+      // than no bet, and one reached the owner's Track page reading
+      // "0 legs".
       //
       // A single's leg carries the bet's odds; a parlay's legs carry
       // none, because Kalshi prices the combo, not the picks, the
       // same as a manual parlay without a Chance %.
-      const { error: legError } = await supabase.from("legs").insert(
+      const legRows = toWrite.flatMap((draft) =>
         draft.legs.map((leg) => ({
-          bet_id: inserted.id,
+          bet_id: idByExternal.get(draft.externalId),
           sport: leg.sport,
           description: leg.description,
           odds: draft.legs.length === 1 ? draft.totalOdds : null,
           result: leg.result,
         }))
       );
+      const { error: legError } = await supabase.from("legs").insert(legRows);
       if (legError) {
-        await supabase.from("bets").delete().eq("id", inserted.id);
+        await supabase
+          .from("bets")
+          .delete()
+          .in("id", [...idByExternal.values()]);
         return NextResponse.json(
-          { error: `Could not save a pick: ${legError.message}` },
+          { error: `Could not save the picks: ${legError.message}` },
           { status: 500 }
         );
       }
 
-      const { error: buyError } = await supabase.from("bet_buys").insert(
+      const buyRows = toWrite.flatMap((draft) =>
         draft.buys.map((b) => ({
-          bet_id: inserted.id,
+          bet_id: idByExternal.get(draft.externalId),
           amount: b.amount,
           payout: b.payout,
           created_at: b.createdAt,
         }))
       );
+      const { error: buyError } = await supabase
+        .from("bet_buys")
+        .insert(buyRows);
       if (buyError) {
-        await supabase.from("bets").delete().eq("id", inserted.id);
+        await supabase
+          .from("bets")
+          .delete()
+          .in("id", [...idByExternal.values()]);
         return NextResponse.json(
-          { error: `Could not save a buy: ${buyError.message}` },
+          { error: `Could not save the buys: ${buyError.message}` },
           { status: 500 }
         );
       }
