@@ -1,21 +1,30 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { BTN, CARD, INNER } from "@/lib/ui";
 import { formatMoney } from "@/lib/format";
 
-// Connecting a betting platform, phase 1 (August 2026): Kalshi, by
-// the owner's ruling, with the official personal API key. The flow
-// copies the shape the owner liked in Pikkit's BookSync: pick the
-// platform, one honest trust screen, then the auth step. Ours differs
-// only at the last step: a guided key setup instead of a password
-// box, because Actuals holds no passwords and pays no middleman.
+// Connecting a betting platform, phase 1 of the sync project (August
+// 2026): Kalshi, by the owner's ruling, with the official personal
+// API key. The flow copies the shape the owner liked in Pikkit's
+// BookSync: pick the platform, one honest trust screen, then the auth
+// step. Ours differs only at the last step: a guided key setup
+// instead of a password box, because Actuals holds no passwords and
+// pays no middleman.
+//
+// THE LIST IS ALWAYS THE FRONT PAGE (the owner, after his first
+// connection): a connected platform must not swallow the whole
+// screen, because the point of the page is also the platforms you
+// have NOT connected yet. Kalshi's row reports its state and opens a
+// detail view; the detail view fetches the live balance every time,
+// because the owner saw his balance once at connect time and then
+// could never find it again.
 //
 // Nothing imports yet. This phase proves the connection and stores
-// the key encrypted; syncing is the next phase, and the screen says
+// the key encrypted; syncing is the next phase, and the screens say
 // so rather than pretending.
 
-type Step = "loading" | "list" | "trust" | "form" | "connected";
+type Step = "loading" | "list" | "trust" | "form" | "detail";
 
 type Status = {
   connected_at: string;
@@ -47,6 +56,23 @@ function LinkIcon({ className = "h-5 w-5" }: { className?: string }) {
   );
 }
 
+function CheckIcon({ className = "h-5 w-5" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2.4}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
+  );
+}
+
 const FIELD =
   "mt-1 block w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none placeholder:text-neutral-400 focus:border-brand-mark focus:ring-2 focus:ring-brand-mark/30 dark:border-white/15 dark:bg-[#0E1228] dark:text-neutral-100 dark:placeholder:text-white/30";
 
@@ -54,12 +80,15 @@ export default function ConnectAccounts({
   // /preview/connect only: open on a chosen step with nothing fetched,
   // so sitecheck and screenshots can reach every state.
   demoStep = null,
+  demoConnected = false,
 }: {
   demoStep?: Step | null;
+  demoConnected?: boolean;
 }) {
+  const demo = demoStep !== null;
   const [step, setStep] = useState<Step>(demoStep ?? "loading");
   const [status, setStatus] = useState<Status>(
-    demoStep === "connected"
+    demo && (demoConnected || demoStep === "detail")
       ? { connected_at: "2026-08-19T12:00:00Z", last_synced_at: null }
       : null
   );
@@ -67,20 +96,43 @@ export default function ConnectAccounts({
   const [privateKey, setPrivateKey] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  // Kalshi's balance in cents, straight from the successful test. The
-  // proof the connection is real, shown once.
-  const [balanceCents, setBalanceCents] = useState<number | null>(null);
+  // Kalshi's live balance in cents, fetched fresh whenever the detail
+  // view opens.
+  const [balanceCents, setBalanceCents] = useState<number | null>(
+    demo && demoStep === "detail" ? 31 : null
+  );
 
   useEffect(() => {
-    if (demoStep) return;
+    if (demo) return;
     fetch("/api/connect/kalshi")
       .then((r) => r.json())
       .then((d) => {
         setStatus(d.connected ?? null);
-        setStep(d.connected ? "connected" : "list");
+        setStep("list");
       })
       .catch(() => setStep("list"));
-  }, [demoStep]);
+  }, [demo]);
+
+  const retest = useCallback(async () => {
+    setError(null);
+    setBusy(true);
+    const res = await fetch("/api/connect/kalshi", { method: "PATCH" }).catch(
+      () => null
+    );
+    setBusy(false);
+    const body = await res?.json().catch(() => null);
+    if (!res?.ok) {
+      setError(body?.error ?? "Something went wrong. Try again.");
+      return;
+    }
+    setBalanceCents(body.balanceCents ?? null);
+  }, []);
+
+  // The live balance greets you on the detail view without a tap.
+  useEffect(() => {
+    if (!demo && step === "detail" && balanceCents === null) retest();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, demo]);
 
   async function connect() {
     setError(null);
@@ -101,22 +153,7 @@ export default function ConnectAccounts({
     setStatus({ connected_at: new Date().toISOString(), last_synced_at: null });
     setPrivateKey("");
     setAccessKey("");
-    setStep("connected");
-  }
-
-  async function retest() {
-    setError(null);
-    setBusy(true);
-    const res = await fetch("/api/connect/kalshi", { method: "PATCH" }).catch(
-      () => null
-    );
-    setBusy(false);
-    const body = await res?.json().catch(() => null);
-    if (!res?.ok) {
-      setError(body?.error ?? "Something went wrong. Try again.");
-      return;
-    }
-    setBalanceCents(body.balanceCents ?? null);
+    setStep("detail");
   }
 
   async function disconnect() {
@@ -148,30 +185,51 @@ export default function ConnectAccounts({
   if (step === "list") {
     return (
       <section className={`${CARD} p-4`}>
-        <h2 className="text-[17px] font-bold">Connect a platform</h2>
+        <h2 className="text-[17px] font-bold">Connect accounts</h2>
         <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
-          Your bets there appear here on their own. Actuals can only
-          read, it never touches your money.
+          Link a platform and your bets there can arrive on their own.
+          Actuals can only read, it never touches your money.
         </p>
         <div className="mt-3 space-y-2">
-          <button
-            type="button"
-            onClick={() => setStep("trust")}
-            className={`${INNER} flex w-full items-center gap-3 px-3 py-3 text-left`}
-          >
-            <span className="text-[#22C55E]">
-              <LinkIcon />
-            </span>
-            <span className="min-w-0 grow">
-              <span className="block text-sm font-semibold">Kalshi</span>
-              <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
-                kalshi.com, with your own API key
+          {status ? (
+            <button
+              type="button"
+              onClick={() => setStep("detail")}
+              className={`${INNER} flex w-full items-center gap-3 px-3 py-3 text-left`}
+            >
+              <span className="text-[#22C55E]">
+                <CheckIcon />
               </span>
-            </span>
-            <span className="shrink-0 text-sm font-semibold text-neutral-600 dark:text-neutral-300">
-              Connect ›
-            </span>
-          </button>
+              <span className="min-w-0 grow">
+                <span className="block text-sm font-semibold">Kalshi</span>
+                <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
+                  Connected on {shortDate(status.connected_at)}
+                </span>
+              </span>
+              <span className="shrink-0 text-sm font-semibold text-neutral-600 dark:text-neutral-300">
+                Manage ›
+              </span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setStep("trust")}
+              className={`${INNER} flex w-full items-center gap-3 px-3 py-3 text-left`}
+            >
+              <span className="text-[#22C55E]">
+                <LinkIcon />
+              </span>
+              <span className="min-w-0 grow">
+                <span className="block text-sm font-semibold">Kalshi</span>
+                <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
+                  kalshi.com, with your own API key
+                </span>
+              </span>
+              <span className="shrink-0 text-sm font-semibold text-neutral-600 dark:text-neutral-300">
+                Connect ›
+              </span>
+            </button>
+          )}
 
           <div className={`${INNER} flex items-center gap-3 px-3 py-3 opacity-60`}>
             <span className="text-neutral-400">
@@ -185,6 +243,9 @@ export default function ConnectAccounts({
             </span>
           </div>
         </div>
+        <p className="mt-3 text-xs text-neutral-500 dark:text-neutral-400">
+          More platforms join this list over time.
+        </p>
       </section>
     );
   }
@@ -234,42 +295,38 @@ export default function ConnectAccounts({
     );
   }
 
-  if (step === "connected") {
+  if (step === "detail") {
     return (
       <section className={`${CARD} p-4`}>
         <div className="flex items-center gap-2">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2.2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="h-5 w-5 text-emerald-600 dark:text-emerald-400"
-            aria-hidden="true"
-          >
-            <path d="M20 6 9 17l-5-5" />
-          </svg>
+          <span className="text-emerald-600 dark:text-emerald-400">
+            <CheckIcon />
+          </span>
           <h2 className="text-[17px] font-bold">Kalshi is connected</h2>
         </div>
 
-        {balanceCents !== null && (
-          <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
-            Kalshi answered with your balance:{" "}
-            <span className="font-money font-semibold tabular-nums text-neutral-900 dark:text-neutral-100">
-              {formatMoney(balanceCents / 100)}
-            </span>
-            . The connection works.
-          </p>
-        )}
-
         <div className={`${INNER} mt-3 px-3 py-3`}>
+          <span className="block text-xs text-neutral-500 dark:text-neutral-400">
+            Your Kalshi balance right now
+          </span>
+          <span className="mt-0.5 block font-money text-lg font-bold tabular-nums">
+            {balanceCents !== null
+              ? formatMoney(balanceCents / 100)
+              : busy
+                ? "..."
+                : "-"}
+          </span>
+        </div>
+
+        <div className={`${INNER} mt-2 px-3 py-3`}>
           <span className="block text-sm font-semibold">
             Connected {status ? `on ${shortDate(status.connected_at)}` : ""}
           </span>
           <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
-            Importing your bets arrives in the next update. Connecting
-            now means you are ready the day it does.
+            Importing your bets arrives in the next update: from then
+            on, bets you place on Kalshi appear here on their own.
+            Your Kalshi history from before you connected stays out,
+            unless you ask for it when importing arrives.
           </span>
         </div>
 
@@ -286,7 +343,7 @@ export default function ConnectAccounts({
             disabled={busy}
             className="text-sm font-semibold text-neutral-600 disabled:opacity-60 dark:text-neutral-300"
           >
-            {busy ? "Testing..." : "Test connection ›"}
+            {busy ? "Asking Kalshi..." : "Refresh balance ›"}
           </button>
           <button
             type="button"
@@ -297,6 +354,17 @@ export default function ConnectAccounts({
             Disconnect
           </button>
         </div>
+
+        <button
+          type="button"
+          onClick={() => {
+            setError(null);
+            setStep("list");
+          }}
+          className="mt-2 h-11 w-full rounded-xl text-sm font-bold text-neutral-500 dark:text-neutral-400"
+        >
+          Back to all platforms
+        </button>
       </section>
     );
   }
@@ -317,7 +385,8 @@ export default function ConnectAccounts({
           Kalshi's own name for it and one differing word is where
           people get lost (his ruling). If Kalshi moves things, walk
           the flow again and rewrite from the screen, not from
-          memory. */}
+          memory. A step wizard redesign of this screen is stored in
+          IDEAS, idea 13. */}
       <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-neutral-600 dark:text-neutral-300">
         <li>
           Log in at kalshi.com. Open the menu, then{" "}

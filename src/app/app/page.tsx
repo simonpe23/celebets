@@ -26,6 +26,7 @@ export default async function HomePage() {
     },
     { data: transactions },
     { data: bets },
+    { data: connections },
   ] = await Promise.all([
     supabase.auth.getUser(),
     supabase.from("transactions").select("type, amount"),
@@ -35,6 +36,7 @@ export default async function HomePage() {
         "id, stake, total_odds, status, placed_at, settled_at, payout, cashed_out, legs (id, sport, description, odds, result, subcategory), bet_buys (id, amount, payout, created_at)"
       )
       .order("placed_at", { ascending: false }),
+    supabase.from("connected_accounts").select("platform"),
   ]);
 
   const allTransactions = transactions ?? [];
@@ -161,6 +163,7 @@ export default async function HomePage() {
           hasBalance={allTransactions.length > 0}
           lastStake={lastStake}
           userId={user!.id}
+          connectedPlatforms={(connections ?? []).map((c) => c.platform)}
         />
 
         <Disclaimer />

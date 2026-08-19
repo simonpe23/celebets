@@ -169,6 +169,22 @@ How this file works:
     - A source filter (Kalshi / manual) joins the filter row, so a
       Vegas cash weekend and Kalshi bets share one balance but can
       be told apart.
+    THE OWNER'S EIGHT POINTS after his first connection, all sorted,
+    19 August:
+    - Fixed same day: the Track tile is a real door to /connect and
+      reports "Kalshi connected" once one is; the Settings row says
+      Connect accounts / Connect; the connect page always leads with
+      the platform LIST (a connected platform shows Manage, the rest
+      stay offered); the Kalshi detail fetches the live balance every
+      time it opens, with a Refresh balance control, because he saw
+      his balance once and could never find it again; the detail says
+      plainly that old history stays out and importing arrives next.
+    - Phase 2 owns: the "boom, Kalshi is connected" celebration with
+      the full what-happens-now story (his sketch: "from now on all
+      of your bets on Kalshi will be tracked and logged and filtered
+      automatically"), which only becomes TRUE when syncing ships.
+      Same for the full old-data vs new-data explanation.
+
     STORED FOR LATER, the owner, 19 August, after connecting his own
     key: THE KEY SETUP SCREEN NEEDS A REAL REDESIGN before testers
     see it. His words: "it looks so messy and i would close the

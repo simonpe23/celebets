@@ -348,13 +348,13 @@ export default function Settings({
             >
               <span className="min-w-0">
                 <span className="block text-sm font-semibold">
-                  Connected accounts
+                  Connect accounts
                 </span>
                 <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
                   Link Kalshi so your bets can arrive on their own.
                 </span>
               </span>
-              <span className={CARD_LINK}>Open ›</span>
+              <span className={CARD_LINK}>Connect ›</span>
             </Link>
 
             <Link

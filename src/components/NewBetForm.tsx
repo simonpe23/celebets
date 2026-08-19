@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import {
@@ -57,6 +58,11 @@ interface Props {
   // The home screen shows this card among several others, so it drops
   // the heading and the explaining line and leads with the buttons.
   compact?: boolean;
+  // Which platforms this user has connected ("kalshi"). The Connect
+  // row changes with it: a door when empty, a status when not. The
+  // owner connected Kalshi and the row still said "Connect your
+  // accounts, Coming Soon", which read as if nothing had happened.
+  connectedPlatforms?: string[];
 }
 
 const QUICK_STAKES = ["20", "50", "100"];
@@ -134,7 +140,11 @@ function CameraIcon({ className = "h-3.5 w-3.5 shrink-0" }: { className?: string
   );
 }
 
-export default function NewBetForm({ lastStake, compact = false }: Props) {
+export default function NewBetForm({
+  lastStake,
+  compact = false,
+  connectedPlatforms = [],
+}: Props) {
   const router = useRouter();
   const [stake, setStake] = useState("");
   const [legs, setLegs] = useState<LegDraft[]>([emptyLeg()]);
@@ -416,21 +426,47 @@ export default function NewBetForm({ lastStake, compact = false }: Props) {
            put Paste and Upload at the top and buried Connect in a
            corner beside Manual entry. */
         <>
-          {/* Biggest by size, quietest by colour. The owner chose this
-              over a filled button: the feature does not work yet, and
-              a big violet control that does nothing when tapped reads
-              as broken rather than as coming. Grey text plus the badge
-              says "not yet" before a finger ever lands on it, so it is
-              a div, not a disabled button. */}
-          <div className="mt-3 flex items-center justify-center gap-2 rounded-xl border border-neutral-200 px-3 py-4 text-[14px] font-semibold text-neutral-400 dark:border-white/10 dark:text-neutral-600">
-            <span className="text-[#22C55E]">
-              <LinkIcon className="h-5 w-5" />
-            </span>
-            Connect your accounts
-            <span className="rounded-full bg-[#22C55E]/15 px-2 py-0.5 text-[10px] font-bold text-[#22C55E]">
-              Coming Soon
-            </span>
-          </div>
+          {/* A real door since phase 1 of the sync project shipped
+              (August 2026): connecting works, so the row is a Link,
+              not the old inert grey div. It also reports: once a
+              platform is connected it says so, because the owner
+              connected Kalshi and the row still read "Connect your
+              accounts" as if nothing had happened. */}
+          {connectedPlatforms.length > 0 ? (
+            <Link
+              href="/connect"
+              className="mt-3 flex items-center justify-center gap-2 rounded-xl border border-neutral-200 px-3 py-4 text-[14px] font-semibold dark:border-white/10"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#22C55E"
+                strokeWidth={2.4}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-5 w-5"
+                aria-hidden="true"
+              >
+                <path d="M20 6 9 17l-5-5" />
+              </svg>
+              {connectedPlatforms
+                .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
+                .join(" and ")}{" "}
+              connected
+              <span className="text-neutral-400">›</span>
+            </Link>
+          ) : (
+            <Link
+              href="/connect"
+              className="mt-3 flex items-center justify-center gap-2 rounded-xl border border-neutral-200 px-3 py-4 text-[14px] font-semibold dark:border-white/10"
+            >
+              <span className="text-[#22C55E]">
+                <LinkIcon className="h-5 w-5" />
+              </span>
+              Connect your accounts
+              <span className="text-neutral-400">›</span>
+            </Link>
+          )}
 
           {/* The three that work, equal thirds, and IDENTICAL. Paste
               used to carry the brand border. The owner cut it: a

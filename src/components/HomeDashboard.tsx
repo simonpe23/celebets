@@ -21,6 +21,9 @@ interface Props {
   hasBalance: boolean;
   lastStake: string;
   userId: string;
+  // Which platforms are connected, for the Connect row on the Track
+  // card.
+  connectedPlatforms: string[];
 }
 
 // The Track page, built to the owner's mockup (August 2026): greeting,
@@ -37,6 +40,7 @@ export default function HomeDashboard({
   hasBalance,
   lastStake,
   userId,
+  connectedPlatforms,
 }: Props) {
   // Everything on this page speaks in the current period. The old
   // bets are not gone, they live in the history on Performance.
@@ -75,7 +79,11 @@ export default function HomeDashboard({
         settledBets={settled}
       />
 
-      <NewBetForm lastStake={lastStake} compact />
+      <NewBetForm
+        lastStake={lastStake}
+        compact
+        connectedPlatforms={connectedPlatforms}
+      />
 
       <InsightCard bets={counted} />
 
