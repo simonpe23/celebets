@@ -143,7 +143,10 @@ How this file works:
     - Does it need a name, like "Vegas August"?
 
 13. Kalshi / Polymarket auto-sync. THE ACTIVE PROJECT, started 19
-    August 2026, plan pending approval. Bets placed there appear in
+    August 2026. PHASE 1 SHIPPED AND VERIFIED the same day: the owner
+    connected his real Kalshi account with a read-only key and the
+    screen answered with his live balance, which is the connect flow,
+    the encryption, and the request signing all proven at once. Bets placed there appear in
     Actuals automatically via their APIs (Kalshi personal API key
     with RSA request signing, docs.kalshi.com; Polymarket public
     wallet data, no key). Buys map to our buys, sells to cash outs,
