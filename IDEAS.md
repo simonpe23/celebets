@@ -142,15 +142,34 @@ How this file works:
     - After the end date, does it lock, keep counting, or just close?
     - Does it need a name, like "Vegas August"?
 
-13. Kalshi / Polymarket auto-sync: bets placed there appear in
-    Celebet automatically via their APIs (Kalshi personal API key,
-    Polymarket public wallet data). Buys map to our buys, sells to
-    cash outs, settlements to wins and losses. Big build: secure key
-    storage, background sync, market-name-to-sport mapping, duplicate
-    protection. Wants the settings page first. Screenshot import
-    (idea 12) builds the mapping brain this will reuse. Long term the
-    owner wants BOTH: sync for Kalshi/Polymarket, screenshots for
-    every other betting site.
+13. Kalshi / Polymarket auto-sync. THE ACTIVE PROJECT, started 19
+    August 2026, plan pending approval. Bets placed there appear in
+    Actuals automatically via their APIs (Kalshi personal API key
+    with RSA request signing, docs.kalshi.com; Polymarket public
+    wallet data, no key). Buys map to our buys, sells to cash outs,
+    settlements to wins and losses. The architecture: translate at
+    the door, one language inside. An imported bet becomes an
+    ordinary row in bets, so every existing filter, chart and
+    insight works untouched; it carries source and external_id, the
+    id being what stops double imports.
+    DECIDED by the owner, 19 August:
+    - KALSHI FIRST. That is where his real betting lives.
+    - NON-SPORT MARKETS IMPORT TOO, under new categories: "I want
+      users to be able to track everything." A top-level split sits
+      above the sport filter: Sports is the standard view, with an
+      option to include Not Sports. His words: "this is a sports app
+      first." He expects to refine this shape.
+    - FRESH START IS THE STANDARD: connecting imports from that day
+      forward, keeping Actuals data unique, and the app explains
+      that. Full Kalshi history stays available behind a small
+      quiet link, clearly not recommended.
+    - A source filter (Kalshi / manual) joins the filter row, so a
+      Vegas cash weekend and Kalshi bets share one balance but can
+      be told apart.
+    Open questions, flagged for the filter phase: does the existing
+    Crypto sport move under Not Sports? Long term the owner wants
+    BOTH: sync for Kalshi/Polymarket, screenshots for every other
+    betting site (idea 12 built the mapping brain this reuses).
 
 7. Personal touch: "Welcome Simon" on login. Needs a settings page
    with name, favorite team, favorite sport.
