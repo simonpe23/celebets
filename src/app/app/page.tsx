@@ -123,16 +123,31 @@ export default async function HomePage() {
           <div className="min-w-0 flex-1">
             <Greeting name={name} />
           </div>
-          {/* The avatar opens Settings. It used to be the log out
-              button, so one stray tap ended the session. Log out now
-              lives at the foot of Settings. */}
+          {/* The Settings door: a gear in a quiet chip. It was an
+              initial-letter avatar, and the owner called that
+              semi-vague: a lone letter says who you are, not where
+              the tap goes. The gear says Settings in one glance. It
+              is muted, not purple: the app's one purple control per
+              screen is Set balance, just below. */}
           <Link
             href="/settings"
             title="Settings"
             aria-label="Settings"
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-top text-[13px] font-bold text-white"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-white text-neutral-500 ring-1 ring-neutral-900/[0.06] dark:bg-[#0E1228] dark:text-neutral-400 dark:ring-white/[0.07]"
           >
-            {(name ?? "C").charAt(0).toUpperCase()}
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.8}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-[18px] w-[18px]"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="3" />
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1Z" />
+            </svg>
           </Link>
         </header>
 
