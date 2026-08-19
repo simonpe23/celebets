@@ -39,6 +39,7 @@ import type { Sport } from "./types";
 export type KalshiFill = {
   ticker: string;
   order_id?: string;
+  ts?: number; // epoch seconds, Kalshi's own clock field
   side: "yes" | "no";
   action: "buy" | "sell";
   count_fp?: string | number;

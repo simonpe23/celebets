@@ -4,6 +4,7 @@ import { decryptSecret } from "@/lib/connectCrypto";
 import {
   KalshiError,
   kalshiGetAll,
+  kalshiFillsBefore,
   kalshiGetPages,
   kalshiMarket,
   kalshiMarketsBatch,
@@ -122,22 +123,32 @@ export async function POST(request: Request) {
       boundIso = (oldest?.placed_at as string | undefined) ?? null;
     }
 
-    const { rows: walked, done: walkedToEnd } =
-      await kalshiGetPages<KalshiFill>(
+    let walked: KalshiFill[];
+    let walkedToEnd: boolean;
+    if (line) {
+      const r = await kalshiGetPages<KalshiFill>(
         key,
         pem,
         "/portfolio/fills",
         "fills",
-        !line && boundIso
-          ? {
-              max_ts: String(
-                Math.floor(new Date(boundIso).getTime() / 1000)
-              ),
-            }
-          : {},
-        line ? { field: "created_time", iso: line } : undefined,
+        {},
+        { field: "created_time", iso: line },
         60
       );
+      walked = r.rows;
+      walkedToEnd = r.done;
+    } else {
+      const r = await kalshiFillsBefore(
+        key,
+        pem,
+        boundIso
+          ? Math.floor(new Date(boundIso).getTime() / 1000)
+          : null,
+        60
+      );
+      walked = r.rows as unknown as KalshiFill[];
+      walkedToEnd = r.done;
+    }
     const fillsPool =
       !line && boundIso
         ? walked.filter((f) => f.created_time < boundIso)

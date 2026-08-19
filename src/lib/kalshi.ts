@@ -132,6 +132,84 @@ export async function kalshiGetPages<T>(
   return { rows, done: false };
 }
 
+// Fills strictly OLDER than a moment, for the history import's later
+// rounds. Kalshi documents a max_ts filter on fills but not its unit,
+// and the first live use returned nothing at all, so this trusts
+// nothing: it probes seconds, then milliseconds, checks the answer
+// actually IS older than the bound, and when neither works it walks
+// the list from the top and discards rows a previous round already
+// imported. Slower, never wrong.
+export async function kalshiFillsBefore(
+  accessKey: string,
+  privateKeyPem: string,
+  boundSec: number | null,
+  pageBudget = 60
+): Promise<{ rows: Record<string, unknown>[]; done: boolean }> {
+  if (boundSec === null) {
+    return kalshiGetPages<Record<string, unknown>>(
+      accessKey,
+      privateKeyPem,
+      "/portfolio/fills",
+      "fills",
+      {},
+      undefined,
+      pageBudget
+    );
+  }
+
+  const tsOf = (f: Record<string, unknown>): number => {
+    if (typeof f.ts === "number") return f.ts;
+    const parsed = Date.parse(String(f.created_time ?? ""));
+    return Number.isFinite(parsed) ? parsed / 1000 : Number.MAX_SAFE_INTEGER;
+  };
+
+  for (const candidate of [String(boundSec), String(boundSec * 1000)]) {
+    try {
+      const probe = (await kalshiGet(
+        accessKey,
+        privateKeyPem,
+        "/portfolio/fills",
+        { limit: "200", max_ts: candidate }
+      )) as { fills?: Record<string, unknown>[] };
+      const rows = probe.fills ?? [];
+      if (rows.length === 0) continue;
+      if (tsOf(rows[0]) < boundSec) {
+        // The filter is honored in this unit: walk with it.
+        return kalshiGetPages<Record<string, unknown>>(
+          accessKey,
+          privateKeyPem,
+          "/portfolio/fills",
+          "fills",
+          { max_ts: candidate },
+          undefined,
+          pageBudget
+        );
+      }
+    } catch {
+      // An unsupported parameter answering 400 just moves us along.
+    }
+  }
+
+  // Neither unit worked: walk from the newest and keep only what a
+  // previous round has not imported. The page ceiling is generous
+  // (skipping already-covered pages costs a request each), and a
+  // truly bottomless account simply takes another round.
+  const out: Record<string, unknown>[] = [];
+  let cursor = "";
+  for (let page = 0; page < 240; page++) {
+    const data = (await kalshiGet(accessKey, privateKeyPem, "/portfolio/fills", {
+      limit: "200",
+      ...(cursor ? { cursor } : {}),
+    })) as { fills?: Record<string, unknown>[]; cursor?: string };
+    const rows = data.fills ?? [];
+    for (const f of rows) if (tsOf(f) < boundSec) out.push(f);
+    cursor = typeof data.cursor === "string" ? data.cursor : "";
+    if (!cursor || rows.length === 0) return { rows: out, done: true };
+    if (out.length >= pageBudget * 200) break;
+  }
+  return { rows: out, done: false };
+}
+
 // The tickers the user currently holds a position in. Used by the
 // sync's discovery step: an open position is live money and belongs
 // to the record even when every fill predates the connect date, the
