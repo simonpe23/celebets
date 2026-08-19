@@ -4,6 +4,7 @@ import { decryptSecret } from "@/lib/connectCrypto";
 import {
   KalshiError,
   kalshiGetAll,
+  kalshiGetPages,
   kalshiMarket,
   kalshiMarketsBatch,
   kalshiOpenTickers,
@@ -31,9 +32,10 @@ import {
 // stake would be missing its early buys. { history: true } drops the
 // date line entirely: the quiet full-history import.
 
-// A sync walks several Kalshi lists and a market per ticker; give it
-// room on deployments that allow more than the default.
-export const maxDuration = 60;
+// A sync walks several Kalshi lists and batched market lookups; give
+// it all the room the plan allows, a heavy account's history round
+// needs it.
+export const maxDuration = 300;
 
 // Opening the app more often than this does not re-ask Kalshi.
 // Manual presses of Sync now always go through.
@@ -94,40 +96,111 @@ export async function POST(request: Request) {
   const line = history === true ? null : (conn.connected_at as string);
 
   try {
-    // 1. EVERY fill, once. The old shape fetched a recent window and
-    // then re-fetched fills one market at a time, which forced a cap
-    // of 60 markets per sync, and the owner's full-history import
-    // silently stopped at 59 bets out of hundreds. One paginated walk
-    // brings the whole trade history in a handful of requests (200 a
-    // page), and the grouping happens here instead of on Kalshi.
-    const allFills = await kalshiGetAll<KalshiFill>(
-      key,
-      pem,
-      "/portfolio/fills",
-      "fills",
-      {},
-      undefined,
-      60 // pages: room for 12,000 fills before truncation
-    );
+    // 1. EVERY fill, once, walked newest first, 200 a page. The old
+    // shape fetched fills one market at a time, which forced a cap of
+    // 60 markets per sync and stopped the owner's history at 59 bets.
+    //
+    // A HISTORY IMPORT RUNS IN ROUNDS. A heavy account's history is
+    // deeper than one request should chew (the owner's reached
+    // 12,000 fills inside two months), so each round walks up to 60
+    // pages, imports what it saw, and answers "more: true" when the
+    // walk ran out of budget before reaching the beginning. The next
+    // round continues BELOW the oldest bet already imported, using
+    // Kalshi's own max_ts filter, and the client keeps asking until
+    // the answer is done. If max_ts is ever ignored, the already
+    // covered rows are dropped here, so a round can never import the
+    // same slice twice.
+    let boundIso: string | null = null;
+    if (!line) {
+      const { data: oldest } = await supabase
+        .from("bets")
+        .select("placed_at")
+        .eq("source", "kalshi")
+        .order("placed_at", { ascending: true })
+        .limit(1)
+        .maybeSingle();
+      boundIso = (oldest?.placed_at as string | undefined) ?? null;
+    }
+
+    const { rows: walked, done: walkedToEnd } =
+      await kalshiGetPages<KalshiFill>(
+        key,
+        pem,
+        "/portfolio/fills",
+        "fills",
+        !line && boundIso
+          ? {
+              max_ts: String(
+                Math.floor(new Date(boundIso).getTime() / 1000)
+              ),
+            }
+          : {},
+        line ? { field: "created_time", iso: line } : undefined,
+        60
+      );
+    const fillsPool =
+      !line && boundIso
+        ? walked.filter((f) => f.created_time < boundIso)
+        : [...walked];
+    const more = !line && !walkedToEnd && fillsPool.length > 0;
+
+    // A market can SPAN the boundary between rounds: its newest buys
+    // imported last round, its older buys only surfacing now. Its bet
+    // would re-derive from half the money. Those few markets get
+    // their complete fill history fetched directly.
+    if (!line && boundIso && fillsPool.length > 0) {
+      const roundTickers = [...new Set(fillsPool.map((f) => f.ticker))];
+      const { data: spanRows } = await supabase
+        .from("bets")
+        .select("external_id")
+        .eq("source", "kalshi")
+        .in(
+          "external_id",
+          roundTickers.flatMap((t) => [`kalshi:${t}:yes`, `kalshi:${t}:no`])
+        );
+      const spanTickers = [
+        ...new Set(
+          (spanRows ?? []).map(
+            (r) => (r.external_id as string).split(":")[1]
+          )
+        ),
+      ];
+      for (const t of spanTickers.slice(0, 30)) {
+        const full = await kalshiGetAll<KalshiFill>(
+          key,
+          pem,
+          "/portfolio/fills",
+          "fills",
+          { ticker: t },
+          undefined,
+          10
+        );
+        for (let i = fillsPool.length - 1; i >= 0; i--) {
+          if (fillsPool[i].ticker === t) fillsPool.splice(i, 1);
+        }
+        fillsPool.push(...full);
+      }
+    }
 
     // 2. Which markets are in scope: everything with activity since
     // the line, PLUS every currently open position. An open position
     // is live money and belongs to the record even when all its fills
     // predate the connect date, the same ruling as the app's own
-    // fresh start line. A full-history import takes everything.
+    // fresh start line. A full-history round takes everything it
+    // walked.
     const inScope = new Set(
       line
         ? [
-            ...allFills
+            ...fillsPool
               .filter((f) => f.created_time >= line)
               .map((f) => f.ticker),
             ...(await kalshiOpenTickers(key, pem)),
           ]
-        : allFills.map((f) => f.ticker)
+        : fillsPool.map((f) => f.ticker)
     );
     // Fills of out-of-scope markets must not leak into the
     // translation, or the fresh start line would mean nothing.
-    const fills = allFills.filter((f) => inScope.has(f.ticker));
+    const fills = fillsPool.filter((f) => inScope.has(f.ticker));
 
     // 3. The markets themselves, batched: titles, results, and which
     // ones are parlays. A parlay's legs may be missing from the batch
@@ -325,6 +398,9 @@ export async function POST(request: Request) {
       updated,
       pending: drafts.filter((d) => d.status === "pending").length,
       total: drafts.length,
+      // A history round that ran out of page budget: the client asks
+      // again and the next round continues below the oldest bet.
+      more,
     });
   } catch (e) {
     if (e instanceof KalshiError) {

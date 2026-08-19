@@ -155,36 +155,62 @@ export default function ConnectAccounts({
     async (history: boolean) => {
       setError(null);
       setSyncing(true);
-      const res = await fetch("/api/connect/kalshi/sync", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ history }),
-      }).catch(() => null);
-      setSyncing(false);
 
-      const body = await res?.json().catch(() => null);
-      if (!res?.ok) {
-        setError(body?.error ?? "The sync did not finish. Try again.");
+      // A deep history arrives in ROUNDS: each server round chews up
+      // to 12,000 trades and answers "more" until it reaches the very
+      // first bet. The running total keeps the long wait honest.
+      let imported = 0;
+      let updated = 0;
+      let pending = 0;
+      let total = 0;
+      let failed: string | null = null;
+      for (let round = 0; round < 20; round++) {
+        const res = await fetch("/api/connect/kalshi/sync", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ history }),
+        }).catch(() => null);
+        const body = await res?.json().catch(() => null);
+        if (!res?.ok) {
+          failed = body?.error ?? "The sync did not finish. Try again.";
+          break;
+        }
+        imported += body.imported ?? 0;
+        updated += body.updated ?? 0;
+        pending += body.pending ?? 0;
+        total += body.total ?? 0;
+        if (!history || body.more !== true) break;
+        setSyncResult(
+          `Imported ${imported} bets so far, fetching older history...`
+        );
+      }
+
+      setSyncing(false);
+      if (failed && imported === 0 && updated === 0) {
+        setError(failed);
         return;
       }
+
       const parts: string[] = [];
-      if (body.imported > 0)
-        parts.push(`Imported ${body.imported} ${body.imported === 1 ? "bet" : "bets"} from Kalshi`);
-      if (body.updated > 0) parts.push(`updated ${body.updated}`);
+      if (imported > 0)
+        parts.push(
+          `Imported ${imported} ${imported === 1 ? "bet" : "bets"} from Kalshi`
+        );
+      if (updated > 0) parts.push(`updated ${updated}`);
       if (parts.length === 0) {
         // "Up to date" is only true when there was something to be up
         // to date WITH. Finding nothing at all is a different fact and
         // the owner read the old wording as success.
         setSyncResult(
-          body.total > 0
+          total > 0
             ? "Everything is already up to date."
             : "No Kalshi bets found to import."
         );
       } else {
-        const pending =
-          body.pending > 0 ? `, ${body.pending} still pending` : "";
-        setSyncResult(`${parts.join(", ")}${pending}.`);
+        const still = pending > 0 ? `, ${pending} still pending` : "";
+        setSyncResult(`${parts.join(", ")}${still}.`);
       }
+      if (failed) setError(`${failed} What arrived before it is saved.`);
       setStatus((s) =>
         s ? { ...s, last_synced_at: new Date().toISOString() } : s
       );

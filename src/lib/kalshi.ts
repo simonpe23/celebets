@@ -82,7 +82,34 @@ export async function kalshiGetAll<T>(
   stopBefore?: { field: string; iso: string },
   maxPages = 25
 ): Promise<T[]> {
-  const out: T[] = [];
+  const { rows } = await kalshiGetPages<T>(
+    accessKey,
+    privateKeyPem,
+    path,
+    listKey,
+    query,
+    stopBefore,
+    maxPages
+  );
+  return rows;
+}
+
+// The same walk, but it also says whether it reached the END of the
+// list or ran out of page budget. The difference matters: a
+// full-history import that hits the budget has to say "there is
+// more" so the next round can continue, instead of quietly calling a
+// two-month slice the whole story, which is how the owner's history
+// stopped at June while his first bet was in the fall.
+export async function kalshiGetPages<T>(
+  accessKey: string,
+  privateKeyPem: string,
+  path: string,
+  listKey: string,
+  query: Record<string, string> = {},
+  stopBefore?: { field: string; iso: string },
+  maxPages = 25
+): Promise<{ rows: T[]; done: boolean }> {
+  const rows: T[] = [];
   let cursor = "";
   for (let page = 0; page < maxPages; page++) {
     const data = (await kalshiGet(accessKey, privateKeyPem, path, {
@@ -90,18 +117,19 @@ export async function kalshiGetAll<T>(
       limit: "200",
       ...(cursor ? { cursor } : {}),
     })) as Record<string, unknown>;
-    const rows = (data[listKey] ?? []) as T[];
-    out.push(...rows);
+    const pageRows = (data[listKey] ?? []) as T[];
+    rows.push(...pageRows);
 
-    if (stopBefore && rows.length > 0) {
-      const oldest = rows[rows.length - 1] as Record<string, unknown>;
+    if (stopBefore && pageRows.length > 0) {
+      const oldest = pageRows[pageRows.length - 1] as Record<string, unknown>;
       const t = oldest[stopBefore.field];
-      if (typeof t === "string" && t < stopBefore.iso) break;
+      if (typeof t === "string" && t < stopBefore.iso)
+        return { rows, done: true };
     }
     cursor = typeof data.cursor === "string" ? data.cursor : "";
-    if (!cursor || rows.length === 0) break;
+    if (!cursor || pageRows.length === 0) return { rows, done: true };
   }
-  return out;
+  return { rows, done: false };
 }
 
 // The tickers the user currently holds a position in. Used by the
