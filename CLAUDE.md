@@ -556,6 +556,33 @@ Decisions locked in during this build:
 - Soon badges instead of dead links, ruled by the owner. The pip
   strip (recent form) was dropped by the owner.
 
+## Login (August 2026): no passwords, a six-digit code
+
+- There is ONE auth page, /login. Start Tracking opens it greeting
+  "Create your account", Log in greets "Welcome back", and the button
+  between them never changes. /signup, /forgot-password and
+  /reset-password are deleted and redirect here.
+- Two Supabase settings this code depends on, neither of them visible
+  in the repo. Both cost the owner a live test when they were wrong:
+  - EMAIL OTP LENGTH MUST BE 6. Authentication, Sign In / Providers,
+    Email. It goes up to 10, the project was on 8, and the app draws
+    exactly six boxes, so a correct code could never be entered.
+  - THE EMAIL TEMPLATES MUST CARRY {{ .Token }}, on BOTH the "Magic
+    link or OTP" and "Confirm sign up" tabs. The stock templates send
+    a sign-in LINK, and nothing in the app catches those any more.
+- A NEW address and a RETURNING one need different verifyOtp types
+  ("signup" vs "email"), because Supabase picks the template by
+  whether the account exists. AuthCard tries one and falls back to the
+  other. Never simplify that to a single type: the wrong one answers
+  "Token has expired or is invalid", which looks exactly like a wrong
+  code, and it silently locked out every first-time visitor.
+- THE DEMO DOOR, for investors. The demo account cannot receive codes,
+  so typing its address skips the email entirely and checks one
+  permanent code through /api/demo-login. Configured only by three
+  Vercel settings (NEXT_PUBLIC_DEMO_EMAIL, DEMO_CODE, DEMO_PASSWORD);
+  with any unset the door does not exist. NEXT_PUBLIC_ values are
+  baked at build time, so a change needs a REDEPLOY, not just a save.
+
 ## Tester readiness (July 2026, complete and verified)
 
 - Email confirmation is ON: new signups must click a link before they
