@@ -34,9 +34,6 @@ export default function LiveBets({ bets }: Props) {
   const [addAmount, setAddAmount] = useState("");
   const [addPayout, setAddPayout] = useState("");
   const [expandedBuys, setExpandedBuys] = useState<string | null>(null);
-  // Which bets the user has opened or closed by hand. Untouched bets
-  // fall back to the mockup's default: parlays open, singles closed.
-  const [toggled, setToggled] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
   // Dates render after mount so they use the phone's timezone.
   const [mounted, setMounted] = useState(false);
@@ -203,21 +200,19 @@ export default function LiveBets({ bets }: Props) {
             // What lands in the account if this wins, stake included.
             const toCollect = round2(stake * totalOdds);
             const isParlay = bet.legs.length > 1;
-            // The mockup opens parlays and closes singles.
-            const open = toggled[bet.id] ?? isParlay;
 
             return (
               <div
                 key={bet.id}
                 className={`${INNER} p-3.5`}
               >
-                <button
-                  type="button"
-                  onClick={() =>
-                    setToggled((prev) => ({ ...prev, [bet.id]: !open }))
-                  }
-                  className="flex w-full items-center justify-between gap-3 text-left"
-                >
+                {/* NOT A BUTTON, NOT COLLAPSIBLE. Pending cards used
+                    to fold up, hiding the picks and the settle
+                    buttons behind a tap (and a stray tap while
+                    scrolling folded them without asking). The owner:
+                    "i want pending bets to always be visible."
+                    Pending money is the page's whole point. */}
+                <div className="flex w-full items-center justify-between gap-3 text-left">
                   <span className="flex min-w-0 items-center gap-2.5">
                     {isParlay ? (
                       <span className="shrink-0 rounded-md bg-neutral-200/70 px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-neutral-600 dark:bg-white/10 dark:text-neutral-300">
@@ -270,24 +265,10 @@ export default function LiveBets({ bets }: Props) {
                         {bet.status === "pending" ? "to collect" : "collected"}
                       </span>
                     </span>
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className={`h-4 w-4 shrink-0 text-neutral-400 transition-transform ${
-                        open ? "rotate-90" : ""
-                      }`}
-                      aria-hidden="true"
-                    >
-                      <path d="M9 6l6 6-6 6" />
-                    </svg>
                   </span>
-                </button>
+                </div>
 
-                {open && (
+
                   <>
                     {/* The legs, with the rail threading the icons on a
                         parlay so the picks read as one ticket. */}
@@ -673,7 +654,7 @@ export default function LiveBets({ bets }: Props) {
                       </button>
                     </div>
                   </>
-                )}
+
               </div>
             );
           })}
