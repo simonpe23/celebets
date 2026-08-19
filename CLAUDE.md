@@ -508,8 +508,22 @@ The Research address stays /recommendations, the same reasoning as
 Performance living at /stats: old links and the tab bar's match both
 keep working, and a redirect is one more thing to get wrong.
 
-## The Track page (August 2026, built to the owner's mockups, on the
-## wip branch, not deployed)
+## The Track page (August 2026, built to the owner's mockups, deployed,
+## then refined as v9.3, deployed and verified by the owner)
+
+V9.3, THE REFINEMENT ROUND, shipped 19 August. Nine drafts taught the
+same lesson as the first build: the owner wants HIS design improved,
+never replaced. What v9.3 changed on the live page: the header is one
+row (the real brand mark from public/brand/mark.png, the greeting
+without the emoji, a gear chip for Settings, ruled by the owner over
+the "semi-vague" initial avatar); Tracking Balance is a full-bleed
+band on phones (a card again from sm up) with the balance at 40px,
+the profit arrow line, the edge-to-edge chart with a dashed
+started-here baseline, and a Today/Week/Month/Year strip whose date
+ranges come from periodStart in stats.ts, THE SAME function
+Performance's chips read; the snapshot lost its mini sparklines and
+sport emoji. Kept against the sketch on purpose: View Insights on the
+insight card, and the fully working pending and history cards.
 
 THE MOCKUPS ARE THE SPEC, TO THE PIXEL. The owner rejected two earlier
 attempts ("a reskin is far from enough", "a fake cheap copy") because
