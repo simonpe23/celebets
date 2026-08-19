@@ -166,6 +166,15 @@ How this file works:
     - A source filter (Kalshi / manual) joins the filter row, so a
       Vegas cash weekend and Kalshi bets share one balance but can
       be told apart.
+    STORED FOR LATER, the owner, 19 August, after connecting his own
+    key: THE KEY SETUP SCREEN NEEDS A REAL REDESIGN before testers
+    see it. His words: "it looks so messy and i would close the
+    window if i saw this. instructions needs to be bigger cards with
+    1-2 bullets per card so the user can click next once completed.
+    its too overwhelming to see this at once." So: a step wizard, one
+    card per one or two steps, a Next button as each is completed,
+    never seven numbered steps on one screen. The COPY itself is his
+    and stays; the container changes. Not built yet.
     Open questions, flagged for the filter phase: does the existing
     Crypto sport move under Not Sports? Long term the owner wants
     BOTH: sync for Kalshi/Polymarket, screenshots for every other
