@@ -141,13 +141,26 @@ export default function AuthCard({
         failure = friendly(body?.error ?? "Something went wrong. Try again.");
       }
     } else {
+      // TWO TYPES, ONE CODE. Supabase decides which email template to
+      // send by whether the address already has a confirmed account,
+      // and the token it puts in each verifies under a DIFFERENT type:
+      //   returning address  -> Magic link template   -> type "email"
+      //   brand new address  -> Confirm sign up       -> type "signup"
+      // Asking for the wrong one answers "Token has expired or is
+      // invalid", which is indistinguishable from a wrong code. This
+      // shipped as exactly that bug: every first-time address was told
+      // its correct code did not match. The page cannot know which
+      // kind of visitor it has (that is the whole point of the code
+      // flow), so it tries the common one and falls back.
       const supabase = createClient();
-      const { error } = await supabase.auth.verifyOtp({
-        email: email.trim(),
-        token,
-        type: "email",
-      });
-      if (error) failure = friendly(error.message);
+      const attempt = (type: "email" | "signup") =>
+        supabase.auth.verifyOtp({ email: email.trim(), token, type });
+
+      const first = await attempt("email");
+      if (first.error) {
+        const second = await attempt("signup");
+        if (second.error) failure = friendly(first.error.message);
+      }
     }
 
     if (failure) {
