@@ -40,6 +40,12 @@ function friendly(message: string): string {
   return message;
 }
 
+// The demo account's email. Typing it skips the email round trip
+// entirely: no code is sent, and the six boxes check the permanent
+// demo code through /api/demo-login instead. Empty when the demo door
+// is not configured, and then nothing here behaves differently.
+const DEMO_EMAIL = (process.env.NEXT_PUBLIC_DEMO_EMAIL ?? "").toLowerCase();
+
 const FIELD =
   "block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none placeholder:text-neutral-400 focus:border-brand-mark focus:ring-2 focus:ring-brand-mark/30 dark:border-white/15 dark:bg-[#161D38] dark:text-neutral-100 dark:placeholder:text-white/40";
 
@@ -86,11 +92,23 @@ export default function AuthCard({
     if (step === "code") codeInput.current?.focus();
   }, [step]);
 
+  const isDemo =
+    DEMO_EMAIL !== "" && email.trim().toLowerCase() === DEMO_EMAIL;
+
   async function sendCode(e?: React.FormEvent) {
     e?.preventDefault();
     setError(null);
-    setSending(true);
 
+    // The demo account has a permanent code, so there is no email to
+    // send. Straight to the boxes.
+    if (isDemo) {
+      setCode("");
+      setCooldown(60);
+      setStep("code");
+      return;
+    }
+
+    setSending(true);
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithOtp({
       email: email.trim(),
@@ -111,17 +129,31 @@ export default function AuthCard({
     setError(null);
     setChecking(true);
 
-    const supabase = createClient();
-    const { error } = await supabase.auth.verifyOtp({
-      email: email.trim(),
-      token,
-      type: "email",
-    });
+    let failure: string | null = null;
+    if (isDemo) {
+      const res = await fetch("/api/demo-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: token }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        failure = friendly(body?.error ?? "Something went wrong. Try again.");
+      }
+    } else {
+      const supabase = createClient();
+      const { error } = await supabase.auth.verifyOtp({
+        email: email.trim(),
+        token,
+        type: "email",
+      });
+      if (error) failure = friendly(error.message);
+    }
 
-    if (error) {
+    if (failure) {
       setChecking(false);
       setCode("");
-      setError(friendly(error.message));
+      setError(failure);
       codeInput.current?.focus();
       return;
     }
@@ -144,9 +176,13 @@ export default function AuthCard({
         <h1 className="flex justify-center text-3xl">
           <Wordmark className="text-3xl" />
         </h1>
-        <h2 className="mt-6 text-center text-xl font-bold">Check your email</h2>
+        <h2 className="mt-6 text-center text-xl font-bold">
+          {isDemo ? "Enter the demo code" : "Check your email"}
+        </h2>
         <p className="mt-2 text-center text-sm text-neutral-500 dark:text-neutral-400">
-          We sent a code to {email.trim()}
+          {isDemo
+            ? "Type the six-digit code you were given."
+            : `We sent a code to ${email.trim()}`}
         </p>
 
         <div
@@ -193,22 +229,26 @@ export default function AuthCard({
           </p>
         )}
 
-        <p className="mt-6 text-center text-sm text-neutral-500 dark:text-neutral-400">
-          Nothing arrived?{" "}
-          {cooldown > 0 ? (
-            <span>Resend in {cooldown}s</span>
-          ) : (
-            <button
-              type="button"
-              onClick={() => sendCode()}
-              disabled={sending}
-              className="font-semibold text-brand-mark disabled:opacity-60"
-            >
-              {sending ? "Sending..." : "Resend code"}
-            </button>
-          )}
-        </p>
-        <p className="mt-2 text-center text-sm">
+        {/* No email was sent to the demo account, so there is nothing
+            to resend. */}
+        {!isDemo && (
+          <p className="mt-6 text-center text-sm text-neutral-500 dark:text-neutral-400">
+            Nothing arrived?{" "}
+            {cooldown > 0 ? (
+              <span>Resend in {cooldown}s</span>
+            ) : (
+              <button
+                type="button"
+                onClick={() => sendCode()}
+                disabled={sending}
+                className="font-semibold text-brand-mark disabled:opacity-60"
+              >
+                {sending ? "Sending..." : "Resend code"}
+              </button>
+            )}
+          </p>
+        )}
+        <p className={`${isDemo ? "mt-6" : "mt-2"} text-center text-sm`}>
           <button
             type="button"
             onClick={() => {

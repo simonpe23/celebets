@@ -76,8 +76,12 @@ export async function middleware(request: NextRequest) {
       pathname.startsWith("/preview"));
 
   // The /auth routes turn emailed links into sessions, so they are
-  // never redirected.
-  const isAuthRoute = pathname.startsWith("/auth/");
+  // never redirected. The demo login route is in the same business:
+  // its whole point is being called logged out, and the gate answering
+  // 307 instead of the route was found by the demo door test, not by
+  // eye.
+  const isAuthRoute =
+    pathname.startsWith("/auth/") || pathname === "/api/demo-login";
 
   if (!user && !isAuthPage && !isAuthRoute) {
     const url = request.nextUrl.clone();

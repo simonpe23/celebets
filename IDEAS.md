@@ -46,6 +46,18 @@ How this file works:
     Supabase email templates so the emails carry a code, then a live
     test to his Gmail.
 
+    THE DEMO DOOR, added the same day for investors. The demo account
+    cannot receive codes (nobody the owner shares it with reads its
+    mailbox), so the demo email gets one permanent code: same landing,
+    same auth page, same boxes, but no email is sent and our own
+    /api/demo-login checks the code and signs in with the demo
+    account's password. Supabase only has this natively for phone
+    numbers, so it is built in our code, not theirs. Configured
+    entirely by three Vercel settings (NEXT_PUBLIC_DEMO_EMAIL,
+    DEMO_CODE, DEMO_PASSWORD, never in the repo); unset means the
+    door does not exist. The owner is renaming the demo account to
+    demo@actuals.cc himself.
+
     The discussion record, kept below:
     The owner: "we have to clarify 2 things:
     the sign up flow, the log in flow." One entrance, two flows.
