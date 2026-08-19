@@ -312,10 +312,12 @@ export default function ConnectAccounts({
           written after he walked Kalshi's real screens twice. His
           rule: keep the Read all data vs Full access distinction
           obvious, because that is the step most likely to cause
-          concern or a wrong setup. One deliberate deviation: the id
-          is called Key ID here and on the box below, one name for
-          one thing. If Kalshi moves things, walk the flow again and
-          rewrite from the screen, not from memory. */}
+          concern or a wrong setup. The id is "API Key ID" in every
+          mention, steps, box label and error alike, because that is
+          Kalshi's own name for it and one differing word is where
+          people get lost (his ruling). If Kalshi moves things, walk
+          the flow again and rewrite from the screen, not from
+          memory. */}
       <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-neutral-600 dark:text-neutral-300">
         <li>
           Log in at kalshi.com. Open the menu, then{" "}
@@ -344,20 +346,20 @@ export default function ConnectAccounts({
         </li>
         <li>
           Click <span className="font-semibold">Create</span>. Kalshi
-          will show your <span className="font-semibold">Key ID</span>{" "}
+          will show your <span className="font-semibold">API Key ID</span>{" "}
           and download your{" "}
           <span className="font-semibold">Private key file</span>. Save
           the file. Kalshi will not show the private key again.
         </li>
         <li>
-          Copy your <span className="font-semibold">Key ID</span> and{" "}
+          Copy your <span className="font-semibold">API Key ID</span> and{" "}
           <span className="font-semibold">Private key</span> and paste
           them below.
         </li>
       </ol>
 
       <label htmlFor="kalshi-key-id" className="mt-4 block text-sm font-semibold">
-        Key ID
+        API Key ID
       </label>
       <input
         id="kalshi-key-id"

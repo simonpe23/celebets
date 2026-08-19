@@ -13,7 +13,7 @@ import { KalshiError, testConnection } from "@/lib/kalshi";
 function friendly(e: unknown): string {
   if (e instanceof KalshiError) {
     if (e.status === 401 || e.status === 403)
-      return "Kalshi did not accept this key. Check the Key ID and that the private key file was pasted whole.";
+      return "Kalshi did not accept this key. Check the API Key ID and that the private key file was pasted whole.";
     return `Kalshi could not be reached (${e.status}). Try again in a minute.`;
   }
   if (e instanceof Error && e.message.includes("CONNECT_ENC_KEY"))
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
 
   const { accessKey, privateKey } = await request.json().catch(() => ({}));
   if (typeof accessKey !== "string" || accessKey.trim() === "")
-    return NextResponse.json({ error: "The Key ID is missing." }, { status: 400 });
+    return NextResponse.json({ error: "The API Key ID is missing." }, { status: 400 });
   if (
     typeof privateKey !== "string" ||
     !privateKey.includes("-----BEGIN") ||
