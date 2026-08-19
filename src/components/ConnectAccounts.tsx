@@ -115,6 +115,9 @@ export default function ConnectAccounts({
   );
   // The full-history question, asked inline instead of a popup.
   const [askHistory, setAskHistory] = useState(false);
+  // What Kalshi actually answers, for when a sync finds nothing and
+  // nobody can see why. Never shown unless asked for.
+  const [diagnosis, setDiagnosis] = useState<string | null>(null);
 
   useEffect(() => {
     if (demo) return;
@@ -513,6 +516,30 @@ export default function ConnectAccounts({
           >
             Import my full Kalshi history
           </button>
+        )}
+
+        {/* The last resort when a sync finds nothing: ask Kalshi what
+            it answers and show it verbatim. Kalshi is unreachable
+            from the machine this app is written on, so without this
+            a failure is invisible to everyone. */}
+        <button
+          type="button"
+          onClick={async () => {
+            setDiagnosis("Asking Kalshi...");
+            const res = await fetch("/api/connect/kalshi/diagnose").catch(
+              () => null
+            );
+            const body = await res?.json().catch(() => null);
+            setDiagnosis(JSON.stringify(body, null, 1));
+          }}
+          className="mt-2 block text-xs text-neutral-500 underline underline-offset-2 dark:text-neutral-400"
+        >
+          Nothing syncing? Check what Kalshi answers
+        </button>
+        {diagnosis && (
+          <pre className="mt-2 max-h-80 overflow-auto rounded-lg bg-neutral-100 p-3 text-[10px] leading-relaxed dark:bg-black/40">
+            {diagnosis}
+          </pre>
         )}
 
         <button

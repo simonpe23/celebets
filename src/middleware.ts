@@ -82,6 +82,9 @@ export async function middleware(request: NextRequest) {
   // eye.
   const isAuthRoute =
     pathname.startsWith("/auth/") || pathname === "/api/demo-login";
+  // Note: /api/connect/* is NOT here on purpose. Those routes act on
+  // the logged in user's own connection, so the gate protecting them
+  // is exactly right.
 
   if (!user && !isAuthPage && !isAuthRoute) {
     const url = request.nextUrl.clone();
