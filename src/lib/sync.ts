@@ -6,8 +6,7 @@
 // disappear the day importing ships, and remembering to delete three
 // strings is exactly the kind of promise that gets broken.
 //
-// So they are not three strings. They are this boolean. Phase 2's
-// first act is flipping it to true, and every "being built now" line
-// vanishes at once while the real copy takes over. Nothing to hunt
-// for, nothing to forget.
-export const IMPORTING_LIVE = false;
+// So they are not three strings. They are this boolean. Phase 2
+// flipped it to true the day the sync shipped, and every "being
+// built now" line was replaced by the real copy in the same move.
+export const IMPORTING_LIVE = true;

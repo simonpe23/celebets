@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { BTN, CARD, INNER } from "@/lib/ui";
 import { formatMoney } from "@/lib/format";
 import { IMPORTING_LIVE } from "@/lib/sync";
@@ -21,9 +22,10 @@ import { IMPORTING_LIVE } from "@/lib/sync";
 // because the owner saw his balance once at connect time and then
 // could never find it again.
 //
-// Nothing imports yet. This phase proves the connection and stores
-// the key encrypted; syncing is the next phase, and the screens say
-// so rather than pretending.
+// Phase 2 (same week): the sync is real. Connecting runs a first
+// import on its own, Sync now re-reads Kalshi on demand, and the
+// quiet history control brings in the pre-connection past for
+// whoever insists. The translation itself lives in kalshiSync.ts.
 
 type Step = "loading" | "list" | "trust" | "form" | "detail";
 
@@ -86,6 +88,7 @@ export default function ConnectAccounts({
   demoStep?: Step | null;
   demoConnected?: boolean;
 }) {
+  const router = useRouter();
   const demo = demoStep !== null;
   const [step, setStep] = useState<Step>(demoStep ?? "loading");
   const [status, setStatus] = useState<Status>(
@@ -102,6 +105,16 @@ export default function ConnectAccounts({
   const [balanceCents, setBalanceCents] = useState<number | null>(
     demo && demoStep === "detail" ? 31 : null
   );
+  // The first moments after connecting get the celebration: the
+  // owner's point after his own first connect was that nothing said
+  // what had just happened.
+  const [justConnected, setJustConnected] = useState(demo && demoStep === "detail");
+  const [syncing, setSyncing] = useState(false);
+  const [syncResult, setSyncResult] = useState<string | null>(
+    demo && demoStep === "detail" ? "Imported 3 bets from Kalshi, 2 still pending." : null
+  );
+  // The full-history question, asked inline instead of a popup.
+  const [askHistory, setAskHistory] = useState(false);
 
   useEffect(() => {
     if (demo) return;
@@ -135,6 +148,44 @@ export default function ConnectAccounts({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step, demo]);
 
+  const sync = useCallback(
+    async (history: boolean) => {
+      setError(null);
+      setSyncing(true);
+      const res = await fetch("/api/connect/kalshi/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ history }),
+      }).catch(() => null);
+      setSyncing(false);
+
+      const body = await res?.json().catch(() => null);
+      if (!res?.ok) {
+        setError(body?.error ?? "The sync did not finish. Try again.");
+        return;
+      }
+      const parts: string[] = [];
+      if (body.imported > 0)
+        parts.push(`Imported ${body.imported} ${body.imported === 1 ? "bet" : "bets"} from Kalshi`);
+      if (body.updated > 0) parts.push(`updated ${body.updated}`);
+      if (parts.length === 0) {
+        setSyncResult("Everything is already up to date.");
+      } else {
+        const pending =
+          body.pending > 0 ? `, ${body.pending} still pending` : "";
+        setSyncResult(`${parts.join(", ")}${pending}.`);
+      }
+      setStatus((s) =>
+        s ? { ...s, last_synced_at: new Date().toISOString() } : s
+      );
+      // The imported bets sit on Track and Performance, which are
+      // server rendered: refresh so they are there when the user
+      // taps over.
+      router.refresh();
+    },
+    [router]
+  );
+
   async function connect() {
     setError(null);
     setBusy(true);
@@ -154,7 +205,11 @@ export default function ConnectAccounts({
     setStatus({ connected_at: new Date().toISOString(), last_synced_at: null });
     setPrivateKey("");
     setAccessKey("");
+    setJustConnected(true);
     setStep("detail");
+    // The first sync runs on its own, so connecting ends with bets
+    // on the page, not with homework.
+    sync(false);
   }
 
   async function disconnect() {
@@ -310,6 +365,32 @@ export default function ConnectAccounts({
           <h2 className="text-[17px] font-bold">Kalshi is connected</h2>
         </div>
 
+        {/* The boom moment, right after connecting. The owner's own
+            sketch of it: "boom you've connected Kalshi... from now on
+            all of your bets on Kalshi will be tracked and logged and
+            filtered automatically." */}
+        {justConnected && (
+          <p className="mt-3 rounded-lg bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+            From now on, bets you place on Kalshi are tracked, logged
+            and filtered in Actuals on their own. Your first import is
+            running right now.
+          </p>
+        )}
+
+        <button
+          type="button"
+          onClick={() => sync(false)}
+          disabled={syncing}
+          className={`${BTN} mt-3 h-11 w-full`}
+        >
+          {syncing ? "Syncing with Kalshi..." : "Sync now"}
+        </button>
+        {syncResult && (
+          <p className="mt-2 text-center text-sm text-neutral-500 dark:text-neutral-400">
+            {syncResult}
+          </p>
+        )}
+
         <div className={`${INNER} mt-3 px-3 py-3`}>
           <span className="block text-xs text-neutral-500 dark:text-neutral-400">
             Your Kalshi balance right now
@@ -388,6 +469,51 @@ export default function ConnectAccounts({
             Disconnect
           </button>
         </div>
+
+        {/* The full history import, quiet and behind a question, per
+            the owner: fresh start is the standard and the app should
+            say so, but the past stays reachable for whoever insists. */}
+        {askHistory ? (
+          <div className={`${INNER} mt-3 px-3 py-3`}>
+            <span className="block text-sm font-semibold">
+              Bring in your whole Kalshi past?
+            </span>
+            <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
+              This imports every Kalshi bet you ever settled, from
+              before you connected. Most people should not: starting
+              from your connect date keeps your Actuals record clean,
+              and old imports will move every number.
+            </span>
+            <div className="mt-2.5 flex items-center gap-4">
+              <button
+                type="button"
+                disabled={syncing}
+                onClick={() => {
+                  setAskHistory(false);
+                  sync(true);
+                }}
+                className="text-sm font-semibold text-neutral-600 disabled:opacity-60 dark:text-neutral-300"
+              >
+                Import everything
+              </button>
+              <button
+                type="button"
+                onClick={() => setAskHistory(false)}
+                className="text-sm font-semibold text-neutral-500 dark:text-neutral-400"
+              >
+                Keep it clean
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setAskHistory(true)}
+            className="mt-3 text-xs text-neutral-500 underline underline-offset-2 dark:text-neutral-400"
+          >
+            Import my full Kalshi history
+          </button>
+        )}
 
         <button
           type="button"

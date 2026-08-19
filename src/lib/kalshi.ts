@@ -67,6 +67,63 @@ export async function kalshiGet(
   return res.json();
 }
 
+// Walks a paginated Kalshi list to the end. Every list endpoint uses
+// the same shape: a cursor in, a cursor out, empty cursor when done.
+// The page cap is a guard against a runaway loop, not a limit anyone
+// should reach: 25 pages of 200 is five thousand records.
+export async function kalshiGetAll<T>(
+  accessKey: string,
+  privateKeyPem: string,
+  path: string,
+  listKey: string,
+  query: Record<string, string> = {},
+  // Stop early once a page's oldest record predates this ISO time.
+  // Lists come newest first, so everything after is older still.
+  stopBefore?: { field: string; iso: string }
+): Promise<T[]> {
+  const out: T[] = [];
+  let cursor = "";
+  for (let page = 0; page < 25; page++) {
+    const data = (await kalshiGet(accessKey, privateKeyPem, path, {
+      ...query,
+      limit: "200",
+      ...(cursor ? { cursor } : {}),
+    })) as Record<string, unknown>;
+    const rows = (data[listKey] ?? []) as T[];
+    out.push(...rows);
+
+    if (stopBefore && rows.length > 0) {
+      const oldest = rows[rows.length - 1] as Record<string, unknown>;
+      const t = oldest[stopBefore.field];
+      if (typeof t === "string" && t < stopBefore.iso) break;
+    }
+    cursor = typeof data.cursor === "string" ? data.cursor : "";
+    if (!cursor || rows.length === 0) break;
+  }
+  return out;
+}
+
+// One market's public details, for its human title. Public endpoint,
+// but sent signed like everything else, which Kalshi accepts.
+export async function kalshiMarket(
+  accessKey: string,
+  privateKeyPem: string,
+  ticker: string
+): Promise<{ ticker: string; title?: string; event_ticker?: string } | null> {
+  try {
+    const data = (await kalshiGet(
+      accessKey,
+      privateKeyPem,
+      `/markets/${encodeURIComponent(ticker)}`
+    )) as { market?: { ticker: string; title?: string; event_ticker?: string } };
+    return data.market ?? null;
+  } catch {
+    // A delisted or renamed market must not sink the whole sync; the
+    // bet then carries its ticker as the description.
+    return null;
+  }
+}
+
 // The connection test: the smallest authenticated read there is. A
 // wrong key id, a wrong private key, or a revoked key all fail here,
 // and nothing about the account changes.

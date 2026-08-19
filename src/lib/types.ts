@@ -8,6 +8,12 @@ export const SPORTS = [
   "Golf",
   "esports",
   "Crypto",
+  // Everything Kalshi trades that is not a sport: politics, weather,
+  // economics, culture. The owner ruled imported bets from those
+  // markets count too ("I want users to be able to track
+  // everything"), and phase 3 of the sync project splits Other into
+  // real categories with a Sports / everything filter above them.
+  "Other",
 ] as const;
 
 export type Sport = (typeof SPORTS)[number];
@@ -22,6 +28,7 @@ export const SPORT_EMOJI: Record<Sport, string> = {
   Golf: "⛳",
   esports: "\u{1F3AE}",
   Crypto: "\u{1FA99}",
+  Other: "\u{1F4CA}",
 };
 
 // A sub-category is either a plain label or a group that opens a

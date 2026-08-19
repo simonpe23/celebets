@@ -146,7 +146,24 @@ How this file works:
     August 2026. PHASE 1 SHIPPED AND VERIFIED the same day: the owner
     connected his real Kalshi account with a read-only key and the
     screen answered with his live balance, which is the connect flow,
-    the encryption, and the request signing all proven at once. Bets placed there appear in
+    the encryption, and the request signing all proven at once.
+    PHASE 2 BUILT the same day, awaiting the owner's live test: the
+    import itself. Connecting runs a first sync on its own and lands
+    on the boom message; Sync now re-reads Kalshi on demand; fills
+    become bets (buys merged per order), full sells become cash outs,
+    settlements become won or lost, titles become pick descriptions,
+    series tickers map to sports and everything unrecognised lands in
+    the new Other sport until phase 3 splits it into categories. The
+    translation is pure and covered by a 31-check money test
+    (src/lib/kalshiSync.ts); syncing twice changes nothing the second
+    time, because a changed bet is re-derived and replaced, never
+    patched. Fresh start rule enforced: only markets with activity
+    since the connect date come in, with all their fills, and the
+    full history lives behind the quiet Import-everything question.
+    KNOWN V1 EDGES, on purpose: a partial sell of a pending position
+    shows full To Collect until settlement (final profit exact); a
+    manually settled or deleted Kalshi bet is put back to Kalshi's
+    truth by the next sync. Bets placed there appear in
     Actuals automatically via their APIs (Kalshi personal API key
     with RSA request signing, docs.kalshi.com; Polymarket public
     wallet data, no key). Buys map to our buys, sells to cash outs,
