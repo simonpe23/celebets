@@ -186,9 +186,12 @@ export default function ConnectAccounts({
     return (
       <section className={`${CARD} p-4`}>
         <h2 className="text-[17px] font-bold">Connect accounts</h2>
+        {/* The same honesty rule as the detail card: no promise in the
+            present tense until importing works. */}
         <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
-          Link a platform and your bets there can arrive on their own.
+          Link a platform so your bets there can arrive on their own.
           Actuals can only read, it never touches your money.
+          Importing the bets is being built now.
         </p>
         <div className="mt-3 space-y-2">
           {status ? (
@@ -258,7 +261,7 @@ export default function ConnectAccounts({
           {[
             [
               "Actuals only reads",
-              "It imports your bets and balance. It never places, changes or cancels a trade, and there is no code in Actuals that can.",
+              "It reads your bets and your balance. It never places, changes or cancels a trade, and there is no code in Actuals that can.",
             ],
             [
               "Your key is stored locked",
@@ -318,15 +321,26 @@ export default function ConnectAccounts({
           </span>
         </div>
 
+        {/* SAYS WHAT IS TRUE TODAY, not what is planned. The first
+            version read "importing arrives in the next update" and
+            the owner asked whether that meant his bets were being
+            tracked from now on. It did not, and a user believing
+            their bets are tracked when they are not is the worst
+            thing this screen could do. Never describe the build
+            schedule here: describe what is happening to their money.
+            This copy changes the day importing actually works. */}
         <div className={`${INNER} mt-2 px-3 py-3`}>
           <span className="block text-sm font-semibold">
-            Connected {status ? `on ${shortDate(status.connected_at)}` : ""}
+            Your bets are not being imported yet
           </span>
           <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
-            Importing your bets arrives in the next update: from then
-            on, bets you place on Kalshi appear here on their own.
-            Your Kalshi history from before you connected stays out,
-            unless you ask for it when importing arrives.
+            Connecting proved Actuals can read your Kalshi account.
+            Bringing the bets in is being built now, and until it is
+            done nothing from Kalshi appears in Actuals. Nothing is
+            lost in the meantime: Kalshi keeps your record, so bets
+            you place from{" "}
+            {status ? shortDate(status.connected_at) : "the day you connected"}{" "}
+            onward can still come in when it is ready.
           </span>
         </div>
 
