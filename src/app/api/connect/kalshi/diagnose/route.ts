@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { decryptSecret } from "@/lib/connectCrypto";
-import { kalshiGet } from "@/lib/kalshi";
+import { kalshiGet, kalshiGetPages } from "@/lib/kalshi";
+
+// Walking two long lists takes a while on a heavy account.
+export const maxDuration = 300;
 import { deriveBets, type KalshiFill, type KalshiSettlement } from "@/lib/kalshiSync";
 
 // WHY THIS EXISTS. Kalshi is unreachable from the machine this app is
@@ -154,6 +157,76 @@ export async function GET() {
     translated = { error: e instanceof Error ? e.message : String(e) };
   }
 
+  // ROUND 3 (the history that will not go past June): measure how
+  // deep Kalshi's own lists actually reach. If the fills list simply
+  // ENDS in June, the older record lives only in settlements, and the
+  // import needs a second source, not a better filter.
+  const depth: Record<string, unknown> = {};
+  for (const [name, path, listKey, timeField] of [
+    ["fills", "/portfolio/fills", "fills", "created_time"],
+    ["settlements", "/portfolio/settlements", "settlements", "settled_time"],
+  ] as const) {
+    try {
+      const { rows, done } = await kalshiGetPages<Record<string, unknown>>(
+        key,
+        pem,
+        path,
+        listKey,
+        {},
+        undefined,
+        100
+      );
+      const oldest = rows[rows.length - 1];
+      depth[name] = {
+        count: rows.length,
+        reachedEnd: done,
+        oldest: oldest?.[timeField] ?? null,
+        oldestSample: name === "settlements" ? (oldest ?? null) : null,
+      };
+    } catch (e) {
+      depth[name] = {
+        error: e instanceof Error ? e.message.slice(0, 120) : String(e),
+      };
+    }
+  }
+
+  // And what max_ts actually does, in both units, against the oldest
+  // imported bet.
+  const { data: oldestBet } = await supabase
+    .from("bets")
+    .select("placed_at")
+    .eq("source", "kalshi")
+    .order("placed_at", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+  if (oldestBet?.placed_at) {
+    const boundSec = Math.floor(
+      new Date(oldestBet.placed_at as string).getTime() / 1000
+    );
+    const probeResults: Record<string, unknown> = { boundSec };
+    for (const [label, value] of [
+      ["seconds", String(boundSec)],
+      ["millis", String(boundSec * 1000)],
+    ]) {
+      try {
+        const d = (await kalshiGet(key, pem, "/portfolio/fills", {
+          limit: "5",
+          max_ts: value,
+        })) as { fills?: Record<string, unknown>[] };
+        const first = d.fills?.[0];
+        probeResults[label] = {
+          rows: d.fills?.length ?? 0,
+          firstTs: first?.ts ?? null,
+          firstTime: first?.created_time ?? null,
+        };
+      } catch (e) {
+        probeResults[label] =
+          e instanceof Error ? e.message.slice(0, 120) : String(e);
+      }
+    }
+    depth.maxTsProbe = probeResults;
+  }
+
   const { count: kalshiBets } = await supabase
     .from("bets")
     .select("id", { count: "exact", head: true })
@@ -167,5 +240,6 @@ export async function GET() {
     translationOfSampleFill: translated,
     recentFills,
     markets,
+    depth,
   });
 }
