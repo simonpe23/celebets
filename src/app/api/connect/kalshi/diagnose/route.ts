@@ -95,6 +95,49 @@ export async function GET() {
     await probe(key, pem, "/portfolio/orders", { limit: "5" }),
   ];
 
+  // ROUND 2 (after the owner's live test): the last 40 fills in
+  // compact form, because a mid-bet position close did not import and
+  // only the raw trade list can say what Kalshi called it. And the
+  // full market object for each recently touched ticker, because a
+  // parlay imported as one strange single and somewhere in that
+  // object Kalshi describes the legs.
+  let recentFills: unknown[] = [];
+  try {
+    const data = (await kalshiGet(key, pem, "/portfolio/fills", {
+      limit: "40",
+    })) as { fills?: Record<string, unknown>[] };
+    recentFills = (data.fills ?? []).map((f) => ({
+      ticker: f.ticker,
+      side: f.side,
+      action: f.action,
+      count_fp: f.count_fp ?? f.count,
+      yes: f.yes_price_dollars ?? f.yes_price,
+      no: f.no_price_dollars ?? f.no_price,
+      fee: f.fee_cost,
+      t: f.created_time,
+    }));
+  } catch (e) {
+    recentFills = [
+      { error: e instanceof Error ? e.message.slice(0, 120) : String(e) },
+    ];
+  }
+
+  const tickers = [
+    ...new Set(
+      recentFills
+        .map((f) => (f as { ticker?: string }).ticker)
+        .filter((t): t is string => Boolean(t))
+    ),
+  ].slice(0, 5);
+  const markets: Record<string, unknown> = {};
+  for (const t of tickers) {
+    try {
+      markets[t] = await kalshiGet(key, pem, `/markets/${encodeURIComponent(t)}`);
+    } catch (e) {
+      markets[t] = e instanceof Error ? e.message.slice(0, 120) : String(e);
+    }
+  }
+
   // What the translation makes of whatever the fills probe returned.
   const fillsProbe = probes[1];
   const settleProbe = probes[2];
@@ -122,5 +165,7 @@ export async function GET() {
     kalshiBetsInActuals: kalshiBets ?? 0,
     probes,
     translationOfSampleFill: translated,
+    recentFills,
+    markets,
   });
 }
