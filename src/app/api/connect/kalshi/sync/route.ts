@@ -107,6 +107,15 @@ export async function POST(request: Request) {
       fills.push(...all);
       const m = await kalshiMarket(key, pem, ticker);
       if (m) meta.set(ticker, m);
+
+      // A parlay's picks are their own markets: fetch each for its
+      // human title and its result, so the legs read like picks and
+      // settle one by one, the way the app's own parlays do.
+      for (const leg of m?.mveLegs ?? []) {
+        if (meta.has(leg.market_ticker)) continue;
+        const lm = await kalshiMarket(key, pem, leg.market_ticker);
+        if (lm) meta.set(leg.market_ticker, lm);
+      }
     }
 
     const settlements = (
@@ -124,7 +133,7 @@ export async function POST(request: Request) {
     // 4. Reconcile: replace what changed, leave what did not.
     const { data: existing } = await supabase
       .from("bets")
-      .select("id, external_id, status, stake, payout, legs (id)")
+      .select("id, external_id, status, stake, payout, legs (result)")
       .in(
         "external_id",
         drafts.map((d) => d.externalId)
@@ -139,10 +148,21 @@ export async function POST(request: Request) {
       const old = byExternal.get(draft.externalId);
       if (old) {
         // A bet with no picks is damaged, whatever its numbers say:
-        // it has no sport and no description. Always replace it.
-        const headless = ((old.legs ?? []) as unknown[]).length === 0;
+        // it has no sport and no description. Always replace it. And
+        // a parlay's leg RESULTS can change while the bet's own
+        // numbers stand still (one game decides, the combo rides on),
+        // so the legs are part of what "unchanged" means.
+        const oldLegs = ((old.legs ?? []) as { result: string }[])
+          .map((l) => l.result)
+          .sort()
+          .join(",");
+        const newLegs = draft.legs
+          .map((l) => l.result)
+          .sort()
+          .join(",");
         const same =
-          !headless &&
+          oldLegs === newLegs &&
+          draft.legs.length === ((old.legs ?? []) as unknown[]).length &&
           old.status === draft.status &&
           Number(old.stake) === draft.stake &&
           Number(old.payout ?? 0) === Number(draft.payout ?? 0);
@@ -176,17 +196,23 @@ export async function POST(request: Request) {
         );
       }
 
-      // A bet and its pick have to arrive together. Postgres gives no
-      // transaction across these calls, so a failed pick takes its
+      // A bet and its picks have to arrive together. Postgres gives
+      // no transaction across these calls, so a failed pick takes its
       // bet with it: a headless bet is worse than no bet, and one
       // reached the owner's Track page reading "0 legs".
-      const { error: legError } = await supabase.from("legs").insert({
-        bet_id: inserted.id,
-        sport: draft.sport,
-        description: draft.description,
-        odds: draft.totalOdds,
-        result: draft.cashedOut ? "pending" : draft.status,
-      });
+      //
+      // A single's leg carries the bet's odds; a parlay's legs carry
+      // none, because Kalshi prices the combo, not the picks, the
+      // same as a manual parlay without a Chance %.
+      const { error: legError } = await supabase.from("legs").insert(
+        draft.legs.map((leg) => ({
+          bet_id: inserted.id,
+          sport: leg.sport,
+          description: leg.description,
+          odds: draft.legs.length === 1 ? draft.totalOdds : null,
+          result: leg.result,
+        }))
+      );
       if (legError) {
         await supabase.from("bets").delete().eq("id", inserted.id);
         return NextResponse.json(

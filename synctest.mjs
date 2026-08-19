@@ -1,21 +1,21 @@
 // THE MONEY TEST FOR THE KALSHI IMPORT.
 //
-// WHY IT EXISTS. The first version of the import shipped against
-// Kalshi's documented field names and imported exactly nothing: the
-// real fills call their size count_fp (a string, and fractional),
-// price their contracts in dollar strings rather than cents, and
-// charge a separate fee per fill. Every fill computed to zero and was
-// silently dropped, and the app cheerfully said "up to date". The
-// owner found it by placing real bets.
+// WHY IT EXISTS. The import shipped twice against guessed shapes and
+// was wrong twice. Every case in here is either copied from the
+// owner's real account or derived from a rule his account proved:
+//   - numbers are strings, sizes fractional, prices in dollars,
+//     fees real money (his $37.80 BTC bet)
+//   - a sell names the OPPOSITE side of the position it closes and
+//     pays the held side's price (his $36.83 close, to the cent)
+//   - a parlay is a multivariate market whose mve_selected_legs are
+//     the picks (his Atletico + Pittsburgh combo)
+// If Kalshi changes shape again, this fails loudly inside `npm run
+// check` instead of importing nothing, or worse, importing wrong
+// money.
 //
-// So the translation now has a test, and it uses RECORDS COPIED FROM
-// HIS ACCOUNT rather than from documentation. If Kalshi changes a
-// field name again, this fails loudly instead of importing nothing.
-//
-// It runs inside `npm run check`. Node cannot import a .ts file whose
-// relative imports have no extension, so the sources are copied to a
-// temp folder with extensions added. That is ugly and it is confined
-// to this file.
+// Node cannot import a .ts file whose relative imports lack
+// extensions, so the sources are copied to a temp folder with
+// extensions added. Ugly, and confined to this file.
 import { mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -41,141 +41,275 @@ function eq(name, got, want) {
     );
   }
 }
+const r2 = (v) => Math.round(v * 100) / 100;
 
-// A fill in the exact shape Kalshi really answers with.
-const fill = (o) => ({
-  ticker: "KXBTC15M-26AUG191400-00",
-  order_id: "order-1",
-  side: "no",
-  action: "buy",
-  count_fp: "106.26",
-  no_price_dollars: "0.3400",
-  yes_price_dollars: "0.6600",
-  fee_cost: "1.669200",
-  created_time: "2026-08-19T17:46:14.353364Z",
-  ...o,
-});
-
-const meta = new Map([
-  [
-    "KXBTC15M-26AUG191400-00",
+// ---- CASE 1: the owner's $37.80 BTC single, held to a losing
+// settlement. Copied from his account.
+{
+  const fills = [
     {
       ticker: "KXBTC15M-26AUG191400-00",
-      title: "Bitcoin above 114,000 at 2pm",
-      event_ticker: "KXBTC15M-26AUG191400",
+      order_id: "o1",
+      side: "no",
+      action: "buy",
+      count_fp: "106.26",
+      no_price_dollars: "0.3400",
+      yes_price_dollars: "0.6600",
+      fee_cost: "1.669200",
+      created_time: "2026-08-19T17:46:14.353364Z",
     },
-  ],
-]);
-
-// 1. THE REGRESSION: the owner's own fill must become a real bet.
-{
-  const [b] = deriveBets([fill()], [], meta);
-  eq("real fill produces a bet", Boolean(b), true);
-  // 106.26 contracts at $0.34 = $36.1284, plus the $1.6692 fee.
-  eq("stake is cost plus fee", b.stake, 37.8);
-  eq("to collect is the contract count", b.buys[0].payout, 106.26);
-  eq("status", b.status, "pending");
-  eq("sport from the series", b.sport, "Crypto");
-  eq("the No side is named", b.description, "Bitcoin above 114,000 at 2pm (No)");
-}
-
-// 2. Strings and fractions must never produce NaN, which is exactly
-// how the first version failed.
-{
-  const [b] = deriveBets([fill()], [], meta);
-  eq("stake is a finite number", Number.isFinite(b.stake), true);
-  eq("odds are finite", Number.isFinite(b.totalOdds), true);
-}
-
-// 3. Settlement, won: payout is the contracts held, at $1 each.
-{
-  const [b] = deriveBets(
-    [fill()],
+  ];
+  const settlements = [
+    {
+      ticker: "KXBTC15M-26AUG191400-00",
+      market_result: "yes",
+      settled_time: "2026-08-19T18:00:10.623262Z",
+    },
+  ];
+  const meta = new Map([
     [
+      "KXBTC15M-26AUG191400-00",
       {
         ticker: "KXBTC15M-26AUG191400-00",
-        market_result: "no",
-        settled_time: "2026-08-19T18:00:00Z",
+        title: "BTC price up in next 15 mins?",
+        event_ticker: "KXBTC15M-26AUG191400",
       },
     ],
-    meta
-  );
-  eq("settled won", b.status, "won");
-  eq("payout is the contract count", b.payout, 106.26);
-  eq("profit is payout minus stake", Math.round((b.payout - b.stake) * 100) / 100, 68.46);
+  ]);
+  const [b] = deriveBets(fills, settlements, meta);
+  eq("single: stake includes the fee", b.stake, 37.8);
+  eq("single: lost with no stored payout", [b.status, b.payout], ["lost", null]);
+  eq("single: one leg, Crypto, the No side named", b.legs, [
+    {
+      sport: "Crypto",
+      description: "BTC price up in next 15 mins? (No)",
+      result: "lost",
+    },
+  ]);
 }
 
-// 4. Settlement, lost: no payout stored, the app's own convention.
-{
-  const [b] = deriveBets(
-    [fill()],
-    [
-      {
-        ticker: "KXBTC15M-26AUG191400-00",
-        market_result: "yes",
-        settled_time: "2026-08-19T18:00:00Z",
-      },
-    ],
-    meta
-  );
-  eq("settled lost", b.status, "lost");
-  eq("no payout on a plain loss", b.payout, null);
-}
-
-// 5. Selling the whole position early is a cash out, net of fees.
+// ---- CASE 2: the owner's $109 position CLOSED mid-bet for $36.83.
+// The close arrives as a sell of the OPPOSITE side. Copied from his
+// account, and his Kalshi receipt says: cost $109.00, paid out
+// $36.83, loss -$72.17.
 {
   const fills = [
-    fill(),
-    fill({
-      order_id: "order-2",
+    {
+      ticker: "KXBTC15M-26AUG191345-45",
+      order_id: "o1",
+      side: "no",
+      action: "buy",
+      count_fp: "185.64",
+      no_price_dollars: "0.5700",
+      yes_price_dollars: "0.4300",
+      fee_cost: "3.185100",
+      created_time: "2026-08-19T17:31:01.390251Z",
+    },
+    {
+      ticker: "KXBTC15M-26AUG191345-45",
+      order_id: "o2",
+      side: "yes",
       action: "sell",
+      count_fp: "185.64",
+      yes_price_dollars: "0.7900",
+      no_price_dollars: "0.2100",
+      fee_cost: "2.155900",
+      created_time: "2026-08-19T17:38:58.325019Z",
+    },
+  ];
+  // The market settled yes later; a fully closed position must not
+  // care.
+  const settlements = [
+    {
+      ticker: "KXBTC15M-26AUG191345-45",
+      market_result: "yes",
+      settled_time: "2026-08-19T17:45:10.628493Z",
+    },
+  ];
+  const drafts = deriveBets(fills, settlements, new Map());
+  eq("close: exactly one bet, not a phantom yes-side one", drafts.length, 1);
+  const [b] = drafts;
+  eq("close: stake is the receipt's cost", b.stake, 109);
+  eq("close: cash out at the receipt's payout", [b.cashedOut, b.payout], [true, 36.83]);
+  eq("close: below stake counts as lost", b.status, "lost");
+  eq("close: profit matches the receipt", r2(b.payout - b.stake), -72.17);
+  eq("close: settled when the position closed", b.settledAt, "2026-08-19T17:38:58.325019Z");
+}
+
+// ---- CASE 3: the owner's Atletico + Pittsburgh parlay, $99.99 for
+// 223.11 contracts. Copied from his account: a multivariate market
+// whose legs are their own markets.
+{
+  const fills = [
+    {
+      ticker: "KXMVECROSSCATEGORY-SHARD1-S202660E284F90DA-185E79127FA",
+      order_id: "o1",
+      side: "yes",
+      action: "buy",
+      count_fp: "223.11",
+      yes_price_dollars: "0.4310",
+      no_price_dollars: "0.5690",
+      fee_cost: "3.830190",
+      created_time: "2026-08-19T17:18:22.15555Z",
+    },
+  ];
+  const meta = new Map([
+    [
+      "KXMVECROSSCATEGORY-SHARD1-S202660E284F90DA-185E79127FA",
+      {
+        ticker: "KXMVECROSSCATEGORY-SHARD1-S202660E284F90DA-185E79127FA",
+        title: "yes Atletico,yes Pittsburgh",
+        event_ticker: "KXMVECROSSCATEGORY-SHARD1-S202660E284F90DA",
+        mveLegs: [
+          {
+            market_ticker: "KXLALIGAGAME-26AUG19ATMMCF-ATM",
+            side: "yes",
+          },
+          {
+            market_ticker: "KXMLBGAME-26AUG191235DETPIT-PIT",
+            side: "yes",
+          },
+        ],
+      },
+    ],
+    [
+      "KXLALIGAGAME-26AUG19ATMMCF-ATM",
+      {
+        ticker: "KXLALIGAGAME-26AUG19ATMMCF-ATM",
+        title: "Atletico Madrid to win",
+        result: "yes",
+      },
+    ],
+    // The MLB leg's market was fetched but has no result yet.
+    [
+      "KXMLBGAME-26AUG191235DETPIT-PIT",
+      {
+        ticker: "KXMLBGAME-26AUG191235DETPIT-PIT",
+        title: "Pittsburgh to win",
+        result: "",
+      },
+    ],
+  ]);
+  const [b] = deriveBets(fills, [], meta);
+  eq("parlay: stake is the receipt's cost", b.stake, 99.99);
+  eq("parlay: still pending", b.status, "pending");
+  eq("parlay: two legs, each its own sport and result", b.legs, [
+    { sport: "Football", description: "Atletico Madrid to win", result: "won" },
+    { sport: "Baseball", description: "Pittsburgh to win", result: "pending" },
+  ]);
+  eq(
+    "parlay: to collect is the contract count",
+    r2(b.stake * b.totalOdds),
+    223.11
+  );
+}
+
+// ---- CASE 4: a parlay leg whose own market was NOT fetched falls
+// back to the parent title's segment, never to a raw ticker.
+{
+  const meta = new Map([
+    [
+      "KXMVE-X-1",
+      {
+        ticker: "KXMVE-X-1",
+        title: "yes Cardiff,yes Tie",
+        mveLegs: [
+          { market_ticker: "KXEFLCHAMPIONSHIPGAME-1-CAR", side: "yes" },
+          { market_ticker: "KXLALIGAGAME-2-TIE", side: "yes" },
+        ],
+      },
+    ],
+  ]);
+  const fills = [
+    {
+      ticker: "KXMVE-X-1",
+      order_id: "o1",
+      side: "yes",
+      action: "buy",
+      count_fp: "100",
+      yes_price_dollars: "0.5000",
       no_price_dollars: "0.5000",
       fee_cost: "1.000000",
-      created_time: "2026-08-19T17:55:00Z",
-    }),
+      created_time: "2026-08-17T10:00:00Z",
+    },
   ];
   const [b] = deriveBets(fills, [], meta);
-  eq("cash out flagged", b.cashedOut, true);
-  // 106.26 at $0.50 = $53.13, less the $1 fee.
-  eq("cash out pays the sale, net of fee", b.payout, 52.13);
-  eq("cash out above stake counts as won", b.status, "won");
+  eq("fallback legs read from the parent title", b.legs.map((l) => l.description), [
+    "Cardiff",
+    "Tie",
+  ]);
+  eq("EFL and LALIGA both map to Football", b.legs.map((l) => l.sport), [
+    "Football",
+    "Football",
+  ]);
 }
 
-// 6. Two orders on one market merge into two buys, one bet.
+// ---- CASE 5: two orders merge into two buys, one bet; pieces of one
+// order stay one buy.
+{
+  const fill = (o) => ({
+    ticker: "KXWTAMATCH-26AUG08SABALE-SAB",
+    order_id: "o1",
+    side: "yes",
+    action: "buy",
+    count_fp: "100",
+    yes_price_dollars: "0.5000",
+    no_price_dollars: "0.5000",
+    fee_cost: "1.000000",
+    created_time: "2026-08-09T00:04:39Z",
+    ...o,
+  });
+  const [b] = deriveBets(
+    [fill(), fill({ count_fp: "50" }), fill({ order_id: "o2", count_fp: "60", created_time: "2026-08-09T01:00:00Z" })],
+    [],
+    new Map()
+  );
+  eq("order pieces merge, orders stay apart", b.buys.length, 2);
+  eq("tennis from the series", b.legs[0].sport, "Tennis");
+}
+
+// ---- CASE 6: partial close, then a winning settlement: both sales
+// and the win count, fees on both sides.
 {
   const fills = [
-    fill(),
-    fill({
-      order_id: "order-3",
-      count_fp: "50",
-      no_price_dollars: "0.4000",
+    {
+      ticker: "KXBTC15M-X-30",
+      order_id: "o1",
+      side: "no",
+      action: "buy",
+      count_fp: "100",
+      no_price_dollars: "0.5000",
+      yes_price_dollars: "0.5000",
+      fee_cost: "1.000000",
+      created_time: "2026-08-19T10:00:00Z",
+    },
+    {
+      ticker: "KXBTC15M-X-30",
+      order_id: "o2",
+      side: "yes",
+      action: "sell",
+      count_fp: "40",
+      yes_price_dollars: "0.4000",
+      no_price_dollars: "0.6000",
       fee_cost: "0.500000",
-      created_time: "2026-08-19T17:50:00Z",
-    }),
+      created_time: "2026-08-19T10:05:00Z",
+    },
   ];
-  const [b] = deriveBets(fills, [], meta);
-  eq("two buys", b.buys.length, 2);
-  eq("stake adds up", b.stake, 58.3);
-  eq("collect adds up", round2(b.stake * b.totalOdds), 156.26);
-}
-function round2(v) {
-  return Math.round(v * 100) / 100;
+  const settlements = [
+    { ticker: "KXBTC15M-X-30", market_result: "no", settled_time: "2026-08-19T10:15:00Z" },
+  ];
+  const [b] = deriveBets(fills, settlements, new Map());
+  // stake 51.00; sells 40 x 0.60 - 0.50 = 23.50; 60 held win 60.
+  eq("partial close: payout is sells plus the win", b.payout, 83.5);
+  eq("partial close: won", b.status, "won");
 }
 
-// 7. Fills of one order arriving in pieces stay one buy.
-{
-  const fills = [
-    fill({ count_fp: "50" }),
-    fill({ count_fp: "56.26", created_time: "2026-08-19T17:46:15Z" }),
-  ];
-  const [b] = deriveBets(fills, [], meta);
-  eq("one order is one buy", b.buys.length, 1);
-}
-
-// 8. Sport mapping, including the fallback the owner asked for.
-eq("crypto series", sportForTicker("KXBTC15M-26AUG191400"), "Crypto");
-eq("nfl series", sportForTicker("KXNFLGAME-25SEP04"), "American Football");
-eq("unknown lands in Other", sportForTicker("KXHIGHNY-25AUG20"), "Other");
+// ---- Sport mapping spot checks, including the ones his account
+// actually contained.
+eq("ITF is Tennis", sportForTicker("KXITFMATCH-26AUG06OETFIX"), "Tennis");
+eq("EFL cup is Football", sportForTicker("KXEFLCUPSPREAD-26AUG06BRCWAL"), "Football");
+eq("club friendly is Football", sportForTicker("KXCLUBFGAME-26AUG12MUNLEE"), "Football");
+eq("weather is Other", sportForTicker("KXHIGHNY-25AUG20"), "Other");
 
 if (failures > 0) {
   console.log(`Sync test found ${failures} problem(s).`);

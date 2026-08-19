@@ -1,37 +1,41 @@
 import { round2, round4 } from "./format";
 import type { Sport } from "./types";
 
-// TRANSLATION AT THE DOOR. Kalshi speaks in contracts, cents and
-// tickers; inside Actuals everything is a bet with a stake, a To
-// Collect, buys, and an outcome. This file is the whole translation,
-// and it is PURE: raw Kalshi records in, bet shapes out, no network
-// and no database, so the money maths is testable without a Kalshi
-// account. The route that syncs does the fetching and the writing.
+// TRANSLATION AT THE DOOR. Kalshi speaks in contracts, dollar-string
+// prices and tickers; inside Actuals everything is a bet with a
+// stake, a To Collect, buys, legs and an outcome. This file is the
+// whole translation, and it is PURE: raw Kalshi records in, bet
+// shapes out, no network and no database, so the money maths is
+// testable without a Kalshi account (synctest.mjs, wired into npm
+// run check).
 //
-// The mapping mirrors how the owner already tracked Kalshi by hand,
-// which is what the app's money model was built around:
-//   every fill that buys the held side   -> a buy (add money)
-//   selling the whole position early     -> cash out at what it paid
-//   settlement                           -> won or lost, exactly
-// One Actuals bet per market per side. Kalshi settles a market once,
-// so that is also one bet per lifecycle, and the external id keeps a
-// second import from ever double-counting it.
+// EVERY SHAPE HERE WAS READ OFF THE OWNER'S REAL ACCOUNT, 19 August
+// 2026, after two rounds of documentation-led guesses each imported
+// something wrong. The three facts that cost a live test each:
 //
-// Known v1 simplification, on purpose: a PARTIAL sell of a pending
-// position is rare and does not exist in the manual model either.
-// Until settlement such a bet shows its full To Collect; at
-// settlement the sold part's revenue joins the payout, so the final
-// profit is exact even when the ride was unusual.
+// 1. Numbers are STRINGS, sizes are fractional (count_fp "106.26"),
+//    and prices are dollar strings (no_price_dollars "0.3400"), with
+//    a real fee per fill (fee_cost) that is part of the money.
+//
+// 2. CLOSING A POSITION IS RECORDED BACKWARDS. Selling your No
+//    contracts arrives as {action: "sell", side: "yes"}: the side
+//    named is the OPPOSITE of the position being closed, and the
+//    money received is the count times the price of the side you
+//    actually held. Proven to the cent against the owner's Kalshi
+//    receipt: 185.64 contracts, no_price 0.21, fee 2.16 = $36.83.
+//
+// 3. A PARLAY IS A MULTIVARIATE MARKET (ticker KXMVE...). The market
+//    object carries mve_selected_legs, one entry per pick with its
+//    own market_ticker and side, which is how a football + baseball
+//    combo becomes a real Actuals parlay with a sport per leg
+//    instead of one strange single called "yes Atletico,yes
+//    Pittsburgh".
+//
+// The mapping mirrors how the owner already tracked Kalshi by hand:
+//   every buy of the held side        -> a buy (add money)
+//   closing the whole position early  -> cash out at what it paid
+//   settlement                        -> won or lost, exactly
 
-// THE REAL SHAPES, read off the owner's own account (19 August 2026)
-// after the first build imported nothing. Kalshi's fills do not look
-// like the documentation this was first written against:
-//   count_fp             a STRING, and fractional: "106.26" contracts
-//   no_price_dollars     a STRING in DOLLARS: "0.3400", not cents
-//   fee_cost             charged per fill, real money, separate
-// The old names are kept as fallbacks so a future account answering
-// in the older shape still works. Everything is parsed through num(),
-// because every number here arrives as text.
 export type KalshiFill = {
   ticker: string;
   order_id?: string;
@@ -41,7 +45,7 @@ export type KalshiFill = {
   count?: string | number;
   yes_price_dollars?: string | number;
   no_price_dollars?: string | number;
-  yes_price?: string | number; // cents, older shape
+  yes_price?: string | number; // cents, the older documented shape
   no_price?: string | number;
   fee_cost?: string | number;
   created_time: string;
@@ -57,12 +61,20 @@ export type KalshiMarketMeta = {
   ticker: string;
   title?: string;
   event_ticker?: string;
+  // "yes" | "no" once the market is decided, "" while open.
+  result?: string;
+  // Present on a multivariate (parlay) market: the picks inside it.
+  mveLegs?: { market_ticker: string; side: string }[];
+};
+
+export type LegDraft = {
+  sport: Sport;
+  description: string;
+  result: "pending" | "won" | "lost";
 };
 
 export type BetDraft = {
   externalId: string;
-  sport: Sport;
-  description: string;
   stake: number;
   totalOdds: number;
   status: "pending" | "won" | "lost";
@@ -70,19 +82,17 @@ export type BetDraft = {
   settledAt: string | null;
   payout: number | null;
   cashedOut: boolean;
-  // Every buy, first included, matching the app's invariant: a bet's
-  // stake is the sum of its buys and To Collect the sum of their
-  // payouts.
+  legs: LegDraft[];
+  // Every buy, first included: a bet's stake is the sum of its buys
+  // and To Collect the sum of their payouts, the app's invariant.
   buys: { amount: number; payout: number; createdAt: string }[];
 };
 
-// Which sport a Kalshi market belongs to, from the ticker's series
-// prefix (the part before the first dash, e.g. KXNFLGAME). Checked
-// with and without the KX prefix, longest match first. Anything not
-// recognised lands in Other: the owner ruled that non-sport markets
-// import too ("I want users to be able to track everything"), and
-// phase 3 refines Other into proper categories with the Sports /
-// everything filter above them.
+// Which sport a market belongs to, from the ticker's series prefix
+// (the part before the first dash, e.g. KXNFLGAME), checked with and
+// without the KX prefix, longest match first. Anything unrecognised
+// lands in Other: the owner ruled that non-sport markets import too,
+// and phase 3 refines Other into categories.
 const SERIES_SPORTS: [string, Sport][] = [
   ["NFL", "American Football"],
   ["NCAAF", "American Football"],
@@ -96,12 +106,14 @@ const SERIES_SPORTS: [string, Sport][] = [
   ["STANLEYCUP", "Ice Hockey"],
   ["ATP", "Tennis"],
   ["WTA", "Tennis"],
+  ["ITF", "Tennis"],
   ["TENNIS", "Tennis"],
   ["PGA", "Golf"],
   ["GOLF", "Golf"],
   ["MASTERS", "Golf"],
   ["RYDERCUP", "Golf"],
   ["EPL", "Football"],
+  ["EFL", "Football"],
   ["UCL", "Football"],
   ["UEL", "Football"],
   ["LALIGA", "Football"],
@@ -111,6 +123,7 @@ const SERIES_SPORTS: [string, Sport][] = [
   ["MLS", "Football"],
   ["FIFA", "Football"],
   ["WORLDCUP", "Football"],
+  ["CLUBF", "Football"],
   ["CS2", "esports"],
   ["CSGO", "esports"],
   ["LOL", "esports"],
@@ -146,57 +159,118 @@ function num(v: unknown): number {
   return Number.isFinite(n) ? n : 0;
 }
 
-// Contracts on this fill. Fractional: Kalshi sells parts of a
-// contract, so this is not an integer.
-function contracts(f: KalshiFill): number {
-  return num(f.count_fp ?? f.count);
-}
-
-// What one contract cost or paid, in dollars.
-function priceDollars(f: KalshiFill): number {
-  const dollars = f.side === "yes" ? f.yes_price_dollars : f.no_price_dollars;
+function priceOf(f: KalshiFill, side: "yes" | "no"): number {
+  const dollars = side === "yes" ? f.yes_price_dollars : f.no_price_dollars;
   if (dollars !== undefined && dollars !== null) return num(dollars);
-  // The older documented shape: cents.
-  return num(f.side === "yes" ? f.yes_price : f.no_price) / 100;
+  return num(side === "yes" ? f.yes_price : f.no_price) / 100;
 }
 
-// Kalshi's fee on this fill. It is money that left the account, so a
-// buy's stake includes it and a sell's proceeds are net of it. Without
-// this the app would report a profit the user never made.
-function fee(f: KalshiFill): number {
-  return num(f.fee_cost);
+// One fill, translated to the position it belongs to. Fact 2 above:
+// a sell names the opposite side, and pays the price of the side
+// actually held.
+type Trade = {
+  ticker: string;
+  positionSide: "yes" | "no";
+  isBuy: boolean;
+  count: number;
+  money: number; // count times the held side's price, before fees
+  fee: number;
+  time: string;
+  orderKey: string;
+};
+
+function toTrade(f: KalshiFill): Trade | null {
+  if (f.side !== "yes" && f.side !== "no") return null;
+  if (f.action !== "buy" && f.action !== "sell") return null;
+  const isBuy = f.action === "buy";
+  const positionSide = isBuy ? f.side : f.side === "yes" ? "no" : "yes";
+  const count = num(f.count_fp ?? f.count);
+  if (count <= 0) return null;
+  return {
+    ticker: f.ticker,
+    positionSide,
+    isBuy,
+    count,
+    money: count * priceOf(f, positionSide),
+    fee: num(f.fee_cost),
+    time: f.created_time,
+    orderKey: f.order_id ?? f.created_time,
+  };
 }
 
-// What the fill cost (buy) or returned (sell), before fees.
-function gross(f: KalshiFill): number {
-  return contracts(f) * priceDollars(f);
-}
-
-// Fills merged per order: one market order can fill in many small
-// pieces seconds apart, and a row of near-identical micro-buys would
-// pollute the odds groups where every buy counts as its own pick.
+// Buys merged per order: one market order can fill in many pieces
+// seconds apart, and a row of near-identical micro-buys would pollute
+// the odds groups where every buy counts as its own pick.
 function mergeBuys(
-  fills: KalshiFill[]
+  buys: Trade[]
 ): { amount: number; payout: number; createdAt: string }[] {
-  const byOrder = new Map<string, KalshiFill[]>();
-  for (const f of fills) {
-    const key = f.order_id ?? `${f.created_time}`;
-    byOrder.set(key, [...(byOrder.get(key) ?? []), f]);
+  const byOrder = new Map<string, Trade[]>();
+  for (const t of buys) {
+    byOrder.set(t.orderKey, [...(byOrder.get(t.orderKey) ?? []), t]);
   }
   return [...byOrder.values()]
     .map((group) => ({
-      // The stake is what left the account: the contracts' cost plus
-      // Kalshi's fee.
-      amount: round2(group.reduce((s, f) => s + gross(f) + fee(f), 0)),
-      // Every contract pays exactly $1 if it wins, so the contract
-      // count IS the To Collect.
-      payout: round2(group.reduce((s, f) => s + contracts(f), 0)),
-      createdAt: group
-        .map((f) => f.created_time)
-        .sort()[0],
+      // The stake is what left the account: contracts plus the fee.
+      amount: round2(group.reduce((s, t) => s + t.money + t.fee, 0)),
+      // A winning contract pays exactly $1, so the count IS the To
+      // Collect.
+      payout: round2(group.reduce((s, t) => s + t.count, 0)),
+      createdAt: group.map((t) => t.time).sort()[0],
     }))
     .filter((b) => b.amount > 0 && b.payout > 0)
     .sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+}
+
+// The picks inside a bet. A multivariate market becomes a real
+// parlay: one leg per selected market, each with its own sport, its
+// description from that market's own title when it was fetched, and
+// its own result the moment its game decides, which is how the app's
+// per-pick records work. Everything else is a single.
+function legsFor(
+  ticker: string,
+  side: "yes" | "no",
+  status: BetDraft["status"],
+  cashedOut: boolean,
+  meta: Map<string, KalshiMarketMeta>
+): LegDraft[] {
+  const m = meta.get(ticker);
+  const mve = m?.mveLegs ?? [];
+
+  if (side === "yes" && mve.length >= 2) {
+    // The parent title reads "yes Atletico,yes Pittsburgh": the
+    // fallback description when a leg's own market was not fetched.
+    const segments = (m?.title ?? "").split(",");
+    return mve.map((leg, i) => {
+      const legMeta = meta.get(leg.market_ticker);
+      const fallback = (segments[i] ?? leg.market_ticker)
+        .replace(/^\s*(yes|no)\s+/i, "")
+        .trim();
+      const base = legMeta?.title?.trim() || fallback || leg.market_ticker;
+      const wantsNo = leg.side.toLowerCase() === "no";
+      const result =
+        legMeta?.result === "yes" || legMeta?.result === "no"
+          ? legMeta.result === leg.side.toLowerCase()
+            ? "won"
+            : "lost"
+          : "pending";
+      return {
+        sport: sportForTicker(leg.market_ticker),
+        description: wantsNo ? `${base} (No)` : base,
+        result,
+      };
+    });
+  }
+
+  const title = m?.title?.trim() || ticker;
+  return [
+    {
+      sport: sportForTicker(m?.event_ticker || ticker),
+      description: side === "no" ? `${title} (No)` : title,
+      // A cashed out bet's picks stay pending and inherit the cash
+      // out outcome through effectiveResult, the app's own rule.
+      result: cashedOut ? "pending" : status,
+    },
+  ];
 }
 
 export function deriveBets(
@@ -205,44 +279,39 @@ export function deriveBets(
   meta: Map<string, KalshiMarketMeta>
 ): BetDraft[] {
   const settled = new Map(settlements.map((s) => [s.ticker, s]));
-  const byMarket = new Map<string, KalshiFill[]>();
+  const byPosition = new Map<string, Trade[]>();
   for (const f of fills) {
-    if (f.side !== "yes" && f.side !== "no") continue;
-    const key = `${f.ticker}:${f.side}`;
-    byMarket.set(key, [...(byMarket.get(key) ?? []), f]);
+    const t = toTrade(f);
+    if (!t) continue;
+    const key = `${t.ticker}:${t.positionSide}`;
+    byPosition.set(key, [...(byPosition.get(key) ?? []), t]);
   }
 
   const out: BetDraft[] = [];
-  for (const [key, marketFills] of byMarket) {
-    const [ticker, side] = [
-      key.slice(0, key.lastIndexOf(":")),
-      key.slice(key.lastIndexOf(":") + 1) as "yes" | "no",
-    ];
+  for (const [key, trades] of byPosition) {
+    const ticker = key.slice(0, key.lastIndexOf(":"));
+    const side = key.slice(key.lastIndexOf(":") + 1) as "yes" | "no";
 
-    const buys = mergeBuys(marketFills.filter((f) => f.action === "buy"));
+    const buys = mergeBuys(trades.filter((t) => t.isBuy));
     if (buys.length === 0) continue;
 
-    const sellFills = marketFills.filter((f) => f.action === "sell");
+    const sells = trades.filter((t) => !t.isBuy);
     // Net of fees, for the same reason a buy's stake includes them.
     const sellRevenue = round2(
-      sellFills.reduce((s, f) => s + gross(f) - fee(f), 0)
+      sells.reduce((s, t) => s + t.money - t.fee, 0)
     );
-    const boughtCount = marketFills
-      .filter((f) => f.action === "buy")
-      .reduce((s, f) => s + contracts(f), 0);
-    const soldCount = sellFills.reduce((s, f) => s + contracts(f), 0);
+    const boughtCount = trades
+      .filter((t) => t.isBuy)
+      .reduce((s, t) => s + t.count, 0);
+    const soldCount = sells.reduce((s, t) => s + t.count, 0);
 
     const stake = round2(buys.reduce((s, b) => s + b.amount, 0));
     const toCollect = round2(buys.reduce((s, b) => s + b.payout, 0));
     if (stake <= 0 || toCollect <= 0) continue;
 
-    const m = meta.get(ticker);
-    const title = m?.title?.trim() || ticker;
-    const description = side === "no" ? `${title} (No)` : title;
-
     const settlement = settled.get(ticker);
-    const lastSell = sellFills
-      .map((f) => f.created_time)
+    const lastSell = sells
+      .map((t) => t.time)
       .sort()
       .at(-1);
 
@@ -251,44 +320,44 @@ export function deriveBets(
     let settledAt: string | null = null;
     let cashedOut = false;
 
-    if (settlement) {
-      const won =
-        (settlement.market_result ?? "").toLowerCase() === side;
-      const heldAtSettle = Math.max(0, boughtCount - soldCount);
-      // Computed from the fills, NOT from the settlement's own
-      // revenue field. On the owner's account that field read 0 on a
-      // market he had traded both ways, and its unit is undocumented;
-      // contracts held times the $1 a winning contract pays is
-      // determined entirely by data we can see and check.
-      const settleRevenue = won ? heldAtSettle : 0;
-      status = won ? "won" : "lost";
-      // A plain lost bet stores NO payout, matching the app's own
-      // convention ("a plain lost bet has no payout"), and some
-      // schema checks require a stored payout to be above zero.
-      const total = round2(settleRevenue + sellRevenue);
-      payout = total > 0 ? total : null;
-      settledAt = settlement.settled_time ?? lastSell ?? null;
-    } else if (soldCount >= boughtCount) {
-      // The whole position was sold before the market decided: the
-      // app's cash out, to the cent. At or above stake counts as won,
-      // below as lost, profit is always payout minus stake.
+    // Closing the whole position first, BEFORE settlement: a market
+    // that later settles adds nothing to a position of zero, and in
+    // the app's language leaving early is a cash out whatever the
+    // market did afterwards. At or above stake counts as won, below
+    // as lost, profit is always payout minus stake.
+    if (soldCount >= boughtCount) {
       cashedOut = true;
       payout = sellRevenue;
       status = sellRevenue >= stake ? "won" : "lost";
       settledAt = lastSell ?? null;
+    } else if (settlement) {
+      const won = (settlement.market_result ?? "").toLowerCase() === side;
+      const heldAtSettle = Math.max(0, boughtCount - soldCount);
+      // Contracts held times the $1 a winner pays, plus whatever
+      // partial sells brought in along the way. The settlement's own
+      // revenue field is not used: it read 0 on a market the owner
+      // had traded, and its unit is undocumented.
+      const total = round2((won ? heldAtSettle : 0) + sellRevenue);
+      status = won ? "won" : "lost";
+      // A plain lost bet stores NO payout, the app's own convention.
+      payout = total > 0 ? total : null;
+      settledAt = settlement.settled_time ?? lastSell ?? null;
     }
 
     out.push({
       externalId: `kalshi:${ticker}:${side}`,
-      sport: sportForTicker(m?.event_ticker || ticker),
-      description,
       stake,
-      totalOdds: round4(toCollect / stake),
+      // The odds checks in the database demand > 1.00. Fees can push
+      // a near-certain market's real ratio to 1.00 or below; the
+      // clamp keeps the bet importable, and the settled money (stake
+      // and payout) stays exact regardless.
+      totalOdds: Math.max(1.01, round4(toCollect / stake)),
       status,
       placedAt: buys[0].createdAt,
       settledAt,
       payout,
       cashedOut,
+      legs: legsFor(ticker, side, status, cashedOut, meta),
       buys,
     });
   }

@@ -133,20 +133,52 @@ export async function kalshiOpenTickers(
   }
 }
 
-// One market's public details, for its human title. Public endpoint,
-// but sent signed like everything else, which Kalshi accepts.
+// One market's details: its human title, its result once decided,
+// and, on a multivariate (parlay) market, the picks inside it.
+// Public endpoint, but sent signed like everything else, which
+// Kalshi accepts.
+export type KalshiMarketDetails = {
+  ticker: string;
+  title?: string;
+  event_ticker?: string;
+  result?: string;
+  mveLegs?: { market_ticker: string; side: string }[];
+};
+
 export async function kalshiMarket(
   accessKey: string,
   privateKeyPem: string,
   ticker: string
-): Promise<{ ticker: string; title?: string; event_ticker?: string } | null> {
+): Promise<KalshiMarketDetails | null> {
   try {
     const data = (await kalshiGet(
       accessKey,
       privateKeyPem,
       `/markets/${encodeURIComponent(ticker)}`
-    )) as { market?: { ticker: string; title?: string; event_ticker?: string } };
-    return data.market ?? null;
+    )) as {
+      market?: {
+        ticker: string;
+        title?: string;
+        event_ticker?: string;
+        result?: string;
+        mve_selected_legs?: { market_ticker?: string; side?: string }[];
+      };
+    };
+    const m = data.market;
+    if (!m) return null;
+    const legs = (m.mve_selected_legs ?? [])
+      .map((l) => ({
+        market_ticker: String(l.market_ticker ?? ""),
+        side: String(l.side ?? "yes"),
+      }))
+      .filter((l) => l.market_ticker !== "");
+    return {
+      ticker: m.ticker,
+      title: m.title,
+      event_ticker: m.event_ticker,
+      result: m.result,
+      ...(legs.length > 0 ? { mveLegs: legs } : {}),
+    };
   } catch {
     // A delisted or renamed market must not sink the whole sync; the
     // bet then carries its ticker as the description.
