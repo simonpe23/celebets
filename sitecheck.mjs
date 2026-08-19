@@ -24,7 +24,11 @@ const ARG = process.argv[2] ?? "3105";
 const BASE = ARG.startsWith("http") ? ARG.replace(/\/$/, "") : `http://localhost:${ARG}`;
 
 // Everything a logged out visitor can reach.
-const PUBLIC = ["/", "/login", "/signup", "/forgot-password", "/terms", "/privacy", "/about"];
+const PUBLIC = ["/", "/login", "/terms", "/privacy", "/about"];
+// The password era's addresses. They must land on /login (redirects in
+// next.config.ts), because old bookmarks and old emailed links still
+// point at them.
+const OLD_AUTH = ["/signup", "/forgot-password", "/reset-password"];
 // These need a session. They must REDIRECT, not error: that is the
 // login gate working, and a 500 here would be a real bug.
 const GATED = ["/app", "/stats", "/settings", "/recommendations", "/insights", "/transactions"];
@@ -39,6 +43,7 @@ const PREVIEW = [
   "/preview/settings",
   "/preview/research",
   "/preview/insights",
+  "/preview/auth",
 ];
 
 // Anything matching this must not appear in rendered text or in a URL.
@@ -110,7 +115,7 @@ for (const theme of ["light", "dark"]) {
     colorScheme: theme,
   });
 
-  for (const path of pass.paths ?? [...RENDERED, ...GATED]) {
+  for (const path of pass.paths ?? [...RENDERED, ...GATED, ...OLD_AUTH]) {
     const page = await ctx.newPage();
     const errors = [];
     const failedRequests = [];
@@ -150,6 +155,9 @@ for (const theme of ["light", "dark"]) {
     if (RENDERED.includes(path)) {
       if (status === 404) note(where, "404, this page should render");
       if (landed !== path) note(where, `redirected to ${landed}, should have stayed`);
+    } else if (OLD_AUTH.includes(path)) {
+      if (landed !== "/login")
+        note(where, `an old auth address landed on ${landed}, should be /login`);
     } else if (landed === path) {
       note(where, "a logged out visitor was NOT redirected, the login gate is open");
     }
@@ -228,7 +236,7 @@ await browser.close();
 stopServer();
 
 if (problems.length === 0) {
-  console.log(`Site check passed. ${(RENDERED.length + GATED.length + PUBLIC.length) * 2} page loads, nothing broken.`);
+  console.log(`Site check passed. ${(RENDERED.length + GATED.length + OLD_AUTH.length + PUBLIC.length) * 2} page loads, nothing broken.`);
 } else {
   console.log(`Site check found ${problems.length} problem(s):\n`);
   for (const p of problems) console.log("  " + p + "\n");

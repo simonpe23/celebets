@@ -33,8 +33,21 @@ How this file works:
 ## NOW (small, fits the current app, high value per effort)
 
 
-26. THE AUTH FLOW REDESIGN. Under active discussion, August 2026, not
-    approved for building. The owner: "we have to clarify 2 things:
+26. THE AUTH FLOW REDESIGN. BUILT, August 2026, awaiting the owner's
+    deploy approval. One auth page at /login, no passwords anywhere:
+    Continue with Google, or type an email and a six-digit code
+    arrives. The code entry swaps in on the same page and the sixth
+    digit submits itself (his ask: "auto-submit as soon as the 6th
+    digit lands... i want that"). Start Tracking opens it saying
+    "Create your account", Log in says "Welcome back". The landing
+    hero and bottom card are one button each, per his five points.
+    /signup, /forgot-password and /reset-password are deleted and
+    redirect to /login. Remaining: deploy, then the owner pastes two
+    Supabase email templates so the emails carry a code, then a live
+    test to his Gmail.
+
+    The discussion record, kept below:
+    The owner: "we have to clarify 2 things:
     the sign up flow, the log in flow." One entrance, two flows.
 
     THE PROBLEM, in his words: five places to click on the landing
@@ -81,16 +94,11 @@ How this file works:
     When built, fold in idea 16 below: the account screen becomes the
     panel over the landing.
 
-16. Login and sign up as drop-down panels on the landing page, instead
-    of their own pages. Tapping Login or Sign up opens a panel over
-    the landing page holding the email and password fields, the
-    Google button, and the Forgot password link. Tap outside or press
-    Escape to close. Decided by the owner: both login and sign up get
-    a panel, the panel may cover most of a phone screen, the /login
-    and /signup pages stay alive behind the scenes so emailed links
-    and bookmarks keep working, and logging out lands on the landing
-    page instead of the login page. Build it together with the
-    landing page rebuild so the panel matches that design, not twice.
+16. CLOSED, August 2026, overruled by idea 26. Login and sign up as
+    drop-down panels on the landing page. The owner later chose a
+    separate auth page instead ("login = separate page"), and the
+    panels' contents (password fields, Forgot password) no longer
+    exist. Kept for the record only.
 
 ## SOON (after the NOW items)
 

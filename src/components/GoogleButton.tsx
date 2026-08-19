@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 // The button only appears once NEXT_PUBLIC_GOOGLE_ENABLED is set to
 // "true" in Vercel, which happens after the Google credentials are in
 // place in Supabase. Until then it renders nothing.
-export default function GoogleButton({ large = false }: { large?: boolean }) {
+export default function GoogleButton() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -36,9 +36,7 @@ export default function GoogleButton({ large = false }: { large?: boolean }) {
         type="button"
         onClick={signIn}
         disabled={loading}
-        className={`flex w-full items-center justify-center gap-3 rounded-xl border border-neutral-300 bg-white font-semibold text-neutral-800 disabled:opacity-60 dark:border-white/15 dark:bg-[#161D38] dark:text-neutral-100 ${
-          large ? "h-14 text-base" : "h-12 text-sm"
-        }`}
+        className="flex h-12 w-full items-center justify-center gap-3 rounded-xl border border-neutral-300 bg-white text-sm font-semibold text-neutral-800 disabled:opacity-60 dark:border-white/15 dark:bg-[#161D38] dark:text-neutral-100"
       >
         <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
           <path

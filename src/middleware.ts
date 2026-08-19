@@ -66,21 +66,20 @@ export async function middleware(request: NextRequest) {
 
   if (isPublicPage) return supabaseResponse;
 
-  // Pages reachable without being logged in.
+  // Pages reachable without being logged in. /signup, /forgot-password
+  // and /reset-password used to be here; they are redirects to /login
+  // now (next.config.ts) and never reach the middleware.
   const isAuthPage =
     pathname.startsWith("/login") ||
-    pathname.startsWith("/signup") ||
-    pathname.startsWith("/forgot-password") ||
     // Local design previews only. Never reachable in production.
     (process.env.NODE_ENV === "development" &&
       pathname.startsWith("/preview"));
 
-  // The reset page needs the temporary session from the emailed link,
-  // and /auth routes handle those links, so neither is ever redirected.
-  const isResetPage =
-    pathname.startsWith("/reset-password") || pathname.startsWith("/auth/");
+  // The /auth routes turn emailed links into sessions, so they are
+  // never redirected.
+  const isAuthRoute = pathname.startsWith("/auth/");
 
-  if (!user && !isAuthPage && !isResetPage) {
+  if (!user && !isAuthPage && !isAuthRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);

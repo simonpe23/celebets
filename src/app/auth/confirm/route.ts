@@ -22,5 +22,5 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  return NextResponse.redirect(new URL("/forgot-password?expired=1", origin));
+  return NextResponse.redirect(new URL("/login?expired=1", origin));
 }

@@ -1,119 +1,43 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
-import Disclaimer from "@/components/Disclaimer";
-import GoogleButton from "@/components/GoogleButton";
+import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+import AuthCard from "@/components/AuthCard";
 import BackHome from "@/components/BackHome";
-import Wordmark from "@/components/Wordmark";
+import Disclaimer from "@/components/Disclaimer";
 
+// THE ONLY AUTH PAGE. /signup, /forgot-password and /reset-password
+// all redirect here (next.config.ts): there are no passwords any more,
+// so there is nothing to forget or reset. Both landing doors open this
+// page and only the greeting differs. See AuthCard for the flow.
+function LoginInner() {
+  const params = useSearchParams();
+
+  // Old emailed links whose token has already been spent land here via
+  // /auth/confirm. One plain line, then the normal flow: a fresh code
+  // fixes it.
+  const notice =
+    params.get("expired") === "1"
+      ? "That link has expired. Log in below and we will send a fresh code."
+      : params.get("error") === "signin"
+        ? "Google sign in did not complete. Try again."
+        : null;
+
+  return (
+    <AuthCard firstVisit={params.get("new") === "1"} notice={notice} />
+  );
+}
+
+// useSearchParams needs a Suspense boundary or the whole route opts out
+// of static rendering, which the build fails on.
 export default function LoginPage() {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-      return;
-    }
-
-    router.push("/app");
-    router.refresh();
-  }
-
   return (
     <main className="relative flex min-h-dvh flex-col justify-center px-6 py-12">
       <BackHome />
       <div className="mx-auto w-full max-w-sm">
-        <h1 className="flex justify-center text-3xl">
-          <Wordmark className="text-3xl" />
-        </h1>
-        <p className="mt-2 text-center text-sm text-neutral-500 dark:text-neutral-400">
-          Log in to your account
-        </p>
-
-        <div className="mt-8">
-          <GoogleButton />
-        </div>
-
-        <form onSubmit={handleSubmit} className="mt-4 space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-semibold">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              inputMode="email"
-              autoComplete="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-brand-mark focus:ring-2 focus:ring-brand-mark/30 dark:border-white/15 dark:bg-[#161D38] dark:text-neutral-100"
-            />
-          </div>
-
-          <div>
-            <div className="flex items-baseline justify-between">
-              <label htmlFor="password" className="block text-sm font-semibold">
-                Password
-              </label>
-              <Link
-                href="/forgot-password"
-                className="text-sm font-semibold text-brand-mark"
-              >
-                Forgot password?
-              </Link>
-            </div>
-            <input
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-brand-mark focus:ring-2 focus:ring-brand-mark/30 dark:border-white/15 dark:bg-[#161D38] dark:text-neutral-100"
-            />
-          </div>
-
-          {error && (
-            <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
-              {error}
-            </p>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="h-12 w-full rounded-xl bg-brand-top text-base font-semibold text-white active:bg-brand-bottom disabled:opacity-60"
-          >
-            {loading ? "Logging in..." : "Log in"}
-          </button>
-        </form>
-
-        <p className="mt-6 text-center text-sm text-neutral-500 dark:text-neutral-400">
-          No account yet?{" "}
-          <Link href="/signup" className="font-semibold text-brand-mark">
-            Sign up
-          </Link>
-        </p>
-
+        <Suspense>
+          <LoginInner />
+        </Suspense>
         <Disclaimer />
       </div>
     </main>

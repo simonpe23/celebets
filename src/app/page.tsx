@@ -188,7 +188,7 @@ export default function LandingPage() {
               Log in
             </Link>
             <Link
-              href="/signup"
+              href="/login?new=1"
               className="whitespace-nowrap rounded-xl bg-gradient-to-b from-brand-top to-brand-bottom px-5 py-2.5 text-[15px] font-bold text-white shadow-lg shadow-brand-top/25 transition-opacity hover:opacity-95"
             >
               Start Tracking
@@ -231,6 +231,20 @@ export default function LandingPage() {
                 <div className="mt-8 flex justify-center lg:justify-start">
                   <StartTracking label="Start Tracking. It's Free" />
                 </div>
+
+                {/* The other door, in words, right under the primary
+                    one. The owner's spec for the hero, August 2026:
+                    "Start Tracking. It's Free / Already have an
+                    account? Log in / No Google button on the hero." */}
+                <p className="mt-4 text-center text-[15px] text-neutral-500 dark:text-neutral-400 lg:text-left">
+                  Already have an account?{" "}
+                  <Link
+                    href="/login"
+                    className="font-semibold text-brand-top dark:text-brand-mark"
+                  >
+                    Log in
+                  </Link>
+                </p>
 
                 <div className="mt-5 flex justify-center lg:justify-start">
                   <TrustRow items={TRUST} />
