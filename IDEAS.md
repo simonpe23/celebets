@@ -164,7 +164,8 @@ How this file works:
     patched. Fresh start rule enforced: only markets with activity
     since the connect date come in, with all their fills, and the
     full history lives behind the quiet Import-everything question.
-    PHASE 4 BUILT the same day, awaiting the owner's live check:
+    PHASE 4 SHIPPED AND VERIFIED the same day, the owner saw the
+    line on his own Track page:
     opening Track syncs Kalshi by itself. The throttle (3 minutes)
     lives in the sync route on the server so open tabs cannot hammer
     Kalshi, manual Sync now always goes through, background failures
