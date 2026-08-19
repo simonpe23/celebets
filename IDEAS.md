@@ -223,6 +223,21 @@ How this file works:
     card per one or two steps, a Next button as each is completed,
     never seven numbered steps on one screen. The COPY itself is his
     and stays; the container changes. Not built yet.
+    THE 59-BET IMPORT, investigated 19 August: not categories at all
+    (unknown categories import fine, as Other). The sync capped
+    itself at 60 markets per run because it fetched fills one market
+    at a time; fixed the same day with one paginated fills walk and
+    batched market lookups, so a full history imports whole.
+    THE CATEGORY FINDING, for phase 3: Kalshi's taxonomy is two
+    levels. CATEGORIES are about a dozen and stable (Politics,
+    Economics, Financials, Climate and Weather, Entertainment,
+    Science and Technology, World, Sports, Crypto). SERIES are
+    thousands and endless (a Wisconsin senate race is a series inside
+    Politics). The owner's fear of "always a new category we don't
+    have" applies to series, not categories, so mirroring the
+    category level exactly is durable, with Other as the safety net.
+    Phase 3 should also switch non-sport mapping from ticker-prefix
+    guessing to Kalshi's own series category field, which is exact.
     Open questions, flagged for the filter phase: does the existing
     Crypto sport move under Not Sports? Long term the owner wants
     BOTH: sync for Kalshi/Polymarket, screenshots for every other
