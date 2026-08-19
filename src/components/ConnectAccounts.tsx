@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { BTN, CARD, INNER } from "@/lib/ui";
 import { formatMoney } from "@/lib/format";
+import { IMPORTING_LIVE } from "@/lib/sync";
 
 // Connecting a betting platform, phase 1 of the sync project (August
 // 2026): Kalshi, by the owner's ruling, with the official personal
@@ -187,11 +188,12 @@ export default function ConnectAccounts({
       <section className={`${CARD} p-4`}>
         <h2 className="text-[17px] font-bold">Connect accounts</h2>
         {/* The same honesty rule as the detail card: no promise in the
-            present tense until importing works. */}
+            present tense until importing works. IMPORTING_LIVE flips
+            all of it at once. */}
         <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
-          Link a platform so your bets there can arrive on their own.
-          Actuals can only read, it never touches your money.
-          Importing the bets is being built now.
+          {IMPORTING_LIVE
+            ? "Link a platform and your bets there arrive on their own. Actuals can only read, it never touches your money."
+            : "Link a platform so your bets there can arrive on their own. Actuals can only read, it never touches your money. Importing the bets is being built now."}
         </p>
         <div className="mt-3 space-y-2">
           {status ? (
@@ -331,16 +333,34 @@ export default function ConnectAccounts({
             This copy changes the day importing actually works. */}
         <div className={`${INNER} mt-2 px-3 py-3`}>
           <span className="block text-sm font-semibold">
-            Your bets are not being imported yet
+            {IMPORTING_LIVE
+              ? `Connected ${status ? `on ${shortDate(status.connected_at)}` : ""}`
+              : "Your bets are not being imported yet"}
           </span>
           <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
-            Connecting proved Actuals can read your Kalshi account.
-            Bringing the bets in is being built now, and until it is
-            done nothing from Kalshi appears in Actuals. Nothing is
-            lost in the meantime: Kalshi keeps your record, so bets
-            you place from{" "}
-            {status ? shortDate(status.connected_at) : "the day you connected"}{" "}
-            onward can still come in when it is ready.
+            {IMPORTING_LIVE ? (
+              <>
+                Bets you place on Kalshi from{" "}
+                {status
+                  ? shortDate(status.connected_at)
+                  : "the day you connected"}{" "}
+                onward appear in Actuals on their own. Your Kalshi
+                history from before that stays out unless you ask for
+                it.
+              </>
+            ) : (
+              <>
+                Connecting proved Actuals can read your Kalshi account.
+                Bringing the bets in is being built now, and until it
+                is done nothing from Kalshi appears in Actuals. Nothing
+                is lost in the meantime: Kalshi keeps your record, so
+                bets you place from{" "}
+                {status
+                  ? shortDate(status.connected_at)
+                  : "the day you connected"}{" "}
+                onward can still come in when it is ready.
+              </>
+            )}
           </span>
         </div>
 
