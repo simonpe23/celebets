@@ -147,8 +147,12 @@ How this file works:
     connected his real Kalshi account with a read-only key and the
     screen answered with his live balance, which is the connect flow,
     the encryption, and the request signing all proven at once.
-    PHASE 2 BUILT the same day, awaiting the owner's live test: the
-    import itself. Connecting runs a first sync on its own and lands
+    PHASE 2 SHIPPED AND VERIFIED LIVE the same day, after three
+    rounds against his real account (field names, the backwards sell
+    recording, multivariate parlays): his singles, his parlay with a
+    Football and a Baseball leg, and his mid-bet close all read
+    correctly on Track, to the cent of his Kalshi receipts. The
+    import itself: Connecting runs a first sync on its own and lands
     on the boom message; Sync now re-reads Kalshi on demand; fills
     become bets (buys merged per order), full sells become cash outs,
     settlements become won or lost, titles become pick descriptions,
