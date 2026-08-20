@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { BTN, CARD, INNER } from "@/lib/ui";
 import { formatMoney } from "@/lib/format";
-import { IMPORTING_LIVE } from "@/lib/sync";
+import { IMPORTING_LIVE, KALSHI_HISTORY_FROM } from "@/lib/sync";
 
 // Connecting a betting platform, phase 1 of the sync project (August
 // 2026): Kalshi, by the owner's ruling, with the official personal
@@ -462,8 +462,8 @@ export default function ConnectAccounts({
                 {status
                   ? shortDate(status.connected_at)
                   : "the day you connected"}{" "}
-                onward appear on their own; your Kalshi history from
-                before that stays out unless you ask for it.
+                onward appear on their own. Earlier bets stay out
+                unless you ask for them, back to {KALSHI_HISTORY_FROM}.
               </>
             ) : (
               <>
@@ -506,19 +506,22 @@ export default function ConnectAccounts({
           </button>
         </div>
 
-        {/* The full history import, quiet and behind a question, per
-            the owner: fresh start is the standard and the app should
-            say so, but the past stays reachable for whoever insists. */}
+        {/* The history import, quiet and behind a question, per the
+            owner: fresh start is the standard and the app should say
+            so, but the past stays reachable for whoever insists.
+            It stopped saying "all" and "everything" once the June 13
+            wall was measured; KALSHI_HISTORY_FROM owns the date. */}
         {askHistory ? (
           <div className={`${INNER} mt-3 px-3 py-3`}>
             <span className="block text-sm font-semibold">
-              Bring in your whole Kalshi past?
+              Bring in your earlier Kalshi bets?
             </span>
             <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
-              This imports every Kalshi bet you ever settled, from
-              before you connected. Most people should not: starting
-              from your connect date keeps your Actuals record clean,
-              and old imports will move every number.
+              You can sync and track your Kalshi bets back to{" "}
+              {KALSHI_HISTORY_FROM}. That is as far as Kalshi lets any
+              app read. Most people should not: starting from your
+              connect date keeps your Actuals record clean, and older
+              bets will move every number.
             </span>
             <div className="mt-2.5 flex items-center gap-4">
               <button
@@ -530,7 +533,7 @@ export default function ConnectAccounts({
                 }}
                 className="text-sm font-semibold text-neutral-600 disabled:opacity-60 dark:text-neutral-300"
               >
-                Import everything
+                Import them
               </button>
               <button
                 type="button"
@@ -547,7 +550,7 @@ export default function ConnectAccounts({
             onClick={() => setAskHistory(true)}
             className="mt-3 text-xs text-neutral-500 underline underline-offset-2 dark:text-neutral-400"
           >
-            Import my full Kalshi history
+            Import my Kalshi bets back to {KALSHI_HISTORY_FROM}
           </button>
         )}
 
@@ -692,8 +695,8 @@ export default function ConnectAccounts({
           <li>Your open Kalshi bets appear in Actuals right away.</li>
           <li>From now on, new Kalshi bets are tracked on their own.</li>
           <li>
-            Your old, finished Kalshi history stays out. You can
-            import it later with one tap if you want it.
+            Your older, finished Kalshi bets stay out. You can bring
+            them in later with one tap, back to {KALSHI_HISTORY_FROM}.
           </li>
         </ul>
       </div>
