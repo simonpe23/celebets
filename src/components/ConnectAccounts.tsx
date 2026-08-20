@@ -98,10 +98,11 @@ function B({ children }: { children: ReactNode }) {
 // things, walk the flow again and rewrite from the screen, not from
 // memory.
 //
-// `image` is the Kalshi screenshot for that card, a file under
-// public/connect/kalshi/. Cards without one are text only, never a
-// placeholder box; phase 2 fills them in as the owner captures the
-// screens.
+// `image` is the Kalshi screenshot for that card, captured by the
+// owner from the real site (20 August 2026), a file under
+// public/connect/kalshi/. The copy card has none on purpose: its
+// screen is the same one card 6 already shows. If Kalshi redesigns,
+// recapture; never mock one up.
 const KALSHI_GUIDE: {
   text: ReactNode;
   image?: { src: string; alt: string };
@@ -115,6 +116,10 @@ const KALSHI_GUIDE: {
         Or go directly to <B>kalshi.com/account/profile</B>.
       </>
     ),
+    image: {
+      src: "/connect/kalshi/step-1.png",
+      alt: "Kalshi's menu with Account & security highlighted",
+    },
   },
   {
     text: (
@@ -122,6 +127,10 @@ const KALSHI_GUIDE: {
         Find <B>API Keys</B> and click <B>Create key</B>.
       </>
     ),
+    image: {
+      src: "/connect/kalshi/step-2.png",
+      alt: "Kalshi's API Keys section with the Create key button",
+    },
   },
   {
     text: (
@@ -129,6 +138,10 @@ const KALSHI_GUIDE: {
         Enter a name, such as <B>Actuals</B>.
       </>
     ),
+    image: {
+      src: "/connect/kalshi/step-3.png",
+      alt: "Kalshi's Create API key popup with the name filled in",
+    },
   },
   {
     text: (
@@ -136,6 +149,10 @@ const KALSHI_GUIDE: {
         Leave the <B>RSA public key</B> field empty.
       </>
     ),
+    image: {
+      src: "/connect/kalshi/step-4.png",
+      alt: "The RSA public key field, left empty",
+    },
   },
   {
     text: (
@@ -145,6 +162,10 @@ const KALSHI_GUIDE: {
         cannot place trades or move money.
       </>
     ),
+    image: {
+      src: "/connect/kalshi/step-5.png",
+      alt: "Kalshi's permissions: Read all data checked, Full access unchecked",
+    },
   },
   {
     text: (
@@ -154,6 +175,10 @@ const KALSHI_GUIDE: {
         will not show the private key again.
       </>
     ),
+    image: {
+      src: "/connect/kalshi/step-6.png",
+      alt: "Kalshi's Keep your key safe screen with the API Key ID and private key",
+    },
   },
   {
     text: (
