@@ -157,9 +157,11 @@ const KALSHI_GUIDE: {
     body: (
       <>
         Check <B>Read all data</B>. Uncheck <B>Full access</B>.
+        <br />
+        Actuals can only read. It can never trade or move your money.
       </>
     ),
-    note: "Actuals can only read. It can never trade or move your money.",
+    note: "Click Create.",
     image: {
       src: "/connect/kalshi/step-5.png",
       alt: "Kalshi's permissions: Read all data checked, Full access unchecked",
@@ -167,11 +169,7 @@ const KALSHI_GUIDE: {
   },
   {
     title: "Save your key",
-    body: (
-      <>
-        Click <B>Create</B> and save the downloaded file.
-      </>
-    ),
+    body: <>Save the downloaded file.</>,
     note: "Kalshi will not show the private key again.",
     image: {
       src: "/connect/kalshi/step-6.png",
