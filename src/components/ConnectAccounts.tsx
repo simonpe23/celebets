@@ -4,7 +4,11 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { BTN, CARD, INNER } from "@/lib/ui";
 import { formatMoney } from "@/lib/format";
-import { IMPORTING_LIVE, KALSHI_HISTORY_FROM } from "@/lib/sync";
+import {
+  IMPORTING_LIVE,
+  KALSHI_HISTORY_FROM,
+  KALSHI_HISTORY_SHORT,
+} from "@/lib/sync";
 
 // Connecting a betting platform, phase 1 of the sync project (August
 // 2026): Kalshi, by the owner's ruling, with the official personal
@@ -404,12 +408,13 @@ export default function ConnectAccounts({
         {/* The boom moment, right after connecting. The owner's own
             sketch of it: "boom you've connected Kalshi... from now on
             all of your bets on Kalshi will be tracked and logged and
-            filtered automatically." */}
+            filtered automatically." Shortened to his own wording on
+            20 August: the sync's own line below already reports the
+            first import, so this said it twice. */}
         {justConnected && (
           <p className="mt-3 rounded-lg bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
-            From now on, bets you place on Kalshi are tracked, logged
-            and filtered in Actuals on their own. Your first import is
-            running right now.
+            From now on, bets you place on Kalshi are synced and
+            tracked in Actuals.
           </p>
         )}
 
@@ -457,13 +462,8 @@ export default function ConnectAccounts({
           <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
             {IMPORTING_LIVE ? (
               <>
-                Actuals syncs with Kalshi each time you open it. Bets
-                from{" "}
-                {status
-                  ? shortDate(status.connected_at)
-                  : "the day you connected"}{" "}
-                onward appear on their own. Earlier bets stay out
-                unless you ask for them, back to {KALSHI_HISTORY_FROM}.
+                Actuals syncs with Kalshi automatically. Earlier bets
+                can be imported from {KALSHI_HISTORY_FROM}.
               </>
             ) : (
               <>
@@ -514,14 +514,12 @@ export default function ConnectAccounts({
         {askHistory ? (
           <div className={`${INNER} mt-3 px-3 py-3`}>
             <span className="block text-sm font-semibold">
-              Bring in your earlier Kalshi bets?
+              Import Kalshi bets from {KALSHI_HISTORY_FROM}?
             </span>
             <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
-              You can sync and track your Kalshi bets back to{" "}
-              {KALSHI_HISTORY_FROM}. That is as far as Kalshi lets any
-              app read. Most people should not: starting from your
-              connect date keeps your Actuals record clean, and older
-              bets will move every number.
+              Importing older bets gives you insights and results from{" "}
+              {KALSHI_HISTORY_SHORT}. Do you want to keep your Actuals
+              record clean and start from your connect date? Skip it.
             </span>
             <div className="mt-2.5 flex items-center gap-4">
               <button
@@ -533,14 +531,14 @@ export default function ConnectAccounts({
                 }}
                 className="text-sm font-semibold text-neutral-600 disabled:opacity-60 dark:text-neutral-300"
               >
-                Import them
+                Import bets
               </button>
               <button
                 type="button"
                 onClick={() => setAskHistory(false)}
                 className="text-sm font-semibold text-neutral-500 dark:text-neutral-400"
               >
-                Keep it clean
+                No. Skip it
               </button>
             </div>
           </div>
@@ -550,7 +548,7 @@ export default function ConnectAccounts({
             onClick={() => setAskHistory(true)}
             className="mt-3 text-xs text-neutral-500 underline underline-offset-2 dark:text-neutral-400"
           >
-            Import my Kalshi bets back to {KALSHI_HISTORY_FROM}
+            Import older Kalshi bets
           </button>
         )}
 

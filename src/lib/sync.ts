@@ -26,3 +26,7 @@ export const IMPORTING_LIVE = true;
 // the real edge, which means the promise holds even if an account's
 // data starts a little later than the owner's did.
 export const KALSHI_HISTORY_FROM = "July 1, 2026";
+
+// The same date without the year, for the second mention in a block
+// that has already said it once. Derived, never typed twice.
+export const KALSHI_HISTORY_SHORT = KALSHI_HISTORY_FROM.split(",")[0];
