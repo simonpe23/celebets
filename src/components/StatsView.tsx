@@ -382,61 +382,47 @@ export default function StatsView({
                   broken.
                   The scrollbar is hidden because iOS draws a grey bar
                   straight through the chips while you swipe. */}
-              {/* THREE ROWS, ONE PURPOSE EACH (the owner, 20 August:
-                  "all these chips are on the same row... that
-                  confuses me a lot"). Row one picks the view, row two
-                  a sport, row three a category. The category row is
-                  always complete: he also ruled against hiding what
-                  exists. There is no Not Sports aggregate chip; he
-                  called it useless. */}
+              {/* ONE ROW, the owner's third and final shape for this
+                  (20 August, "i regret it. remove the 3 rows"): a
+                  CATEGORIES label, an All chip, then every category,
+                  sports first. The Sports only view is not a chip
+                  among chips anymore: it is a quiet toggle beside the
+                  label, on or off, and off means everything. */}
               <div className="mt-4">
-                <MicroLabel>View</MicroLabel>
-                <div className={`-mx-4 mt-1.5 flex gap-2 overflow-x-auto px-4 pb-1 ${NO_SCROLLBAR}`}>
+                <div className="flex items-baseline justify-between">
+                  <MicroLabel>Categories</MicroLabel>
                   <button
                     type="button"
                     onClick={() => {
-                      setGroup("all");
-                      setSport(null);
+                      const next = group === "sports" ? "all" : "sports";
+                      setGroup(next);
+                      // Sports only cannot hold a not-sports pick.
+                      if (next === "sports" && sport && NOT_SPORTS.has(sport))
+                        setSport(null);
                     }}
-                    className={pillClass(group === "all" && sport === null)}
+                    className={`text-xs ${
+                      group === "sports"
+                        ? "font-semibold text-brand-mark"
+                        : "text-neutral-500 dark:text-neutral-400"
+                    }`}
                   >
-                    Everything
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setGroup("sports");
-                      setSport(null);
-                    }}
-                    className={pillClass(group === "sports" && sport === null)}
-                  >
-                    Sports only
+                    {group === "sports" ? "✓ Sports only" : "Sports only"}
                   </button>
                 </div>
-                <MicroLabel className="mt-2.5">Sports</MicroLabel>
                 <div className={`-mx-4 mt-1.5 flex gap-2 overflow-x-auto px-4 pb-1 ${NO_SCROLLBAR}`}>
-                  {sportChips.map((s) => (
+                  <button
+                    type="button"
+                    onClick={() => setSport(null)}
+                    className={pillClass(sport === null)}
+                  >
+                    All
+                  </button>
+                  {[...sportChips, ...notSportsChips].map((s) => (
                     <button
                       key={s}
                       type="button"
                       onClick={() => {
-                        setGroup("all");
-                        setSport(sport === s ? null : s);
-                      }}
-                      className={pillClass(sport === s)}
-                    >
-                      {SPORT_EMOJI[s]} {s}
-                    </button>
-                  ))}
-                </div>
-                <MicroLabel className="mt-2.5">Categories</MicroLabel>
-                <div className={`-mx-4 mt-1.5 flex gap-2 overflow-x-auto px-4 pb-1 ${NO_SCROLLBAR}`}>
-                  {notSportsChips.map((s) => (
-                    <button
-                      key={s}
-                      type="button"
-                      onClick={() => {
-                        setGroup("all");
+                        if (NOT_SPORTS.has(s)) setGroup("all");
                         setSport(sport === s ? null : s);
                       }}
                       className={pillClass(sport === s)}
