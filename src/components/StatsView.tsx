@@ -13,6 +13,7 @@ import ProfitPanel, { type Period } from "@/components/ProfitPanel";
 import {
   bucketRows,
   categoryRows,
+  marketRows,
   periodStart,
   sportRows,
   sinceLine,
@@ -157,6 +158,8 @@ export default function StatsView({
   // With a fresh start line, the charts show the current record by
   // default and this opens the whole history back up.
   const [showAllTime, setShowAllTime] = useState(false);
+  // Which Per-category row is expanded into its markets.
+  const [openCategory, setOpenCategory] = useState<string | null>(null);
 
   const inPeriodLine =
     trackingSince && !showAllTime ? sinceLine(bets, trackingSince) : bets;
@@ -207,7 +210,7 @@ export default function StatsView({
   const bySportType = sport === null ? null : sportTypeRows(filtered, sport);
   const sportTotals = sport === null ? null : bySport[0];
   const byBucket = bucketRows(filtered, sport);
-  const byCategory = sport === null ? [] : categoryRows(filtered, sport);
+  const byCategory = categoryRows(filtered, sport);
   const historyBets = [...filtered].sort(
     (a, b) =>
       new Date(b.settled_at ?? 0).getTime() -
@@ -568,36 +571,87 @@ export default function StatsView({
               </div>
             </section>
 
-            {sport !== null && byCategory.length > 0 && (
+            {byCategory.length > 0 && (
               <section className={`${CARD} p-4`}>
+                {/* HOW DO I PERFORM BY BETTING TYPE. The headline
+                    question of the taxonomy work (August 2026), so it
+                    shows for every view, not only with a sport
+                    chosen. Rows are canonical categories; tapping one
+                    opens its markets, the controlled detail level. */}
                 <h2 className="text-lg font-bold">Per category</h2>
                 <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
-                  Your {sport} picks grouped by what you bet on. Same money
-                  rules as everywhere else.
+                  {sport === null ? "Your" : `Your ${sport}`} picks grouped
+                  by bet type. Tap a row for the detail. Same money rules
+                  as everywhere else.
                 </p>
                 <div className="mt-3 space-y-2">
-                  {byCategory.map((row) => (
-                    <div
-                      key={row.label}
-                      className="flex items-center justify-between gap-2"
-                    >
-                      <p className="min-w-0 truncate text-sm font-semibold">
-                        {row.label}
-                      </p>
-                      <div className="flex shrink-0 items-center gap-3">
-                        <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                          {row.wins}-{row.losses}
-                        </p>
-                        <p
-                          className={`w-20 font-money text-right text-sm font-bold tabular-nums ${profitColor(
-                            row.profit
-                          )}`}
+                  {byCategory.map((row) => {
+                    const open = openCategory === row.label;
+                    const markets = open
+                      ? marketRows(filtered, row.label, sport)
+                      : [];
+                    return (
+                      <div key={row.label}>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setOpenCategory(open ? null : row.label)
+                          }
+                          className="flex w-full items-center justify-between gap-2"
                         >
-                          {formatSignedMoney(round2(row.profit))}
-                        </p>
+                          <p className="flex min-w-0 items-center gap-1.5 truncate text-sm font-semibold">
+                            {row.label}
+                            <span
+                              aria-hidden="true"
+                              className={`text-xs text-neutral-400 transition-transform ${
+                                open ? "rotate-90" : ""
+                              }`}
+                            >
+                              ›
+                            </span>
+                          </p>
+                          <span className="flex shrink-0 items-center gap-3">
+                            <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                              {row.wins}-{row.losses}
+                            </span>
+                            <span
+                              className={`w-20 font-money text-right text-sm font-bold tabular-nums ${profitColor(
+                                row.profit
+                              )}`}
+                            >
+                              {formatSignedMoney(round2(row.profit))}
+                            </span>
+                          </span>
+                        </button>
+                        {open && markets.length > 0 && (
+                          <div className="mt-1.5 space-y-1.5 rounded-xl bg-neutral-100 px-3 py-2.5 dark:bg-[#161D38]">
+                            {markets.map((m) => (
+                              <div
+                                key={m.label}
+                                className="flex items-center justify-between gap-2"
+                              >
+                                <p className="min-w-0 truncate text-xs text-neutral-500 dark:text-neutral-400">
+                                  {m.label}
+                                </p>
+                                <div className="flex shrink-0 items-center gap-3">
+                                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                                    {m.wins}-{m.losses}
+                                  </p>
+                                  <p
+                                    className={`w-20 font-money text-right text-xs font-bold tabular-nums ${profitColor(
+                                      m.profit
+                                    )}`}
+                                  >
+                                    {formatSignedMoney(round2(m.profit))}
+                                  </p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </section>
             )}

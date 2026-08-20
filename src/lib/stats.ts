@@ -265,11 +265,13 @@ export interface CategoryRow {
   profit: number;
 }
 
-// One sport's picks grouped by sub-category (Corners, BTTS, ...).
-// Picks without a sub-category are grouped under "No category".
+// Picks grouped by canonical category (Moneyline, Match Props...),
+// across every sport when none is chosen. A manual pick whose user
+// never chose a category groups under "No category", a distinct fact
+// from Unclassified (classification attempted and failed).
 export function categoryRows(
   bets: BetWithLegs[],
-  sport: Sport
+  sport: Sport | null
 ): CategoryRow[] {
   const map = new Map<string, CategoryRow>();
 
@@ -277,8 +279,42 @@ export function categoryRows(
     const shares = legShares(bet);
     const isSingle = bet.legs.length === 1;
     bet.legs.forEach((leg, i) => {
-      if (leg.sport !== sport) return;
+      if (sport !== null && leg.sport !== sport) return;
       const label = leg.subcategory ?? "No category";
+      const row = map.get(label) ?? { label, wins: 0, losses: 0, profit: 0 };
+      const result = effectiveResult(bet, leg);
+      const picks = isSingle ? pickCount(bet) : 1;
+      if (result === "won") row.wins += picks;
+      if (result === "lost") row.losses += picks;
+      row.profit += shares[i];
+      map.set(label, row);
+    });
+  }
+
+  return [...map.values()].sort(
+    (a, b) => b.wins + b.losses - (a.wins + a.losses)
+  );
+}
+
+// The drill-down inside one category: its picks grouped by the
+// controlled market (Match Winner, To Advance, BTTS...), same money
+// rules. Period joins the label where one exists, so a first-half
+// winner reads "Match Winner · 1st Half".
+export function marketRows(
+  bets: BetWithLegs[],
+  category: string,
+  sport: Sport | null
+): CategoryRow[] {
+  const map = new Map<string, CategoryRow>();
+
+  for (const bet of bets) {
+    const shares = legShares(bet);
+    const isSingle = bet.legs.length === 1;
+    bet.legs.forEach((leg, i) => {
+      if (sport !== null && leg.sport !== sport) return;
+      if ((leg.subcategory ?? "No category") !== category) return;
+      const base = leg.market ?? "Unspecified";
+      const label = leg.period ? `${base} · ${leg.period}` : base;
       const row = map.get(label) ?? { label, wins: 0, losses: 0, profit: 0 };
       const result = effectiveResult(bet, leg);
       const picks = isSingle ? pickCount(bet) : 1;
