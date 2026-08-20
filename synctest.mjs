@@ -88,12 +88,19 @@ const r2 = (v) => Math.round(v * 100) / 100;
   const [b] = deriveBets(fills, settlements, meta);
   eq("single: stake includes the fee", b.stake, 37.8);
   eq("single: lost with no stored payout", [b.status, b.payout], ["lost", null]);
+  // No series answer here: the pick is honestly Unclassified with a
+  // null provider market, which is exactly what the repair pass
+  // retries on the next sync.
   eq("single: one leg, Crypto, the No side named", b.legs, [
     {
       sport: "Crypto",
       description: "BTC price up in next 15 mins? (No)",
       result: "lost",
-      subcategory: null,
+      subcategory: "Unclassified",
+      market: null,
+      period: null,
+      competition: null,
+      providerMarket: null,
     },
   ]);
 }
@@ -203,18 +210,29 @@ const r2 = (v) => Math.round(v * 100) / 100;
   const [b] = deriveBets(fills, [], meta);
   eq("parlay: stake is the receipt's cost", b.stake, 99.99);
   eq("parlay: still pending", b.status, "pending");
+  // Without series data the leg TICKERS still carry the market word
+  // (KXLALIGAGAME, KXMLBGAME), so both classify as Moneyline with no
+  // provider market recorded, queued for the repair pass to enrich.
   eq("parlay: two legs, each its own sport and result", b.legs, [
     {
       sport: "Football",
       description: "Atletico Madrid to win",
       result: "won",
-      subcategory: null,
+      subcategory: "Moneyline",
+      market: "Match Winner",
+      period: null,
+      competition: null,
+      providerMarket: null,
     },
     {
       sport: "Baseball",
       description: "Pittsburgh to win",
       result: "pending",
-      subcategory: null,
+      subcategory: "Moneyline",
+      market: "Match Winner",
+      period: null,
+      competition: null,
+      providerMarket: null,
     },
   ]);
   eq(
@@ -443,7 +461,16 @@ const r2 = (v) => Math.round(v * 100) / 100;
     ],
   ]);
   const [b] = deriveBets(fills, [], meta, series);
-  eq("taxonomy: the pick carries the bet type", b.legs[0].subcategory, "ITF Women's Match");
+  eq(
+    "taxonomy: the pick carries the full classification",
+    [
+      b.legs[0].subcategory,
+      b.legs[0].market,
+      b.legs[0].competition,
+      b.legs[0].providerMarket,
+    ],
+    ["Moneyline", "Match Winner", "ITF Women's", "ITF Women's Match"]
+  );
   eq("taxonomy: and the tag's sport", b.legs[0].sport, "Tennis");
 }
 

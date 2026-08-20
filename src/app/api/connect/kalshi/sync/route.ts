@@ -13,9 +13,9 @@ import {
 } from "@/lib/kalshi";
 import {
   clampToStart,
+  classifyMarket,
   deriveBets,
   sportFor,
-  subcategoryFor,
   type KalshiFill,
   type KalshiSettlement,
   type KalshiMarketMeta,
@@ -313,7 +313,7 @@ export async function POST(request: Request) {
     const { data: existing } = await supabase
       .from("bets")
       .select(
-        "id, external_id, status, stake, payout, legs (result, sport, subcategory)"
+        "id, external_id, status, stake, payout, legs (result, sport, subcategory, market)"
       )
       .in(
         "external_id",
@@ -342,12 +342,14 @@ export async function POST(request: Request) {
           result?: string | null;
           sport?: string | null;
           subcategory?: string | null;
-        }) => `${l.result}|${l.sport}|${l.subcategory ?? ""}`;
+          market?: string | null;
+        }) => `${l.result}|${l.sport}|${l.subcategory ?? ""}|${l.market ?? ""}`;
         const oldLegs = (
           (old.legs ?? []) as {
             result: string;
             sport: string;
             subcategory: string | null;
+            market: string | null;
           }[]
         )
           .map(legKey)
@@ -424,6 +426,10 @@ export async function POST(request: Request) {
           odds: draft.legs.length === 1 ? draft.totalOdds : null,
           result: leg.result,
           subcategory: leg.subcategory,
+          market: leg.market,
+          period: leg.period,
+          competition: leg.competition,
+          provider_market: leg.providerMarket,
         }))
       );
       const { error: legError } = await supabase.from("legs").insert(legRows);
@@ -475,16 +481,22 @@ export async function POST(request: Request) {
     try {
       const { data: allKalshi } = await supabase
         .from("bets")
-        .select("id, external_id, legs (id, sport, subcategory, description)")
+        .select(
+          "id, external_id, legs (id, sport, subcategory, provider_market, description)"
+        )
         .eq("source", "kalshi");
       type LegRow = {
         id: string;
         sport: string;
         subcategory: string | null;
+        provider_market: string | null;
         description: string | null;
       };
+      // provider_market null marks a pick from before the taxonomy
+      // (or whose series lookup failed): exactly what needs the
+      // upgrade, and the retry marker in one.
       const needs = (allKalshi ?? []).filter((b) =>
-        ((b.legs ?? []) as LegRow[]).some((l) => l.subcategory === null)
+        ((b.legs ?? []) as LegRow[]).some((l) => l.provider_market === null)
       );
       if (needs.length > 0) {
         const tickerOf = (b: { external_id: unknown }) =>
@@ -526,28 +538,29 @@ export async function POST(request: Request) {
           ...legTickers.map((t) => t.split("-")[0]?.toUpperCase() ?? ""),
         ]);
 
-        // Group the fixes by target so a hundred legs become a
-        // handful of update calls.
+        // Group the fixes by identical target values so a hundred
+        // legs become a handful of update calls. JSON keys, never
+        // joined strings: every one of these values can carry spaces.
         const fixes = new Map<string, string[]>();
-        const addFix = (
-          leg: LegRow,
-          sport: string,
-          subcategory: string | null
-        ) => {
-          if (subcategory === null) return;
-          if (leg.sport === sport && leg.subcategory === subcategory) return;
-          // JSON, never a joined string: sports and bet types carry
-          // spaces ("American Football", "World Cup Goal").
-          const key2 = JSON.stringify([sport, subcategory]);
+        const addFix = (leg: LegRow, ticker: string) => {
+          const sport = sportFor(ticker, relabelSeries);
+          const cls = classifyMarket(ticker, relabelSeries);
+          // No series answer means nothing to write and the null
+          // provider_market keeps it queued for the next sync.
+          if (cls.providerMarket === null) return;
+          const key2 = JSON.stringify([
+            sport,
+            cls.category,
+            cls.market,
+            cls.period,
+            cls.competition,
+            cls.providerMarket,
+          ]);
           fixes.set(key2, [...(fixes.get(key2) ?? []), leg.id]);
         };
         for (const b of singles) {
-          const t = tickerOf(b);
-          addFix(
-            ((b.legs ?? []) as LegRow[])[0],
-            sportFor(t, relabelSeries),
-            subcategoryFor(t, relabelSeries)
-          );
+          const leg = ((b.legs ?? []) as LegRow[])[0];
+          if (leg.provider_market === null) addFix(leg, tickerOf(b));
         }
         for (const b of parlays) {
           const m = parentMeta.get(tickerOf(b));
@@ -555,21 +568,27 @@ export async function POST(request: Request) {
             const base = legMeta.get(mveLeg.market_ticker)?.title?.trim();
             if (!base) continue;
             const stored = ((b.legs ?? []) as LegRow[]).find(
-              (l) => l.description === base || l.description === `${base} (No)`
+              (l) =>
+                l.provider_market === null &&
+                (l.description === base || l.description === `${base} (No)`)
             );
             if (!stored) continue;
-            addFix(
-              stored,
-              sportFor(mveLeg.market_ticker, relabelSeries),
-              subcategoryFor(mveLeg.market_ticker, relabelSeries)
-            );
+            addFix(stored, mveLeg.market_ticker);
           }
         }
         for (const [key2, ids] of fixes) {
-          const [sport, subcategory] = JSON.parse(key2) as [string, string];
+          const [sport, subcategory, market, period, competition, provider_market] =
+            JSON.parse(key2) as [
+              string,
+              string,
+              string | null,
+              string | null,
+              string | null,
+              string,
+            ];
           const { error: fixError } = await supabase
             .from("legs")
-            .update({ sport, subcategory })
+            .update({ sport, subcategory, market, period, competition, provider_market })
             .in("id", ids);
           if (!fixError) repaired += ids.length;
         }

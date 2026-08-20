@@ -99,7 +99,16 @@ export interface Leg {
   description: string | null;
   odds: number | null;
   result: LegResult;
+  // The canonical Actuals category (a registered skill from
+  // src/lib/taxonomy.ts, or "Unclassified"). Null means a manual bet
+  // whose user never picked one: a different fact, kept distinct.
   subcategory: string | null;
+  // The taxonomy's other dimensions. Older rows may predate them.
+  market: string | null;
+  period: string | null;
+  competition: string | null;
+  // The provider's own market name, the explainability trail.
+  provider_market: string | null;
 }
 
 export interface Transaction {

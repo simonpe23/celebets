@@ -1,4 +1,10 @@
 import { round2, round4 } from "./format";
+import {
+  classifyKalshi,
+  domainOf,
+  validated,
+  type Classification,
+} from "./taxonomy";
 import type { Sport } from "./types";
 
 // TRANSLATION AT THE DOOR. Kalshi speaks in contracts, dollar-string
@@ -80,11 +86,18 @@ export type LegDraft = {
   sport: Sport;
   description: string;
   result: "pending" | "won" | "lost";
-  // The bet type, mirrored from the Kalshi series title ("EFL Cup
-  // Spread", "World Cup Correct Score"). Free text on the leg, the
-  // same field manual entry's picker fills, so Performance groups by
-  // it with no hand-kept list.
-  subcategory: string | null;
+  // The canonical Actuals category (a registered skill, or
+  // Unclassified). Same field manual entry fills, which is what makes
+  // "same bet = same category" hold across both doors.
+  subcategory: string;
+  // The taxonomy's other dimensions, from src/lib/taxonomy.ts.
+  market: string | null;
+  period: string | null;
+  competition: string | null;
+  // The provider's own market name, verbatim: the explainability
+  // trail. Null also marks a pick whose series lookup failed, which
+  // is exactly what the repair pass retries.
+  providerMarket: string | null;
 };
 
 export type BetDraft = {
@@ -236,16 +249,19 @@ export function sportFor(
   return sportForTicker(ticker);
 }
 
-// The bet type for one market: the series title, which is Kalshi
-// naming its own product ("EFL Cup Spread"). Nothing to keep in step
-// by hand.
-export function subcategoryFor(
+// The full classification for one market: sport-validated canonical
+// category plus the taxonomy's dimensions, with the provider's own
+// series title preserved. The mapper cannot mint a category: its
+// output is validated against the pick's domain register.
+export function classifyMarket(
   ticker: string,
   series: Map<string, KalshiSeriesMeta>
-): string | null {
+): Classification & { providerMarket: string | null } {
   const prefix = ticker.split("-")[0]?.toUpperCase() ?? "";
-  const title = series.get(prefix)?.title?.trim();
-  return title || null;
+  const title = series.get(prefix)?.title?.trim() || null;
+  const sport = sportFor(ticker, series);
+  const cls = validated(domainOf(sport), classifyKalshi(title, ticker));
+  return { ...cls, providerMarket: title };
 }
 
 // Every number on a Kalshi record can arrive as a string.
@@ -349,20 +365,26 @@ function legsFor(
             ? "won"
             : "lost"
           : "pending";
+      // Each pick carries ITS OWN classification: a cross-category
+      // parlay's tennis leg is Tennis Moneyline, never the parent's
+      // container.
+      const cls = classifyMarket(leg.market_ticker, series);
       return {
-        // Each pick carries ITS OWN series taxonomy: a cross-category
-        // parlay's tennis leg is Tennis with a tennis bet type, never
-        // the parent's.
         sport: sportFor(leg.market_ticker, series),
         description: wantsNo ? `${base} (No)` : base,
         result,
-        subcategory: subcategoryFor(leg.market_ticker, series),
+        subcategory: cls.category,
+        market: cls.market,
+        period: cls.period,
+        competition: cls.competition,
+        providerMarket: cls.providerMarket,
       };
     });
   }
 
   const title = m?.title?.trim() || ticker;
   const sportTicker = m?.event_ticker || ticker;
+  const cls = classifyMarket(sportTicker, series);
   return [
     {
       sport: sportFor(sportTicker, series),
@@ -370,7 +392,11 @@ function legsFor(
       // A cashed out bet's picks stay pending and inherit the cash
       // out outcome through effectiveResult, the app's own rule.
       result: cashedOut ? "pending" : status,
-      subcategory: subcategoryFor(sportTicker, series),
+      subcategory: cls.category,
+      market: cls.market,
+      period: cls.period,
+      competition: cls.competition,
+      providerMarket: cls.providerMarket,
     },
   ];
 }
