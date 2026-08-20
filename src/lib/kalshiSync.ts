@@ -274,6 +274,33 @@ function legsFor(
   ];
 }
 
+// THE HISTORY FLOOR. Actuals promises on four screens that a history
+// import reaches back to one date, so the import has to obey it.
+//
+// The rule works on MARKETS, not on single fills, and that is the
+// whole point. Dropping fills alone would keep a market whose first
+// buy landed in June and whose second landed in July, and derive its
+// bet from half the money: a wrong stake, a wrong payout, a wrong
+// profit. A bet belongs to the record only if it STARTED inside the
+// promised window, so one fill older than the floor disqualifies its
+// whole market.
+//
+// The caller must walk slightly past the floor for this to see the
+// disqualifying fills. Kalshi's own paging does that naturally: a
+// page stops after the first row older than the floor, so the rest of
+// that page is exactly the evidence needed.
+export function clampToStart(
+  fills: KalshiFill[],
+  startIso: string
+): KalshiFill[] {
+  const started_before = new Set(
+    fills.filter((f) => f.created_time < startIso).map((f) => f.ticker)
+  );
+  return fills.filter(
+    (f) => f.created_time >= startIso && !started_before.has(f.ticker)
+  );
+}
+
 export function deriveBets(
   fills: KalshiFill[],
   settlements: KalshiSettlement[],

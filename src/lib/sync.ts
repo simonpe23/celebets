@@ -25,8 +25,27 @@ export const IMPORTING_LIVE = true;
 // ruling: state one clean date and keep it. July 1 sits safely after
 // the real edge, which means the promise holds even if an account's
 // data starts a little later than the owner's did.
-export const KALSHI_HISTORY_FROM = "July 1, 2026";
+// THE DATE ITSELF, and the only place it is typed. The import
+// enforces it and four screens print it, so if the promise and the
+// code could be edited apart they eventually would be. Everything
+// below is derived from this line.
+export const KALSHI_HISTORY_FROM_ISO = "2026-07-01T00:00:00.000Z";
 
-// The same date without the year, for the second mention in a block
-// that has already said it once. Derived, never typed twice.
-export const KALSHI_HISTORY_SHORT = KALSHI_HISTORY_FROM.split(",")[0];
+const startDate = new Date(KALSHI_HISTORY_FROM_ISO);
+
+// "July 1, 2026", for the screens. UTC on purpose: the promise is one
+// date for everyone, not a date that moves with the reader's clock.
+export const KALSHI_HISTORY_FROM = startDate.toLocaleDateString("en-US", {
+  month: "long",
+  day: "numeric",
+  year: "numeric",
+  timeZone: "UTC",
+});
+
+// "July 1", for a second mention in a block that has already said the
+// year once.
+export const KALSHI_HISTORY_SHORT = startDate.toLocaleDateString("en-US", {
+  month: "long",
+  day: "numeric",
+  timeZone: "UTC",
+});

@@ -11,11 +11,13 @@ import {
   kalshiOpenTickers,
 } from "@/lib/kalshi";
 import {
+  clampToStart,
   deriveBets,
   type KalshiFill,
   type KalshiSettlement,
   type KalshiMarketMeta,
 } from "@/lib/kalshiSync";
+import { KALSHI_HISTORY_FROM_ISO } from "@/lib/sync";
 
 // THE SYNC. Reads the user's Kalshi activity, translates it with
 // kalshiSync.ts, and makes the bets table match: new markets become
@@ -144,16 +146,35 @@ export async function POST(request: Request) {
         boundIso
           ? Math.floor(new Date(boundIso).getTime() / 1000)
           : null,
-        60
+        60,
+        KALSHI_HISTORY_FROM_ISO
       );
       walked = r.rows as unknown as KalshiFill[];
       walkedToEnd = r.done;
     }
-    const fillsPool =
-      !line && boundIso
-        ? walked.filter((f) => f.created_time < boundIso)
-        : [...walked];
-    const more = !line && !walkedToEnd && fillsPool.length > 0;
+    // THE HISTORY PROMISE, ENFORCED. Four screens say a history
+    // import reaches back to one date, so a history round keeps only
+    // markets that STARTED on or after it. clampToStart works on
+    // whole markets, never on single fills, or a market straddling
+    // the date would import missing its earlier buys and show the
+    // wrong stake. The fresh start path is untouched: its own line is
+    // the connect date, which is later still, and an open position
+    // still comes in at any age, which is what the connect screen
+    // promises.
+    const fillsPool = line
+      ? [...walked]
+      : clampToStart(
+          boundIso
+            ? walked.filter((f) => f.created_time < boundIso)
+            : walked,
+          KALSHI_HISTORY_FROM_ISO
+        );
+    // A round that saw fills older than the promise has reached the
+    // bottom of what Actuals will ever import, so there is no "more".
+    const hitStart = walked.some(
+      (f) => f.created_time < KALSHI_HISTORY_FROM_ISO
+    );
+    const more = !line && !walkedToEnd && !hitStart && fillsPool.length > 0;
 
     // A market can SPAN the boundary between rounds: its newest buys
     // imported last round, its older buys only surfacing now. Its bet
@@ -189,7 +210,10 @@ export async function POST(request: Request) {
         for (let i = fillsPool.length - 1; i >= 0; i--) {
           if (fillsPool[i].ticker === t) fillsPool.splice(i, 1);
         }
-        fillsPool.push(...full);
+        // Its complete history can reveal that the market started
+        // before the promised date after all, in which case it does
+        // not belong to the record at any stake.
+        fillsPool.push(...clampToStart(full, KALSHI_HISTORY_FROM_ISO));
       }
     }
 

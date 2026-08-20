@@ -139,12 +139,22 @@ export async function kalshiGetPages<T>(
 // actually IS older than the bound, and when neither works it walks
 // the list from the top and discards rows a previous round already
 // imported. Slower, never wrong.
+// `floorIso` stops the walk once a page reaches fills older than the
+// history promise: there is nothing below it worth fetching, and
+// without it every round would burn its whole page budget walking
+// into data the import will throw away. The page that CROSSES the
+// floor is kept whole on purpose, because clampToStart needs those
+// older rows to spot a market that started before the floor.
 export async function kalshiFillsBefore(
   accessKey: string,
   privateKeyPem: string,
   boundSec: number | null,
-  pageBudget = 60
+  pageBudget = 60,
+  floorIso?: string
 ): Promise<{ rows: Record<string, unknown>[]; done: boolean }> {
+  const floor = floorIso
+    ? { field: "created_time", iso: floorIso }
+    : undefined;
   if (boundSec === null) {
     return kalshiGetPages<Record<string, unknown>>(
       accessKey,
@@ -152,7 +162,7 @@ export async function kalshiFillsBefore(
       "/portfolio/fills",
       "fills",
       {},
-      undefined,
+      floor,
       pageBudget
     );
   }
@@ -181,7 +191,7 @@ export async function kalshiFillsBefore(
           "/portfolio/fills",
           "fills",
           { max_ts: candidate },
-          undefined,
+          floor,
           pageBudget
         );
       }
@@ -203,6 +213,14 @@ export async function kalshiFillsBefore(
     })) as { fills?: Record<string, unknown>[]; cursor?: string };
     const rows = data.fills ?? [];
     for (const f of rows) if (tsOf(f) < boundSec) out.push(f);
+    // Past the history promise: nothing older can be imported, so the
+    // walk is finished rather than merely out of budget.
+    if (
+      floorIso &&
+      rows.length > 0 &&
+      String(rows[rows.length - 1].created_time ?? "") < floorIso
+    )
+      return { rows: out, done: true };
     cursor = typeof data.cursor === "string" ? data.cursor : "";
     if (!cursor || rows.length === 0) return { rows: out, done: true };
     if (out.length >= pageBudget * 200) break;

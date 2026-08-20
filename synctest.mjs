@@ -28,7 +28,7 @@ for (const name of ["kalshiSync", "format", "types"]) {
     src.replace(/from "\.\/(\w+)"/g, 'from "./$1.ts"')
   );
 }
-const { deriveBets, sportForTicker } = await import(
+const { clampToStart, deriveBets, sportForTicker } = await import(
   join(dir, "kalshiSync.ts")
 );
 
@@ -302,6 +302,45 @@ const r2 = (v) => Math.round(v * 100) / 100;
   // stake 51.00; sells 40 x 0.60 - 0.50 = 23.50; 60 held win 60.
   eq("partial close: payout is sells plus the win", b.payout, 83.5);
   eq("partial close: won", b.status, "won");
+}
+
+// ---- THE HISTORY FLOOR. Actuals promises on four screens that an
+// import reaches back to one date, so the import must not quietly
+// carry in a bet from before it, and must not import HALF of one
+// either.
+{
+  const START = "2026-07-01T00:00:00.000Z";
+  const fills = [
+    // Well inside the window: stays.
+    { ticker: "A", created_time: "2026-07-05T10:00:00Z" },
+    // Straddles the date: one buy before, one after. The whole market
+    // goes, because half its money is out of reach.
+    { ticker: "B", created_time: "2026-07-02T10:00:00Z" },
+    { ticker: "B", created_time: "2026-06-28T10:00:00Z" },
+    // Entirely before: never in.
+    { ticker: "C", created_time: "2026-06-01T10:00:00Z" },
+  ];
+  const kept = clampToStart(fills, START);
+  eq(
+    "history floor: only markets that started in the window",
+    kept.map((f) => f.ticker),
+    ["A"]
+  );
+
+  // The exact boundary belongs to the new record, the same ruling as
+  // the app's own restart line.
+  eq(
+    "history floor: midnight itself is inside",
+    clampToStart([{ ticker: "D", created_time: START }], START).length,
+    1
+  );
+
+  // A market whose money is all inside must survive with ALL of it.
+  const many = [
+    { ticker: "E", created_time: "2026-07-03T10:00:00Z" },
+    { ticker: "E", created_time: "2026-07-04T10:00:00Z" },
+  ];
+  eq("history floor: an in-window market keeps every buy", clampToStart(many, START).length, 2);
 }
 
 // ---- Sport mapping spot checks, including the ones his account
