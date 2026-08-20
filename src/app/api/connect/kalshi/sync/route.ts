@@ -9,6 +9,7 @@ import {
   kalshiMarket,
   kalshiMarketsBatch,
   kalshiOpenTickers,
+  kalshiSeriesBatch,
 } from "@/lib/kalshi";
 import {
   clampToStart,
@@ -272,6 +273,25 @@ export async function POST(request: Request) {
       meta.set(m.ticker, m);
     }
 
+    // 3b. Kalshi's own taxonomy, one series per distinct ticker
+    // prefix, LEG tickers included: a cross-category parlay's tennis
+    // pick gets tennis, not the parent's category. This is what
+    // names the sport (via the series tags) and the bet type (via
+    // the series title).
+    const seriesPrefixes = [
+      ...new Set(
+        [
+          ...[...inScope],
+          ...[...meta.values()].flatMap((m) =>
+            (m.mveLegs ?? []).map((l) => l.market_ticker)
+          ),
+        ]
+          .map((t) => t.split("-")[0]?.toUpperCase() ?? "")
+          .filter(Boolean)
+      ),
+    ];
+    const series = await kalshiSeriesBatch(key, pem, seriesPrefixes);
+
     const settlements = (
       await kalshiGetAll<KalshiSettlement>(
         key,
@@ -285,12 +305,14 @@ export async function POST(request: Request) {
     ).filter((s) => inScope.has(s.ticker));
 
     // 4. Translate.
-    const drafts = deriveBets(fills, settlements, meta);
+    const drafts = deriveBets(fills, settlements, meta, series);
 
     // 5. Reconcile: replace what changed, leave what did not.
     const { data: existing } = await supabase
       .from("bets")
-      .select("id, external_id, status, stake, payout, legs (result)")
+      .select(
+        "id, external_id, status, stake, payout, legs (result, sport, subcategory)"
+      )
       .in(
         "external_id",
         drafts.map((d) => d.externalId)
@@ -310,13 +332,27 @@ export async function POST(request: Request) {
         // it has no sport and no description. Always replace it. And
         // a parlay's leg RESULTS can change while the bet's own
         // numbers stand still (one game decides, the combo rides on),
-        // so the legs are part of what "unchanged" means.
-        const oldLegs = ((old.legs ?? []) as { result: string }[])
-          .map((l) => l.result)
+        // so the legs are part of what "unchanged" means. Sport and
+        // sub-category are too, since phase 3: when the taxonomy
+        // improves, the first sync after the deploy upgrades every
+        // bet it names better, no manual migration.
+        const legKey = (l: {
+          result?: string | null;
+          sport?: string | null;
+          subcategory?: string | null;
+        }) => `${l.result}|${l.sport}|${l.subcategory ?? ""}`;
+        const oldLegs = (
+          (old.legs ?? []) as {
+            result: string;
+            sport: string;
+            subcategory: string | null;
+          }[]
+        )
+          .map(legKey)
           .sort()
           .join(",");
         const newLegs = draft.legs
-          .map((l) => l.result)
+          .map(legKey)
           .sort()
           .join(",");
         const same =
@@ -385,6 +421,7 @@ export async function POST(request: Request) {
           description: leg.description,
           odds: draft.legs.length === 1 ? draft.totalOdds : null,
           result: leg.result,
+          subcategory: leg.subcategory,
         }))
       );
       const { error: legError } = await supabase.from("legs").insert(legRows);

@@ -28,7 +28,7 @@ for (const name of ["kalshiSync", "format", "types"]) {
     src.replace(/from "\.\/(\w+)"/g, 'from "./$1.ts"')
   );
 }
-const { clampToStart, deriveBets, sportForTicker } = await import(
+const { clampToStart, deriveBets, sportFor, sportForTicker } = await import(
   join(dir, "kalshiSync.ts")
 );
 
@@ -84,6 +84,7 @@ const r2 = (v) => Math.round(v * 100) / 100;
       sport: "Crypto",
       description: "BTC price up in next 15 mins? (No)",
       result: "lost",
+      subcategory: null,
     },
   ]);
 }
@@ -194,8 +195,18 @@ const r2 = (v) => Math.round(v * 100) / 100;
   eq("parlay: stake is the receipt's cost", b.stake, 99.99);
   eq("parlay: still pending", b.status, "pending");
   eq("parlay: two legs, each its own sport and result", b.legs, [
-    { sport: "Football", description: "Atletico Madrid to win", result: "won" },
-    { sport: "Baseball", description: "Pittsburgh to win", result: "pending" },
+    {
+      sport: "Football",
+      description: "Atletico Madrid to win",
+      result: "won",
+      subcategory: null,
+    },
+    {
+      sport: "Baseball",
+      description: "Pittsburgh to win",
+      result: "pending",
+      subcategory: null,
+    },
   ]);
   eq(
     "parlay: to collect is the contract count",
@@ -341,6 +352,66 @@ const r2 = (v) => Math.round(v * 100) / 100;
     { ticker: "E", created_time: "2026-07-04T10:00:00Z" },
   ];
   eq("history floor: an in-window market keeps every buy", clampToStart(many, START).length, 2);
+}
+
+// ---- CASE: KALSHI'S OWN TAXONOMY (phase 3). Series data copied
+// from the owner's real account, 20 August 2026: the category names
+// the family, the tags name the sport (in Kalshi's words: Soccer,
+// and plain Football means the American kind), the title names the
+// bet type and becomes the pick's sub-category.
+{
+  const series = new Map([
+    ["KXITFWMATCH", { category: "Sports", title: "ITF Women's Match", tags: ["Tennis"] }],
+    ["KXWCGOAL", { category: "Sports", title: "World Cup Goal", tags: ["Soccer"] }],
+    ["KXNFLGAME", { category: "Sports", title: "Pro Football Game", tags: ["Football"] }],
+    ["KXBTC15M", { category: "Crypto", title: "Bitcoin price up down", tags: ["BTC"] }],
+    ["KXHIGHNY", { category: "Climate and Weather", title: "Highest temperature in NYC", tags: [] }],
+  ]);
+  eq("taxonomy: Tennis tag wins", sportFor("KXITFWMATCH-26AUG19ROMSAR-ROM", series), "Tennis");
+  eq("taxonomy: Soccer tag is Football here", sportFor("KXWCGOAL-26X-Y", series), "Football");
+  eq(
+    "taxonomy: plain Football tag is the American kind",
+    sportFor("KXNFLGAME-26X-Y", series),
+    "American Football"
+  );
+  eq("taxonomy: Crypto category wins", sportFor("KXBTC15M-26AUG191700-00", series), "Crypto");
+  eq(
+    "taxonomy: a non-sport category stays Other for now",
+    sportFor("KXHIGHNY-25AUG20", series),
+    "Other"
+  );
+  eq(
+    "taxonomy: no series answer falls back to the prefix table",
+    sportFor("KXMLBGAME-26AUG19-PIT", new Map()),
+    "Baseball"
+  );
+
+  const fills = [
+    {
+      ticker: "KXITFWMATCH-26AUG19ROMSAR-ROM",
+      order_id: "o1",
+      side: "yes",
+      action: "buy",
+      count_fp: "16.21",
+      yes_price_dollars: "0.9200",
+      no_price_dollars: "0.0800",
+      fee_cost: "0.083600",
+      created_time: "2026-08-19T20:27:23.249264Z",
+    },
+  ];
+  const meta = new Map([
+    [
+      "KXITFWMATCH-26AUG19ROMSAR-ROM",
+      {
+        ticker: "KXITFWMATCH-26AUG19ROMSAR-ROM",
+        title: "Will Camila Romero win the match?",
+        event_ticker: "KXITFWMATCH-26AUG19ROMSAR",
+      },
+    ],
+  ]);
+  const [b] = deriveBets(fills, [], meta, series);
+  eq("taxonomy: the pick carries the bet type", b.legs[0].subcategory, "ITF Women's Match");
+  eq("taxonomy: and the tag's sport", b.legs[0].sport, "Tennis");
 }
 
 // ---- Sport mapping spot checks, including the ones his account

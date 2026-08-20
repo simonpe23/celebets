@@ -68,10 +68,23 @@ export type KalshiMarketMeta = {
   mveLegs?: { market_ticker: string; side: string }[];
 };
 
+// What Kalshi's series endpoint says about one ticker prefix: the
+// broad category, the bet type as a title, the sport as a tag.
+export type KalshiSeriesMeta = {
+  category?: string;
+  title?: string;
+  tags?: string[];
+};
+
 export type LegDraft = {
   sport: Sport;
   description: string;
   result: "pending" | "won" | "lost";
+  // The bet type, mirrored from the Kalshi series title ("EFL Cup
+  // Spread", "World Cup Correct Score"). Free text on the leg, the
+  // same field manual entry's picker fills, so Performance groups by
+  // it with no hand-kept list.
+  subcategory: string | null;
 };
 
 export type BetDraft = {
@@ -154,6 +167,58 @@ export function sportForTicker(ticker: string): Sport {
   return best ?? "Other";
 }
 
+// Kalshi's sport tags, measured off the owner's account (20 August
+// 2026): a Sports-category series carries the sport as a tag, and
+// the tag says "Soccer" where this app says Football. American
+// football is the one to watch: Kalshi's US tag for it is plain
+// "Football".
+const TAG_SPORTS: Record<string, Sport> = {
+  tennis: "Tennis",
+  soccer: "Football",
+  football: "American Football",
+  baseball: "Baseball",
+  basketball: "Basketball",
+  hockey: "Ice Hockey",
+  "ice hockey": "Ice Hockey",
+  golf: "Golf",
+  esports: "esports",
+};
+
+// The sport for one market, best source first: Kalshi's own series
+// taxonomy (category + tags), then the hand-kept ticker-prefix table
+// for markets whose series lookup failed. Non-sport categories other
+// than Crypto stay Other until the app grows real categories.
+export function sportFor(
+  ticker: string,
+  series: Map<string, KalshiSeriesMeta>
+): Sport {
+  const prefix = ticker.split("-")[0]?.toUpperCase() ?? "";
+  const s = series.get(prefix);
+  if (s) {
+    const cat = (s.category ?? "").toLowerCase();
+    if (cat === "crypto") return "Crypto";
+    if (cat === "sports") {
+      for (const tag of s.tags ?? []) {
+        const mapped = TAG_SPORTS[tag.toLowerCase()];
+        if (mapped) return mapped;
+      }
+    }
+  }
+  return sportForTicker(ticker);
+}
+
+// The bet type for one market: the series title, which is Kalshi
+// naming its own product ("EFL Cup Spread"). Nothing to keep in step
+// by hand.
+function subcategoryFor(
+  ticker: string,
+  series: Map<string, KalshiSeriesMeta>
+): string | null {
+  const prefix = ticker.split("-")[0]?.toUpperCase() ?? "";
+  const title = series.get(prefix)?.title?.trim();
+  return title || null;
+}
+
 // Every number on a Kalshi record can arrive as a string.
 function num(v: unknown): number {
   const n = Number(v);
@@ -232,7 +297,8 @@ function legsFor(
   side: "yes" | "no",
   status: BetDraft["status"],
   cashedOut: boolean,
-  meta: Map<string, KalshiMarketMeta>
+  meta: Map<string, KalshiMarketMeta>,
+  series: Map<string, KalshiSeriesMeta>
 ): LegDraft[] {
   const m = meta.get(ticker);
   const mve = m?.mveLegs ?? [];
@@ -255,21 +321,27 @@ function legsFor(
             : "lost"
           : "pending";
       return {
-        sport: sportForTicker(leg.market_ticker),
+        // Each pick carries ITS OWN series taxonomy: a cross-category
+        // parlay's tennis leg is Tennis with a tennis bet type, never
+        // the parent's.
+        sport: sportFor(leg.market_ticker, series),
         description: wantsNo ? `${base} (No)` : base,
         result,
+        subcategory: subcategoryFor(leg.market_ticker, series),
       };
     });
   }
 
   const title = m?.title?.trim() || ticker;
+  const sportTicker = m?.event_ticker || ticker;
   return [
     {
-      sport: sportForTicker(m?.event_ticker || ticker),
+      sport: sportFor(sportTicker, series),
       description: side === "no" ? `${title} (No)` : title,
       // A cashed out bet's picks stay pending and inherit the cash
       // out outcome through effectiveResult, the app's own rule.
       result: cashedOut ? "pending" : status,
+      subcategory: subcategoryFor(sportTicker, series),
     },
   ];
 }
@@ -304,7 +376,8 @@ export function clampToStart(
 export function deriveBets(
   fills: KalshiFill[],
   settlements: KalshiSettlement[],
-  meta: Map<string, KalshiMarketMeta>
+  meta: Map<string, KalshiMarketMeta>,
+  series: Map<string, KalshiSeriesMeta> = new Map()
 ): BetDraft[] {
   const settled = new Map(settlements.map((s) => [s.ticker, s]));
   const byPosition = new Map<string, Trade[]>();
@@ -385,7 +458,7 @@ export function deriveBets(
       settledAt,
       payout,
       cashedOut,
-      legs: legsFor(ticker, side, status, cashedOut, meta),
+      legs: legsFor(ticker, side, status, cashedOut, meta, series),
       buys,
     });
   }

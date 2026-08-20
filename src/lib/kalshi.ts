@@ -320,6 +320,47 @@ export async function kalshiMarketsBatch(
   return out;
 }
 
+// One series per distinct ticker prefix, fetched in parallel chunks.
+// The series is where Kalshi keeps its own taxonomy: the broad
+// category ("Sports", "Crypto", "Politics"...), the bet type as a
+// title ("EFL Cup Spread"), and the actual sport as a tag ("Soccer").
+// Measured on the owner's real account, 20 August 2026, not guessed.
+// A failed lookup is simply absent: the ticker-prefix fallback still
+// answers for it.
+export type KalshiSeriesMeta = {
+  category?: string;
+  title?: string;
+  tags?: string[];
+};
+
+export async function kalshiSeriesBatch(
+  accessKey: string,
+  privateKeyPem: string,
+  prefixes: string[]
+): Promise<Map<string, KalshiSeriesMeta>> {
+  const out = new Map<string, KalshiSeriesMeta>();
+  const distinct = [...new Set(prefixes.filter(Boolean))];
+  for (let i = 0; i < distinct.length; i += 8) {
+    const chunk = distinct.slice(i, i + 8);
+    const found = await Promise.all(
+      chunk.map(async (p) => {
+        try {
+          const d = (await kalshiGet(
+            accessKey,
+            privateKeyPem,
+            `/series/${encodeURIComponent(p)}`
+          )) as { series?: KalshiSeriesMeta };
+          return [p, d.series ?? null] as const;
+        } catch {
+          return [p, null] as const;
+        }
+      })
+    );
+    for (const [p, s] of found) if (s) out.set(p, s);
+  }
+  return out;
+}
+
 export async function kalshiMarket(
   accessKey: string,
   privateKeyPem: string,
