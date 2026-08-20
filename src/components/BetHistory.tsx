@@ -158,8 +158,13 @@ export default function BetHistory({ bets, limit }: Props) {
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
+                    {/* Kalshi titles are whole questions, so one
+                        truncated line chopped them mid-name (the
+                        owner: "looks ugly"). Two lines, then the
+                        ellipsis, at the dense-row size (his call:
+                        text-sm read too big in here). */}
                     {bet.legs.map((leg) => (
-                      <p key={leg.id} className="truncate text-sm font-semibold">
+                      <p key={leg.id} className="line-clamp-2 text-xs font-semibold">
                         {SPORT_EMOJI[leg.sport]}{" "}
                         {leg.description ?? leg.subcategory ?? leg.sport}
                         {leg.description !== null &&

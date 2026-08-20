@@ -224,7 +224,10 @@ export default function LiveBets({ bets }: Props) {
                       </span>
                     )}
                     <span className="min-w-0">
-                      <span className="block truncate text-[15px] font-bold">
+                      {/* Kalshi titles are whole questions: two
+                          lines before the ellipsis, same ruling as
+                          Betting history. */}
+                      <span className="line-clamp-2 block text-[15px] font-bold">
                         {isParlay
                           ? `${bet.legs.length} Leg Parlay`
                           : (bet.legs[0]?.description ??
@@ -289,7 +292,7 @@ export default function LiveBets({ bets }: Props) {
                               {SPORT_EMOJI[leg.sport]}
                             </span>
                             <div className="min-w-0">
-                              <p className="truncate text-sm font-semibold">
+                              <p className="line-clamp-2 text-sm font-semibold">
                                 {leg.description ?? leg.subcategory ?? leg.sport}
                               </p>
                               {/* A leg without odds shows its sport,
