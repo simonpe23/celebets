@@ -88,15 +88,17 @@ function B({ children }: { children: ReactNode }) {
 }
 
 // THE KEY GUIDE, one card per step. The owner rejected the single
-// long list ("it looks like a hot mess... i would close the window if
-// i saw this") and drew the shape himself: soft cards, one bullet
-// each, dots at the bottom, Back and Next in the corners. The copy is
-// his, word for word (19 August 2026), written after he walked
-// Kalshi's real screens twice. His rules: keep the Read all data vs
-// Full access distinction obvious, and say "API Key ID" in every
-// mention because that is Kalshi's own name for it. If Kalshi moves
-// things, walk the flow again and rewrite from the screen, not from
-// memory.
+// long list ("it looks like a hot mess"), then rejected paragraph
+// cards too ("no clear headline. just starts off with blocks of texts
+// no one wants to read"). The anatomy that answers both: a short
+// HEADLINE naming the action, ONE line under it, the screenshot, and
+// nothing else. A `note` is the rare third line, muted and small,
+// only where money or a stuck user is at stake.
+//
+// Standing rules: the Read all data vs Full access distinction stays
+// obvious, and the id is called "API Key ID" everywhere because that
+// is Kalshi's own name for it. If Kalshi moves things, walk the flow
+// again and rewrite from the screen, not from memory.
 //
 // `image` is the Kalshi screenshot for that card, captured by the
 // owner from the real site (20 August 2026), a file under
@@ -104,27 +106,29 @@ function B({ children }: { children: ReactNode }) {
 // screen is the same one card 6 already shows. If Kalshi redesigns,
 // recapture; never mock one up.
 const KALSHI_GUIDE: {
-  text: ReactNode;
+  title: string;
+  body: ReactNode;
+  note?: string;
   image?: { src: string; alt: string };
 }[] = [
   {
-    text: (
+    title: "Log in to Kalshi",
+    body: (
       <>
-        Log in at kalshi.com. Open the menu, then{" "}
-        <B>Account &amp; Security</B>.
-        <br />
-        Or go directly to kalshi.com/account/profile.
+        Open the menu and choose <B>Account &amp; security</B>.
       </>
     ),
+    note: "Use a computer. Kalshi does not show API keys on the phone.",
     image: {
       src: "/connect/kalshi/step-1.png",
       alt: "Kalshi's menu with Account & security highlighted",
     },
   },
   {
-    text: (
+    title: "Open API Keys",
+    body: (
       <>
-        Find API Keys and click <B>Create key</B>.
+        Click <B>Create key</B>.
       </>
     ),
     image: {
@@ -133,59 +137,50 @@ const KALSHI_GUIDE: {
     },
   },
   {
-    text: (
-      <>
-        Enter a name, such as <B>Actuals</B>.
-      </>
-    ),
+    title: "Name the key",
+    body: <>Type a name, like Actuals.</>,
     image: {
       src: "/connect/kalshi/step-3.png",
       alt: "Kalshi's Create API key popup with the name filled in",
     },
   },
   {
-    text: (
-      <>
-        Leave the RSA public key field empty.
-      </>
-    ),
+    title: "Skip the RSA field",
+    body: <>Leave it empty.</>,
     image: {
       src: "/connect/kalshi/step-4.png",
       alt: "The RSA public key field, left empty",
     },
   },
   {
-    text: (
+    title: "Set the permissions",
+    body: (
       <>
-        Under <B>Permissions</B>, check <B>Read all data</B>.{" "}
-        <B>Uncheck Full access.</B> Actuals only reads your data. It
-        cannot place trades or move money.
+        Check <B>Read all data</B>. Uncheck <B>Full access</B>.
       </>
     ),
+    note: "Actuals can only read. It can never trade or move your money.",
     image: {
       src: "/connect/kalshi/step-5.png",
       alt: "Kalshi's permissions: Read all data checked, Full access unchecked",
     },
   },
   {
-    text: (
+    title: "Save your key",
+    body: (
       <>
-        Click <B>Create</B>. Kalshi will show your API Key ID and
-        download your private key file. Save the file. Kalshi will not
-        show the private key again.
+        Click <B>Create</B> and save the downloaded file.
       </>
     ),
+    note: "Kalshi will not show the private key again.",
     image: {
       src: "/connect/kalshi/step-6.png",
       alt: "Kalshi's Keep your key safe screen with the API Key ID and private key",
     },
   },
   {
-    text: (
-      <>
-        Copy your API Key ID and private key.
-      </>
-    ),
+    title: "Copy both",
+    body: <>Your API Key ID and your private key.</>,
   },
 ];
 
@@ -737,25 +732,22 @@ export default function ConnectAccounts({
     const guide = KALSHI_GUIDE[card];
     return (
       <section className={`${CARD} p-4`}>
-        {/* THE PHONE WARNING, on the first card so nobody discovers
-            it at step 5: Kalshi does not show API keys on the phone
-            (the owner hit this himself, August 2026). A muted line,
-            not a box. */}
-        {card === 0 && (
-          <p className="mb-3 text-xs text-neutral-500 dark:text-neutral-400">
-            You need a computer for this part. Kalshi does not show API
-            keys on the phone.
-          </p>
-        )}
-
-        {/* min-height keeps the corners still while the text length
-            changes card to card. */}
-        <div className="min-h-[88px]">
-          <p className="text-sm leading-relaxed">
-            <span className="sr-only">
-              Step {card + 1} of {KALSHI_GUIDE.length + 1}:{" "}
-            </span>
-            {guide.text}
+        {/* One headline naming the action, one line under it, the
+            screenshot. The number gives the headline its place in the
+            flow; the phone warning is card 1's note, so nobody
+            discovers it at step 5. */}
+        <div className="min-h-[80px]">
+          <h2 className="text-sm font-semibold">
+            {card + 1}. {guide.title}
+          </h2>
+          <p className="mt-1 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
+            {guide.body}
+            {guide.note && (
+              <>
+                <br />
+                {guide.note}
+              </>
+            )}
           </p>
           {guide.image && (
             /* A screenshot of the Kalshi screen this card talks
@@ -782,7 +774,7 @@ export default function ConnectAccounts({
                 setCard(card - 1);
               }
             }}
-            className="-ml-1 h-9 rounded-lg px-1 text-sm text-neutral-500 dark:text-neutral-400"
+            className="-ml-1 h-9 rounded-lg px-1 text-xs text-neutral-500 dark:text-neutral-400"
           >
             Back
           </button>
@@ -790,7 +782,7 @@ export default function ConnectAccounts({
           <button
             type="button"
             onClick={() => setCard(card + 1)}
-            className="-mr-1 h-9 rounded-lg px-1 text-sm font-semibold"
+            className="-mr-1 h-9 rounded-lg px-1 text-xs"
           >
             Next ›
           </button>
@@ -801,7 +793,9 @@ export default function ConnectAccounts({
 
   return (
     <section className={`${CARD} p-4`}>
-      <p className="text-sm leading-relaxed">Paste them here.</p>
+      <h2 className="text-sm font-semibold">
+        {KALSHI_GUIDE.length + 1}. Paste them here
+      </h2>
 
       <label htmlFor="kalshi-key-id" className="mt-4 block text-sm font-semibold">
         API Key ID
@@ -881,7 +875,7 @@ export default function ConnectAccounts({
             setError(null);
             setCard(KALSHI_GUIDE.length - 1);
           }}
-          className="-ml-1 h-9 rounded-lg px-1 text-sm text-neutral-500 dark:text-neutral-400"
+          className="-ml-1 h-9 rounded-lg px-1 text-xs text-neutral-500 dark:text-neutral-400"
         >
           Back
         </button>
