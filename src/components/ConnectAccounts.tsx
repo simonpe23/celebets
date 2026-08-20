@@ -519,7 +519,12 @@ export default function ConnectAccounts({
             <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
               Importing older bets gives you insights and results from{" "}
               {KALSHI_HISTORY_SHORT}. Do you want to keep your Actuals
-              record clean and start from your connect date? Skip it.
+              record clean and start from your connect date?
+            </span>
+            {/* Its own row, by the owner: glued to the question above
+                it, the answer read as part of the question. */}
+            <span className="mt-1 block text-xs text-neutral-500 dark:text-neutral-400">
+              Skip it.
             </span>
             <div className="mt-2.5 flex items-center gap-4">
               <button
