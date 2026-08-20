@@ -21,7 +21,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 const dir = await mkdtemp(join(tmpdir(), "synctest-"));
-for (const name of ["kalshiSync", "format", "types"]) {
+for (const name of ["kalshiSync", "format", "types", "taxonomy"]) {
   const src = await readFile(`src/lib/${name}.ts`, "utf8");
   await writeFile(
     join(dir, `${name}.ts`),
@@ -31,6 +31,15 @@ for (const name of ["kalshiSync", "format", "types"]) {
 const { clampToStart, deriveBets, sportFor, sportForTicker } = await import(
   join(dir, "kalshiSync.ts")
 );
+const {
+  UNCLASSIFIED,
+  DOMAIN_CATEGORIES,
+  CATEGORY_MARKETS,
+  classifyKalshi,
+  domainOf,
+  migrateManualLabel,
+  validated,
+} = await import(join(dir, "taxonomy.ts"));
 
 let failures = 0;
 function eq(name, got, want) {
@@ -444,6 +453,86 @@ eq("ITF is Tennis", sportForTicker("KXITFMATCH-26AUG06OETFIX"), "Tennis");
 eq("EFL cup is Football", sportForTicker("KXEFLCUPSPREAD-26AUG06BRCWAL"), "Football");
 eq("club friendly is Football", sportForTicker("KXCLUBFGAME-26AUG12MUNLEE"), "Football");
 eq("weather is Other", sportForTicker("KXHIGHNY-25AUG20"), "Other");
+
+// ---- THE TAXONOMY. Locked with the owner on 21 August 2026.
+// Category = repeatable skill, Market = controlled instrument,
+// Domain / Sport / Competition / Period = independent dimensions.
+// Every mapping below is a real series from his accounts.
+{
+  const cases = [
+    // [series title, ticker, category, market, period, competition]
+    ["World Cup Game", "KXWCGAME-X", "Moneyline", "Match Winner", null, "World Cup"],
+    ["World Cup Advance", "KXWCADVANCE-X", "Moneyline", "To Advance", null, "World Cup"],
+    ["World Cup 1st Half", "KXWC1H-X", "Moneyline", "Match Winner", "1st Half", "World Cup"],
+    ["World Cup Total", "KXWCTOTAL-X", "Totals (Over/Under)", "Match Total", null, "World Cup"],
+    ["World Cup Correct Score", "KXWCSCORE-X", "Correct Score", "Correct Score", null, "World Cup"],
+    ["World Cup BTTS", "KXWCBTTS-X", "Match Props", "BTTS", null, "World Cup"],
+    ["World Cup Corners", "KXWCCORNERS-X", "Match Props", "Corners", null, "World Cup"],
+    ["World Cup First Goal", "KXWCFIRSTGOAL-X", "Match Props", "First to Score", null, "World Cup"],
+    ["World Cup Goal", "KXWCGOAL-X", "Player Props", "Goalscorer", null, "World Cup"],
+    ["Men's World Cup winner", "KXMENWORLDCUP-X", "Outright Winner", "Outright", null, "Men's World Cup"],
+    ["EFL Cup Spread", "KXEFLCUPSPREAD-X", "Spread / Handicap", "Spread", null, "EFL Cup"],
+    ["Professional Baseball Game", "KXMLBGAME-X", "Moneyline", "Match Winner", null, "Professional Baseball"],
+    ["ATP Tennis Match", "KXATPMATCH-X", "Moneyline", "Match Winner", null, "ATP Tennis"],
+    ["Challenger ATP ", "KXATPCHALLENGERMATCH-X", "Moneyline", "Match Winner", null, "Challenger ATP"],
+    ["Club Friendlies", "KXCLUBFGAME-X", "Moneyline", "Match Winner", null, "Club Friendlies"],
+    ["Bitcoin price up down", "KXBTC15M-X", "Price Direction", "Price Direction", null, null],
+    ["La Liga Game", "KXLALIGAGAME-X", "Moneyline", "Match Winner", null, "La Liga"],
+  ];
+  for (const [title, ticker, category, market, period, competition] of cases) {
+    const c = classifyKalshi(title, ticker);
+    eq(`taxonomy: ${title}`, [c.category, c.market, c.period, c.competition],
+       [category, market, period, competition]);
+  }
+
+  // UNCLASSIFIED IS THE ONLY FALLBACK. Never a guess, never Match
+  // Props, never an old category.
+  eq("taxonomy: a never-seen series is Unclassified",
+     classifyKalshi("Highest temperature in NYC", "KXHIGHNY-X").category, UNCLASSIFIED);
+  eq("taxonomy: a parlay container is never one category",
+     classifyKalshi("MVE Sport Mutli Game", "KXMVESPORTSMULTIGAMEEXTENDED-X").category,
+     UNCLASSIFIED);
+
+  // NO PROVIDER CAN MINT A CATEGORY: a classification is only valid
+  // if its category is registered in the pick's domain.
+  eq("taxonomy: an unregistered category is rejected to Unclassified",
+     validated("Politics", { category: "Moneyline", market: "Match Winner", period: null, competition: null }).category,
+     UNCLASSIFIED);
+  eq("taxonomy: a registered one passes",
+     validated(domainOf("Football"), classifyKalshi("La Liga Game", "KXLALIGAGAME-X")).category,
+     "Moneyline");
+
+  // SAME BET = SAME CANONICAL CATEGORY. A manual pick and its
+  // imported twin must land together, whatever door they came in.
+  const pairs = [
+    ["Win-bet / Moneyline", "La Liga Game", "KXLALIGAGAME-X"],
+    ["Correct Score", "World Cup Correct Score", "KXWCSCORE-X"],
+    ["BTTS (Both Teams to Score)", "World Cup BTTS", "KXWCBTTS-X"],
+    ["Corners", "World Cup Corners", "KXWCCORNERS-X"],
+    ["First team to score", "World Cup First Goal", "KXWCFIRSTGOAL-X"],
+    ["Points Total", "World Cup Total", "KXWCTOTAL-X"],
+    ["Player Props: Goalscorer", "World Cup Goal", "KXWCGOAL-X"],
+  ];
+  for (const [manual, kalshiTitle, ticker] of pairs) {
+    eq(
+      `same bet = same category: ${manual}`,
+      migrateManualLabel(manual).category,
+      classifyKalshi(kalshiTitle, ticker).category
+    );
+  }
+  // The owner's half bets: first-half results, both doors agree on
+  // category AND period.
+  const mHalf = migrateManualLabel("1st half / 2nd half");
+  const kHalf = classifyKalshi("World Cup 1st Half", "KXWC1H-X");
+  eq("same bet = same category: halves", [mHalf.category, mHalf.period], [kHalf.category, kHalf.period]);
+
+  // Every market the mappers can emit is registered under its
+  // category, and every registered category belongs to a domain.
+  const allRegistered = Object.values(DOMAIN_CATEGORIES).flat();
+  for (const cat of Object.keys(CATEGORY_MARKETS)) {
+    eq(`register: ${cat} belongs to a domain`, allRegistered.includes(cat), true);
+  }
+}
 
 if (failures > 0) {
   console.log(`Sync test found ${failures} problem(s).`);
