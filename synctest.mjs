@@ -366,7 +366,31 @@ const r2 = (v) => Math.round(v * 100) / 100;
     ["KXNFLGAME", { category: "Sports", title: "Pro Football Game", tags: ["Football"] }],
     ["KXBTC15M", { category: "Crypto", title: "Bitcoin price up down", tags: ["BTC"] }],
     ["KXHIGHNY", { category: "Climate and Weather", title: "Highest temperature in NYC", tags: [] }],
+    ["KXPRES", { category: "Politics", title: "Presidential Election", tags: [] }],
+    ["KXCPI", { category: "Economics", title: "Monthly inflation", tags: [] }],
+    ["KXOSCARS", { category: "Culture", title: "Oscars Best Picture", tags: [] }],
+    ["KXAAPL", { category: "Companies", title: "Apple announcement", tags: [] }],
+    ["KXQUANTUM", { category: "Science and Technology", title: "Quantum milestone", tags: [] }],
+    ["KXMYSTERY", { category: "Something Brand New", title: "Mystery market", tags: [] }],
   ]);
+  eq("taxonomy: Politics named", sportFor("KXPRES-28-X", series), "Politics");
+  eq("taxonomy: Economics named", sportFor("KXCPI-26SEP-X", series), "Economics");
+  eq(
+    "taxonomy: Culture is Entertainment here",
+    sportFor("KXOSCARS-27-X", series),
+    "Entertainment"
+  );
+  eq("taxonomy: Companies named", sportFor("KXAAPL-26-X", series), "Companies");
+  eq(
+    "taxonomy: Science and Technology named",
+    sportFor("KXQUANTUM-26-X", series),
+    "Tech & Science"
+  );
+  eq(
+    "taxonomy: a category we have never seen lands safely in Other",
+    sportFor("KXMYSTERY-26-X", series),
+    "Other"
+  );
   eq("taxonomy: Tennis tag wins", sportFor("KXITFWMATCH-26AUG19ROMSAR-ROM", series), "Tennis");
   eq("taxonomy: Soccer tag is Football here", sportFor("KXWCGOAL-26X-Y", series), "Football");
   eq(
@@ -376,9 +400,9 @@ const r2 = (v) => Math.round(v * 100) / 100;
   );
   eq("taxonomy: Crypto category wins", sportFor("KXBTC15M-26AUG191700-00", series), "Crypto");
   eq(
-    "taxonomy: a non-sport category stays Other for now",
+    "taxonomy: a weather category gets its real name",
     sportFor("KXHIGHNY-25AUG20", series),
-    "Other"
+    "Weather"
   );
   eq(
     "taxonomy: no series answer falls back to the prefix table",

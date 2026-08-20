@@ -20,7 +20,14 @@ import {
   totals,
   typeRows,
 } from "@/lib/stats";
-import { SPORTS, SPORT_EMOJI, type BetWithLegs, type Sport } from "@/lib/types";
+import {
+  KALSHI_CATEGORIES,
+  NOT_SPORTS,
+  SPORTS,
+  SPORT_EMOJI,
+  type BetWithLegs,
+  type Sport,
+} from "@/lib/types";
 import { CARD, NO_SCROLLBAR } from "@/lib/ui";
 
 const PERIOD_LABELS: { key: Period; label: string }[] = [
@@ -134,6 +141,13 @@ export default function StatsView({
   activeHref?: string;
 }) {
   const [sport, setSport] = useState<Sport | null>(null);
+  // The Sports / Not Sports split (phase 3, the owner's ruling): a
+  // sports app first, so the whole-sports view is one tap, but the
+  // DEFAULT stays everything, or this page's headline would disagree
+  // with the Tracking Balance for anyone who bets crypto or politics.
+  // A group only narrows the bet set; picking a single sport clears
+  // it, so the two can never fight over one headline.
+  const [group, setGroup] = useState<"all" | "sports" | "notsports">("all");
   const [period, setPeriod] = useState<Period>("all");
   const [customFrom, setCustomFrom] = useState("");
   const [customTo, setCustomTo] = useState("");
@@ -168,11 +182,26 @@ export default function StatsView({
     return true;
   });
 
+  // The group narrows first: a bet counts as Sports (or Not Sports)
+  // when at least one of its picks is, the same "some pick" rule the
+  // single-sport filter has always used, so a crypto + tennis parlay
+  // shows up under both, whole. Then the sport filter, unchanged.
+  const inGroup =
+    group === "all"
+      ? inPeriod
+      : inPeriod.filter((b) =>
+          b.legs.some((leg) =>
+            group === "sports"
+              ? !NOT_SPORTS.has(leg.sport)
+              : NOT_SPORTS.has(leg.sport)
+          )
+        );
+
   // Sport filter: keep bets that contain at least one pick of the sport.
   const filtered =
     sport === null
-      ? inPeriod
-      : inPeriod.filter((b) => b.legs.some((leg) => leg.sport === sport));
+      ? inGroup
+      : inGroup.filter((b) => b.legs.some((leg) => leg.sport === sport));
 
   const t = totals(filtered, sport);
   const bySport = sportRows(filtered).filter(
@@ -190,6 +219,16 @@ export default function StatsView({
       new Date(b.settled_at ?? 0).getTime() -
       new Date(a.settled_at ?? 0).getTime()
   );
+
+  // The chip row: real sports always, the Not Sports side only when
+  // the record actually holds such picks, in a stable order.
+  const sportChips = SPORTS.filter((s) => !NOT_SPORTS.has(s));
+  const present = new Set(
+    allSettled.flatMap((b) => b.legs.map((leg) => leg.sport))
+  );
+  const notSportsChips = (
+    ["Crypto", ...KALSHI_CATEGORIES, "Other"] as Sport[]
+  ).filter((s) => present.has(s));
 
   // The hero speaks in bets with no sport chosen, and in that sport's
   // picks and money share once one is.
@@ -302,7 +341,15 @@ export default function StatsView({
                     further down, and two of them cost the chart the
                     height it needed. The tile is the one that stays. */}
                 <HeadlineProfit
-                  label={`${periodLabel}${sport === null ? "" : ` / ${sport}`}`}
+                  label={`${periodLabel}${
+                    sport !== null
+                      ? ` / ${sport}`
+                      : group === "sports"
+                        ? " / Sports"
+                        : group === "notsports"
+                          ? " / Not Sports"
+                          : ""
+                  }`}
                   profit={heroProfit}
                   roi={null}
                   scrub={scrub}
@@ -350,16 +397,59 @@ export default function StatsView({
               <div className={`-mx-4 mt-4 flex gap-2 overflow-x-auto px-4 pb-1 ${NO_SCROLLBAR}`}>
                 <button
                   type="button"
-                  onClick={() => setSport(null)}
-                  className={pillClass(sport === null)}
+                  onClick={() => {
+                    setGroup("all");
+                    setSport(null);
+                  }}
+                  className={pillClass(group === "all" && sport === null)}
                 >
-                  All sports
+                  All
                 </button>
-                {SPORTS.map((s) => (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setGroup("sports");
+                    setSport(null);
+                  }}
+                  className={pillClass(group === "sports" && sport === null)}
+                >
+                  Sports
+                </button>
+                {sportChips.map((s) => (
                   <button
                     key={s}
                     type="button"
-                    onClick={() => setSport(s)}
+                    onClick={() => {
+                      setGroup("all");
+                      setSport(s);
+                    }}
+                    className={pillClass(sport === s)}
+                  >
+                    {SPORT_EMOJI[s]} {s}
+                  </button>
+                ))}
+                {/* The Not Sports side only exists for users who have
+                    such bets: a sports-only record keeps a clean row. */}
+                {notSportsChips.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setGroup("notsports");
+                      setSport(null);
+                    }}
+                    className={pillClass(group === "notsports" && sport === null)}
+                  >
+                    Not Sports
+                  </button>
+                )}
+                {notSportsChips.map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => {
+                      setGroup("all");
+                      setSport(s);
+                    }}
                     className={pillClass(sport === s)}
                   >
                     {SPORT_EMOJI[s]} {s}

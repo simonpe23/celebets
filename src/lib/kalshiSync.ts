@@ -184,10 +184,36 @@ const TAG_SPORTS: Record<string, Sport> = {
   esports: "esports",
 };
 
+// Kalshi's non-sport categories, normalised into this app's names by
+// a contains-match, so a rename on their side ("Climate" becoming
+// "Climate and Weather") keeps mapping instead of breaking. Order
+// matters only where words overlap; anything unmatched falls through
+// to the prefix table and finally to Other, so a category we have
+// never seen degrades safely instead of failing an import.
+const CATEGORY_SPORTS: [string, Sport][] = [
+  ["crypto", "Crypto"],
+  ["politic", "Politics"],
+  ["election", "Politics"],
+  ["econom", "Economics"],
+  ["financial", "Economics"],
+  ["inflation", "Economics"],
+  ["culture", "Entertainment"],
+  ["entertain", "Entertainment"],
+  ["music", "Entertainment"],
+  ["movie", "Entertainment"],
+  ["climate", "Weather"],
+  ["weather", "Weather"],
+  ["compan", "Companies"],
+  ["science", "Tech & Science"],
+  ["tech", "Tech & Science"],
+  ["health", "Health"],
+  ["world", "World"],
+  ["transport", "World"],
+];
+
 // The sport for one market, best source first: Kalshi's own series
 // taxonomy (category + tags), then the hand-kept ticker-prefix table
-// for markets whose series lookup failed. Non-sport categories other
-// than Crypto stay Other until the app grows real categories.
+// for markets whose series lookup failed.
 export function sportFor(
   ticker: string,
   series: Map<string, KalshiSeriesMeta>
@@ -196,11 +222,14 @@ export function sportFor(
   const s = series.get(prefix);
   if (s) {
     const cat = (s.category ?? "").toLowerCase();
-    if (cat === "crypto") return "Crypto";
     if (cat === "sports") {
       for (const tag of s.tags ?? []) {
         const mapped = TAG_SPORTS[tag.toLowerCase()];
         if (mapped) return mapped;
+      }
+    } else if (cat !== "") {
+      for (const [word, sport] of CATEGORY_SPORTS) {
+        if (cat.includes(word)) return sport;
       }
     }
   }
