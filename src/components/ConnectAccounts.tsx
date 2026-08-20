@@ -696,11 +696,14 @@ export default function ConnectAccounts({
           What pressing Connect does
         </span>
         <ul className="mt-1.5 space-y-1 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
-          <li>Your open Kalshi bets appear in Actuals right away.</li>
-          <li>From now on, new Kalshi bets are tracked on their own.</li>
+          <li>Your current pending Kalshi bets will appear in Actuals.</li>
           <li>
-            Your older, finished Kalshi bets stay out. You can bring
-            them in later with one tap, back to {KALSHI_HISTORY_FROM}.
+            New Kalshi bets will automatically be synced and tracked in
+            Actuals.
+          </li>
+          <li>
+            Older bets won&apos;t be imported. You can bring in bets
+            from {KALSHI_HISTORY_FROM} later.
           </li>
         </ul>
       </div>
