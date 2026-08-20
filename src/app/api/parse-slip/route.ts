@@ -1,17 +1,15 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { SPORTS, SUBCATEGORIES } from "@/lib/types";
+import { SPORTS } from "@/lib/types";
+import { DOMAIN_CATEGORIES } from "@/lib/taxonomy";
 
 // Reading a slip can take a little while on slow images.
 export const maxDuration = 30;
 
-const FOOTBALL_CATEGORIES = (SUBCATEGORIES.Football ?? [])
-  .flatMap((item) =>
-    typeof item === "string"
-      ? [item]
-      : item.children.map((child) => `${item.label}: ${child}`)
-  )
-  .join('", "');
+// The AI is offered the canonical taxonomy only. Whatever it
+// answers is still coerced by the form (coerceManualCategory), so a
+// stray reading becomes no category, never a junk one.
+const FOOTBALL_CATEGORIES = (DOMAIN_CATEGORIES.Sports ?? []).join('", "');
 
 const SYSTEM_PROMPT = `You read screenshots of sports bet slips (Kalshi, Polymarket, sportsbooks).
 Respond with ONLY a JSON object, no other text, in this exact shape:

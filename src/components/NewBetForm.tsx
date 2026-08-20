@@ -11,7 +11,13 @@ import {
   round2,
   round4,
 } from "@/lib/format";
-import { SPORTS, SPORT_EMOJI, SUBCATEGORIES, type Sport } from "@/lib/types";
+import { SPORTS, SPORT_EMOJI, type Sport } from "@/lib/types";
+import {
+  CATEGORY_MARKETS,
+  SPORT_PERIODS,
+  categoriesForSport,
+  coerceManualCategory,
+} from "@/lib/taxonomy";
 import { CARD, NO_SCROLLBAR } from "@/lib/ui";
 
 interface LegDraft {
@@ -19,9 +25,12 @@ interface LegDraft {
   description: string;
   // Kalshi style chance percentage, used on parlays only.
   percent: string;
+  // The canonical category, market and period from the taxonomy: the
+  // same vocabulary imports write, which is what keeps a manual bet
+  // and its imported twin in one analytics row.
   subcategory: string | null;
-  // Which chip group (like Player Props) currently shows its third row.
-  openGroup: string | null;
+  market: string | null;
+  period: string | null;
   // Tapping the selected sport again hides or shows the category row.
   categoriesOpen: boolean;
 }
@@ -37,7 +46,8 @@ function emptyLeg(): LegDraft {
     description: "",
     percent: "",
     subcategory: null,
-    openGroup: null,
+    market: null,
+    period: null,
     categoriesOpen: true,
   };
 }
@@ -227,6 +237,8 @@ export default function NewBetForm({
           description: description === "" ? null : description,
           odds: legOdds[i],
           subcategory: leg.subcategory,
+          market: leg.market,
+          period: leg.period,
         };
       }),
     });
@@ -280,11 +292,19 @@ export default function NewBetForm({
               raw.percent < 100
                 ? String(raw.percent)
                 : "",
-            subcategory:
-              typeof raw.category === "string" && raw.category.trim() !== ""
-                ? raw.category.trim()
-                : null,
-            openGroup: null,
+            // The AI's free-text category coerces into the taxonomy
+            // or becomes no category. Free text must not mint
+            // categories through the manual door either.
+            ...(typeof raw.category === "string"
+              ? (() => {
+                  const c = coerceManualCategory(raw.category);
+                  return {
+                    subcategory: c?.category ?? null,
+                    market: c?.market ?? null,
+                    period: c?.period ?? null,
+                  };
+                })()
+              : { subcategory: null, market: null, period: null }),
             categoriesOpen: false,
           })
         )
@@ -632,7 +652,8 @@ export default function NewBetForm({
                       : {
                           sport: s,
                           subcategory: null,
-                          openGroup: null,
+                          market: null,
+                          period: null,
                           categoriesOpen: true,
                         }
                   )
@@ -649,21 +670,31 @@ export default function NewBetForm({
           </div>
 
           {leg.sport !== null &&
-            SUBCATEGORIES[leg.sport] !== undefined &&
+            categoriesForSport(leg.sport).length > 0 &&
             !leg.categoriesOpen &&
             leg.subcategory !== null && (
               <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
-                Category: {leg.subcategory} (tap {leg.sport} to change)
+                Category: {leg.subcategory}
+                {leg.market !== null && ` · ${leg.market}`}
+                {leg.period !== null && ` · ${leg.period}`} (tap {leg.sport} to
+                change)
               </p>
             )}
 
-          {(leg.sport === null || SUBCATEGORIES[leg.sport] === undefined) &&
+          {(leg.sport === null ||
+            categoriesForSport(leg.sport).length === 0) &&
             leg.subcategory !== null && (
               <p className="mt-2 text-xs text-neutral-500 dark:text-neutral-400">
                 Category: {leg.subcategory}{" "}
                 <button
                   type="button"
-                  onClick={() => updateLeg(index, { subcategory: null })}
+                  onClick={() =>
+                    updateLeg(index, {
+                      subcategory: null,
+                      market: null,
+                      period: null,
+                    })
+                  }
                   className="font-semibold underline underline-offset-2"
                 >
                   clear
@@ -671,8 +702,13 @@ export default function NewBetForm({
               </p>
             )}
 
+          {/* THE TAXONOMY PICKER: Category, then Market where the
+              category has more than one, then Period where the sport
+              has periods. The same canonical vocabulary imports
+              write, so both doors land in one analytics row. A
+              single-market category fills its market on selection. */}
           {leg.sport !== null &&
-            SUBCATEGORIES[leg.sport] !== undefined &&
+            categoriesForSport(leg.sport).length > 0 &&
             leg.categoriesOpen && (
               <>
                 <p className="mt-4 text-sm font-semibold">
@@ -682,81 +718,51 @@ export default function NewBetForm({
                   </span>
                 </p>
                 <div className={`-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1 ${NO_SCROLLBAR}`}>
-                  {SUBCATEGORIES[leg.sport]!.map((item) => {
-                    if (typeof item === "string") {
-                      const selected = leg.subcategory === item;
-                      return (
-                        <button
-                          key={item}
-                          type="button"
-                          onClick={() =>
-                            updateLeg(index, {
-                              subcategory: selected ? null : item,
-                              openGroup: null,
-                            })
-                          }
-                          className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
-                            selected
-                              ? "border-brand-mark bg-brand-top text-white"
-                              : "border-neutral-300 dark:border-white/15"
-                          }`}
-                        >
-                          {item}
-                        </button>
-                      );
-                    }
-                    const groupSelected =
-                      leg.subcategory?.startsWith(item.label + ": ") ?? false;
-                    const groupOpen =
-                      leg.openGroup === item.label || groupSelected;
+                  {categoriesForSport(leg.sport).map((cat) => {
+                    const selected = leg.subcategory === cat;
+                    const markets = CATEGORY_MARKETS[cat] ?? [];
                     return (
                       <button
-                        key={item.label}
+                        key={cat}
                         type="button"
                         onClick={() =>
-                          updateLeg(index, {
-                            openGroup:
-                              leg.openGroup === item.label && !groupSelected
-                                ? null
-                                : item.label,
-                          })
+                          updateLeg(
+                            index,
+                            selected
+                              ? { subcategory: null, market: null }
+                              : {
+                                  subcategory: cat,
+                                  market:
+                                    markets.length === 1 ? markets[0] : null,
+                                }
+                          )
                         }
                         className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
-                          groupSelected
+                          selected
                             ? "border-brand-mark bg-brand-top text-white"
-                            : groupOpen
-                              ? "border-brand-mark text-brand-mark"
-                              : "border-neutral-300 dark:border-white/15"
+                            : "border-neutral-300 dark:border-white/15"
                         }`}
                       >
-                        {item.label}
+                        {cat}
                       </button>
                     );
                   })}
                 </div>
 
-                {SUBCATEGORIES[leg.sport]!.map((item) => {
-                  if (typeof item === "string") return null;
-                  const groupSelected =
-                    leg.subcategory?.startsWith(item.label + ": ") ?? false;
-                  if (leg.openGroup !== item.label && !groupSelected) {
-                    return null;
-                  }
-                  return (
+                {leg.subcategory !== null &&
+                  (CATEGORY_MARKETS[leg.subcategory] ?? []).length > 1 && (
                     <div
-                      key={item.label}
                       className={`mt-2 flex gap-2 overflow-x-auto rounded-xl bg-neutral-100 p-2 dark:bg-[#161D38] ${NO_SCROLLBAR}`}
                     >
-                      {item.children.map((child) => {
-                        const value = `${item.label}: ${child}`;
-                        const selected = leg.subcategory === value;
+                      {CATEGORY_MARKETS[leg.subcategory].map((m) => {
+                        const selected = leg.market === m;
                         return (
                           <button
-                            key={child}
+                            key={m}
                             type="button"
                             onClick={() =>
                               updateLeg(index, {
-                                subcategory: selected ? null : value,
+                                market: selected ? null : m,
                               })
                             }
                             className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
@@ -765,13 +771,42 @@ export default function NewBetForm({
                                 : "border-neutral-300 bg-white dark:border-white/15 dark:bg-[#0E1228]"
                             }`}
                           >
-                            {child}
+                            {m}
                           </button>
                         );
                       })}
                     </div>
-                  );
-                })}
+                  )}
+
+                {leg.subcategory !== null &&
+                  (SPORT_PERIODS[leg.sport] ?? []).length > 0 && (
+                    <div className={`-mx-1 mt-2 flex items-center gap-2 overflow-x-auto px-1 pb-1 ${NO_SCROLLBAR}`}>
+                      <span className="shrink-0 text-xs text-neutral-500 dark:text-neutral-400">
+                        Period, optional
+                      </span>
+                      {(SPORT_PERIODS[leg.sport] ?? []).map((p) => {
+                        const selected = leg.period === p;
+                        return (
+                          <button
+                            key={p}
+                            type="button"
+                            onClick={() =>
+                              updateLeg(index, {
+                                period: selected ? null : p,
+                              })
+                            }
+                            className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
+                              selected
+                                ? "border-brand-mark bg-brand-top text-white"
+                                : "border-neutral-300 dark:border-white/15"
+                            }`}
+                          >
+                            {p}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
               </>
             )}
 

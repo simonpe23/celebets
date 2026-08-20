@@ -64,31 +64,11 @@ export const SPORT_EMOJI: Record<Sport, string> = {
   World: "\u{1F30D}",
 };
 
-// A sub-category is either a plain label or a group that opens a
-// third row of choices (stored as "Group: Choice").
-export type SubcategoryItem =
-  | string
-  | { label: string; children: string[] };
-
-// Sub-categories per sport. Sports not listed here have none yet.
-// Adding more is a code change only, the database accepts any text.
-export const SUBCATEGORIES: Partial<Record<Sport, SubcategoryItem[]>> = {
-  Football: [
-    "Win-bet / Moneyline",
-    "Goal Difference",
-    "Points Total",
-    "1st half / 2nd half",
-    "Team Points Total",
-    "BTTS (Both Teams to Score)",
-    "Correct Score",
-    "Corners",
-    "First team to score",
-    {
-      label: "Player Props",
-      children: ["Goalscorer", "Assists", "Score or Assist"],
-    },
-  ],
-};
+// The curated SUBCATEGORIES list that used to live here was the
+// pre-taxonomy category system, superseded on 21 August 2026 by
+// src/lib/taxonomy.ts (categories registered per domain, controlled
+// markets, sport-appropriate periods). phase12.sql migrated the
+// stored labels; keep exactly one vocabulary.
 
 export type BetStatus = "pending" | "won" | "lost";
 export type LegResult = "pending" | "won" | "lost";

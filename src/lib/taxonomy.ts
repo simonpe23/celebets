@@ -316,3 +316,24 @@ export function migrateManualLabel(
   }
   return null;
 }
+
+// Free text arriving through the manual door (the bet-slip parser's
+// AI reading, mostly) must not mint categories any more than a
+// provider can. An exact match on a registered category or a legacy
+// label coerces; anything else becomes null, a bet with no category,
+// never a junk row in the analytics.
+export function coerceManualCategory(
+  label: string
+): { category: string; market: string | null; period: string | null } | null {
+  const trimmed = label.trim();
+  if (trimmed === "") return null;
+  const lower = trimmed.toLowerCase();
+  for (const cats of Object.values(DOMAIN_CATEGORIES)) {
+    for (const cat of cats ?? []) {
+      if (cat.toLowerCase() === lower) {
+        return { category: cat, market: null, period: null };
+      }
+    }
+  }
+  return migrateManualLabel(trimmed);
+}
