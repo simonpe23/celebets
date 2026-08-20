@@ -241,15 +241,33 @@ How this file works:
       automatically"), which only becomes TRUE when syncing ships.
       Same for the full old-data vs new-data explanation.
 
-    STORED FOR LATER, the owner, 19 August, after connecting his own
-    key: THE KEY SETUP SCREEN NEEDS A REAL REDESIGN before testers
-    see it. His words: "it looks so messy and i would close the
-    window if i saw this. instructions needs to be bigger cards with
-    1-2 bullets per card so the user can click next once completed.
-    its too overwhelming to see this at once." So: a step wizard, one
-    card per one or two steps, a Next button as each is completed,
-    never seven numbered steps on one screen. The COPY itself is his
-    and stays; the container changes. Not built yet.
+    THE KEY WIZARD, SHIPPED AND APPROVED 20 August ("beautiful!
+    that'll do for now"). The seven-step list became eight cards, one
+    action each, walked with Back and Next and a dot strip. It took
+    FOUR design rounds to land, and the lessons are rules now:
+    - The card anatomy that survived: a numbered semibold headline
+      naming the action, ONE thin small muted line under it, the
+      owner's real Kalshi screenshot, nothing else. A second muted
+      line only where money or a stuck user is at stake.
+    - His verdicts along the way, in order: v1 "too noisy... it looks
+      cheap and not classy" (big heading, warning box, purple Next);
+      v2 bare paragraphs "no clear headline. just starts off with
+      blocks of texts no one wants to read"; v3 with headlines,
+      "better"; v4 with his images and copy edits, approved.
+    - Corners are quiet text, never buttons. No purple on the cards:
+      purple belongs to the one real button at the end, Connect.
+    - The screenshots live in public/connect/kalshi/step-N.png,
+      captured by the owner from the real site, tight crops of just
+      the element the card talks about. If Kalshi redesigns,
+      recapture, never mock up.
+    - The card 1 note says a computer is needed: Kalshi does not show
+      API keys on the phone. That stays until the key flow dies.
+    INTERIM BY DESIGN: the whole wizard exists because users must
+    ferry an API key by hand. The owner, at approval: "that'll do for
+    now until we have the fancy in app sync going." A future in-app
+    sync (OAuth-style connect inside Actuals, no key ferrying) would
+    replace these cards entirely; that is the long-term shape, not
+    yet designed or promised by Kalshi's API.
     THE 59-BET IMPORT, investigated 19 August: not categories at all
     (unknown categories import fine, as Other). The sync capped
     itself at 60 markets per run because it fetched fills one market
