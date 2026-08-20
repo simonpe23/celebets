@@ -273,6 +273,40 @@ How this file works:
     itself at 60 markets per run because it fetched fills one market
     at a time; fixed the same day with one paginated fills walk and
     batched market lookups, so a full history imports whole.
+    PHASE 3 SHIPPED AND VERIFIED, 20 August 2026 ("Works better now!
+    bets became football bets now"). What landed, in order:
+    - Sports come from Kalshi's series TAGS (their "Soccer" is our
+      Football; their plain "Football" tag is the American kind), the
+      old ticker-prefix table is only the fallback.
+    - Bet types mirror themselves: the series title lands in the
+      pick's subcategory (World Cup Correct Score, EFL Cup Spread),
+      no hand-kept list.
+    - Non-sport categories got real names from Kalshi's category
+      field: Politics, Economics, Entertainment, Weather, Companies,
+      Tech & Science, Health, World, plus Crypto and Other. Contains-
+      matching, so their renames keep mapping and the never-seen
+      lands in Other. phase11.sql taught the database the names.
+    - Crypto is Not Sports, the owner's ruling.
+    - THE FILTER took three rounds and ended at one row: a CATEGORIES
+      label, an All chip, every category in one scrollable row, and
+      "Sports only" as a quiet toggle beside the label (on = sports,
+      off = everything). Default is EVERYTHING, his ruling, so the
+      Performance headline never disagrees with the Tracking Balance.
+      Rejected on the way: a Not Sports aggregate chip ("useless"),
+      hiding chips when the record lacks such bets, and a three-row
+      layout he asked for and then regretted ("it's ugly").
+    - THE RELABEL PASS: the sync repairs picks that predate the
+      taxonomy (subcategory null marks them), fixing sport and bet
+      type in place, money untouched, singles all at once and parlays
+      40 a sync, and REPORTS itself in the result line ("fixed
+      categories on N picks"). Its first version shipped broken
+      twice over (fixes grouped under a space-joined key that fell
+      apart on multi-word names, and a stray NUL byte hid the line
+      from the first patch), which is why silent repairs are now
+      forbidden: if it fixes nothing and says nothing, nobody can
+      tell it apart from working.
+    STILL OPEN from the phase 3 sketch: the Kalshi vs manual SOURCE
+    filter on Performance, not yet designed or built.
     THE CATEGORY FINDING, for phase 3: Kalshi's taxonomy is two
     levels. CATEGORIES are about a dozen and stable (Politics,
     Economics, Financials, Climate and Weather, Entertainment,
