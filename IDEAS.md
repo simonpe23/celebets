@@ -305,8 +305,10 @@ How this file works:
       from the first patch), which is why silent repairs are now
       forbidden: if it fixes nothing and says nothing, nobody can
       tell it apart from working.
-    STILL OPEN from the phase 3 sketch: the Kalshi vs manual SOURCE
-    filter on Performance, not yet designed or built.
+    DROPPED, the owner, 21 August: the Kalshi vs manual SOURCE filter
+    sketched at the start of phase 3. "not necessary feature." Every
+    bet still records its source, so it is an hour's work if a user
+    ever asks for it. PHASE 3 IS CLOSED.
     THE CATEGORY FINDING, for phase 3: Kalshi's taxonomy is two
     levels. CATEGORIES are about a dozen and stable (Politics,
     Economics, Financials, Climate and Weather, Entertainment,
