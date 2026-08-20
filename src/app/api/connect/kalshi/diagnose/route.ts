@@ -157,79 +157,69 @@ export async function GET() {
     translated = { error: e instanceof Error ? e.message : String(e) };
   }
 
-  // ROUND 3 (the history that will not go past June): measure how
-  // deep Kalshi's own lists actually reach. If the fills list simply
-  // ENDS in June, the older record lives only in settlements, and the
-  // import needs a second source, not a better filter.
-  // Orders is included because fills and settlements both END at the
-  // same minute (June 13), which smells like an account-wide data
-  // boundary on Kalshi's side. If orders reach past it, the older
-  // record can be rebuilt from executed orders instead.
-  const depth: Record<string, unknown> = {};
-  for (const [name, path, listKey, timeField] of [
-    ["fills", "/portfolio/fills", "fills", "created_time"],
-    ["settlements", "/portfolio/settlements", "settlements", "settled_time"],
-    ["orders", "/portfolio/orders", "orders", "created_time"],
-  ] as const) {
-    try {
-      const { rows, done } = await kalshiGetPages<Record<string, unknown>>(
-        key,
-        pem,
-        path,
-        listKey,
-        {},
-        undefined,
-        100
-      );
-      const oldest = rows[rows.length - 1];
-      depth[name] = {
-        count: rows.length,
-        reachedEnd: done,
-        oldest: oldest?.[timeField] ?? null,
-        oldestSample: name === "fills" ? null : (oldest ?? null),
-      };
-    } catch (e) {
-      depth[name] = {
-        error: e instanceof Error ? e.message.slice(0, 120) : String(e),
-      };
-    }
-  }
-
-  // And what max_ts actually does, in both units, against the oldest
-  // imported bet.
-  const { data: oldestBet } = await supabase
-    .from("bets")
-    .select("placed_at")
-    .eq("source", "kalshi")
-    .order("placed_at", { ascending: true })
-    .limit(1)
-    .maybeSingle();
-  if (oldestBet?.placed_at) {
-    const boundSec = Math.floor(
-      new Date(oldestBet.placed_at as string).getTime() / 1000
+  // ROUND 4 (phase 3, categories). The sync guesses a sport from the
+  // ticker prefix, which is a hand-kept list that ages. Kalshi's own
+  // taxonomy hangs off the SERIES: every ticker's first segment names
+  // a series, and GET /series/{ticker} answers with its category and
+  // title. This walks the whole fills history once, collects every
+  // distinct series, and asks Kalshi what each one is, so the mapping
+  // phase is built from the account's real taxonomy, never guessed.
+  // (Round 3, the June 13 depth measurements, answered its question
+  // and retired: all three lists end together, an account-wide
+  // boundary on Kalshi's side.)
+  const series: Record<string, unknown> = {};
+  try {
+    const { rows } = await kalshiGetPages<{ ticker?: string }>(
+      key,
+      pem,
+      "/portfolio/fills",
+      "fills",
+      {},
+      undefined,
+      100
     );
-    const probeResults: Record<string, unknown> = { boundSec };
-    for (const [label, value] of [
-      ["seconds", String(boundSec)],
-      ["millis", String(boundSec * 1000)],
-    ]) {
-      try {
-        const d = (await kalshiGet(key, pem, "/portfolio/fills", {
-          limit: "5",
-          max_ts: value,
-        })) as { fills?: Record<string, unknown>[] };
-        const first = d.fills?.[0];
-        probeResults[label] = {
-          rows: d.fills?.length ?? 0,
-          firstTs: first?.ts ?? null,
-          firstTime: first?.created_time ?? null,
+    const fillsPerSeries = new Map<string, number>();
+    for (const r of rows) {
+      const prefix = String(r.ticker ?? "").split("-")[0];
+      if (!prefix) continue;
+      fillsPerSeries.set(prefix, (fillsPerSeries.get(prefix) ?? 0) + 1);
+    }
+    const prefixes = [...fillsPerSeries.keys()].slice(0, 80);
+    for (let i = 0; i < prefixes.length; i += 8) {
+      const chunk = prefixes.slice(i, i + 8);
+      const found = await Promise.all(
+        chunk.map(async (p) => {
+          try {
+            const d = (await kalshiGet(
+              key,
+              pem,
+              `/series/${encodeURIComponent(p)}`
+            )) as {
+              series?: { category?: string; title?: string; tags?: string[] };
+            };
+            return [p, d.series ?? null] as const;
+          } catch (e) {
+            return [
+              p,
+              { error: e instanceof Error ? e.message.slice(0, 80) : String(e) },
+            ] as const;
+          }
+        })
+      );
+      for (const [p, s] of found) {
+        series[p] = {
+          fills: fillsPerSeries.get(p) ?? 0,
+          category: (s as { category?: string })?.category ?? null,
+          title: (s as { title?: string })?.title ?? null,
+          tags: (s as { tags?: string[] })?.tags ?? null,
+          ...((s as { error?: string })?.error
+            ? { error: (s as { error?: string }).error }
+            : {}),
         };
-      } catch (e) {
-        probeResults[label] =
-          e instanceof Error ? e.message.slice(0, 120) : String(e);
       }
     }
-    depth.maxTsProbe = probeResults;
+  } catch (e) {
+    series.error = e instanceof Error ? e.message.slice(0, 120) : String(e);
   }
 
   const { count: kalshiBets } = await supabase
@@ -245,6 +235,6 @@ export async function GET() {
     translationOfSampleFill: translated,
     recentFills,
     markets,
-    depth,
+    series,
   });
 }
