@@ -468,7 +468,10 @@ export async function POST(request: Request) {
     // (subcategory null marks the pre-taxonomy imports) gets its
     // series looked up and its sport and bet type fixed IN PLACE.
     // Money is never touched: this relabels, it does not re-derive.
-    // Failures are swallowed on purpose, the sync itself succeeded.
+    // Failures must not sink the sync, but they must not be invisible
+    // either: the response reports what the repair did, because a
+    // silent repair that silently failed cost the owner a round trip.
+    let repaired = 0;
     try {
       const { data: allKalshi } = await supabase
         .from("bets")
@@ -480,20 +483,21 @@ export async function POST(request: Request) {
         subcategory: string | null;
         description: string | null;
       };
-      const needs = (allKalshi ?? [])
-        .filter((b) =>
-          ((b.legs ?? []) as LegRow[]).some((l) => l.subcategory === null)
-        )
-        .slice(0, 120);
+      const needs = (allKalshi ?? []).filter((b) =>
+        ((b.legs ?? []) as LegRow[]).some((l) => l.subcategory === null)
+      );
       if (needs.length > 0) {
         const tickerOf = (b: { external_id: unknown }) =>
           String(b.external_id ?? "").split(":")[1] ?? "";
+        // Singles are cheap (one batched series lookup per distinct
+        // prefix), so they all repair in one pass. Parlays cost one
+        // market fetch each, so they heal 40 a sync.
         const singles = needs.filter(
           (b) => ((b.legs ?? []) as LegRow[]).length === 1
         );
-        const parlays = needs.filter(
-          (b) => ((b.legs ?? []) as LegRow[]).length > 1
-        );
+        const parlays = needs
+          .filter((b) => ((b.legs ?? []) as LegRow[]).length > 1)
+          .slice(0, 40);
 
         // Parlay legs live in their own markets; the parent knows
         // which. Parents are fetched one by one because the batch
@@ -532,7 +536,9 @@ export async function POST(request: Request) {
         ) => {
           if (subcategory === null) return;
           if (leg.sport === sport && leg.subcategory === subcategory) return;
-          const key2 = `${sport} ${subcategory}`;
+          // JSON, never a joined string: sports and bet types carry
+          // spaces ("American Football", "World Cup Goal").
+          const key2 = JSON.stringify([sport, subcategory]);
           fixes.set(key2, [...(fixes.get(key2) ?? []), leg.id]);
         };
         for (const b of singles) {
@@ -560,11 +566,12 @@ export async function POST(request: Request) {
           }
         }
         for (const [key2, ids] of fixes) {
-          const [sport, subcategory] = key2.split(" ");
-          await supabase
+          const [sport, subcategory] = JSON.parse(key2) as [string, string];
+          const { error: fixError } = await supabase
             .from("legs")
             .update({ sport, subcategory })
             .in("id", ids);
+          if (!fixError) repaired += ids.length;
         }
       }
     } catch {
@@ -582,6 +589,8 @@ export async function POST(request: Request) {
       updated,
       pending: drafts.filter((d) => d.status === "pending").length,
       total: drafts.length,
+      // Picks whose sport or bet type the relabel pass just fixed.
+      repaired,
       // A history round that ran out of page budget: the client asks
       // again and the next round continues below the oldest bet.
       more,

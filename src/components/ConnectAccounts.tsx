@@ -269,6 +269,7 @@ export default function ConnectAccounts({
       let updated = 0;
       let pending = 0;
       let total = 0;
+      let repaired = 0;
       let failed: string | null = null;
       for (let round = 0; round < 20; round++) {
         const res = await fetch("/api/connect/kalshi/sync", {
@@ -285,6 +286,7 @@ export default function ConnectAccounts({
         updated += body.updated ?? 0;
         pending += body.pending ?? 0;
         total += body.total ?? 0;
+        repaired = Math.max(repaired, body.repaired ?? 0);
         if (!history || body.more !== true) break;
         setSyncResult(
           `Imported ${imported} bets so far, fetching older history...`
@@ -303,6 +305,9 @@ export default function ConnectAccounts({
           `Imported ${imported} ${imported === 1 ? "bet" : "bets"} from Kalshi`
         );
       if (updated > 0) parts.push(`updated ${updated}`);
+      // The relabel pass reports itself: a silent repair that
+      // silently failed once cost the owner a round trip.
+      if (repaired > 0) parts.push(`fixed categories on ${repaired} picks`);
       if (parts.length === 0) {
         // "Up to date" is only true when there was something to be up
         // to date WITH. Finding nothing at all is a different fact and
