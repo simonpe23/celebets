@@ -297,10 +297,17 @@ How this file works:
     history import also dies around end of May / June. Nobody with
     an API key can reach further. So the sync is correct and the
     import already holds everything Kalshi serves.
-    What is left to decide: (A) say the horizon in the copy, so
-    "Import my full Kalshi history" stops promising everything;
-    (B) the owner asks Kalshi support whether older history will
-    ever be served; (C) idea 28, importing Kalshi's own export file.
+    SETTLED, 20 August: the copy names one clean date, July 1 2026,
+    and the import ENFORCES it (clampToStart in kalshiSync.ts, the
+    date typed once as KALSHI_HISTORY_FROM_ISO in sync.ts). The owner
+    ruled out saying "all" or "everything" anywhere.
+    ONE KNOWN EXCEPTION, on purpose, ruled by the owner: his own
+    account still holds the bets imported before that rule existed,
+    roughly 13 to 30 June. He chose to keep them. Do NOT delete them
+    in a later tidy-up; they are not a bug.
+    Still open: (B) the owner asks Kalshi support whether older
+    history will ever be served; (C) idea 28, importing Kalshi's own
+    export file.
 
 7. Personal touch: "Welcome Simon" on login. Needs a settings page
    with name, favorite team, favorite sport.
