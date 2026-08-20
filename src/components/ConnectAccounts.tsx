@@ -113,7 +113,7 @@ const KALSHI_GUIDE: {
         Log in at kalshi.com. Open the menu, then{" "}
         <B>Account &amp; Security</B>.
         <br />
-        Or go directly to <B>kalshi.com/account/profile</B>.
+        Or go directly to kalshi.com/account/profile.
       </>
     ),
     image: {
@@ -124,7 +124,7 @@ const KALSHI_GUIDE: {
   {
     text: (
       <>
-        Find <B>API Keys</B> and click <B>Create key</B>.
+        Find API Keys and click <B>Create key</B>.
       </>
     ),
     image: {
@@ -146,7 +146,7 @@ const KALSHI_GUIDE: {
   {
     text: (
       <>
-        Leave the <B>RSA public key</B> field empty.
+        Leave the RSA public key field empty.
       </>
     ),
     image: {
@@ -170,9 +170,9 @@ const KALSHI_GUIDE: {
   {
     text: (
       <>
-        Click <B>Create</B>. Kalshi will show your <B>API Key ID</B> and
-        download your <B>Private key file</B>. Save the file. Kalshi
-        will not show the private key again.
+        Click <B>Create</B>. Kalshi will show your API Key ID and
+        download your private key file. Save the file. Kalshi will not
+        show the private key again.
       </>
     ),
     image: {
@@ -183,7 +183,7 @@ const KALSHI_GUIDE: {
   {
     text: (
       <>
-        Copy your <B>API Key ID</B> and <B>Private key</B>.
+        Copy your API Key ID and private key.
       </>
     ),
   },
@@ -710,33 +710,51 @@ export default function ConnectAccounts({
 
   // THE GUIDE WIZARD. One card at a time, the owner's own shape. The
   // last card, one past the guide, is the paste card.
+  //
+  // QUIET ON PURPOSE (the owner, 20 August, after seeing v1): "these
+  // cards are too noisy already. the fact that they exist is noise...
+  // it looks cheap and not classy so far." So: no card heading, no
+  // boxes, one text size, and the corners are text, not buttons. The
+  // only loud thing on a card is the Kalshi screenshot, which is the
+  // thing being explained. Purple is spent nowhere here; it belongs
+  // to the one real button at the end, Connect.
   const onPasteCard = card >= KALSHI_GUIDE.length;
+  const dots = (
+    <div className="flex items-center gap-1.5" aria-hidden="true">
+      {Array.from({ length: KALSHI_GUIDE.length + 1 }).map((_, i) => (
+        <span
+          key={i}
+          className={
+            i === card
+              ? "h-1 w-3 rounded-full bg-neutral-900 dark:bg-white"
+              : "h-1 w-1 rounded-full bg-neutral-300 dark:bg-white/20"
+          }
+        />
+      ))}
+    </div>
+  );
   if (!onPasteCard) {
     const guide = KALSHI_GUIDE[card];
     return (
       <section className={`${CARD} p-4`}>
-        <h2 className="text-[17px] font-bold">Your Kalshi API key</h2>
-
         {/* THE PHONE WARNING, on the first card so nobody discovers
             it at step 5: Kalshi does not show API keys on the phone
-            (the owner hit this himself, August 2026). */}
+            (the owner hit this himself, August 2026). A muted line,
+            not a box. */}
         {card === 0 && (
-          <div className={`${INNER} mt-3 px-3 py-3`}>
-            <span className="block text-sm font-semibold">
-              You need a computer for this.
-            </span>
-            <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
-              Kalshi does not show API keys on the phone. It takes about
-              two minutes, and you only do it once.
-            </span>
-          </div>
+          <p className="mb-3 text-xs text-neutral-500 dark:text-neutral-400">
+            You need a computer for this part. Kalshi does not show API
+            keys on the phone.
+          </p>
         )}
 
         {/* min-height keeps the corners still while the text length
             changes card to card. */}
-        <div className="mt-3 min-h-[96px]">
-          <p className="text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
-            <span className="sr-only">Step {card + 1} of {KALSHI_GUIDE.length + 1}: </span>
+        <div className="min-h-[88px]">
+          <p className="text-sm leading-relaxed">
+            <span className="sr-only">
+              Step {card + 1} of {KALSHI_GUIDE.length + 1}:{" "}
+            </span>
             {guide.text}
           </p>
           {guide.image && (
@@ -753,7 +771,7 @@ export default function ConnectAccounts({
           )}
         </div>
 
-        <div className="mt-4 flex items-center justify-between">
+        <div className="mt-4 flex h-9 items-center justify-between">
           <button
             type="button"
             onClick={() => {
@@ -764,28 +782,17 @@ export default function ConnectAccounts({
                 setCard(card - 1);
               }
             }}
-            className="h-10 rounded-xl px-2 text-sm font-bold text-neutral-500 dark:text-neutral-400"
+            className="-ml-1 h-9 rounded-lg px-1 text-sm text-neutral-500 dark:text-neutral-400"
           >
             Back
           </button>
-          <div className="flex items-center gap-1.5" aria-hidden="true">
-            {Array.from({ length: KALSHI_GUIDE.length + 1 }).map((_, i) => (
-              <span
-                key={i}
-                className={
-                  i === card
-                    ? "h-1.5 w-4 rounded-full bg-brand-mark"
-                    : "h-1.5 w-1.5 rounded-full bg-neutral-300 dark:bg-white/20"
-                }
-              />
-            ))}
-          </div>
+          {dots}
           <button
             type="button"
             onClick={() => setCard(card + 1)}
-            className={`${BTN} h-10 px-6`}
+            className="-mr-1 h-9 rounded-lg px-1 text-sm font-semibold"
           >
-            Next
+            Next ›
           </button>
         </div>
       </section>
@@ -794,7 +801,7 @@ export default function ConnectAccounts({
 
   return (
     <section className={`${CARD} p-4`}>
-      <h2 className="text-[17px] font-bold">Paste them here</h2>
+      <p className="text-sm leading-relaxed">Paste them here.</p>
 
       <label htmlFor="kalshi-key-id" className="mt-4 block text-sm font-semibold">
         API Key ID
@@ -867,32 +874,21 @@ export default function ConnectAccounts({
         {busy ? "Checking with Kalshi..." : "Connect Kalshi"}
       </button>
 
-      <div className="mt-2 flex items-center justify-between">
+      <div className="mt-3 flex h-9 items-center justify-between">
         <button
           type="button"
           onClick={() => {
             setError(null);
             setCard(KALSHI_GUIDE.length - 1);
           }}
-          className="h-10 rounded-xl px-2 text-sm font-bold text-neutral-500 dark:text-neutral-400"
+          className="-ml-1 h-9 rounded-lg px-1 text-sm text-neutral-500 dark:text-neutral-400"
         >
           Back
         </button>
-        <div className="flex items-center gap-1.5" aria-hidden="true">
-          {Array.from({ length: KALSHI_GUIDE.length + 1 }).map((_, i) => (
-            <span
-              key={i}
-              className={
-                i === card
-                  ? "h-1.5 w-4 rounded-full bg-brand-mark"
-                  : "h-1.5 w-1.5 rounded-full bg-neutral-300 dark:bg-white/20"
-              }
-            />
-          ))}
-        </div>
+        {dots}
         {/* An empty box the Back button's size, so the dots stay
             centered on the paste card too. */}
-        <span className="h-10 w-[52px]" aria-hidden="true" />
+        <span className="w-9" aria-hidden="true" />
       </div>
     </section>
   );
