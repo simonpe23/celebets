@@ -524,9 +524,8 @@ export default function ConnectAccounts({
                 choices in one sentence, so the buttons under it are
                 an answer rather than a guess. */}
             <span className="mt-1 block text-xs text-neutral-500 dark:text-neutral-400">
-              Do you want to import bets from {KALSHI_HISTORY_SHORT} or
-              keep your Actuals record clean and start tracking from
-              your connect date?
+              Do you want to import bets or keep your Actuals record
+              clean and start tracking from your connect date?
             </span>
             <div className="mt-2.5 flex items-center gap-4">
               <button
