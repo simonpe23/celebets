@@ -695,7 +695,9 @@ export default function ConnectAccounts({
         <span className="block text-sm font-semibold">
           What pressing Connect does
         </span>
-        <ul className="mt-1.5 space-y-1 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
+        {/* list-outside keeps a wrapped second line aligned under the
+            first word, not under the dot. */}
+        <ul className="mt-1.5 list-disc list-outside space-y-1 pl-4 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
           <li>Your current pending Kalshi bets will appear in Actuals.</li>
           <li>
             New Kalshi bets will automatically be synced and tracked in
