@@ -239,7 +239,7 @@ export function sportFor(
 // The bet type for one market: the series title, which is Kalshi
 // naming its own product ("EFL Cup Spread"). Nothing to keep in step
 // by hand.
-function subcategoryFor(
+export function subcategoryFor(
   ticker: string,
   series: Map<string, KalshiSeriesMeta>
 ): string | null {

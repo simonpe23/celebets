@@ -147,7 +147,7 @@ export default function StatsView({
   // with the Tracking Balance for anyone who bets crypto or politics.
   // A group only narrows the bet set; picking a single sport clears
   // it, so the two can never fight over one headline.
-  const [group, setGroup] = useState<"all" | "sports" | "notsports">("all");
+  const [group, setGroup] = useState<"all" | "sports">("all");
   const [period, setPeriod] = useState<Period>("all");
   const [customFrom, setCustomFrom] = useState("");
   const [customTo, setCustomTo] = useState("");
@@ -189,13 +189,7 @@ export default function StatsView({
   const inGroup =
     group === "all"
       ? inPeriod
-      : inPeriod.filter((b) =>
-          b.legs.some((leg) =>
-            group === "sports"
-              ? !NOT_SPORTS.has(leg.sport)
-              : NOT_SPORTS.has(leg.sport)
-          )
-        );
+      : inPeriod.filter((b) => b.legs.some((leg) => !NOT_SPORTS.has(leg.sport)));
 
   // Sport filter: keep bets that contain at least one pick of the sport.
   const filtered =
@@ -220,15 +214,11 @@ export default function StatsView({
       new Date(a.settled_at ?? 0).getTime()
   );
 
-  // The chip row: real sports always, the Not Sports side only when
-  // the record actually holds such picks, in a stable order.
+  // The chip rows: real sports on one, categories on the other, both
+  // complete. The owner ruled against hiding chips behind whether the
+  // record holds such bets: what exists is visible.
   const sportChips = SPORTS.filter((s) => !NOT_SPORTS.has(s));
-  const present = new Set(
-    allSettled.flatMap((b) => b.legs.map((leg) => leg.sport))
-  );
-  const notSportsChips = (
-    ["Crypto", ...KALSHI_CATEGORIES, "Other"] as Sport[]
-  ).filter((s) => present.has(s));
+  const notSportsChips = ["Crypto", ...KALSHI_CATEGORIES, "Other"] as Sport[];
 
   // The hero speaks in bets with no sport chosen, and in that sport's
   // picks and money share once one is.
@@ -346,9 +336,7 @@ export default function StatsView({
                       ? ` / ${sport}`
                       : group === "sports"
                         ? " / Sports"
-                        : group === "notsports"
-                          ? " / Not Sports"
-                          : ""
+                        : ""
                   }`}
                   profit={heroProfit}
                   roi={null}
@@ -394,67 +382,69 @@ export default function StatsView({
                   broken.
                   The scrollbar is hidden because iOS draws a grey bar
                   straight through the chips while you swipe. */}
-              <div className={`-mx-4 mt-4 flex gap-2 overflow-x-auto px-4 pb-1 ${NO_SCROLLBAR}`}>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setGroup("all");
-                    setSport(null);
-                  }}
-                  className={pillClass(group === "all" && sport === null)}
-                >
-                  All
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setGroup("sports");
-                    setSport(null);
-                  }}
-                  className={pillClass(group === "sports" && sport === null)}
-                >
-                  Sports
-                </button>
-                {sportChips.map((s) => (
+              {/* THREE ROWS, ONE PURPOSE EACH (the owner, 20 August:
+                  "all these chips are on the same row... that
+                  confuses me a lot"). Row one picks the view, row two
+                  a sport, row three a category. The category row is
+                  always complete: he also ruled against hiding what
+                  exists. There is no Not Sports aggregate chip; he
+                  called it useless. */}
+              <div className="mt-4">
+                <MicroLabel>View</MicroLabel>
+                <div className={`-mx-4 mt-1.5 flex gap-2 overflow-x-auto px-4 pb-1 ${NO_SCROLLBAR}`}>
                   <button
-                    key={s}
                     type="button"
                     onClick={() => {
                       setGroup("all");
-                      setSport(s);
-                    }}
-                    className={pillClass(sport === s)}
-                  >
-                    {SPORT_EMOJI[s]} {s}
-                  </button>
-                ))}
-                {/* The Not Sports side only exists for users who have
-                    such bets: a sports-only record keeps a clean row. */}
-                {notSportsChips.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setGroup("notsports");
                       setSport(null);
                     }}
-                    className={pillClass(group === "notsports" && sport === null)}
+                    className={pillClass(group === "all" && sport === null)}
                   >
-                    Not Sports
+                    Everything
                   </button>
-                )}
-                {notSportsChips.map((s) => (
                   <button
-                    key={s}
                     type="button"
                     onClick={() => {
-                      setGroup("all");
-                      setSport(s);
+                      setGroup("sports");
+                      setSport(null);
                     }}
-                    className={pillClass(sport === s)}
+                    className={pillClass(group === "sports" && sport === null)}
                   >
-                    {SPORT_EMOJI[s]} {s}
+                    Sports only
                   </button>
-                ))}
+                </div>
+                <MicroLabel className="mt-2.5">Sports</MicroLabel>
+                <div className={`-mx-4 mt-1.5 flex gap-2 overflow-x-auto px-4 pb-1 ${NO_SCROLLBAR}`}>
+                  {sportChips.map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => {
+                        setGroup("all");
+                        setSport(sport === s ? null : s);
+                      }}
+                      className={pillClass(sport === s)}
+                    >
+                      {SPORT_EMOJI[s]} {s}
+                    </button>
+                  ))}
+                </div>
+                <MicroLabel className="mt-2.5">Categories</MicroLabel>
+                <div className={`-mx-4 mt-1.5 flex gap-2 overflow-x-auto px-4 pb-1 ${NO_SCROLLBAR}`}>
+                  {notSportsChips.map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => {
+                        setGroup("all");
+                        setSport(sport === s ? null : s);
+                      }}
+                      className={pillClass(sport === s)}
+                    >
+                      {SPORT_EMOJI[s]} {s}
+                    </button>
+                  ))}
+                </div>
               </div>
               </>
             }

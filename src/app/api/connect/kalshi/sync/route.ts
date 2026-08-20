@@ -14,6 +14,8 @@ import {
 import {
   clampToStart,
   deriveBets,
+  sportFor,
+  subcategoryFor,
   type KalshiFill,
   type KalshiSettlement,
   type KalshiMarketMeta,
@@ -457,6 +459,116 @@ export async function POST(request: Request) {
           { status: 500 }
         );
       }
+    }
+
+    // 7. THE RELABEL PASS. The sync only re-derives markets with new
+    // activity, so a bet imported before the taxonomy existed kept
+    // its old labels forever: the owner's early soccer bets sat in
+    // Other with no way back. Any pick still missing its bet type
+    // (subcategory null marks the pre-taxonomy imports) gets its
+    // series looked up and its sport and bet type fixed IN PLACE.
+    // Money is never touched: this relabels, it does not re-derive.
+    // Failures are swallowed on purpose, the sync itself succeeded.
+    try {
+      const { data: allKalshi } = await supabase
+        .from("bets")
+        .select("id, external_id, legs (id, sport, subcategory, description)")
+        .eq("source", "kalshi");
+      type LegRow = {
+        id: string;
+        sport: string;
+        subcategory: string | null;
+        description: string | null;
+      };
+      const needs = (allKalshi ?? [])
+        .filter((b) =>
+          ((b.legs ?? []) as LegRow[]).some((l) => l.subcategory === null)
+        )
+        .slice(0, 120);
+      if (needs.length > 0) {
+        const tickerOf = (b: { external_id: unknown }) =>
+          String(b.external_id ?? "").split(":")[1] ?? "";
+        const singles = needs.filter(
+          (b) => ((b.legs ?? []) as LegRow[]).length === 1
+        );
+        const parlays = needs.filter(
+          (b) => ((b.legs ?? []) as LegRow[]).length > 1
+        );
+
+        // Parlay legs live in their own markets; the parent knows
+        // which. Parents are fetched one by one because the batch
+        // shape may omit mve_selected_legs.
+        const parentMeta = new Map<string, KalshiMarketMeta>();
+        for (let i = 0; i < parlays.length; i += 8) {
+          const chunk = parlays.slice(i, i + 8);
+          const found = await Promise.all(
+            chunk.map((b) => kalshiMarket(key, pem, tickerOf(b)))
+          );
+          for (const m of found) if (m) parentMeta.set(m.ticker, m);
+        }
+        const legTickers = [
+          ...new Set(
+            [...parentMeta.values()].flatMap((m) =>
+              (m.mveLegs ?? []).map((l) => l.market_ticker)
+            )
+          ),
+        ];
+        const legMeta = new Map<string, KalshiMarketMeta>();
+        for (const m of await kalshiMarketsBatch(key, pem, legTickers)) {
+          legMeta.set(m.ticker, m);
+        }
+        const relabelSeries = await kalshiSeriesBatch(key, pem, [
+          ...singles.map((b) => tickerOf(b).split("-")[0]?.toUpperCase() ?? ""),
+          ...legTickers.map((t) => t.split("-")[0]?.toUpperCase() ?? ""),
+        ]);
+
+        // Group the fixes by target so a hundred legs become a
+        // handful of update calls.
+        const fixes = new Map<string, string[]>();
+        const addFix = (
+          leg: LegRow,
+          sport: string,
+          subcategory: string | null
+        ) => {
+          if (subcategory === null) return;
+          if (leg.sport === sport && leg.subcategory === subcategory) return;
+          const key2 = `${sport} ${subcategory}`;
+          fixes.set(key2, [...(fixes.get(key2) ?? []), leg.id]);
+        };
+        for (const b of singles) {
+          const t = tickerOf(b);
+          addFix(
+            ((b.legs ?? []) as LegRow[])[0],
+            sportFor(t, relabelSeries),
+            subcategoryFor(t, relabelSeries)
+          );
+        }
+        for (const b of parlays) {
+          const m = parentMeta.get(tickerOf(b));
+          for (const mveLeg of m?.mveLegs ?? []) {
+            const base = legMeta.get(mveLeg.market_ticker)?.title?.trim();
+            if (!base) continue;
+            const stored = ((b.legs ?? []) as LegRow[]).find(
+              (l) => l.description === base || l.description === `${base} (No)`
+            );
+            if (!stored) continue;
+            addFix(
+              stored,
+              sportFor(mveLeg.market_ticker, relabelSeries),
+              subcategoryFor(mveLeg.market_ticker, relabelSeries)
+            );
+          }
+        }
+        for (const [key2, ids] of fixes) {
+          const [sport, subcategory] = key2.split(" ");
+          await supabase
+            .from("legs")
+            .update({ sport, subcategory })
+            .in("id", ids);
+        }
+      }
+    } catch {
+      // Relabelling is a repair, never a reason to fail a sync.
     }
 
     await supabase
