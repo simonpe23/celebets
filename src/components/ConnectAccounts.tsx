@@ -518,13 +518,15 @@ export default function ConnectAccounts({
             </span>
             <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
               Importing older bets gives you insights and results from{" "}
-              {KALSHI_HISTORY_SHORT}. Do you want to keep your Actuals
-              record clean and start from your connect date?
+              {KALSHI_HISTORY_SHORT}.
             </span>
-            {/* Its own row, by the owner: glued to the question above
-                it, the answer read as part of the question. */}
+            {/* The actual ask, on its own row by the owner: both
+                choices in one sentence, so the buttons under it are
+                an answer rather than a guess. */}
             <span className="mt-1 block text-xs text-neutral-500 dark:text-neutral-400">
-              Skip it.
+              Do you want to import bets from {KALSHI_HISTORY_SHORT} or
+              keep your Actuals record clean and start tracking from
+              your connect date?
             </span>
             <div className="mt-2.5 flex items-center gap-4">
               <button
