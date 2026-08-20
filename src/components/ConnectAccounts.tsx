@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { BTN, CARD, INNER } from "@/lib/ui";
 import { formatMoney } from "@/lib/format";
@@ -83,6 +83,87 @@ function CheckIcon({ className = "h-5 w-5" }: { className?: string }) {
 const FIELD =
   "mt-1 block w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none placeholder:text-neutral-400 focus:border-brand-mark focus:ring-2 focus:ring-brand-mark/30 dark:border-white/15 dark:bg-[#0E1228] dark:text-neutral-100 dark:placeholder:text-white/30";
 
+function B({ children }: { children: ReactNode }) {
+  return <span className="font-semibold">{children}</span>;
+}
+
+// THE KEY GUIDE, one card per step. The owner rejected the single
+// long list ("it looks like a hot mess... i would close the window if
+// i saw this") and drew the shape himself: soft cards, one bullet
+// each, dots at the bottom, Back and Next in the corners. The copy is
+// his, word for word (19 August 2026), written after he walked
+// Kalshi's real screens twice. His rules: keep the Read all data vs
+// Full access distinction obvious, and say "API Key ID" in every
+// mention because that is Kalshi's own name for it. If Kalshi moves
+// things, walk the flow again and rewrite from the screen, not from
+// memory.
+//
+// `image` is the Kalshi screenshot for that card, a file under
+// public/connect/kalshi/. Cards without one are text only, never a
+// placeholder box; phase 2 fills them in as the owner captures the
+// screens.
+const KALSHI_GUIDE: {
+  text: ReactNode;
+  image?: { src: string; alt: string };
+}[] = [
+  {
+    text: (
+      <>
+        Log in at kalshi.com. Open the menu, then{" "}
+        <B>Account &amp; Security</B>.
+        <br />
+        Or go directly to <B>kalshi.com/account/profile</B>.
+      </>
+    ),
+  },
+  {
+    text: (
+      <>
+        Find <B>API Keys</B> and click <B>Create key</B>.
+      </>
+    ),
+  },
+  {
+    text: (
+      <>
+        Enter a name, such as <B>Actuals</B>.
+      </>
+    ),
+  },
+  {
+    text: (
+      <>
+        Leave the <B>RSA public key</B> field empty.
+      </>
+    ),
+  },
+  {
+    text: (
+      <>
+        Under <B>Permissions</B>, check <B>Read all data</B>.{" "}
+        <B>Uncheck Full access.</B> Actuals only reads your data. It
+        cannot place trades or move money.
+      </>
+    ),
+  },
+  {
+    text: (
+      <>
+        Click <B>Create</B>. Kalshi will show your <B>API Key ID</B> and
+        download your <B>Private key file</B>. Save the file. Kalshi
+        will not show the private key again.
+      </>
+    ),
+  },
+  {
+    text: (
+      <>
+        Copy your <B>API Key ID</B> and <B>Private key</B>.
+      </>
+    ),
+  },
+];
+
 export default function ConnectAccounts({
   // /preview/connect only: open on a chosen step with nothing fetched,
   // so sitecheck and screenshots can reach every state.
@@ -102,6 +183,9 @@ export default function ConnectAccounts({
   );
   const [accessKey, setAccessKey] = useState("");
   const [privateKey, setPrivateKey] = useState("");
+  // Which card of the key guide is showing, 0 to KALSHI_GUIDE.length.
+  // The value one past the guide is the paste card.
+  const [card, setCard] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   // Kalshi's live balance in cents, fetched fresh whenever the detail
@@ -379,7 +463,10 @@ export default function ConnectAccounts({
         </ul>
         <button
           type="button"
-          onClick={() => setStep("form")}
+          onClick={() => {
+            setCard(0);
+            setStep("form");
+          }}
           className={`${BTN} mt-4 h-11 w-full`}
         >
           Continue
@@ -596,63 +683,93 @@ export default function ConnectAccounts({
     );
   }
 
+  // THE GUIDE WIZARD. One card at a time, the owner's own shape. The
+  // last card, one past the guide, is the paste card.
+  const onPasteCard = card >= KALSHI_GUIDE.length;
+  if (!onPasteCard) {
+    const guide = KALSHI_GUIDE[card];
+    return (
+      <section className={`${CARD} p-4`}>
+        <h2 className="text-[17px] font-bold">Your Kalshi API key</h2>
+
+        {/* THE PHONE WARNING, on the first card so nobody discovers
+            it at step 5: Kalshi does not show API keys on the phone
+            (the owner hit this himself, August 2026). */}
+        {card === 0 && (
+          <div className={`${INNER} mt-3 px-3 py-3`}>
+            <span className="block text-sm font-semibold">
+              You need a computer for this.
+            </span>
+            <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
+              Kalshi does not show API keys on the phone. It takes about
+              two minutes, and you only do it once.
+            </span>
+          </div>
+        )}
+
+        {/* min-height keeps the corners still while the text length
+            changes card to card. */}
+        <div className="mt-3 min-h-[96px]">
+          <p className="text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
+            <span className="sr-only">Step {card + 1} of {KALSHI_GUIDE.length + 1}: </span>
+            {guide.text}
+          </p>
+          {guide.image && (
+            /* A screenshot of the Kalshi screen this card talks
+               about, in a quiet frame. next/image is skipped on
+               purpose: these are fixed local files shown at their
+               natural size. */
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              src={guide.image.src}
+              alt={guide.image.alt}
+              className="mt-3 w-full rounded-xl ring-1 ring-neutral-200 dark:ring-white/10"
+            />
+          )}
+        </div>
+
+        <div className="mt-4 flex items-center justify-between">
+          <button
+            type="button"
+            onClick={() => {
+              if (card === 0) {
+                setError(null);
+                setStep("trust");
+              } else {
+                setCard(card - 1);
+              }
+            }}
+            className="h-10 rounded-xl px-2 text-sm font-bold text-neutral-500 dark:text-neutral-400"
+          >
+            Back
+          </button>
+          <div className="flex items-center gap-1.5" aria-hidden="true">
+            {Array.from({ length: KALSHI_GUIDE.length + 1 }).map((_, i) => (
+              <span
+                key={i}
+                className={
+                  i === card
+                    ? "h-1.5 w-4 rounded-full bg-brand-mark"
+                    : "h-1.5 w-1.5 rounded-full bg-neutral-300 dark:bg-white/20"
+                }
+              />
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={() => setCard(card + 1)}
+            className={`${BTN} h-10 px-6`}
+          >
+            Next
+          </button>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className={`${CARD} p-4`}>
-      <h2 className="text-[17px] font-bold">Your Kalshi API key</h2>
-      <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
-        Takes about two minutes. Do this once, preferably on a computer.
-      </p>
-
-      {/* This copy is the owner's, word for word (19 August 2026),
-          written after he walked Kalshi's real screens twice. His
-          rule: keep the Read all data vs Full access distinction
-          obvious, because that is the step most likely to cause
-          concern or a wrong setup. The id is "API Key ID" in every
-          mention, steps, box label and error alike, because that is
-          Kalshi's own name for it and one differing word is where
-          people get lost (his ruling). If Kalshi moves things, walk
-          the flow again and rewrite from the screen, not from
-          memory. A step wizard redesign of this screen is stored in
-          IDEAS, idea 13. */}
-      <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-neutral-600 dark:text-neutral-300">
-        <li>
-          Log in at kalshi.com. Open the menu, then{" "}
-          <span className="font-semibold">Account &amp; Security</span>.
-          <br />
-          Or go directly to{" "}
-          <span className="font-semibold">kalshi.com/account/profile</span>.
-        </li>
-        <li>
-          Find <span className="font-semibold">API Keys</span> and click{" "}
-          <span className="font-semibold">Create key</span>.
-        </li>
-        <li>
-          Enter a name, such as <span className="font-semibold">Actuals</span>.
-        </li>
-        <li>
-          Leave the <span className="font-semibold">RSA public key</span>{" "}
-          field empty.
-        </li>
-        <li>
-          Under <span className="font-semibold">Permissions</span>, check{" "}
-          <span className="font-semibold">Read all data</span>.{" "}
-          <span className="font-semibold">Uncheck Full access.</span>{" "}
-          Actuals only reads your data. It cannot place trades or move
-          money.
-        </li>
-        <li>
-          Click <span className="font-semibold">Create</span>. Kalshi
-          will show your <span className="font-semibold">API Key ID</span>{" "}
-          and download your{" "}
-          <span className="font-semibold">Private key file</span>. Save
-          the file. Kalshi will not show the private key again.
-        </li>
-        <li>
-          Copy your <span className="font-semibold">API Key ID</span> and{" "}
-          <span className="font-semibold">Private key</span> and paste
-          them below.
-        </li>
-      </ol>
+      <h2 className="text-[17px] font-bold">Paste them here</h2>
 
       <label htmlFor="kalshi-key-id" className="mt-4 block text-sm font-semibold">
         API Key ID
@@ -724,16 +841,34 @@ export default function ConnectAccounts({
       >
         {busy ? "Checking with Kalshi..." : "Connect Kalshi"}
       </button>
-      <button
-        type="button"
-        onClick={() => {
-          setError(null);
-          setStep("trust");
-        }}
-        className="mt-2 h-11 w-full rounded-xl text-sm font-bold text-neutral-500 dark:text-neutral-400"
-      >
-        Back
-      </button>
+
+      <div className="mt-2 flex items-center justify-between">
+        <button
+          type="button"
+          onClick={() => {
+            setError(null);
+            setCard(KALSHI_GUIDE.length - 1);
+          }}
+          className="h-10 rounded-xl px-2 text-sm font-bold text-neutral-500 dark:text-neutral-400"
+        >
+          Back
+        </button>
+        <div className="flex items-center gap-1.5" aria-hidden="true">
+          {Array.from({ length: KALSHI_GUIDE.length + 1 }).map((_, i) => (
+            <span
+              key={i}
+              className={
+                i === card
+                  ? "h-1.5 w-4 rounded-full bg-brand-mark"
+                  : "h-1.5 w-1.5 rounded-full bg-neutral-300 dark:bg-white/20"
+              }
+            />
+          ))}
+        </div>
+        {/* An empty box the Back button's size, so the dots stay
+            centered on the paste card too. */}
+        <span className="h-10 w-[52px]" aria-hidden="true" />
+      </div>
     </section>
   );
 }
