@@ -41,7 +41,6 @@ export const UNCLASSIFIED = "Unclassified";
 
 export type Domain =
   | "Sports"
-  | "Crypto"
   | "Politics"
   | "Economics"
   | "Entertainment"
@@ -69,9 +68,17 @@ const SPORTS_DOMAIN: Sport[] = [
   "Table Tennis",
 ];
 
+// Level 2 values that do not name their own domain. Crypto sits
+// under Economics by the owner's ruling (21 August 2026): a BTC price
+// bet is a financial bet, and Crypto as its own domain made the top
+// level longer without making it clearer.
+const LEVEL_TWO_DOMAINS: Record<string, Domain> = {
+  Crypto: "Economics",
+};
+
 export function domainOf(sport: Sport): Domain {
   if ((SPORTS_DOMAIN as string[]).includes(sport)) return "Sports";
-  return sport as Domain;
+  return LEVEL_TWO_DOMAINS[sport] ?? (sport as Domain);
 }
 
 // ---------------------------------------------------------------
@@ -96,7 +103,8 @@ export const DOMAIN_CATEGORIES: Partial<Record<Domain, readonly string[]>> = {
     "Awards",
     "Transfers & Moves",
   ],
-  Crypto: ["Price Direction"],
+  // Crypto's price markets live in the Economics domain now.
+  Economics: ["Price Direction"],
 };
 
 // The controlled market vocabulary inside each category. Match Props

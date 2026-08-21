@@ -646,6 +646,23 @@ eq("weather is Other", sportForTicker("KXHIGHNY-25AUG20"), "Other");
     ["Match Winner", "To Advance"]
   );
 
+  // THE DOMAIN LIST, the owner's ten (21 August 2026). Crypto is a
+  // LEVEL 2 value inside Economics, not a domain of its own, so a BTC
+  // price bet must still validate.
+  eq("domains: Crypto sits under Economics", domainOf("Crypto"), "Economics");
+  eq("domains: a sport sits under Sports", domainOf("Rugby"), "Sports");
+  eq("domains: Health names its own domain", domainOf("Health"), "Health");
+  eq(
+    "domains: a crypto price bet still validates",
+    validated(domainOf("Crypto"), classifyKalshi("Bitcoin price up down", "KXBTC15M-X")).category,
+    "Price Direction"
+  );
+  eq(
+    "domains: Crypto is no longer a registered domain",
+    DOMAIN_CATEGORIES.Crypto ?? null,
+    null
+  );
+
   // Every market the mappers can emit is registered under its
   // category, and every registered category belongs to a domain.
   const allRegistered = Object.values(DOMAIN_CATEGORIES).flat();
