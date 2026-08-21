@@ -40,6 +40,16 @@ The owner has no coding experience. These rules are permanent.
 
 ## UI rules (permanent, added August 2026 after wasting the owner's time)
 
+THE OWNER'S PAST REACTIONS ARE NOT CONSTRAINTS. Added 22 August 2026
+after he had to say it twice in two days: "just because i loved a view
+from 3 weeks ago does not mean that we have to keep that view a month
+or a year later... my opinions will change as we work through this."
+During a redesign, never argue for keeping something because he once
+liked it, and never quote an old preference back at him as a reason.
+Every option competes on today's merits. His CURRENT words are the
+only spec. (Decisions he marks permanent, like the fonts, stay
+permanent until he says otherwise; everything else is fluid.)
+
 The owner should never have to catch a typography or spacing
 inconsistency. Finding one is a failure, not feedback.
 
