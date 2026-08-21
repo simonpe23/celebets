@@ -26,11 +26,15 @@ they split this user's money; only the strongest open expanded, the
 rest fold themselves. One personal line explains the ranking.
 Wireframe: /preview/sorted. Mockup: /preview/lab2-sorted.
 
-## Upgrade B: Questions First (QUEUED)
+## Upgrade B: Questions First (IN REVIEW)
 
 The Lab opens as a stack of ready-made tappable questions ranked from
 the user's data; one tap loads the answer with tokens filled. No
-typing anywhere. The board waits below for custom questions.
+typing anywhere. The board waits folded under "Build your own
+question". Wireframe: /preview/questions. Mockup:
+/preview/lab2-questions. The question engine generates: biggest
+earner, biggest leak, strongest two-fact combination, and the two
+comparisons whose values disagree most, ranked by money at stake.
 
 ## Concept 1: The Money Map (QUEUED)
 
