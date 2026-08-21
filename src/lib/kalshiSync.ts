@@ -1,5 +1,6 @@
 import { round2, round4 } from "./format";
 import {
+  canonicalCompetition,
   classifyKalshi,
   domainOf,
   validated,
@@ -305,7 +306,15 @@ export function classifyMarket(
   const title = series.get(prefix)?.title?.trim() || null;
   const sport = sportFor(ticker, series);
   const cls = validated(domainOf(sport), classifyKalshi(title, ticker));
-  return { ...cls, providerMarket: title };
+  // The competition dimension gets the registered word where we know
+  // it ("EPL" becomes "Premier League"), so an imported pick and a
+  // manually tapped one land on the SAME analytics row. Anything the
+  // alias table has never seen keeps Kalshi's own words.
+  return {
+    ...cls,
+    competition: canonicalCompetition(cls.competition, sport),
+    providerMarket: title,
+  };
 }
 
 // Every number on a Kalshi record can arrive as a string.

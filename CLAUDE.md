@@ -680,6 +680,18 @@ Decisions locked in during this build:
   competition on manual entry) were run by the owner and both returned
   their proof numbers, 21 August 2026.
   Transaction dates are editable.
+- COMPETITION IS TAPPED, NEVER TYPED. It shipped as a text box and
+  the owner rejected that on 21 August 2026: "99% of the competitions
+  are the same leagues every time. this has to be tappable chips. not
+  writing." He is right, and the reason is data integrity, not
+  convenience: "EPL" and "Premier League" typed by two people is one
+  league split into two analytics rows forever, the same disease the
+  taxonomy exists to cure. SPORT_COMPETITIONS in src/lib/taxonomy.ts
+  holds his approved list per sport, and COMPETITION_ALIASES pulls
+  Kalshi's words onto the same chip. Football deliberately has no
+  World Cup or Euros chip (neither runs for two years) and carries
+  International and Rest of the World instead. Boxing has no list at
+  all, because it has fights, not seasons, so it keeps a text box.
 - SUPABASE'S SQL EDITOR RUNS YOUR SELECTION, not the file, whenever
   any text is selected. phase13 failed on its second run with "syntax
   error at or near Companies" because a double-click had selected that

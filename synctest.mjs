@@ -35,7 +35,10 @@ const {
   UNCLASSIFIED,
   DOMAIN_CATEGORIES,
   CATEGORY_MARKETS,
+  SPORT_COMPETITIONS,
+  canonicalCompetition,
   classifyKalshi,
+  competitionsFor,
   domainOf,
   marketsFor,
   migrateManualLabel,
@@ -684,6 +687,102 @@ eq("weather is Other", sportForTicker("KXHIGHNY-25AUG20"), "Other");
   for (const cat of Object.keys(CATEGORY_MARKETS)) {
     eq(`register: ${cat} belongs to a domain`, allRegistered.includes(cat), true);
   }
+}
+
+// ---- COMPETITIONS: the registered list, and the alias table that
+// keeps an imported pick on the same row as a tapped one.
+{
+  // The owner's approved football list, exactly. World Cup and Euros
+  // are absent on purpose, so a well meaning re-add fails here first.
+  eq(
+    "competitions: football has no World Cup or Euros chip",
+    competitionsFor("Football").filter((c) =>
+      ["World Cup", "Euros"].includes(c)
+    ),
+    []
+  );
+  eq(
+    "competitions: football keeps the owner's additions",
+    ["Conference League", "Allsvenskan", "FA Cup", "EFL Cup",
+     "International", "Rest of the World"].every((c) =>
+      competitionsFor("Football").includes(c)
+    ),
+    true
+  );
+  // Boxing has fights, not seasons: no list means the text box.
+  eq("competitions: boxing has no list", competitionsFor("Boxing"), []);
+  eq("competitions: crypto has no list", competitionsFor("Crypto"), []);
+
+  // THE POINT OF THE LIST. Kalshi's words become the chip's words.
+  eq(
+    "competitions: EPL becomes Premier League",
+    canonicalCompetition("EPL", "Football"),
+    "Premier League"
+  );
+  eq(
+    "competitions: UEFA Champions League becomes Champions League",
+    canonicalCompetition("UEFA Champions League", "Football"),
+    "Champions League"
+  );
+  eq(
+    "competitions: Carabao Cup becomes EFL Cup",
+    canonicalCompetition("carabao cup", "Football"),
+    "EFL Cup"
+  );
+  eq(
+    "competitions: NCAAF becomes College Football",
+    canonicalCompetition("NCAAF", "American Football"),
+    "College Football"
+  );
+  eq(
+    "competitions: French Open becomes Roland Garros",
+    canonicalCompetition("French Open", "Tennis"),
+    "Roland Garros"
+  );
+  // The sport decides: US Open is Tennis or Golf, never the alphabet.
+  eq(
+    "competitions: US Open stays put in Tennis",
+    canonicalCompetition("US Open", "Tennis"),
+    "US Open"
+  );
+  eq(
+    "competitions: a football alias cannot leak into basketball",
+    canonicalCompetition("EPL", "Basketball"),
+    "EPL"
+  );
+  // An unknown league is real information, never discarded.
+  eq(
+    "competitions: an unlisted league keeps its own words",
+    canonicalCompetition("Serie B", "Football"),
+    "Serie B"
+  );
+  eq("competitions: empty stays empty", canonicalCompetition("", "Football"), null);
+  eq(
+    "competitions: nothing stays nothing",
+    canonicalCompetition(null, "Football"),
+    null
+  );
+
+  // Every alias must resolve to a chip that exists, or the table
+  // would quietly write a word no user could ever tap.
+  const lists = Object.values(SPORT_COMPETITIONS).flat();
+  for (const [sport, list] of Object.entries(SPORT_COMPETITIONS)) {
+    for (const c of list) {
+      eq(
+        `competitions: ${sport} ${c} round-trips`,
+        canonicalCompetition(c, sport),
+        c
+      );
+    }
+  }
+  eq(
+    "competitions: no duplicate chip inside one sport",
+    Object.entries(SPORT_COMPETITIONS).filter(
+      ([, list]) => new Set(list).size !== list.length
+    ),
+    []
+  );
+  eq("competitions: the lists are not empty", lists.length > 40, true);
 }
 
 if (failures > 0) {

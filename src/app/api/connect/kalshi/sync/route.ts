@@ -24,6 +24,7 @@ import { KALSHI_HISTORY_FROM_ISO } from "@/lib/sync";
 import {
   DOMAIN_CATEGORIES,
   UNCLASSIFIED,
+  canonicalCompetition,
   classifyKalshi,
   domainOf,
   validated,
@@ -497,13 +498,14 @@ export async function POST(request: Request) {
       const { data: allKalshi } = await supabase
         .from("bets")
         .select(
-          "id, external_id, legs (id, sport, subcategory, provider_market, description)"
+          "id, external_id, legs (id, sport, subcategory, competition, provider_market, description)"
         )
         .eq("source", "kalshi");
       type LegRow = {
         id: string;
         sport: string;
         subcategory: string | null;
+        competition: string | null;
         provider_market: string | null;
         description: string | null;
       };
@@ -648,6 +650,28 @@ export async function POST(request: Request) {
             .in("id", ids);
           if (!fixError) repaired += ids.length;
         }
+      }
+
+      // COMPETITION NORMALISATION, no network, every sync. Kalshi
+      // writes its own words ("UEFA Champions League") while the
+      // manual door taps a registered chip ("Champions League"), and
+      // two words for one league is two analytics rows: the exact
+      // split the taxonomy exists to prevent. Anything the alias
+      // table has never seen keeps Kalshi's words and is left alone.
+      const renames = new Map<string, string[]>();
+      for (const b of allKalshi ?? []) {
+        for (const leg of (b.legs ?? []) as LegRow[]) {
+          const want = canonicalCompetition(leg.competition, leg.sport as Sport);
+          if (want === null || want === leg.competition) continue;
+          renames.set(want, [...(renames.get(want) ?? []), leg.id]);
+        }
+      }
+      for (const [competition, ids] of renames) {
+        const { error: renameError } = await supabase
+          .from("legs")
+          .update({ competition })
+          .in("id", ids);
+        if (!renameError) repaired += ids.length;
       }
     } catch {
       // Relabelling is a repair, never a reason to fail a sync.

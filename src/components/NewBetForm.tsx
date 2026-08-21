@@ -16,6 +16,7 @@ import {
   SPORT_PERIODS,
   categoriesForSport,
   coerceManualCategory,
+  competitionsFor,
   marketsFor,
 } from "@/lib/taxonomy";
 import { CARD, NO_SCROLLBAR } from "@/lib/ui";
@@ -819,30 +820,71 @@ export default function NewBetForm({
                     </div>
                   )}
 
-                {/* COMPETITION, an independent dimension: free text,
-                    because leagues are endless and Actuals owns the
-                    category vocabulary, not the world's competitions.
-                    Optional, like everything else in this form. */}
-                <label
-                  htmlFor={`competition-${index}`}
-                  className="mt-3 block text-sm font-semibold"
-                >
-                  Competition
-                  <span className="font-normal text-neutral-500 dark:text-neutral-400">
-                    , optional
-                  </span>
-                </label>
-                <input
-                  id={`competition-${index}`}
-                  type="text"
-                  autoComplete="off"
-                  placeholder="Premier League, World Cup, ATP..."
-                  value={leg.competition}
-                  onChange={(e) =>
-                    updateLeg(index, { competition: e.target.value })
-                  }
-                  className={inputClass}
-                />
+                {/* COMPETITION, an independent dimension. Chips, not
+                    typing: the owner's ruling on 21 August 2026, and
+                    the reason is data integrity, not convenience.
+                    "EPL" and "Premier League" typed by two people is
+                    one league split into two analytics rows forever.
+                    A sport with no registered list (Boxing has fights,
+                    not seasons) keeps the text box below. */}
+                {competitionsFor(leg.sport).length > 0 ? (
+                  <>
+                    <p className="mt-4 text-sm font-semibold">
+                      Competition
+                      <span className="font-normal text-neutral-500 dark:text-neutral-400">
+                        , optional. Scroll for more.
+                      </span>
+                    </p>
+                    <div
+                      className={`-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1 ${NO_SCROLLBAR}`}
+                    >
+                      {competitionsFor(leg.sport).map((c) => {
+                        const selected = leg.competition === c;
+                        return (
+                          <button
+                            key={c}
+                            type="button"
+                            onClick={() =>
+                              updateLeg(index, {
+                                competition: selected ? "" : c,
+                              })
+                            }
+                            className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
+                              selected
+                                ? "border-brand-mark bg-brand-top text-white"
+                                : "border-neutral-300 dark:border-white/15"
+                            }`}
+                          >
+                            {c}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <label
+                      htmlFor={`competition-${index}`}
+                      className="mt-3 block text-sm font-semibold"
+                    >
+                      Competition
+                      <span className="font-normal text-neutral-500 dark:text-neutral-400">
+                        , optional
+                      </span>
+                    </label>
+                    <input
+                      id={`competition-${index}`}
+                      type="text"
+                      autoComplete="off"
+                      placeholder="World title fight, exhibition..."
+                      value={leg.competition}
+                      onChange={(e) =>
+                        updateLeg(index, { competition: e.target.value })
+                      }
+                      className={inputClass}
+                    />
+                  </>
+                )}
               </>
             )}
 

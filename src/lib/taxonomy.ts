@@ -219,6 +219,230 @@ export const SPORT_PERIODS: Partial<Record<Sport, readonly string[]>> = {
   Football: ["1st Half", "2nd Half"],
 };
 
+// ---------------------------------------------------------------
+// COMPETITIONS. A registered list per sport, approved by the owner
+// on 21 August 2026, ordered by how much each is bet.
+//
+// WHY A LIST AND NOT FREE TEXT. The first build shipped a text box,
+// reasoning that leagues are endless. The owner: "99% of the
+// competitions are the same leagues every time. this has to be
+// tappable chips. not writing." He is right, and the text box had
+// the same disease the categories had before the taxonomy: two
+// people typing "EPL" and "Premier League" split one league into
+// two rows of analytics forever.
+//
+// Football carries International and Rest of the World so a bet on
+// a league nobody listed still has an honest home. World Cup and
+// Euros are deliberately absent: neither runs for another two years,
+// and a chip nobody can use is noise (owner's call).
+//
+// A sport with no list here keeps the free text box, because it has
+// no leagues to list. Boxing is the worked example: it has fights,
+// not seasons, and the owner ruled out listing the belts.
+// ---------------------------------------------------------------
+export const SPORT_COMPETITIONS: Partial<Record<Sport, readonly string[]>> = {
+  Football: [
+    "Premier League",
+    "Champions League",
+    "La Liga",
+    "Serie A",
+    "Bundesliga",
+    "Ligue 1",
+    "Europa League",
+    "Conference League",
+    "MLS",
+    "Championship",
+    "FA Cup",
+    "EFL Cup",
+    "Liga MX",
+    "Allsvenskan",
+    "International",
+    "Rest of the World",
+  ],
+  "American Football": ["NFL", "College Football", "UFL"],
+  Basketball: ["NBA", "College Basketball", "WNBA", "EuroLeague"],
+  Baseball: ["MLB", "College Baseball", "NPB", "KBO"],
+  "Ice Hockey": ["NHL", "KHL", "SHL", "World Championship"],
+  Tennis: [
+    "ATP",
+    "WTA",
+    "Australian Open",
+    "Roland Garros",
+    "Wimbledon",
+    "US Open",
+  ],
+  Golf: [
+    "PGA Tour",
+    "LIV Golf",
+    "DP World Tour",
+    "The Masters",
+    "The Open",
+    "Ryder Cup",
+  ],
+  esports: ["CS2", "League of Legends", "Valorant", "Dota 2", "Rocket League"],
+  Cricket: ["IPL", "T20 World Cup", "The Hundred", "Big Bash"],
+  MMA: ["UFC", "PFL", "Bellator", "ONE"],
+  Rugby: [
+    "Six Nations",
+    "NRL",
+    "Premiership Rugby",
+    "Super Rugby",
+    "World Cup",
+  ],
+  Motorsport: ["Formula 1", "NASCAR", "MotoGP", "IndyCar"],
+  "Table Tennis": ["WTT", "World Championship"],
+};
+
+export function competitionsFor(sport: Sport): readonly string[] {
+  return SPORT_COMPETITIONS[sport] ?? [];
+}
+
+// THE ALIAS TABLE, and the reason the list is worth anything.
+//
+// A chip strip only holds the vocabulary steady on the manual door.
+// Kalshi writes competitions from its own series titles ("EPL",
+// "UEFA Champions League", "Premier League Game"), so without this
+// the two doors would file the same league under different names and
+// the whole point of the list would be lost, exactly the split that
+// started the taxonomy work.
+//
+// Keys are lowercased. Anything unmatched keeps the provider's own
+// words: an unknown league is real information, not a failure, and
+// competition is a dimension rather than a classified skill, so it
+// has no Unclassified.
+const COMPETITION_ALIASES: Record<string, string> = {
+  // Football
+  epl: "Premier League",
+  "english premier league": "Premier League",
+  "premier league": "Premier League",
+  ucl: "Champions League",
+  "uefa champions league": "Champions League",
+  "champions league": "Champions League",
+  uel: "Europa League",
+  "uefa europa league": "Europa League",
+  "europa league": "Europa League",
+  uecl: "Conference League",
+  "uefa conference league": "Conference League",
+  "europa conference league": "Conference League",
+  "conference league": "Conference League",
+  laliga: "La Liga",
+  "la liga": "La Liga",
+  "spanish la liga": "La Liga",
+  "serie a": "Serie A",
+  "italian serie a": "Serie A",
+  bundesliga: "Bundesliga",
+  "german bundesliga": "Bundesliga",
+  "ligue 1": "Ligue 1",
+  ligue1: "Ligue 1",
+  "french ligue 1": "Ligue 1",
+  mls: "MLS",
+  "major league soccer": "MLS",
+  efl: "Championship",
+  "efl championship": "Championship",
+  championship: "Championship",
+  "fa cup": "FA Cup",
+  "efl cup": "EFL Cup",
+  "carabao cup": "EFL Cup",
+  "league cup": "EFL Cup",
+  "liga mx": "Liga MX",
+  ligamx: "Liga MX",
+  allsvenskan: "Allsvenskan",
+  // American Football
+  nfl: "NFL",
+  "national football league": "NFL",
+  ncaaf: "College Football",
+  "college football": "College Football",
+  ufl: "UFL",
+  // Basketball
+  nba: "NBA",
+  ncaab: "College Basketball",
+  "college basketball": "College Basketball",
+  wnba: "WNBA",
+  euroleague: "EuroLeague",
+  // Baseball
+  mlb: "MLB",
+  "major league baseball": "MLB",
+  "college baseball": "College Baseball",
+  npb: "NPB",
+  kbo: "KBO",
+  // Ice Hockey
+  nhl: "NHL",
+  khl: "KHL",
+  shl: "SHL",
+  // Tennis
+  atp: "ATP",
+  wta: "WTA",
+  "australian open": "Australian Open",
+  "roland garros": "Roland Garros",
+  "french open": "Roland Garros",
+  wimbledon: "Wimbledon",
+  // Golf
+  "pga tour": "PGA Tour",
+  pga: "PGA Tour",
+  "liv golf": "LIV Golf",
+  liv: "LIV Golf",
+  "dp world tour": "DP World Tour",
+  masters: "The Masters",
+  "the masters": "The Masters",
+  "the open": "The Open",
+  "open championship": "The Open",
+  "ryder cup": "Ryder Cup",
+  // esports
+  cs2: "CS2",
+  "counter strike": "CS2",
+  "counter-strike": "CS2",
+  csgo: "CS2",
+  lol: "League of Legends",
+  "league of legends": "League of Legends",
+  valorant: "Valorant",
+  "dota 2": "Dota 2",
+  dota: "Dota 2",
+  "rocket league": "Rocket League",
+  // Cricket
+  ipl: "IPL",
+  "indian premier league": "IPL",
+  "t20 world cup": "T20 World Cup",
+  "the hundred": "The Hundred",
+  "big bash": "Big Bash",
+  bbl: "Big Bash",
+  // MMA
+  ufc: "UFC",
+  pfl: "PFL",
+  bellator: "Bellator",
+  // Rugby
+  "six nations": "Six Nations",
+  nrl: "NRL",
+  "premiership rugby": "Premiership Rugby",
+  "super rugby": "Super Rugby",
+  // Motorsport
+  f1: "Formula 1",
+  "formula 1": "Formula 1",
+  "formula one": "Formula 1",
+  nascar: "NASCAR",
+  motogp: "MotoGP",
+  indycar: "IndyCar",
+  // Table Tennis
+  wtt: "WTT",
+};
+
+// Normalise a provider's competition to the registered word when we
+// know it, and only when the answer is a competition that sport
+// actually offers: "US Open" is Tennis or Golf depending on the
+// pick, so the sport decides rather than the alphabet.
+export function canonicalCompetition(
+  raw: string | null | undefined,
+  sport: Sport
+): string | null {
+  const text = (raw ?? "").trim();
+  if (text === "") return null;
+  const list = competitionsFor(sport);
+  const exact = list.find((c) => c.toLowerCase() === text.toLowerCase());
+  if (exact !== undefined) return exact;
+  const alias = COMPETITION_ALIASES[text.toLowerCase()];
+  if (alias !== undefined && list.includes(alias)) return alias;
+  return text;
+}
+
 // A provider mapper result is only valid if the category is
 // registered in the pick's domain. This is rule 2 with teeth.
 export function validated(
