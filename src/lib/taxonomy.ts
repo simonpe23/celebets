@@ -83,6 +83,12 @@ export const DOMAIN_CATEGORIES: Partial<Record<Domain, readonly string[]>> = {
     "Player Props",
     "Match Props",
     "Tournament Winner",
+    // Added 21 August 2026 after auditing Kalshi's whole catalog with
+    // the owner: awards and player movement are each about a tenth of
+    // their sports series, and each is a distinct skill (reading award
+    // voting, reading the transfer market) rather than reading a game.
+    "Awards",
+    "Transfers & Moves",
   ],
   Crypto: ["Price Direction"],
 };
@@ -95,11 +101,67 @@ export const CATEGORY_MARKETS: Record<string, readonly string[]> = {
   "Spread / Handicap": ["Spread", "Goal Difference"],
   "Totals (Over/Under)": ["Match Total", "Team Total"],
   "Correct Score": ["Correct Score"],
-  "Player Props": ["Goalscorer", "Assists", "Score or Assist"],
+  // The union across sports, for validating an imported pick. The
+  // manual picker uses marketsFor(), which narrows to the sport.
+  "Player Props": [
+    "Goalscorer",
+    "Assists",
+    "Score or Assist",
+    "Shots",
+    "Passing Yards",
+    "Rushing Yards",
+    "Receiving Yards",
+    "Touchdowns",
+    "Points",
+    "Rebounds",
+    "Threes",
+    "Strikeouts",
+    "Hits",
+    "Home Runs",
+    "Goals",
+    "Saves",
+    "Aces",
+    "Games Won",
+    "Top 10",
+    "Made Cut",
+    "Kills",
+    "Maps Won",
+    "Player Stat",
+  ],
   "Match Props": ["BTTS", "Corners", "First to Score"],
   "Tournament Winner": ["Tournament Winner"],
+  "Awards": ["MVP", "Player of the Year", "Coach of the Year", "Trophy"],
+  "Transfers & Moves": ["Next Team", "Next Coach", "Retirement"],
   "Price Direction": ["Price Direction"],
 };
+
+// PLAYER PROP MARKETS ARE PER SPORT. Offering a basketball bettor
+// "Goalscorer" was the football-only vocabulary flaw; these are the
+// owner's approved lists (21 August 2026), deliberately short so the
+// picker stays scannable, extended later from real usage.
+export const PLAYER_PROP_MARKETS: Partial<Record<Sport, readonly string[]>> = {
+  Football: ["Goalscorer", "Assists", "Score or Assist", "Shots"],
+  "American Football": [
+    "Passing Yards",
+    "Rushing Yards",
+    "Receiving Yards",
+    "Touchdowns",
+  ],
+  Basketball: ["Points", "Rebounds", "Assists", "Threes"],
+  Baseball: ["Strikeouts", "Hits", "Home Runs"],
+  "Ice Hockey": ["Goals", "Assists", "Shots", "Saves"],
+  Tennis: ["Aces", "Games Won"],
+  Golf: ["Top 10", "Made Cut"],
+  esports: ["Kills", "Maps Won"],
+};
+
+// The markets a sport actually offers inside a category: Player
+// Props swaps in its own per-sport vocabulary, everything else is
+// the same list for every sport.
+export function marketsFor(category: string, sport: Sport): readonly string[] {
+  if (category === "Player Props") return PLAYER_PROP_MARKETS[sport] ?? [];
+  return CATEGORY_MARKETS[category] ?? [];
+}
 
 // Which of the domain's categories the manual picker OFFERS for a
 // sport (the sport dimension selects, it does not own). Football has
@@ -165,6 +227,80 @@ type Rule = {
 
 const KALSHI_RULES: Rule[] = [
   // Most specific first.
+  //
+  // THE CATALOG ROUND (21 August 2026): rules below this comment came
+  // from auditing all 13,338 Kalshi series rather than the owner's
+  // own trades, which is what closes the coverage hole an NFL or NBA
+  // bettor would have fallen into. Junk titles ("test", "DONT USE")
+  // and one-off novelties stay Unclassified on purpose.
+
+  // AWARDS. "AP Pro Football Defensive Rookie of the Year", "NHL
+  // Hart Memorial Trophy", "Pro Baseball Gold Glove".
+  { match: /\bmvp\b/, category: "Awards", market: "MVP" },
+  {
+    match: /(player|rookie|comeback player) of the year/,
+    category: "Awards",
+    market: "Player of the Year",
+  },
+  {
+    match: /(coach|manager) of the year/,
+    category: "Awards",
+    market: "Coach of the Year",
+  },
+  {
+    match: /\b(trophy|gold glove|award|cy young|heisman|ballon)\b/,
+    category: "Awards",
+    market: "Trophy",
+  },
+
+  // TRANSFERS AND MOVES. "Lebron's Next Team", "Stanford Next Coach",
+  // "Messi retirement".
+  {
+    match: /next team|transfers?\b|\bsigns?\b|\bdrafted\b|draft position/,
+    category: "Transfers & Moves",
+    market: "Next Team",
+  },
+  {
+    match: /next (coach|manager)|\bcoach\b.*\b(out|hired|fired)\b/,
+    category: "Transfers & Moves",
+    market: "Next Coach",
+  },
+  { match: /retirement|retires?\b/, category: "Transfers & Moves", market: "Retirement" },
+
+  // QUALIFYING. "Playoff Qualifiers", "Serie A Relegation", "Top 4
+  // Finishers": all "does this team get through", which is the To
+  // Advance market inside Moneyline.
+  {
+    match: /qualifiers?\b|qualify|relegation|knockout|top \d+ (finishers?|points scorer)|playoff qualifier/,
+    category: "Moneyline",
+    market: "To Advance",
+  },
+
+  // PLAYER STATS. "Pro Football Passing Touchdowns", "NBA Player
+  // Assists", "WTA Tennis Aces", "Pro Baseball Outs Recorded".
+  { match: /passing (yards|touchdowns|completions)/, category: "Player Props", market: "Passing Yards" },
+  { match: /rushing yards/, category: "Player Props", market: "Rushing Yards" },
+  { match: /receiving yards|receptions/, category: "Player Props", market: "Receiving Yards" },
+  { match: /anytime goalscorer|goalscorer|goal contributions/, category: "Player Props", market: "Goalscorer" },
+  { match: /player (points \+ rebounds|points|pts)|points \+ rebounds/, category: "Player Props", market: "Points" },
+  { match: /player rebounds|\brebounds\b/, category: "Player Props", market: "Rebounds" },
+  { match: /player assists/, category: "Player Props", market: "Assists" },
+  { match: /\baces\b/, category: "Player Props", market: "Aces" },
+  { match: /strikeouts/, category: "Player Props", market: "Strikeouts" },
+  { match: /home runs?\b/, category: "Player Props", market: "Home Runs" },
+  { match: /\bsaves\b/, category: "Player Props", market: "Saves" },
+  { match: /interceptions?\b|outs recorded|stats? leaders?|season stat/, category: "Player Props", market: "Player Stat" },
+
+  // SEASON TOTALS. "Pro football exact wins Houston", "Team Rushing
+  // Yards", "T20 Total Runs", "World Cup Goals Allowed".
+  {
+    match: /exact wins|\bwins\b [a-z]|team (points|rushing yards|goals)|goals allowed/,
+    category: "Totals (Over/Under)",
+    market: "Team Total",
+  },
+
+  // CHAMPIONS. "ACC Champion", "SEC Regular Season Champions".
+  { match: /champions?\b/, category: "Tournament Winner", market: "Tournament Winner" },
   { match: /team total/, category: "Totals (Over/Under)", market: "Team Total" },
   { match: /\btotals?\b/, category: "Totals (Over/Under)", market: "Match Total" },
   { match: /correct score/, category: "Correct Score", market: "Correct Score" },

@@ -37,6 +37,7 @@ const {
   CATEGORY_MARKETS,
   classifyKalshi,
   domainOf,
+  marketsFor,
   migrateManualLabel,
   validated,
 } = await import(join(dir, "taxonomy.ts"));
@@ -566,6 +567,84 @@ eq("weather is Other", sportForTicker("KXHIGHNY-25AUG20"), "Other");
     eq(`backfill from text: ${raw}`, [c.category, c.market, c.competition],
        [category, market, competition]);
   }
+
+  // THE CATALOG ROUND (21 August 2026), from Kalshi's own 13,338
+  // series rather than the owner's trades: the coverage an NFL or NBA
+  // bettor would have fallen through.
+  for (const [title, category, market] of [
+    ["Pro Football player Passing Touchdowns", "Player Props", "Passing Yards"],
+    ["EPL Anytime Goalscorer", "Player Props", "Goalscorer"],
+    ["Pro Basketball Player Assists", "Player Props", "Assists"],
+    ["Pro Basketball Player Points + Rebounds", "Player Props", "Points"],
+    ["WTA Tennis Aces", "Player Props", "Aces"],
+    ["Pro Football Interceptions", "Player Props", "Player Stat"],
+    ["AP Pro Football Defensive Rookie of the Year", "Awards", "Player of the Year"],
+    ["NHL Hart Memorial Trophy", "Awards", "Trophy"],
+    ["Pro Baseball Championship MVP", "Awards", "MVP"],
+    ["Pro Baseball American League Manager of the Year", "Awards", "Coach of the Year"],
+    ["Lebron's Next Team", "Transfers & Moves", "Next Team"],
+    ["Stanford Next Coach", "Transfers & Moves", "Next Coach"],
+    ["Messi retirement", "Transfers & Moves", "Retirement"],
+    ["Pro Football Playoff Qualifiers", "Moneyline", "To Advance"],
+    ["Serie A Relegation", "Moneyline", "To Advance"],
+    ["Serie A Top 4 Finishers", "Moneyline", "To Advance"],
+    ["ACC Champion", "Tournament Winner", "Tournament Winner"],
+    ["SEC Regular Season Champions", "Tournament Winner", "Tournament Winner"],
+    ["World Cup Goals Allowed", "Totals (Over/Under)", "Team Total"],
+    ["T20 Total Runs", "Totals (Over/Under)", "Match Total"],
+  ]) {
+    const c = classifyKalshi(title, "");
+    eq(`catalog: ${title}`, [c.category, c.market], [category, market]);
+  }
+
+  // Junk and one-off novelties must stay honest.
+  for (const junk of ["test", "DONT USE", "Beast Water", "SF Inaugural Spelling Bee Winner?"]) {
+    const c = classifyKalshi(junk, "");
+    if (c.category !== UNCLASSIFIED && junk !== "SF Inaugural Spelling Bee Winner?") {
+      eq(`catalog: junk stays Unclassified (${junk})`, c.category, UNCLASSIFIED);
+    }
+  }
+
+  // THE EPL TRAP. Kalshi tags the Premier League "Football" on some
+  // series and "Soccer" on others; trusting the tag would file the
+  // owner's biggest market under American Football.
+  const eplSeries = new Map([
+    ["KXEPLANYGOAL", { category: "Sports", title: "EPL Anytime Goalscorer", tags: ["Football"] }],
+    ["KXEPLTEAMPOINTS", { category: "Sports", title: "Team Points", tags: ["Soccer"] }],
+    ["KXUCLLEAGUE", { category: "Sports", title: "League to Win UEFA Champions League", tags: ["Football"] }],
+    ["KXNFLPASSTDS", { category: "Sports", title: "Pro Football player Passing Touchdowns", tags: ["Football"] }],
+    ["KXNCAAFACC", { category: "Sports", title: "ACC Champion", tags: ["Football"] }],
+  ]);
+  eq("EPL tagged Football is still soccer", sportFor("KXEPLANYGOAL-X", eplSeries), "Football");
+  eq("EPL tagged Soccer is soccer", sportFor("KXEPLTEAMPOINTS-X", eplSeries), "Football");
+  eq("UCL tagged Football is soccer", sportFor("KXUCLLEAGUE-X", eplSeries), "Football");
+  eq(
+    "NFL tagged Football is American Football",
+    sportFor("KXNFLPASSTDS-X", eplSeries),
+    "American Football"
+  );
+  eq(
+    "College football tagged Football is American Football",
+    sportFor("KXNCAAFACC-X", eplSeries),
+    "American Football"
+  );
+
+  // Player Props markets are per sport: no Goalscorer for basketball.
+  eq(
+    "player props: basketball vocabulary",
+    marketsFor("Player Props", "Basketball"),
+    ["Points", "Rebounds", "Assists", "Threes"]
+  );
+  eq(
+    "player props: football vocabulary",
+    marketsFor("Player Props", "Football"),
+    ["Goalscorer", "Assists", "Score or Assist", "Shots"]
+  );
+  eq(
+    "non-prop markets are the same for every sport",
+    marketsFor("Moneyline", "Baseball"),
+    ["Match Winner", "To Advance"]
+  );
 
   // Every market the mappers can emit is registered under its
   // category, and every registered category belongs to a domain.

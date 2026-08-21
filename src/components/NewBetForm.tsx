@@ -13,10 +13,10 @@ import {
 } from "@/lib/format";
 import { SPORTS, SPORT_EMOJI, type Sport } from "@/lib/types";
 import {
-  CATEGORY_MARKETS,
   SPORT_PERIODS,
   categoriesForSport,
   coerceManualCategory,
+  marketsFor,
 } from "@/lib/taxonomy";
 import { CARD, NO_SCROLLBAR } from "@/lib/ui";
 
@@ -720,7 +720,9 @@ export default function NewBetForm({
                 <div className={`-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1 ${NO_SCROLLBAR}`}>
                   {categoriesForSport(leg.sport).map((cat) => {
                     const selected = leg.subcategory === cat;
-                    const markets = CATEGORY_MARKETS[cat] ?? [];
+                    // Player Props swaps in the sport's own words:
+                    // no Goalscorer offered to a basketball bettor.
+                    const markets = marketsFor(cat, leg.sport!);
                     return (
                       <button
                         key={cat}
@@ -750,11 +752,11 @@ export default function NewBetForm({
                 </div>
 
                 {leg.subcategory !== null &&
-                  (CATEGORY_MARKETS[leg.subcategory] ?? []).length > 1 && (
+                  marketsFor(leg.subcategory, leg.sport).length > 1 && (
                     <div
                       className={`mt-2 flex gap-2 overflow-x-auto rounded-xl bg-neutral-100 p-2 dark:bg-[#161D38] ${NO_SCROLLBAR}`}
                     >
-                      {CATEGORY_MARKETS[leg.subcategory].map((m) => {
+                      {marketsFor(leg.subcategory, leg.sport).map((m) => {
                         const selected = leg.market === m;
                         return (
                           <button

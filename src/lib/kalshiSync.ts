@@ -180,15 +180,19 @@ export function sportForTicker(ticker: string): Sport {
   return best ?? "Other";
 }
 
-// Kalshi's sport tags, measured off the owner's account (20 August
-// 2026): a Sports-category series carries the sport as a tag, and
-// the tag says "Soccer" where this app says Football. American
-// football is the one to watch: Kalshi's US tag for it is plain
-// "Football".
+// Kalshi's sport tags. Their "Soccer" is this app's Football.
+//
+// THE AMBIGUOUS ONE: Kalshi's plain "Football" tag usually means
+// American football, BUT their catalog is inconsistent, measured 21
+// August 2026 across all 13,338 series: the Premier League appears
+// as ["Football"] on one series (EPL Anytime Goalscorer) and
+// ["Soccer"] on another (EPL Team Points). Trusting that tag alone
+// would file Premier League bets under American Football, wrecking
+// the app's two biggest markets at once. So "football" is resolved
+// by the league prefix, never by the tag.
 const TAG_SPORTS: Record<string, Sport> = {
   tennis: "Tennis",
   soccer: "Football",
-  football: "American Football",
   baseball: "Baseball",
   basketball: "Basketball",
   hockey: "Ice Hockey",
@@ -196,6 +200,44 @@ const TAG_SPORTS: Record<string, Sport> = {
   golf: "Golf",
   esports: "esports",
 };
+
+// Soccer competitions Kalshi sometimes mislabels "Football".
+const SOCCER_PREFIXES = [
+  "EPL",
+  "EFL",
+  "UCL",
+  "UEL",
+  "UECL",
+  "LALIGA",
+  "SERIEA",
+  "BUNDESLIGA",
+  "LIGUE1",
+  "MLS",
+  "USL",
+  "FIFA",
+  "WC",
+  "WORLDCUP",
+  "CLUBF",
+  "CONCACAF",
+  "COPA",
+  "EREDIVISIE",
+  "PRIMEIRA",
+  "ARGPREM",
+  "BRASIL",
+  "LIGAMX",
+  "SAUDI",
+  "SCOTPREM",
+];
+
+// Which sport an ambiguous "football" tag really means.
+function resolveFootball(ticker: string): Sport {
+  const series = ticker.split("-")[0]?.toUpperCase() ?? "";
+  const bare = series.startsWith("KX") ? series.slice(2) : series;
+  for (const p of SOCCER_PREFIXES) {
+    if (bare.startsWith(p)) return "Football";
+  }
+  return "American Football";
+}
 
 // Kalshi's non-sport categories, normalised into this app's names by
 // a contains-match, so a rename on their side ("Climate" becoming
@@ -237,7 +279,9 @@ export function sportFor(
     const cat = (s.category ?? "").toLowerCase();
     if (cat === "sports") {
       for (const tag of s.tags ?? []) {
-        const mapped = TAG_SPORTS[tag.toLowerCase()];
+        const lower = tag.toLowerCase();
+        if (lower === "football") return resolveFootball(ticker);
+        const mapped = TAG_SPORTS[lower];
         if (mapped) return mapped;
       }
     } else if (cat !== "") {
