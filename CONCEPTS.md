@@ -61,6 +61,19 @@ deeper page. Layers can be stolen in later: Upgrade B's questions,
 the Money Map as an alternate view. Wireframe: /preview/portfolio.
 Mockup: /preview/portfolio-mock.
 
+## The Portfolio v2 (IN REVIEW, built from the review round)
+
+The Portfolio with the six improvements applied, all computed live:
+ranking = money x evidence x actionability (bet types and
+competitions above risk bands) x recency; movement badges (NEW, up,
+down, cooling) against the ranking as of a week earlier, plus a
+computed "This week" line; sparklines on every row; one urgent card
+when a leak is still active; leak rows name their biggest driver;
+and V1 Lab's tokens live on every fact page ("+ Add a fact" opens a
+ranked flat panel), so any page becomes any intersection. The Money
+Map is reachable as a view of the same ranking (List | Map).
+Wireframe: /preview/portfolio2. Mockup: /preview/portfolio2-mock.
+
 ## Rejected
 
 - Findings Deck (a feed of finished finding cards): not good enough,
