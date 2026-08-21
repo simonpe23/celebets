@@ -5,7 +5,15 @@ import { kalshiGet, kalshiGetPages } from "@/lib/kalshi";
 
 // Walking two long lists takes a while on a heavy account.
 export const maxDuration = 300;
-import { deriveBets, type KalshiFill, type KalshiSettlement } from "@/lib/kalshiSync";
+import {
+  classifyMarket,
+  deriveBets,
+  sportFor,
+  type KalshiFill,
+  type KalshiSeriesMeta,
+  type KalshiSettlement,
+} from "@/lib/kalshiSync";
+import { UNCLASSIFIED } from "@/lib/taxonomy";
 
 // WHY THIS EXISTS. Kalshi is unreachable from the machine this app is
 // written on, so the fetching layer was built from documentation and
@@ -157,69 +165,116 @@ export async function GET() {
     translated = { error: e instanceof Error ? e.message : String(e) };
   }
 
-  // ROUND 4 (phase 3, categories). The sync guesses a sport from the
-  // ticker prefix, which is a hand-kept list that ages. Kalshi's own
-  // taxonomy hangs off the SERIES: every ticker's first segment names
-  // a series, and GET /series/{ticker} answers with its category and
-  // title. This walks the whole fills history once, collects every
-  // distinct series, and asks Kalshi what each one is, so the mapping
-  // phase is built from the account's real taxonomy, never guessed.
-  // (Round 3, the June 13 depth measurements, answered its question
-  // and retired: all three lists end together, an account-wide
-  // boundary on Kalshi's side.)
-  const series: Record<string, unknown> = {};
+  // ROUND 5 (the mapper coverage audit, 21 August). The mapper only
+  // learned series the owner traded, so an NFL or NBA bettor could
+  // import straight into a pile of Unclassified. This walks Kalshi's
+  // ENTIRE series catalog, runs every series through the taxonomy
+  // mapper server-side, and reports only what matters: the counts,
+  // the leftovers no rule covers, and the sport tags we have never
+  // seen. The rules then get written against Kalshi's real
+  // vocabulary and pinned by tests, never guessed. (Round 4, the
+  // per-account series probe, answered its question and retired.)
+  const catalog: Record<string, unknown> = {};
   try {
-    const { rows } = await kalshiGetPages<{ ticker?: string }>(
-      key,
-      pem,
-      "/portfolio/fills",
-      "fills",
-      {},
-      undefined,
-      100
-    );
-    const fillsPerSeries = new Map<string, number>();
-    for (const r of rows) {
-      const prefix = String(r.ticker ?? "").split("-")[0];
-      if (!prefix) continue;
-      fillsPerSeries.set(prefix, (fillsPerSeries.get(prefix) ?? 0) + 1);
+    // The catalog endpoint may demand a category filter; probe bare
+    // first, then per candidate category, and report which door
+    // worked so a failed shape names itself.
+    let rows: { ticker?: string; title?: string; category?: string; tags?: string[] }[] =
+      [];
+    let door = "bare";
+    try {
+      const r = await kalshiGetPages<{
+        ticker?: string;
+        title?: string;
+        category?: string;
+        tags?: string[];
+      }>(key, pem, "/series", "series", {}, undefined, 60);
+      rows = r.rows;
+      if (rows.length === 0) throw new Error("empty");
+    } catch {
+      door = "per-category";
+      const candidates = [
+        "Sports",
+        "Crypto",
+        "Politics",
+        "Economics",
+        "Climate and Weather",
+        "Entertainment",
+        "Companies",
+        "Financials",
+        "Science and Technology",
+        "Health",
+        "World",
+        "Transportation",
+        "Culture",
+        "Elections",
+        "Exotics",
+      ];
+      const doors: Record<string, number | string> = {};
+      for (const c of candidates) {
+        try {
+          const r = await kalshiGetPages<{
+            ticker?: string;
+            title?: string;
+            category?: string;
+            tags?: string[];
+          }>(key, pem, "/series", "series", { category: c }, undefined, 30);
+          doors[c] = r.rows.length;
+          rows.push(...r.rows);
+        } catch (e) {
+          doors[c] = e instanceof Error ? e.message.slice(0, 60) : String(e);
+        }
+      }
+      catalog.doors = doors;
     }
-    const prefixes = [...fillsPerSeries.keys()].slice(0, 80);
-    for (let i = 0; i < prefixes.length; i += 8) {
-      const chunk = prefixes.slice(i, i + 8);
-      const found = await Promise.all(
-        chunk.map(async (p) => {
-          try {
-            const d = (await kalshiGet(
-              key,
-              pem,
-              `/series/${encodeURIComponent(p)}`
-            )) as {
-              series?: { category?: string; title?: string; tags?: string[] };
-            };
-            return [p, d.series ?? null] as const;
-          } catch (e) {
-            return [
-              p,
-              { error: e instanceof Error ? e.message.slice(0, 80) : String(e) },
-            ] as const;
+    catalog.door = door;
+    catalog.totalSeries = rows.length;
+
+    // Grade every series through the same mapper the sync uses. The
+    // series map keys by ticker prefix, exactly how classifyMarket
+    // reads it.
+    const meta = new Map<string, KalshiSeriesMeta>();
+    for (const r of rows) {
+      const prefix = String(r.ticker ?? "").split("-")[0]?.toUpperCase() ?? "";
+      if (prefix === "") continue;
+      meta.set(prefix, { category: r.category, title: r.title, tags: r.tags });
+    }
+
+    const perCategory: Record<string, number> = {};
+    const unmatched: {
+      ticker: string;
+      title: string | null;
+      category: string | null;
+      tags: string[] | null;
+    }[] = [];
+    const unknownSportTags = new Map<string, number>();
+    for (const [prefix, m] of meta) {
+      const cls = classifyMarket(`${prefix}-X`, meta);
+      perCategory[cls.category] = (perCategory[cls.category] ?? 0) + 1;
+      if (cls.category === UNCLASSIFIED) {
+        unmatched.push({
+          ticker: prefix,
+          title: m.title ?? null,
+          category: m.category ?? null,
+          tags: m.tags ?? null,
+        });
+      }
+      if ((m.category ?? "").toLowerCase() === "sports") {
+        const sport = sportFor(`${prefix}-X`, meta);
+        if (sport === "Other") {
+          for (const t of m.tags ?? []) {
+            unknownSportTags.set(t, (unknownSportTags.get(t) ?? 0) + 1);
           }
-        })
-      );
-      for (const [p, s] of found) {
-        series[p] = {
-          fills: fillsPerSeries.get(p) ?? 0,
-          category: (s as { category?: string })?.category ?? null,
-          title: (s as { title?: string })?.title ?? null,
-          tags: (s as { tags?: string[] })?.tags ?? null,
-          ...((s as { error?: string })?.error
-            ? { error: (s as { error?: string }).error }
-            : {}),
-        };
+        }
       }
     }
+    catalog.mappedPerCategory = perCategory;
+    catalog.unknownSportTags = Object.fromEntries(unknownSportTags);
+    // The review list, capped so the paste stays human-sized.
+    catalog.unmatchedCount = unmatched.length;
+    catalog.unmatched = unmatched.slice(0, 250);
   } catch (e) {
-    series.error = e instanceof Error ? e.message.slice(0, 120) : String(e);
+    catalog.error = e instanceof Error ? e.message.slice(0, 160) : String(e);
   }
 
   const { count: kalshiBets } = await supabase
@@ -235,6 +290,6 @@ export async function GET() {
     translationOfSampleFill: translated,
     recentFills,
     markets,
-    series,
+    catalog,
   });
 }
