@@ -553,6 +553,20 @@ eq("weather is Other", sportForTicker("KXHIGHNY-25AUG20"), "Other");
   const kHalf = classifyKalshi("World Cup 1st Half", "KXWC1H-X");
   eq("same bet = same category: halves", [mHalf.category, mHalf.period], [kHalf.category, kHalf.period]);
 
+  // THE TEXT BACKFILL. Old parlay markets stop returning their leg
+  // data, so legs still carrying a raw series title must be
+  // classifiable from that title alone, with no network. These are
+  // the exact labels left stranded on the owner's Old account.
+  for (const [raw, category, market, competition] of [
+    ["World Cup Game", "Moneyline", "Match Winner", "World Cup"],
+    ["Professional Baseball Game", "Moneyline", "Match Winner", "Professional Baseball"],
+    ["Pro Basketball Game", "Moneyline", "Match Winner", "Pro Basketball"],
+  ]) {
+    const c = classifyKalshi(raw, "");
+    eq(`backfill from text: ${raw}`, [c.category, c.market, c.competition],
+       [category, market, competition]);
+  }
+
   // Every market the mappers can emit is registered under its
   // category, and every registered category belongs to a domain.
   const allRegistered = Object.values(DOMAIN_CATEGORIES).flat();

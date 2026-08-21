@@ -21,6 +21,18 @@ import {
   type KalshiMarketMeta,
 } from "@/lib/kalshiSync";
 import { KALSHI_HISTORY_FROM_ISO } from "@/lib/sync";
+import {
+  DOMAIN_CATEGORIES,
+  UNCLASSIFIED,
+  classifyKalshi,
+  domainOf,
+  validated,
+} from "@/lib/taxonomy";
+import type { Sport } from "@/lib/types";
+
+// Every registered category, for spotting a leg still carrying a raw
+// provider label in the canonical field.
+const REGISTERED = new Set(Object.values(DOMAIN_CATEGORIES).flat());
 
 // THE SYNC. Reads the user's Kalshi activity, translates it with
 // kalshiSync.ts, and makes the bets table match: new markets become
@@ -587,6 +599,39 @@ export async function POST(request: Request) {
             addFix(stored, mveLeg.market_ticker);
           }
         }
+        // TEXT BACKFILL, no network. Some old parlay markets no
+        // longer return their leg data, so the market-based pass
+        // above can never reach their legs: they sat on the owner's
+        // Performance page as "World Cup Game" and friends while the
+        // sync honestly reported zero repairs. But the stored value
+        // IS Kalshi's own series title, so the same mapper reads it
+        // straight from the field, and the title moves to
+        // provider_market where it belongs.
+        const alreadyFixed = new Set([...fixes.values()].flat());
+        for (const b of needs) {
+          for (const leg of (b.legs ?? []) as LegRow[]) {
+            if (leg.provider_market !== null) continue;
+            if (alreadyFixed.has(leg.id)) continue;
+            const raw = leg.subcategory;
+            if (raw === null || REGISTERED.has(raw) || raw === UNCLASSIFIED)
+              continue;
+            const cls = validated(
+              domainOf(leg.sport as Sport),
+              classifyKalshi(raw, "")
+            );
+            if (cls.category === UNCLASSIFIED) continue;
+            const key2 = JSON.stringify([
+              leg.sport,
+              cls.category,
+              cls.market,
+              cls.period,
+              cls.competition,
+              raw,
+            ]);
+            fixes.set(key2, [...(fixes.get(key2) ?? []), leg.id]);
+          }
+        }
+
         for (const [key2, ids] of fixes) {
           const [sport, subcategory, market, period, competition, provider_market] =
             JSON.parse(key2) as [
