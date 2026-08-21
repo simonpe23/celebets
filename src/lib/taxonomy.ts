@@ -61,6 +61,12 @@ const SPORTS_DOMAIN: Sport[] = [
   "Tennis",
   "Golf",
   "esports",
+  "Cricket",
+  "MMA",
+  "Rugby",
+  "Motorsport",
+  "Boxing",
+  "Table Tennis",
 ];
 
 export function domainOf(sport: Sport): Domain {
@@ -104,6 +110,10 @@ export const CATEGORY_MARKETS: Record<string, readonly string[]> = {
   // The union across sports, for validating an imported pick. The
   // manual picker uses marketsFor(), which narrows to the sport.
   "Player Props": [
+    "Runs",
+    "Wickets",
+    "Rounds",
+    "Method of Victory",
     "Goalscorer",
     "Assists",
     "Score or Assist",
@@ -153,6 +163,9 @@ export const PLAYER_PROP_MARKETS: Partial<Record<Sport, readonly string[]>> = {
   Tennis: ["Aces", "Games Won"],
   Golf: ["Top 10", "Made Cut"],
   esports: ["Kills", "Maps Won"],
+  Cricket: ["Runs", "Wickets"],
+  Boxing: ["Rounds", "Method of Victory"],
+  MMA: ["Rounds", "Method of Victory"],
 };
 
 // The markets a sport actually offers inside a category: Player

@@ -31,6 +31,10 @@ interface LegDraft {
   subcategory: string | null;
   market: string | null;
   period: string | null;
+  // The competition dimension: World Cup, Premier League, ATP. Typed
+  // freely because leagues are endless and Actuals does not own that
+  // vocabulary, unlike category and market.
+  competition: string;
   // Tapping the selected sport again hides or shows the category row.
   categoriesOpen: boolean;
 }
@@ -48,6 +52,7 @@ function emptyLeg(): LegDraft {
     subcategory: null,
     market: null,
     period: null,
+    competition: "",
     categoriesOpen: true,
   };
 }
@@ -239,6 +244,8 @@ export default function NewBetForm({
           subcategory: leg.subcategory,
           market: leg.market,
           period: leg.period,
+          competition:
+            leg.competition.trim() === "" ? null : leg.competition.trim(),
         };
       }),
     });
@@ -305,6 +312,7 @@ export default function NewBetForm({
                   };
                 })()
               : { subcategory: null, market: null, period: null }),
+            competition: "",
             categoriesOpen: false,
           })
         )
@@ -654,6 +662,7 @@ export default function NewBetForm({
                           subcategory: null,
                           market: null,
                           period: null,
+                          competition: "",
                           categoriesOpen: true,
                         }
                   )
@@ -809,6 +818,31 @@ export default function NewBetForm({
                       })}
                     </div>
                   )}
+
+                {/* COMPETITION, an independent dimension: free text,
+                    because leagues are endless and Actuals owns the
+                    category vocabulary, not the world's competitions.
+                    Optional, like everything else in this form. */}
+                <label
+                  htmlFor={`competition-${index}`}
+                  className="mt-3 block text-sm font-semibold"
+                >
+                  Competition
+                  <span className="font-normal text-neutral-500 dark:text-neutral-400">
+                    , optional
+                  </span>
+                </label>
+                <input
+                  id={`competition-${index}`}
+                  type="text"
+                  autoComplete="off"
+                  placeholder="Premier League, World Cup, ATP..."
+                  value={leg.competition}
+                  onChange={(e) =>
+                    updateLeg(index, { competition: e.target.value })
+                  }
+                  className={inputClass}
+                />
               </>
             )}
 

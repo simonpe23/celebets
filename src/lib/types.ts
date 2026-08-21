@@ -7,6 +7,14 @@ export const SPORTS = [
   "Tennis",
   "Golf",
   "esports",
+  // Added 21 August 2026, from Kalshi's catalog audit: they carry
+  // real volume in these and the owner ruled them in.
+  "Cricket",
+  "MMA",
+  "Rugby",
+  "Motorsport",
+  "Boxing",
+  "Table Tennis",
   "Crypto",
   "Other",
 ] as const;
@@ -52,6 +60,12 @@ export const SPORT_EMOJI: Record<Sport, string> = {
   Tennis: "\u{1F3BE}",
   Golf: "⛳",
   esports: "\u{1F3AE}",
+  Cricket: "\u{1F3CF}",
+  MMA: "\u{1F94B}",
+  Rugby: "\u{1F3C9}",
+  Motorsport: "\u{1F3CE}",
+  Boxing: "\u{1F94A}",
+  "Table Tennis": "\u{1F3D3}",
   Crypto: "\u{1FA99}",
   Other: "\u{1F4CA}",
   Politics: "\u{1F3DB}",
