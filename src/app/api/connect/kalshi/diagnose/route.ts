@@ -241,10 +241,15 @@ export async function GET() {
     }
 
     const perCategory: Record<string, number> = {};
-    const unmatched: {
+    // Unmatched split by KALSHI's own category: most of their catalog
+    // is politics, weather and economics, domains with no registered
+    // Actuals categories by design, so a raw unmatched count reads as
+    // catastrophic while the sports gap, the one that matters before
+    // testers, hides inside it.
+    const unmatchedByDomain: Record<string, number> = {};
+    const unmatchedSports: {
       ticker: string;
       title: string | null;
-      category: string | null;
       tags: string[] | null;
     }[] = [];
     const unknownSportTags = new Map<string, number>();
@@ -252,12 +257,15 @@ export async function GET() {
       const cls = classifyMarket(`${prefix}-X`, meta);
       perCategory[cls.category] = (perCategory[cls.category] ?? 0) + 1;
       if (cls.category === UNCLASSIFIED) {
-        unmatched.push({
-          ticker: prefix,
-          title: m.title ?? null,
-          category: m.category ?? null,
-          tags: m.tags ?? null,
-        });
+        const dom = m.category ?? "(none)";
+        unmatchedByDomain[dom] = (unmatchedByDomain[dom] ?? 0) + 1;
+        if (dom.toLowerCase() === "sports") {
+          unmatchedSports.push({
+            ticker: prefix,
+            title: m.title ?? null,
+            tags: m.tags ?? null,
+          });
+        }
       }
       if ((m.category ?? "").toLowerCase() === "sports") {
         const sport = sportFor(`${prefix}-X`, meta);
@@ -270,9 +278,19 @@ export async function GET() {
     }
     catalog.mappedPerCategory = perCategory;
     catalog.unknownSportTags = Object.fromEntries(unknownSportTags);
-    // The review list, capped so the paste stays human-sized.
-    catalog.unmatchedCount = unmatched.length;
-    catalog.unmatched = unmatched.slice(0, 250);
+    catalog.unmatchedByDomain = unmatchedByDomain;
+    catalog.unmatchedSportsCount = unmatchedSports.length;
+    // The review list: sports only, deduped by title so a hundred
+    // variants of one market do not fill the paste, capped human-sized.
+    const seenTitles = new Set<string>();
+    catalog.unmatchedSports = unmatchedSports
+      .filter((u) => {
+        const t = (u.title ?? u.ticker).toLowerCase();
+        if (seenTitles.has(t)) return false;
+        seenTitles.add(t);
+        return true;
+      })
+      .slice(0, 150);
   } catch (e) {
     catalog.error = e instanceof Error ? e.message.slice(0, 160) : String(e);
   }
