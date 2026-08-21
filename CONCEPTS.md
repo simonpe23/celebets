@@ -45,12 +45,21 @@ map (one value holding 80%+ of the money is demoted). Facts too
 small to map sit on a shelf, never lost. Wireframe: /preview/map.
 Mockup: /preview/map-mock.
 
-## Concept 2: The Portfolio (QUEUED)
+## Concept 2: The Portfolio (IN REVIEW, the owner's favourite going in)
 
-Betting skills as holdings: one ranked list mixing all dimensions
-(no groups), each fact with its own stock-style page (chart, stats,
-"Inside" rows that are ready-made intersections, Compare). The
-audience already lives in this metaphor on Kalshi.
+One ranked list mixing ALL dimensions freely. The principle, in the
+owner's words: it prioritizes information by relevance to the user,
+rather than by the structure of the database. Actuals continuously
+asks "what are the most meaningful facts about this bettor right
+now?" and ranks them; the taxonomy stays sophisticated underneath
+and invisible until relevant. Ranking is meaningfulness, not raw
+P&L: money weighted by evidence (|profit| x sqrt(picks/(picks+10)))
+in the preview, growing later with exposure, recency, consistency,
+change over time. Leaks sink to their own section. Every fact has
+its own page with "Inside" rows (ready-made intersections), each a
+deeper page. Layers can be stolen in later: Upgrade B's questions,
+the Money Map as an alternate view. Wireframe: /preview/portfolio.
+Mockup: /preview/portfolio-mock.
 
 ## Rejected
 
