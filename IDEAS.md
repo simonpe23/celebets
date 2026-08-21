@@ -33,6 +33,33 @@ How this file works:
 ## NOW (small, fits the current app, high value per effort)
 
 
+29. THE THREE TAXONOMY GAPS. Parked by the owner on 21 August 2026
+    with "OK for now. But remind me to fix this later." THIS IS THAT
+    REMINDER. Ordered by his own ranking:
+
+    a. PERIODS EXIST FOR FOOTBALL ONLY, and he called this the most
+       important of the three. Every other sport has no half, no
+       quarter, no set, no innings to choose, so a first-quarter NBA
+       bet and a full-game one sit in the same analytics row and
+       nothing tells them apart. SPORT_PERIODS in src/lib/taxonomy.ts
+       is where the lists go. Needs his approved vocabulary per
+       sport, the same way he approved the competitions.
+
+    b. THE SCREENSHOT IMPORT DOES NOT CLASSIFY. Paste bet slip and
+       Upload image read the sport and nothing else, so category,
+       market and competition come back empty and the user taps them
+       before placing. It is a third door speaking a different
+       language from the other two. The fix is teaching the
+       parse-slip prompt the registered vocabulary and running its
+       answer through validated(), so the AI can pick from the list
+       but never invent a word. Lower priority by his ruling: "paste
+       bet slip and manual entry will not be used a lot."
+
+    c. ONLY SPORTS AND ECONOMICS HAVE CATEGORIES. A Politics or
+       Culture pick has nothing to file itself under and is honestly
+       Unclassified. Deliberate (no invented taxonomy without real
+       markets to justify it), but still unfinished.
+
 26. THE AUTH FLOW REDESIGN. SHIPPED and verified live by the owner,
     August 2026, on his phone: Google, an emailed code, and the demo
     door all tested. One auth page at /login, no passwords anywhere:
