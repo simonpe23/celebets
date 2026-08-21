@@ -231,10 +231,16 @@ export const SPORT_PERIODS: Partial<Record<Sport, readonly string[]>> = {
 // people typing "EPL" and "Premier League" split one league into
 // two rows of analytics forever.
 //
-// Football carries International and Rest of the World so a bet on
-// a league nobody listed still has an honest home. World Cup and
-// Euros are deliberately absent: neither runs for another two years,
-// and a chip nobody can use is noise (owner's call).
+// EVERY LIST ENDS IN A CATCH-ALL, so a league nobody listed still
+// has an honest home and the strip is never a dead end. Football
+// says International and Rest of the World (the owner's own words);
+// the rest say Other. World Cup and Euros are deliberately absent
+// from football: neither runs for another two years, and a chip
+// nobody can use is noise (owner's call).
+//
+// The catch-all is a TAP, never an import target. A Kalshi league we
+// have never seen keeps its own words rather than being flattened
+// into Other, because a name is worth more than a shrug.
 //
 // A sport with no list here keeps the free text box, because it has
 // no leagues to list. Boxing is the worked example: it has fights,
@@ -259,10 +265,10 @@ export const SPORT_COMPETITIONS: Partial<Record<Sport, readonly string[]>> = {
     "International",
     "Rest of the World",
   ],
-  "American Football": ["NFL", "College Football", "UFL"],
-  Basketball: ["NBA", "College Basketball", "WNBA", "EuroLeague"],
-  Baseball: ["MLB", "College Baseball", "NPB", "KBO"],
-  "Ice Hockey": ["NHL", "KHL", "SHL", "World Championship"],
+  "American Football": ["NFL", "College Football", "UFL", "Other"],
+  Basketball: ["NBA", "College Basketball", "WNBA", "EuroLeague", "Other"],
+  Baseball: ["MLB", "College Baseball", "NPB", "KBO", "Other"],
+  "Ice Hockey": ["NHL", "KHL", "SHL", "World Championship", "Other"],
   Tennis: [
     "ATP",
     "WTA",
@@ -270,6 +276,7 @@ export const SPORT_COMPETITIONS: Partial<Record<Sport, readonly string[]>> = {
     "Roland Garros",
     "Wimbledon",
     "US Open",
+    "Other",
   ],
   Golf: [
     "PGA Tour",
@@ -278,19 +285,28 @@ export const SPORT_COMPETITIONS: Partial<Record<Sport, readonly string[]>> = {
     "The Masters",
     "The Open",
     "Ryder Cup",
+    "Other",
   ],
-  esports: ["CS2", "League of Legends", "Valorant", "Dota 2", "Rocket League"],
-  Cricket: ["IPL", "T20 World Cup", "The Hundred", "Big Bash"],
-  MMA: ["UFC", "PFL", "Bellator", "ONE"],
+  esports: [
+    "CS2",
+    "League of Legends",
+    "Valorant",
+    "Dota 2",
+    "Rocket League",
+    "Other",
+  ],
+  Cricket: ["IPL", "T20 World Cup", "The Hundred", "Big Bash", "Other"],
+  MMA: ["UFC", "PFL", "Bellator", "ONE", "Other"],
   Rugby: [
     "Six Nations",
     "NRL",
     "Premiership Rugby",
     "Super Rugby",
     "World Cup",
+    "Other",
   ],
-  Motorsport: ["Formula 1", "NASCAR", "MotoGP", "IndyCar"],
-  "Table Tennis": ["WTT", "World Championship"],
+  Motorsport: ["Formula 1", "NASCAR", "MotoGP", "IndyCar", "Other"],
+  "Table Tennis": ["WTT", "World Championship", "Other"],
 };
 
 export function competitionsFor(sport: Sport): readonly string[] {

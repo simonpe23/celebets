@@ -711,6 +711,26 @@ eq("weather is Other", sportForTicker("KXHIGHNY-25AUG20"), "Other");
   );
   // Boxing has fights, not seasons: no list means the text box.
   eq("competitions: boxing has no list", competitionsFor("Boxing"), []);
+  // Every list ends in a catch-all, so the strip is never a dead end.
+  eq(
+    "competitions: every sport list ends in a catch-all",
+    Object.entries(SPORT_COMPETITIONS)
+      .filter(([, list]) => list.at(-1) !== "Other")
+      .map(([sport]) => sport),
+    ["Football"]
+  );
+  eq(
+    "competitions: football's catch-all is Rest of the World",
+    competitionsFor("Football").at(-1),
+    "Rest of the World"
+  );
+  // The catch-all is a tap, not an import target: an unknown league
+  // keeps its name rather than being flattened into Other.
+  eq(
+    "competitions: an unknown league is never flattened to Other",
+    canonicalCompetition("Liga Portugal", "Football"),
+    "Liga Portugal"
+  );
   eq("competitions: crypto has no list", competitionsFor("Crypto"), []);
 
   // THE POINT OF THE LIST. Kalshi's words become the chip's words.
