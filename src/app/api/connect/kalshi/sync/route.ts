@@ -48,6 +48,9 @@ export const maxDuration = 300;
 const AUTO_THROTTLE_MS = 3 * 60 * 1000;
 
 export async function POST(request: Request) {
+  // The repair pass budgets itself against the request ceiling, so
+  // the clock starts at the door.
+  const startedMs = Date.now();
   const supabase = await createClient();
   const {
     data: { user },
@@ -503,19 +506,27 @@ export async function POST(request: Request) {
           String(b.external_id ?? "").split(":")[1] ?? "";
         // Singles are cheap (one batched series lookup per distinct
         // prefix), so they all repair in one pass. Parlays cost one
-        // market fetch each, so they heal 40 a sync.
+        // market fetch each, so they heal on a TIME budget instead of
+        // a count: the fixed 40-a-sync cap left the owner's
+        // parlay-heavy accounts (267 parlays) half-migrated across
+        // many syncs, which is how raw provider labels were still on
+        // his Performance page a day after the taxonomy shipped.
         const singles = needs.filter(
           (b) => ((b.legs ?? []) as LegRow[]).length === 1
         );
-        const parlays = needs
-          .filter((b) => ((b.legs ?? []) as LegRow[]).length > 1)
-          .slice(0, 40);
+        const parlays = needs.filter(
+          (b) => ((b.legs ?? []) as LegRow[]).length > 1
+        );
 
         // Parlay legs live in their own markets; the parent knows
         // which. Parents are fetched one by one because the batch
-        // shape may omit mve_selected_legs.
+        // shape may omit mve_selected_legs. The loop stops when the
+        // request nears its ceiling (maxDuration 300s), leaving room
+        // for the batched lookups and writes that follow; whatever
+        // did not fit stays queued for the next sync.
         const parentMeta = new Map<string, KalshiMarketMeta>();
         for (let i = 0; i < parlays.length; i += 8) {
+          if (Date.now() - startedMs > 220_000) break;
           const chunk = parlays.slice(i, i + 8);
           const found = await Promise.all(
             chunk.map((b) => kalshiMarket(key, pem, tickerOf(b)))
