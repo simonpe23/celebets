@@ -39,16 +39,15 @@ export const UNCLASSIFIED = "Unclassified";
 // every sport value maps to exactly one domain.
 // ---------------------------------------------------------------
 
+// FIVE DOMAINS, the owner's ruling on 21 August 2026 after a
+// rethink: "the fewer the better, everything falls under these".
+// Everything Kalshi trades lands in one of them, so the top level
+// stays scannable no matter how many market types exist below it.
 export type Domain =
   | "Sports"
   | "Politics"
   | "Economics"
-  | "Entertainment"
-  | "Weather"
-  | "Companies"
-  | "Tech & Science"
-  | "Health"
-  | "World"
+  | "Culture"
   | "Other";
 
 const SPORTS_DOMAIN: Sport[] = [
@@ -68,17 +67,33 @@ const SPORTS_DOMAIN: Sport[] = [
   "Table Tennis",
 ];
 
-// Level 2 values that do not name their own domain. Crypto sits
-// under Economics by the owner's ruling (21 August 2026): a BTC price
-// bet is a financial bet, and Crypto as its own domain made the top
-// level longer without making it clearer.
+// Where each Level 2 value lives, the owner's mapping. Anything not
+// listed and not a sport falls to Other, which is the honest home for
+// an unmatched subject rather than a guess.
 const LEVEL_TWO_DOMAINS: Record<string, Domain> = {
   Crypto: "Economics",
+  Companies: "Economics",
+  Commodities: "Economics",
+  Financials: "Economics",
+  Economics: "Economics",
+  Elections: "Politics",
+  Politics: "Politics",
+  "World affairs": "Politics",
+  World: "Politics",
+  Entertainment: "Culture",
+  Music: "Culture",
+  Film: "Culture",
+  Awards: "Culture",
+  Social: "Culture",
+  Weather: "Other",
+  Health: "Other",
+  Transport: "Other",
+  "Tech & Science": "Other",
 };
 
 export function domainOf(sport: Sport): Domain {
   if ((SPORTS_DOMAIN as string[]).includes(sport)) return "Sports";
-  return LEVEL_TWO_DOMAINS[sport] ?? (sport as Domain);
+  return LEVEL_TWO_DOMAINS[sport] ?? "Other";
 }
 
 // ---------------------------------------------------------------

@@ -651,7 +651,12 @@ eq("weather is Other", sportForTicker("KXHIGHNY-25AUG20"), "Other");
   // price bet must still validate.
   eq("domains: Crypto sits under Economics", domainOf("Crypto"), "Economics");
   eq("domains: a sport sits under Sports", domainOf("Rugby"), "Sports");
-  eq("domains: Health names its own domain", domainOf("Health"), "Health");
+  eq("domains: Health falls to Other", domainOf("Health"), "Other");
+  eq("domains: Companies is Economics", domainOf("Companies"), "Economics");
+  eq("domains: Entertainment is Culture", domainOf("Entertainment"), "Culture");
+  eq("domains: World affairs is Politics", domainOf("World"), "Politics");
+  eq("domains: Tech & Science is Other", domainOf("Tech & Science"), "Other");
+  eq("domains: an unmatched subject is Other", domainOf("Nonsense"), "Other");
   eq(
     "domains: a crypto price bet still validates",
     validated(domainOf("Crypto"), classifyKalshi("Bitcoin price up down", "KXBTC15M-X")).category,
@@ -661,6 +666,16 @@ eq("weather is Other", sportForTicker("KXHIGHNY-25AUG20"), "Other");
     "domains: Crypto is no longer a registered domain",
     DOMAIN_CATEGORIES.Crypto ?? null,
     null
+  );
+  // Five domains, the owner's ruling: everything lands in one.
+  eq(
+    "domains: every stored value resolves into the five",
+    [...new Set(
+      ["Football", "Rugby", "Crypto", "Companies", "Elections", "Politics",
+       "Entertainment", "Social", "Weather", "Health", "Tech & Science",
+       "World", "Other", "Nonsense"].map(domainOf)
+    )].sort(),
+    ["Culture", "Economics", "Other", "Politics", "Sports"]
   );
 
   // Every market the mappers can emit is registered under its
