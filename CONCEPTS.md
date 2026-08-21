@@ -36,11 +36,14 @@ question". Wireframe: /preview/questions. Mockup:
 earner, biggest leak, strongest two-fact combination, and the two
 comparisons whose values disagree most, ranked by money at stake.
 
-## Concept 1: The Money Map (QUEUED)
+## Concept 1: The Money Map (IN REVIEW)
 
-The record as territory: a mosaic of tiles sized by money moved,
-colored by profit and loss. Drilling is zooming; a tile opens the
-answer card. Unequal weight becomes physics.
+The record as territory: a real treemap of tiles sized by the money
+each fact moves, colored by profit and loss. Drilling is zooming and
+re-splitting; the auto-split prefers dimensions that draw an actual
+map (one value holding 80%+ of the money is demoted). Facts too
+small to map sit on a shelf, never lost. Wireframe: /preview/map.
+Mockup: /preview/map-mock.
 
 ## Concept 2: The Portfolio (QUEUED)
 
