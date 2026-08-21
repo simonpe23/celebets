@@ -674,9 +674,16 @@ Decisions locked in during this build:
   live in SUBCATEGORIES in src/lib/types.ts, Football only so far.
   Adding sub-categories is a code change, never a database change.
   Nested choices are stored as "Group: Choice" (Player Props: Assists).
-- All SQL files through supabase/phase8.sql have been run (July 2026).
+- All SQL files through supabase/phase13.sql have been run, in order.
   phase8 (Crypto) was applied by Claude via the Supabase connector.
+  phase12 (the taxonomy columns) and phase13 (six more sports, plus
+  competition on manual entry) were run by the owner and both returned
+  their proof numbers, 21 August 2026.
   Transaction dates are editable.
+- SUPABASE'S SQL EDITOR RUNS YOUR SELECTION, not the file, whenever
+  any text is selected. phase13 failed on its second run with "syntax
+  error at or near Companies" because a double-click had selected that
+  one word. Clear the selection, or press Cmd+A, before Run.
 
 ## Settings (August 2026, built and verified)
 
