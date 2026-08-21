@@ -82,7 +82,7 @@ export const DOMAIN_CATEGORIES: Partial<Record<Domain, readonly string[]>> = {
     "Correct Score",
     "Player Props",
     "Match Props",
-    "Outright Winner",
+    "Tournament Winner",
   ],
   Crypto: ["Price Direction"],
 };
@@ -97,7 +97,7 @@ export const CATEGORY_MARKETS: Record<string, readonly string[]> = {
   "Correct Score": ["Correct Score"],
   "Player Props": ["Goalscorer", "Assists", "Score or Assist"],
   "Match Props": ["BTTS", "Corners", "First to Score"],
-  "Outright Winner": ["Outright"],
+  "Tournament Winner": ["Tournament Winner"],
   "Price Direction": ["Price Direction"],
 };
 
@@ -178,8 +178,14 @@ const KALSHI_RULES: Rule[] = [
   // 1+ goals"), proven by the owner's own bets.
   { match: /\bgoals?$/, category: "Player Props", market: "Goalscorer" },
   // "Men's World Cup winner". Guarded so a "... Match Winner" title
-  // could never read as a futures market.
-  { match: /winner\s*$/, category: "Outright Winner", market: "Outright" },
+  // could never read as a futures market. Named Tournament Winner
+  // (the owner, 21 August): "outright" is trade jargon, and it sat
+  // next to Moneyline in the picker confusing which was which.
+  {
+    match: /winner\s*$/,
+    category: "Tournament Winner",
+    market: "Tournament Winner",
+  },
   { match: /friendl/, category: "Moneyline", market: "Match Winner", keepTitle: true },
   { match: /\b(game|match|matches)\b/, category: "Moneyline", market: "Match Winner" },
   // Kalshi's 15-minute crypto markets ("Bitcoin price up down").
@@ -228,7 +234,10 @@ export function classifyKalshi(
   for (const rule of KALSHI_RULES) {
     const m = lower.match(rule.match);
     if (!m) continue;
-    if (rule.category === "Outright Winner" && /\b(game|match)\b/.test(lower)) {
+    if (
+      rule.category === "Tournament Winner" &&
+      /\b(game|match)\b/.test(lower)
+    ) {
       continue;
     }
     const competition = rule.noCompetition

@@ -497,7 +497,7 @@ eq("weather is Other", sportForTicker("KXHIGHNY-25AUG20"), "Other");
     ["World Cup Corners", "KXWCCORNERS-X", "Match Props", "Corners", null, "World Cup"],
     ["World Cup First Goal", "KXWCFIRSTGOAL-X", "Match Props", "First to Score", null, "World Cup"],
     ["World Cup Goal", "KXWCGOAL-X", "Player Props", "Goalscorer", null, "World Cup"],
-    ["Men's World Cup winner", "KXMENWORLDCUP-X", "Outright Winner", "Outright", null, "Men's World Cup"],
+    ["Men's World Cup winner", "KXMENWORLDCUP-X", "Tournament Winner", "Tournament Winner", null, "Men's World Cup"],
     ["EFL Cup Spread", "KXEFLCUPSPREAD-X", "Spread / Handicap", "Spread", null, "EFL Cup"],
     ["Professional Baseball Game", "KXMLBGAME-X", "Moneyline", "Match Winner", null, "Professional Baseball"],
     ["ATP Tennis Match", "KXATPMATCH-X", "Moneyline", "Match Winner", null, "ATP Tennis"],
