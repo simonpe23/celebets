@@ -152,5 +152,28 @@ Then the motion pass, then the real-build plan in phases.
   into Others, leaving a heatmap with no red in it), and type is
   sized from each tile's real pixels so a narrow column never prints
   a number wider than itself. Tapping a tile opens that fact.
+- View 7, WHAT CHANGED: built to 07_what_changed.png. Reached from
+  Home's "Updated today" line. Ranks are recomputed as of the past
+  and compared with today, so every badge is earned: an arrow with
+  the number of places moved, NEW for a fact that was not in the top
+  list before, and a neutral "#rank" for one that held its place. A
+  fact that did not move is NOT a fall, which the first draft drew
+  as a red down arrow pointing at zero. NEW cards print no day
+  delta, because their whole profit is the change. The quiet-day
+  state is designed, per the ruling: "Nothing moved yesterday".
+- View 8, INSIGHT / QUESTION CARD: built to
+  08_insight_question_card.png. A modal over the dimmed home,
+  opened from the "Things worth knowing" header or "See all
+  insights". The finding is COMPUTED, never canned: the strongest
+  two-fact intersection with at least four picks behind it, worded
+  by its sign (Biggest opportunity in purple, Biggest leak in red,
+  with the ring following). Four stat rows, a filled Explore button
+  that opens that exact intersection in the builder, and an
+  outlined "Ask Actuals why".
+- ALL TEN VIEWS ARE NOW WALKABLE end to end at /preview/pf. What is
+  deliberately NOT done yet: the polish pass across all views at
+  once, the illustrated icon artwork replacing the emoji, and the
+  All Facts directory (recommended folded into the builder rather
+  than built as a near-twin; the owner has not ruled).
 - The living preview is one tappable prototype at /preview/pf.
   Engine and skin: src/app/preview/pf/ (engine.ts, theme.tsx).
