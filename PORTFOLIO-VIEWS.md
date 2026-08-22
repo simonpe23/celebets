@@ -128,9 +128,13 @@ Then the motion pass, then the real-build plan in phases.
   facts. Owner edits applied: primary-fact icon, no duplicate stats
   row, slim period control, measured card geometry, a serious dark
   blue + with no circle.
-- View 5, ADD A FACT: built to 05_add_a_fact.png. Opens from the
-  token pill and the bottom button; tabs Popular / Markets /
-  Leagues / Other; every row priced at the intersection it would
-  create. "Create custom fact" is drawn but inert by ruling.
+- View 5, ADD A FACT: built to 05_add_a_fact.png. THREE doors, all
+  wired: Home's "Build your Performance View" opens it with NO
+  context (build a question from scratch), and on a fact page both
+  the token pill and the bottom button open it scoped. Tabs Popular
+  / Markets / Leagues / Other; every row priced at the intersection
+  it would create. "Create custom fact" is drawn but inert by
+  ruling. Home now always shows exactly five ranked rows, per the
+  v2 sheet: everything beyond them lives in the builder.
 - The living preview is one tappable prototype at /preview/pf.
   Engine and skin: src/app/preview/pf/ (engine.ts, theme.tsx).
