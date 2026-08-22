@@ -21,9 +21,11 @@ at the bottom.
 3. COMPARE (03_compare.png). Two fact cards with a vs badge, metric
    toggle ($ Profit | ROI | Hit rate), dual-line chart, period
    chips, Key stats rows, Explore button.
-4. ALL FACTS (04_all_facts.png). The directory: search, filter chips
-   (All, Profit, Loss, Hot, New), flat ranked rows, Add a fact.
-5. ADD A FACT (05_add_a_fact.png). Sheet with tabs (Popular,
+4. ALL FACTS (04_all_facts.png). FOLDED INTO 5 by the owner, 22
+   August. Its search field and filter chips moved into the Add a
+   fact sheet; there is no separate All Facts page.
+5. ADD A FACT (05_add_a_fact.png), which is now also the directory.
+   Search, a filter chip (All, Winning, Losing, Hot), tabs (Popular,
    Markets, Leagues, Other), ranked rows with +, and "Create custom
    fact: build your own combination".
 6. MAP VIEW (06_map_view.png). The treemap as a full view: solid
@@ -170,10 +172,50 @@ Then the motion pass, then the real-build plan in phases.
   with the ring following). Four stat rows, a filled Explore button
   that opens that exact intersection in the builder, and an
   outlined "Ask Actuals why".
-- ALL TEN VIEWS ARE NOW WALKABLE end to end at /preview/pf. What is
-  deliberately NOT done yet: the polish pass across all views at
-  once, the illustrated icon artwork replacing the emoji, and the
-  All Facts directory (recommended folded into the builder rather
-  than built as a near-twin; the owner has not ruled).
+- ALL TEN VIEWS ARE WALKABLE end to end at /preview/pf.
+
+## The polish pass (22 August, after all views were built)
+
+Ruled by the owner: one pass, emoji left alone for now, All Facts
+folded into the builder.
+
+WHAT THE SEAMS WERE. Seven views built one per round, each solving
+its own sheet, had drifted into: four different back bars, three
+segmented controls with two different active states, ten corner
+radii, section gaps from 4px to 26px, three chevrons, and a third
+green (#009B07) on the strength pill. None of it was visible in any
+single screenshot, which is exactly why it survived seven rounds.
+
+WHAT IS SHARED NOW, in src/app/preview/pf/theme.tsx and nowhere else:
+- Three radii (--pf-r-card / -inner / -small) and two vertical
+  rhythms (--pf-gap-section / -block). A fourth value is a bug.
+- PfTopBar: one back bar, with a right slot for whatever a view
+  keeps up there.
+- PfSegments: one period control. The active state is SOLID PURPLE
+  everywhere. Home's lavender-on-white pill lost because it is
+  barely a state on a white card and vanishes on the dark page.
+- .pf-door: the full-width bordered card that opens something
+  bigger. Home's builder and What Changed's full list were three
+  different shapes for one job.
+- .pf-chev, and :active / :focus-visible feedback. Nothing in the
+  prototype acknowledged a tap before this, which reads as broken.
+
+TWO DUPLICATIONS REMOVED, both the same mistake CLAUDE.md records
+from the last Performance rebuild: Home and the fact page each
+carried an "All time ▾" chip directly above a segmented control that
+said the same thing. The chips are gone. Home's label now names the
+window ("Last 30 days profit"), so it does work instead of saying
+"Profit".
+
+Sub-lines that are READ now take --pf-sub at weight 500 everywhere.
+--pf-muted survives only on uppercase micro labels and chart axes.
+
+TWO DELIBERATE DEVIATIONS FROM THE SHEETS, for the owner to rule:
+- "View all" beside Key stats on 03_compare.png is removed. It
+  promised a page that exists in none of the ten sheets.
+- The insight card (08) keeps its pill buttons while the fact page
+  and Compare keep rounded rectangles, because that is what the two
+  sheets draw. The sheets disagree; the owner drew them.
+
 - The living preview is one tappable prototype at /preview/pf.
   Engine and skin: src/app/preview/pf/ (engine.ts, theme.tsx).
