@@ -136,5 +136,13 @@ Then the motion pass, then the real-build plan in phases.
   it would create. "Create custom fact" is drawn but inert by
   ruling. Home now always shows exactly five ranked rows, per the
   v2 sheet: everything beyond them lives in the builder.
+- View 3, COMPARE: built to 03_compare.png. Reached from the fact
+  page's Compare button, which opens the sheet in "Compare with"
+  mode (ranked against the whole record, same-group rivals allowed,
+  no custom-fact card). Two cards with the vs badge, the $ Profit /
+  ROI / Hit rate toggle redrawing both series from one cumulative
+  engine pass, period chips, Key stats, Explore. The chart rule
+  holds: each side coloured by its own sign, with a second weight
+  and a legend dot when both share one.
 - The living preview is one tappable prototype at /preview/pf.
   Engine and skin: src/app/preview/pf/ (engine.ts, theme.tsx).
