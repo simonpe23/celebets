@@ -76,25 +76,30 @@ on Home are PURPLE in the mockup, matching the owner's "charts are
 purple" ruling; the v2 preview's green/red sparklines will be
 corrected to purple.
 
-## Owner rulings pending (asked 22 August)
+## Owner rulings (22 August)
 
-- Four tabs (Profile joins the bar) - confirm, it changes Track too.
-- Fact Page stat boxes: sheet 02 says Bets/Record/Hit rate/ROI,
-  sheet 10 says Bets/Avg odds/Units/Profit per bet. Also Avg odds is
-  drawn AMERICAN (+128) while the app is decimal, and Units does not
-  exist in the data model.
-- Intersection View: does the top card re-scope to the intersection
-  (recommended), or stay on the base fact with the strip showing the
-  intersection as sheet 09 draws it?
-- Where the overall record (+$2,637, the old Review headline) lives
-  now: Home shows no total.
-- "Create custom fact": save-and-name an intersection as a reusable
-  fact (recommended reading) - scope and timing.
-- Compare chart colors: sheet 03 uses blue vs red; the earlier dark
-  sheet used purple vs orange.
-- "By impact" selector: which options (impact / profit / ROI / hit
-  rate?).
-- What changed window: "since yesterday" confirmed daily?
+- Four tabs: DEFERRED. Not needed for the rebuild; previews keep the
+  three-tab bar. Decide before the real build ships.
+- Fact Page stat boxes: Bets, Record, Hit rate, ROI now. Avg odds
+  (decimal) and Profit per bet may join later. Units needs its own
+  product decision first.
+- Intersection View: the whole card RE-SCOPES when a fact is added.
+  One screen, one truth; the tokens say what is included.
+- The overall record: a quiet total line under "Your performance" on
+  Home, AND the Intersection View with no filters IS the overall
+  record page (it has the chart already). It carries a "Show overall
+  record" / "Remove filters" button.
+- "Create custom fact" = save-and-name an intersection as a reusable
+  fact. Confirmed. Built late.
+- CHART RULE (owner's wording): "Purple line for profit and red for
+  losses." Applies everywhere: a leaking fact's chart draws red;
+  compare lines color by each side's sign (two-profitable-facts case
+  to be solved with two purple weights and shown at the Compare
+  round).
+- "By impact" selector options: By impact (default), By profit,
+  By ROI, By hit rate.
+- What changed: daily as drawn, with a designed quiet-day state
+  ("Nothing moved yesterday").
 
 ## Build order (one view per round, each into the living preview)
 
