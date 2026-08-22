@@ -120,8 +120,17 @@ Then the motion pass, then the real-build plan in phases.
   Final shape follows v2_01_portfolio_home.png with the owner's
   edits: no Overall score, profit as the hero, "Build your
   Performance View", "Explore Your Heatmap", darker green #069F41.
-- View 2, THE FACT PAGE: built to 02_fact_page.png, awaiting review.
-  Home's rows now open it and its Inside rows open intersections
-  (the page re-scopes and the title joins the facts).
+- View 2, THE FACT PAGE, now THE GOLDEN VIEW: rebuilt to
+  v3_02_fact_page.png as the chart builder. The "Inside" list was
+  cut (it duplicated adding a fact); in its place the token bar, the
+  See-the-bets link and the EXPLORE THIS PERFORMANCE card grid whose
+  + refines the page where it stands. Ten cards before View all
+  facts. Owner edits applied: primary-fact icon, no duplicate stats
+  row, slim period control, measured card geometry, a serious dark
+  blue + with no circle.
+- View 5, ADD A FACT: built to 05_add_a_fact.png. Opens from the
+  token pill and the bottom button; tabs Popular / Markets /
+  Leagues / Other; every row priced at the intersection it would
+  create. "Create custom fact" is drawn but inert by ruling.
 - The living preview is one tappable prototype at /preview/pf.
   Engine and skin: src/app/preview/pf/ (engine.ts, theme.tsx).
