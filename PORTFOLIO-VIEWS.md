@@ -115,5 +115,7 @@ Then the motion pass, then the real-build plan in phases.
 
 ## Status
 
-- 22 August: architecture pass delivered, rulings pending. No view
-  built yet.
+- 22 August: architecture pass delivered; the eight rulings landed.
+- View 1, PORTFOLIO HOME: built into the living preview at
+  /preview/pf, awaiting the owner's review. Engine and skin live in
+  src/app/preview/pf/ (engine.ts, theme.tsx) for every later view.
