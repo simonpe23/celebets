@@ -144,5 +144,13 @@ Then the motion pass, then the real-build plan in phases.
   engine pass, period chips, Key stats, Explore. The chart rule
   holds: each side coloured by its own sign, with a second weight
   and a legend dot when both share one.
+- View 6, MAP VIEW: built to 06_map_view.png. Reached from Home's
+  "Explore Your Heatmap"; the list/map toggle returns. Solid tiles
+  graded green by profit, one red for losses, a grey Others bucket,
+  the legend and the "Size shows impact" caption. Tiles are ranked
+  by money moved (a percentage cutoff once folded the biggest leak
+  into Others, leaving a heatmap with no red in it), and type is
+  sized from each tile's real pixels so a narrow column never prints
+  a number wider than itself. Tapping a tile opens that fact.
 - The living preview is one tappable prototype at /preview/pf.
   Engine and skin: src/app/preview/pf/ (engine.ts, theme.tsx).
