@@ -116,6 +116,12 @@ Then the motion pass, then the real-build plan in phases.
 ## Status
 
 - 22 August: architecture pass delivered; the eight rulings landed.
-- View 1, PORTFOLIO HOME: built into the living preview at
-  /preview/pf, awaiting the owner's review. Engine and skin live in
-  src/app/preview/pf/ (engine.ts, theme.tsx) for every later view.
+- View 1, PORTFOLIO HOME: APPROVED 22 August, after five rounds.
+  Final shape follows v2_01_portfolio_home.png with the owner's
+  edits: no Overall score, profit as the hero, "Build your
+  Performance View", "Explore Your Heatmap", darker green #069F41.
+- View 2, THE FACT PAGE: built to 02_fact_page.png, awaiting review.
+  Home's rows now open it and its Inside rows open intersections
+  (the page re-scopes and the title joins the facts).
+- The living preview is one tappable prototype at /preview/pf.
+  Engine and skin: src/app/preview/pf/ (engine.ts, theme.tsx).
