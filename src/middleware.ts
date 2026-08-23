@@ -71,7 +71,15 @@ export async function middleware(request: NextRequest) {
   // now (next.config.ts) and never reach the middleware.
   const isAuthPage =
     pathname.startsWith("/login") ||
-    // Local design previews only. Never reachable in production.
+    // THE DESIGN PREVIEWS. They ARE deployed now (the owner ruled on
+    // 23 August 2026 that they should be committed, so the work is
+    // backed up rather than living in one temporary container). This
+    // line is what keeps them out of a stranger's hands: in
+    // production /preview is not an auth page, so a logged-OUT
+    // visitor who guesses the address is bounced to /login like any
+    // other private page. A logged-IN user reaches them, which is
+    // the point, because that is how the owner and the testers look
+    // at a preview on their own phones.
     (process.env.NODE_ENV === "development" &&
       pathname.startsWith("/preview"));
 

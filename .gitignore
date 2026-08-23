@@ -40,5 +40,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Local design preview pages, never deployed
-/src/app/preview/
+# The design preview pages used to be ignored here, so they were
+# never deployed. That also meant they were never BACKED UP: the
+# whole Portfolio prototype existed only inside one temporary
+# container. Not deployed and not saved are different problems,
+# and one rule was treating them as one. Ruled by the owner on
+# 23 August 2026: commit them. The login gate in middleware.ts
+# still keeps every /preview page away from logged-out visitors.
