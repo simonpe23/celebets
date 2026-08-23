@@ -33,6 +33,30 @@ How this file works:
 ## NOW (small, fits the current app, high value per effort)
 
 
+30. MOTION LEVEL C, THE SHARED ELEMENT TRANSITIONS. Parked by the
+    owner on 23 August 2026 with "we park C. remind me later." THIS
+    IS THAT REMINDER.
+
+    What C is: tapping a ranked row makes that row's icon and its
+    money fly up into the fact page's header, so the row visibly
+    BECOMES the page. Same for a heatmap tile and a What changed
+    card. It is the difference between a screen that replaces
+    another and a screen that grows out of the thing you touched.
+
+    Why it waits: every one of those flights is tuned to the exact
+    position and size of two elements in two different layouts. Move
+    a card, retune the flight. The owner has not settled the four
+    tab question, the icon artwork, the font, or the web layout, and
+    any of those moves the targets.
+
+    THE TRIGGER TO BUILD IT: when the Portfolio layouts stop
+    changing, which in practice means after the real build ships and
+    the design is no longer under review. Not before.
+
+    Levels A (sheets and pages move with direction) and B (the chart
+    line draws, numbers count, rows arrive in sequence) were built
+    on 23 August and are not part of this.
+
 29. THE THREE TAXONOMY GAPS. Parked by the owner on 21 August 2026
     with "OK for now. But remind me to fix this later." THIS IS THAT
     REMINDER. Ordered by his own ranking:
