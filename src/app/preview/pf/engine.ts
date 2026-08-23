@@ -146,6 +146,40 @@ export function roiOf(s: Stats): string {
   return s.staked > 0 ? `${((s.profit / s.staked) * 100).toFixed(1)}%` : "-";
 }
 
+// TWINS: two facts covering exactly the same bets.
+//
+// In a real record this happens constantly. Every one of the owner's
+// American Football bets is an NFL bet, so "American Football" and
+// "NFL" are the same set under two names, with the same record and
+// the same profit to the dollar. Same for Baseball and MLB, Ice
+// Hockey and NHL, Basketball and NBA.
+//
+// THIS USED TO BE APPLIED TO EVERYTHING, AND IT SILENTLY DELETED
+// EVERY ONE OF THOSE SPORTS. Caught by the owner on 23 August 2026:
+// "i can not filter on sport... i can compare leagues but not
+// sports." He was exactly right, and the cause was here. A league
+// scores slightly higher than a sport (DIM_WEIGHT), so the league
+// always won and the sport vanished from search, from the compare
+// picker and from the builder. His own starting question for this
+// whole design was "where am I leaking, baseball, hockey or
+// football", and the tool had quietly removed two of the three
+// words.
+//
+// THE RULE NOW: a twin is only hidden where showing both would be a
+// LIE about size, which is a ranked list or a treemap (two tiles for
+// one set of bets double-counts the area). It is never hidden in the
+// vocabulary: search, the tabs, the compare picker and the Explore
+// grid all offer every fact the record contains.
+export function dedupeFacts(facts: Fact[]): Fact[] {
+  const seen = new Set<string>();
+  return facts.filter(({ s }) => {
+    const sig = `${s.wins}|${s.losses}|${Math.round(s.profit)}`;
+    if (seen.has(sig)) return false;
+    seen.add(sig);
+    return true;
+  });
+}
+
 export type SortMode = "impact" | "profit" | "roi" | "hit";
 export const SORT_LABELS: Record<SortMode, string> = {
   impact: "By impact",
@@ -306,13 +340,7 @@ export function makeEngine(bets: BetWithLegs[]): Engine {
       facts.push({ chip, s, score, recent: recentStats.profit, spark: [] });
     }
     facts.sort((a, b) => b.score - a.score);
-    const seen = new Set<string>();
-    return facts.filter(({ s }) => {
-      const sig = `${s.wins}|${s.losses}|${Math.round(s.profit)}`;
-      if (seen.has(sig)) return false;
-      seen.add(sig);
-      return true;
-    });
+    return facts;
   }
 
   function sortFacts(facts: Fact[], mode: SortMode): Fact[] {

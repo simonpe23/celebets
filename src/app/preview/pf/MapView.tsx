@@ -15,7 +15,7 @@
 
 import { useMemo } from "react";
 import TabBar from "@/components/TabBar";
-import { money, type Chip, type Engine } from "./engine";
+import { dedupeFacts, money, type Chip, type Engine } from "./engine";
 import { PF_CSS, PfTopBar } from "./theme";
 import { pageCls, type Dir } from "./motion";
 
@@ -105,9 +105,13 @@ export default function MapView({
     // about size. A fixed count keeps the biggest LEAK on the map:
     // a percentage threshold once folded it into Others, and a
     // heatmap with no red in it is not a heatmap.
-    const facts = engine
-      .rankedFacts([], 5)
-      .sort((a, b) => Math.abs(b.s.profit) - Math.abs(a.s.profit));
+    // Twins are hidden HERE and only here among the pickers,
+    // because size is the map's whole message: two tiles for one set
+    // of bets (Baseball and MLB) would paint the same money twice
+    // and make it look like double the impact.
+    const facts = dedupeFacts(engine.rankedFacts([], 5)).sort(
+      (a, b) => Math.abs(b.s.profit) - Math.abs(a.s.profit)
+    );
     return {
       tiles: facts.slice(0, 9),
       others: facts.slice(9).reduce((s, f) => s + f.s.profit, 0),

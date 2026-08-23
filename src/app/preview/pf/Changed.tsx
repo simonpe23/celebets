@@ -14,7 +14,7 @@
 
 import { useMemo } from "react";
 import TabBar from "@/components/TabBar";
-import { hitOf, money, type Chip, type Engine } from "./engine";
+import { dedupeFacts, hitOf, money, type Chip, type Engine } from "./engine";
 import { PF_CSS, PfTopBar } from "./theme";
 import { pageCls, type Dir } from "./motion";
 
@@ -35,8 +35,8 @@ export default function Changed({
     // The window is generous in the preview (a demo record does not
     // settle bets every single day); the real build uses one day.
     const since = engine.now + 1 - 3 * DAY;
-    const today = engine.rankedFacts([], 5);
-    const before = engine.rankedFacts([], 5, since);
+    const today = dedupeFacts(engine.rankedFacts([], 5));
+    const before = dedupeFacts(engine.rankedFacts([], 5, since));
     const wasRank = new Map(
       before.map((f, i) => [`${f.chip.group}|${f.chip.value}`, i])
     );

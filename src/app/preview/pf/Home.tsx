@@ -25,6 +25,7 @@
 import { useMemo, useState } from "react";
 import TabBar from "@/components/TabBar";
 import {
+  dedupeFacts,
   hitOf,
   iconFor,
   money,
@@ -70,7 +71,7 @@ export default function Home({
   const [sheetOpen, setSheetOpen] = useState(false);
 
   const { facts, topLine, leakLine, fullSeries } = useMemo(() => {
-    const ranked = engine.rankedFacts([], 5);
+    const ranked = dedupeFacts(engine.rankedFacts([], 5));
     for (const f of ranked) f.spark = engine.sparkFor([f.chip]);
     return {
       facts: ranked.slice(0, 10),

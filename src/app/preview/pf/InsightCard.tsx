@@ -12,6 +12,7 @@
 
 import { useMemo } from "react";
 import {
+  dedupeFacts,
   hitOf,
   money,
   roiOf,
@@ -34,7 +35,7 @@ export default function InsightCard({
   // closing reads as one movement rather than two things vanishing.
   const { leaving, close } = useDismiss(onClose);
   const finding = useMemo(() => {
-    const top = engine.rankedFacts([], 5).slice(0, 7);
+    const top = dedupeFacts(engine.rankedFacts([], 5)).slice(0, 7);
     let best: { path: Chip[]; profit: number; score: number } | null = null;
     for (const a of top) {
       for (const b of engine.rankedFacts([a.chip], 3).slice(0, 6)) {
