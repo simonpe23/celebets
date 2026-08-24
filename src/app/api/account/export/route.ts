@@ -39,10 +39,10 @@ export async function GET() {
       .from("transactions")
       .select("*")
       .eq("user_id", user.id)
-      .order("occurred_at", { ascending: true }),
+      .order("created_at", { ascending: true }),
     supabase
       .from("connected_accounts")
-      .select("provider, created_at")
+      .select("platform, connected_at, last_synced_at")
       .eq("user_id", user.id),
   ]);
 
