@@ -15,11 +15,25 @@ import { BTN, CARD, CARD_LINK, INNER } from "@/lib/ui";
 // Log out used to be the avatar itself, which meant one stray tap
 // ended your session. It lives down here now, under everything else.
 //
-// There is NO delete-everything button, and never will be. I built one
-// and the owner rejected it: he had asked to reset the tracking balance
-// so a user could start over, and deleting their bets is not that. "i
-// think data is still valuable despite wanting a fresh reset of your
-// tracking."
+// TWO CONTROLS AT THE FOOT, AND THEY ARE NOT THE SAME THING. Keeping
+// them straight is the whole design of this page's bottom half.
+//
+// RESTART MY RECORD deletes nothing. It draws a line and starts the
+// stats from it. I once built a delete-everything button in its place
+// and the owner rejected it: he had asked to reset the tracking
+// balance so a user could start over, and deleting their bets is not
+// that. "i think data is still valuable despite wanting a fresh reset
+// of your tracking."
+//
+// DELETE MY ACCOUNT is the real thing, added August 2026 because both
+// app stores require it to exist inside the app (Apple 5.1.1(v),
+// Google Play's data deletion policy) and a restart does not count.
+// It is permanent and it says so first, which is the exact opposite
+// of the restart sheet's "Nothing is deleted" opening. Neither may
+// ever borrow the other's wording.
+//
+// Export my data sits above both, so the way out is met before the
+// door that cannot be reopened.
 //
 // He then rejected my first replacement too, for the right reason:
 // "too much risk... there must be an option to regret the start fresh.
@@ -249,6 +263,68 @@ export default function Settings({
         : "text-neutral-600 dark:text-neutral-300"
     }`;
 
+  // EXPORT. The browser is told to save the response, so the file
+  // lands wherever downloads land. It is fetched rather than linked
+  // so a failure can say something instead of opening a blank tab.
+  const [exporting, setExporting] = useState(false);
+  async function exportData() {
+    setError(null);
+    setExporting(true);
+    try {
+      const res = await fetch("/api/account/export");
+      if (!res.ok) throw new Error("failed");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `actuals-data-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch {
+      setError("Could not build your file. Please try again.");
+    }
+    setExporting(false);
+  }
+
+  // DELETE. Required by both app stores. The confirmation asks the
+  // user to TYPE the word, because this is the one action in Actuals
+  // with no undo, and the owner's rule for Restart my record was
+  // that a control should say what it does. This one has to prove
+  // you meant it as well.
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteWord, setDeleteWord] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  const confirmed = deleteWord.trim().toUpperCase() === "DELETE";
+
+  async function deleteAccount() {
+    if (!confirmed) return;
+    setError(null);
+    setDeleting(true);
+    let res: Response;
+    try {
+      res = await fetch("/api/account/delete", { method: "POST" });
+    } catch {
+      setDeleting(false);
+      setError("Could not reach the server. Please try again.");
+      return;
+    }
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      setDeleting(false);
+      setDeleteOpen(false);
+      setDeleteWord("");
+      setError(body.error ?? "Could not delete the account.");
+      return;
+    }
+    // The account is gone, so there is nothing to come back to. A
+    // hard navigation rather than a router push, to throw away every
+    // cached page belonging to the account that just stopped
+    // existing.
+    window.location.href = "/";
+  }
+
   return (
     <main className="flex min-h-svh flex-col px-4 pt-6 pb-2 sm:px-6">
       <div className="mx-auto w-full max-w-md space-y-4">
@@ -372,6 +448,29 @@ export default function Settings({
               <span className={CARD_LINK}>Open ›</span>
             </Link>
 
+            {/* Deliberately placed BEFORE the record fact and well
+                above the delete control. Someone about to delete in
+                a bad moment should meet the way out first. */}
+            <button
+              type="button"
+              onClick={exportData}
+              disabled={exporting}
+              className={`${INNER} flex w-full items-center justify-between gap-3 px-3 py-3 text-left disabled:opacity-60`}
+            >
+              <span className="min-w-0">
+                <span className="block text-sm font-semibold">
+                  Export my data
+                </span>
+                <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
+                  Download every bet and balance change as a file you
+                  keep.
+                </span>
+              </span>
+              <span className={CARD_LINK}>
+                {exporting ? "Building..." : "Download ›"}
+              </span>
+            </button>
+
             {/* A plain fact, not a control. No Undo button here: the
                 owner cut it. "a restart is uncommon. to undo a restart
                 is even more unique. we can't have a big button that
@@ -441,6 +540,107 @@ export default function Settings({
             </button>
           )}
         </div>
+
+        {/* DELETE MY ACCOUNT. Last thing on the page, under the
+            restart, which is where the rarest and heaviest action
+            belongs.
+
+            THE OPPOSITE DESIGN TO RESTART, on purpose. Restart leads
+            with "Nothing is deleted" in green, because the owner's
+            fear there was a user believing their bets were gone.
+            Here they ARE gone, so the red line comes first and the
+            reassurance is only that the file is still yours to take.
+            Same page, opposite promise, and neither may borrow the
+            other's wording.
+
+            Both stores require this to exist inside the app: Apple
+            5.1.1(v) and Google Play's data deletion policy. */}
+        <div className="pt-1 pb-3 text-center">
+          <button
+            type="button"
+            onClick={() => {
+              setDeleteWord("");
+              setDeleteOpen(true);
+            }}
+            className="text-xs text-red-600 underline underline-offset-4 dark:text-red-400"
+          >
+            Delete my account
+          </button>
+          <p className="mx-auto mt-1.5 max-w-[19rem] text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
+            Permanently removes your account and every bet you have
+            tracked. This cannot be undone.
+          </p>
+        </div>
+
+        {deleteOpen && (
+          <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center">
+            <div className="w-full max-w-sm rounded-t-2xl bg-white p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:rounded-2xl sm:pb-6 dark:bg-[#161D38]">
+              <h3 className="text-lg font-bold">Delete my account</h3>
+
+              <div className="mt-3 rounded-xl bg-red-50 px-3 py-3 dark:bg-red-950/40">
+                <p className="text-sm font-semibold text-red-700 dark:text-red-300">
+                  This is permanent. There is no undo.
+                </p>
+                <p className="mt-1 text-sm leading-relaxed text-red-700/90 dark:text-red-300/90">
+                  Unlike restarting your record, nothing is kept and
+                  nothing can be brought back.
+                </p>
+              </div>
+
+              <p className="mt-3 text-sm font-semibold">What is deleted</p>
+              <ul className="mt-1 space-y-1 text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
+                <li>Your account and your login.</li>
+                <li>Every bet, pick and result you have tracked.</li>
+                <li>Your balance and its whole history.</li>
+                <li>Any connected account, and its stored keys.</li>
+              </ul>
+
+              <p className="mt-3 text-sm leading-relaxed">
+                Want a copy first? Close this and tap{" "}
+                <span className="font-semibold">Export my data</span>.
+              </p>
+
+              <label
+                htmlFor="deleteword"
+                className="mt-4 block text-sm font-semibold"
+              >
+                Type DELETE to confirm
+              </label>
+              <input
+                id="deleteword"
+                type="text"
+                autoCapitalize="characters"
+                autoCorrect="off"
+                spellCheck={false}
+                placeholder="DELETE"
+                value={deleteWord}
+                onChange={(e) => setDeleteWord(e.target.value)}
+                className="mt-1 block h-12 w-full rounded-xl border border-neutral-300 bg-white px-4 text-base text-neutral-900 outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/30 dark:border-white/15 dark:bg-[#0E1228] dark:text-neutral-100"
+              />
+
+              <div className="mt-5 grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDeleteOpen(false);
+                    setDeleteWord("");
+                  }}
+                  className="h-11 rounded-md border border-neutral-300 text-sm font-bold dark:border-white/15"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  disabled={!confirmed || deleting}
+                  onClick={deleteAccount}
+                  className="h-11 rounded-md bg-red-600 text-sm font-bold text-white disabled:opacity-40 dark:bg-red-600"
+                >
+                  {deleting ? "Deleting..." : "Delete forever"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {freshOpen && (
           <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center">
