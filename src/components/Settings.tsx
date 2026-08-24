@@ -32,7 +32,7 @@ import { BTN, CARD, CARD_LINK, INNER } from "@/lib/ui";
 // of the restart sheet's "Nothing is deleted" opening. Neither may
 // ever borrow the other's wording.
 //
-// Export my data sits above both, so the way out is met before the
+// The two exports sit above both, so the way out is met before the
 // door that cannot be reopened.
 //
 // He then rejected my first replacement too, for the right reason:
@@ -263,29 +263,60 @@ export default function Settings({
         : "text-neutral-600 dark:text-neutral-300"
     }`;
 
-  // EXPORT. The browser is told to save the response, so the file
-  // lands wherever downloads land. It is fetched rather than linked
-  // so a failure can say something instead of opening a blank tab.
-  const [exporting, setExporting] = useState(false);
-  async function exportData() {
+  // EXPORT, as CSV. The owner tried the first version, a JSON file,
+  // and called it "pretty useless for most ppl that dont read code
+  // right." He was right, so it is a spreadsheet now: bets and
+  // balance history are two separate downloads rather than one
+  // file, because a bet leg and a deposit do not share columns.
+  //
+  // Both share this one fetch-and-save helper. The browser is told
+  // to save the response, so the file lands wherever downloads
+  // land; it is fetched rather than linked so a failure can say
+  // something instead of opening a blank tab.
+  const [exportingBets, setExportingBets] = useState(false);
+  const [exportingTx, setExportingTx] = useState(false);
+
+  async function download(
+    url: string,
+    filename: string,
+    setBusy: (b: boolean) => void
+  ) {
     setError(null);
-    setExporting(true);
+    setBusy(true);
     try {
-      const res = await fetch("/api/account/export");
+      const res = await fetch(url);
       if (!res.ok) throw new Error("failed");
       const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
+      const objectUrl = URL.createObjectURL(blob);
       const a = document.createElement("a");
-      a.href = url;
-      a.download = `actuals-data-${new Date().toISOString().slice(0, 10)}.json`;
+      a.href = objectUrl;
+      a.download = filename;
       document.body.appendChild(a);
       a.click();
       a.remove();
-      URL.revokeObjectURL(url);
+      URL.revokeObjectURL(objectUrl);
     } catch {
       setError("Could not build your file. Please try again.");
     }
-    setExporting(false);
+    setBusy(false);
+  }
+
+  function exportBets() {
+    const stamp = new Date().toISOString().slice(0, 10);
+    download(
+      "/api/account/export/bets",
+      `actuals-bets-${stamp}.csv`,
+      setExportingBets
+    );
+  }
+
+  function exportTransactions() {
+    const stamp = new Date().toISOString().slice(0, 10);
+    download(
+      "/api/account/export/transactions",
+      `actuals-balance-history-${stamp}.csv`,
+      setExportingTx
+    );
   }
 
   // DELETE. Required by both app stores. The confirmation asks the
@@ -448,26 +479,47 @@ export default function Settings({
               <span className={CARD_LINK}>Open ›</span>
             </Link>
 
-            {/* Deliberately placed BEFORE the record fact and well
-                above the delete control. Someone about to delete in
-                a bad moment should meet the way out first. */}
+            {/* Two exports, not one, deliberately placed BEFORE the
+                record fact and well above the delete control:
+                someone about to delete in a bad moment should meet
+                the way out first. Bets and balance history are
+                separate files because a bet leg and a balance
+                change do not share columns; see csv.ts. */}
             <button
               type="button"
-              onClick={exportData}
-              disabled={exporting}
+              onClick={exportBets}
+              disabled={exportingBets}
               className={`${INNER} flex w-full items-center justify-between gap-3 px-3 py-3 text-left disabled:opacity-60`}
             >
               <span className="min-w-0">
                 <span className="block text-sm font-semibold">
-                  Export my data
+                  Export my bets
                 </span>
                 <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
-                  Download every bet and balance change as a file you
-                  keep.
+                  Every bet and pick as a spreadsheet file.
                 </span>
               </span>
               <span className={CARD_LINK}>
-                {exporting ? "Building..." : "Download ›"}
+                {exportingBets ? "Building..." : "Download ›"}
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={exportTransactions}
+              disabled={exportingTx}
+              className={`${INNER} flex w-full items-center justify-between gap-3 px-3 py-3 text-left disabled:opacity-60`}
+            >
+              <span className="min-w-0">
+                <span className="block text-sm font-semibold">
+                  Export my balance history
+                </span>
+                <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
+                  Every change to your balance as a spreadsheet file.
+                </span>
+              </span>
+              <span className={CARD_LINK}>
+                {exportingTx ? "Building..." : "Download ›"}
               </span>
             </button>
 
@@ -597,7 +649,9 @@ export default function Settings({
 
               <p className="mt-3 text-sm leading-relaxed">
                 Want a copy first? Close this and tap{" "}
-                <span className="font-semibold">Export my data</span>.
+                <span className="font-semibold">Export my bets</span> or{" "}
+                <span className="font-semibold">Export my balance history</span>{" "}
+                above.
               </p>
 
               <label
