@@ -52,19 +52,31 @@ export type Sport =
   | (typeof SPORTS)[number]
   | (typeof KALSHI_CATEGORIES)[number];
 
-// EVERY VALUE leg.sport is allowed to hold, sports and non-sports
-// together. It mirrors the legs_sport_check constraint exactly.
+// EVERY TOPIC leg.sport is allowed to hold. It mirrors the
+// legs_sport_check constraint exactly.
+//
+// TOPIC is the name for the thing that sits under a domain. Football
+// is a topic under Sports; Crypto is a topic under Economics. The
+// owner's model, in his words: "Sport is a domain and under that
+// domain we have lots of options and choices. just like what can
+// grow under other domains." Domain, category, market, competition
+// and period were all taken, so this level had no name at all, which
+// is how it ended up borrowing "sport".
 //
 // It exists because SPORTS was doing two jobs: naming the sports,
-// and standing in for "any valid subject". That was harmless while
-// Crypto sat inside SPORTS, and became wrong the moment it moved:
-// three separate places validated a subject against SPORTS and
-// would now silently reject a Crypto pick.
-export const SUBJECTS = [...SPORTS, ...KALSHI_CATEGORIES] as const;
+// AND standing in for "any valid topic". Harmless while Crypto sat
+// inside SPORTS, wrong the moment it moved: three separate places
+// validated a topic against SPORTS and would have silently rejected
+// every Crypto pick.
+//
+// The database column is still called sport. Renaming it is a
+// migration with no user-visible gain, the same reasoning that keeps
+// the transactions table saying deposit and withdrawal.
+export const TOPICS = [...SPORTS, ...KALSHI_CATEGORIES] as const;
 
-export function isSubject(value: unknown): value is Sport {
+export function isTopic(value: unknown): value is Sport {
   return (
-    typeof value === "string" && (SUBJECTS as readonly string[]).includes(value)
+    typeof value === "string" && (TOPICS as readonly string[]).includes(value)
   );
 }
 

@@ -11,12 +11,12 @@ export const maxDuration = 30;
 // stray reading becomes no category, never a junk one.
 const FOOTBALL_CATEGORIES = (DOMAIN_CATEGORIES.Sports ?? []).join('", "');
 
-// A slip's subject can be a sport OR a non-sport market, because a
+// A slip's topic can be a sport OR a non-sport market, because a
 // Kalshi screenshot is just as likely to be a Bitcoin price market
 // as a football match. Both lists are offered: SPORTS alone would
 // name Crypto in the rules while forbidding it in the answer, which
 // is how the prompt broke when Crypto moved out of SPORTS.
-const SLIP_SUBJECTS = [...SPORTS, ...KALSHI_CATEGORIES].join('", "');
+const SLIP_TOPICS = [...SPORTS, ...KALSHI_CATEGORIES].join('", "');
 
 const SYSTEM_PROMPT = `You read screenshots of sports bet slips (Kalshi, Polymarket, sportsbooks).
 Respond with ONLY a JSON object, no other text, in this exact shape:
@@ -31,7 +31,7 @@ Rules:
 - stake: the total amount wagered (Kalshi calls it Cost). USD number, no symbols.
 - to_collect: the total payout if the bet wins (Max Payout / Payout if right). USD number.
 - One leg per pick shown on the slip. A single bet has exactly one leg.
-- sport must be exactly one of: "${SLIP_SUBJECTS}". Soccer, FIFA and World Cup football are "Football". Bitcoin, Ethereum and other crypto price markets are "Crypto", which is not a sport. Use null when unsure.
+- sport must be exactly one of: "${SLIP_TOPICS}". Soccer, FIFA and World Cup football are "Football". Bitcoin, Ethereum and other crypto price markets are "Crypto", which is not a sport. Use null when unsure.
 - category: for Football prefer exactly one of: "${FOOTBALL_CATEGORIES}". For other sports or unusual bets write a short fitting category yourself, or null.
 - pick: a short human name for the pick, like "France advances" or "Mbappe 1+ goals".
 - percent: the chance percentage shown next to the pick (like 44 for 44%), else null.

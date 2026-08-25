@@ -11,7 +11,14 @@ import {
   round2,
   round4,
 } from "@/lib/format";
-import { isSubject, SPORTS, SPORT_EMOJI, type Sport } from "@/lib/types";
+import {
+  isTopic,
+  KALSHI_CATEGORIES,
+  NOT_SPORTS,
+  SPORTS,
+  SPORT_EMOJI,
+  type Sport,
+} from "@/lib/types";
 import {
   SPORT_PERIODS,
   categoriesForSport,
@@ -38,6 +45,10 @@ interface LegDraft {
   competition: string;
   // Tapping the selected sport again hides or shows the category row.
   categoriesOpen: boolean;
+  // Whether the non-sport strip is unfolded. Per leg, not per form:
+  // a parlay renders one picker per leg, so a shared flag would open
+  // every leg's door at once.
+  notSportOpen: boolean;
 }
 
 type PercentState =
@@ -55,6 +66,7 @@ function emptyLeg(): LegDraft {
     period: null,
     competition: "",
     categoriesOpen: true,
+    notSportOpen: false,
   };
 }
 
@@ -82,6 +94,22 @@ interface Props {
 }
 
 const QUICK_STAKES = ["20", "50", "100"];
+
+// The two halves of the topic picker. SPORTS still carries "Other",
+// which is not a sport and is filtered out here the same way the
+// Performance chips do it, so the sport strip holds sports only.
+const SPORT_CHIPS = SPORTS.filter((s) => !NOT_SPORTS.has(s));
+const NOT_SPORT_CHIPS = [...KALSHI_CATEGORIES, "Other"] as Sport[];
+
+// The hint on the free-text competition box, shown whenever a topic
+// has no chip list. Boxing was the only one until the non-sports
+// arrived, so the placeholder was written for boxing alone, and a
+// Crypto bet was being asked for a "World title fight". A form that
+// asks nonsense reads as unfinished.
+function competitionHint(sport: Sport): string {
+  if (sport === "Boxing") return "World title fight, exhibition...";
+  return "Event or series, if it has one";
+}
 
 // Small line icons for the capture tiles. They take their color from
 // the tile's own text color.
@@ -288,11 +316,11 @@ export default function NewBetForm({
             pick?: unknown;
             percent?: unknown;
           }) => ({
-            // Any valid subject, because the slip parser is now
+            // Any valid topic, because the slip parser is now
             // offered the non-sports too. Validating against SPORTS
             // alone would let the AI answer "Crypto" and then throw
             // that answer away.
-            sport: isSubject(raw.sport) ? raw.sport : null,
+            sport: isTopic(raw.sport) ? raw.sport : null,
             description: typeof raw.pick === "string" ? raw.pick : "",
             percent:
               typeof raw.percent === "number" &&
@@ -315,6 +343,9 @@ export default function NewBetForm({
               : { subcategory: null, market: null, period: null }),
             competition: "",
             categoriesOpen: false,
+            // Folded: an imported slip already has its topic, so the
+            // door only gets in the way of reviewing what arrived.
+            notSportOpen: false,
           })
         )
       );
@@ -647,9 +678,21 @@ export default function NewBetForm({
             </div>
           )}
 
-          <p className="mt-3 text-sm font-semibold">Sport</p>
+          {/* SPORTS FIRST, THEN A DOOR. Ruled by the owner, 24 August
+              2026, over a two-step domain picker and over one long
+              grouped list: logging a football bet must stay one tap,
+              and everything else is one tap deeper.
+
+              The non-sports could only arrive by Kalshi sync before
+              this. Nobody decided that; it was a leftover from how
+              the sync project introduced them. */}
+          <p className="mt-3 text-sm font-semibold">
+            {leg.sport !== null && NOT_SPORTS.has(leg.sport)
+              ? "What you bet on"
+              : "Sport"}
+          </p>
           <div className={`-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1 ${NO_SCROLLBAR}`}>
-            {SPORTS.map((s) => (
+            {SPORT_CHIPS.map((s) => (
               <button
                 key={s}
                 type="button"
@@ -677,7 +720,64 @@ export default function NewBetForm({
                 {SPORT_EMOJI[s]} {s}
               </button>
             ))}
+
+            {/* THE DOOR. Last chip on the strip, so the sports keep
+                the whole first screen. It lights up when the chosen
+                topic is one of the non-sports, so the strip always
+                shows what is selected even when the selection is not
+                a sport. */}
+            <button
+              type="button"
+              onClick={() =>
+                updateLeg(index, { notSportOpen: !leg.notSportOpen })
+              }
+              className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
+                leg.sport !== null && NOT_SPORTS.has(leg.sport)
+                  ? "border-brand-mark bg-brand-top text-white"
+                  : "border-dashed border-neutral-300 dark:border-white/15"
+              }`}
+            >
+              {leg.sport !== null && NOT_SPORTS.has(leg.sport)
+                ? `${SPORT_EMOJI[leg.sport]} ${leg.sport}`
+                : "Not a sport"}
+            </button>
           </div>
+
+          {leg.notSportOpen && (
+            <div
+              className={`-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1 ${NO_SCROLLBAR}`}
+            >
+              {NOT_SPORT_CHIPS.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() =>
+                    updateLeg(
+                      index,
+                      leg.sport === s
+                        ? { categoriesOpen: !leg.categoriesOpen }
+                        : {
+                            sport: s,
+                            subcategory: null,
+                            market: null,
+                            period: null,
+                            competition: "",
+                            categoriesOpen: true,
+                            notSportOpen: false,
+                          }
+                    )
+                  }
+                  className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
+                    leg.sport === s
+                      ? "border-brand-mark bg-brand-top text-white"
+                      : "border-neutral-300 dark:border-white/15"
+                  }`}
+                >
+                  {SPORT_EMOJI[s]} {s}
+                </button>
+              ))}
+            </div>
+          )}
 
           {leg.sport !== null &&
             categoriesForSport(leg.sport).length > 0 &&
@@ -876,7 +976,7 @@ export default function NewBetForm({
                       id={`competition-${index}`}
                       type="text"
                       autoComplete="off"
-                      placeholder="World title fight, exhibition..."
+                      placeholder={competitionHint(leg.sport)}
                       value={leg.competition}
                       onChange={(e) =>
                         updateLeg(index, { competition: e.target.value })

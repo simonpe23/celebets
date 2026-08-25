@@ -1,6 +1,6 @@
 import { formatMoney, formatSignedMoney, round2 } from "./format";
 import {
-  SUBJECTS,
+  TOPICS,
   type BetWithLegs,
   type Leg,
   type LegResult,
@@ -169,14 +169,14 @@ export interface SportRow {
 
 // Per-sport record and money over a set of settled bets.
 export function sportRows(bets: BetWithLegs[]): SportRow[] {
-  // Seeded from SUBJECTS, not SPORTS: a leg whose subject has no row
+  // Seeded from TOPICS, not SPORTS: a leg whose topic has no row
   // here is dropped silently by the `if (!row)` guards below, so
   // seeding from SPORTS alone would have made every Crypto bet
   // vanish from this table the moment Crypto stopped being a sport.
   // Callers decide which rows to SHOW using NOT_SPORTS; this
   // function's job is only to count what exists.
   const map = new Map<Sport, SportRow>(
-    SUBJECTS.map((sport) => [sport, { sport, wins: 0, losses: 0, profit: 0 }])
+    TOPICS.map((sport) => [sport, { sport, wins: 0, losses: 0, profit: 0 }])
   );
 
   for (const bet of bets) {
@@ -733,9 +733,9 @@ function keyGroups(settledBets: BetWithLegs[]): Group[] {
     });
   }
 
-  // SUBJECTS, so "Crypto Price Direction" can still surface as an
+  // TOPICS, so "Crypto Price Direction" can still surface as an
   // insight now that Crypto is not a sport.
-  for (const sport of SUBJECTS) {
+  for (const sport of TOPICS) {
     for (const row of categoryRows(settledBets, sport)) {
       if (row.label === "No category") continue;
       if (row.wins + row.losses < KEY_MIN_PICKS) continue;
