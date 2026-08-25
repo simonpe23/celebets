@@ -221,7 +221,9 @@ export default function StatsView({
   // complete. The owner ruled against hiding chips behind whether the
   // record holds such bets: what exists is visible.
   const sportChips = SPORTS.filter((s) => !NOT_SPORTS.has(s));
-  const notSportsChips = ["Crypto", ...KALSHI_CATEGORIES, "Other"] as Sport[];
+  // Crypto is no longer named here: it lives inside KALSHI_CATEGORIES
+  // now, and listing it twice would draw two identical chips.
+  const notSportsChips = [...KALSHI_CATEGORIES, "Other"] as Sport[];
 
   // The hero speaks in bets with no sport chosen, and in that sport's
   // picks and money share once one is.

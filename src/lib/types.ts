@@ -15,7 +15,6 @@ export const SPORTS = [
   "Motorsport",
   "Boxing",
   "Table Tennis",
-  "Crypto",
   "Other",
 ] as const;
 
@@ -34,19 +33,46 @@ export const KALSHI_CATEGORIES = [
   "Tech & Science",
   "Health",
   "World",
+  // CRYPTO IS NOT A SPORT. It sat in SPORTS from phase 8, when Crypto
+  // was added as "a new top-level option" before the taxonomy
+  // existed. The taxonomy has said Economics for a while
+  // (LEVEL_TWO_DOMAINS, and SPORTS_DOMAIN never listed it), so the
+  // SPORTS entry was the last place still disagreeing. Moved by the
+  // owner's ruling, 24 August 2026: "sports only fall under the
+  // sports category. crypto can only fall under the economics
+  // category."
+  //
+  // No migration: legs_sport_check already accepts all of these
+  // words, and Sport is the union of both lists, so every stored row
+  // stays valid.
+  "Crypto",
 ] as const;
 
 export type Sport =
   | (typeof SPORTS)[number]
   | (typeof KALSHI_CATEGORIES)[number];
 
-// What counts as Not Sports for the Performance filter. Crypto is
-// here by the owner's ruling (20 August 2026): the app is sports
-// first, and a BTC price bet is not a sport, however much he trades
-// it. Other is here too: an unrecognised market is by definition not
-// one of the named sports.
+// EVERY VALUE leg.sport is allowed to hold, sports and non-sports
+// together. It mirrors the legs_sport_check constraint exactly.
+//
+// It exists because SPORTS was doing two jobs: naming the sports,
+// and standing in for "any valid subject". That was harmless while
+// Crypto sat inside SPORTS, and became wrong the moment it moved:
+// three separate places validated a subject against SPORTS and
+// would now silently reject a Crypto pick.
+export const SUBJECTS = [...SPORTS, ...KALSHI_CATEGORIES] as const;
+
+export function isSubject(value: unknown): value is Sport {
+  return (
+    typeof value === "string" && (SUBJECTS as readonly string[]).includes(value)
+  );
+}
+
+// What counts as Not Sports for the Performance filter. Crypto used
+// to be listed here by name; it now arrives through KALSHI_CATEGORIES
+// like every other non-sport. Other stays explicit: an unrecognised
+// market is by definition not one of the named sports.
 export const NOT_SPORTS: ReadonlySet<Sport> = new Set([
-  "Crypto",
   "Other",
   ...KALSHI_CATEGORIES,
 ]);

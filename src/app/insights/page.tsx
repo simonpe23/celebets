@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import AllInsights from "@/components/AllInsights";
-import { SPORTS, type BetWithLegs, type Sport } from "@/lib/types";
+import { isSubject, type BetWithLegs, type Sport } from "@/lib/types";
 
 interface Props {
   searchParams: Promise<{ sport?: string }>;
@@ -8,9 +8,9 @@ interface Props {
 
 export default async function InsightsPage({ searchParams }: Props) {
   const { sport: sportParam } = await searchParams;
-  const sport = (SPORTS as readonly string[]).includes(sportParam ?? "")
-    ? (sportParam as Sport)
-    : null;
+  // Any valid subject, not just sports: ?sport=Crypto has to keep
+  // working now that Crypto is filed under Economics.
+  const sport: Sport | null = isSubject(sportParam) ? sportParam : null;
 
   const supabase = await createClient();
   const { data: bets } = await supabase

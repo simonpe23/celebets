@@ -11,7 +11,7 @@ import {
   round2,
   round4,
 } from "@/lib/format";
-import { SPORTS, SPORT_EMOJI, type Sport } from "@/lib/types";
+import { isSubject, SPORTS, SPORT_EMOJI, type Sport } from "@/lib/types";
 import {
   SPORT_PERIODS,
   categoriesForSport,
@@ -288,11 +288,11 @@ export default function NewBetForm({
             pick?: unknown;
             percent?: unknown;
           }) => ({
-            sport: (SPORTS as readonly string[]).includes(
-              typeof raw.sport === "string" ? raw.sport : ""
-            )
-              ? (raw.sport as Sport)
-              : null,
+            // Any valid subject, because the slip parser is now
+            // offered the non-sports too. Validating against SPORTS
+            // alone would let the AI answer "Crypto" and then throw
+            // that answer away.
+            sport: isSubject(raw.sport) ? raw.sport : null,
             description: typeof raw.pick === "string" ? raw.pick : "",
             percent:
               typeof raw.percent === "number" &&
