@@ -24,7 +24,9 @@ import {
   categoriesForSport,
   coerceManualCategory,
   competitionsFor,
+  domainOf,
   marketsFor,
+  type Domain,
 } from "@/lib/taxonomy";
 import { CARD, NO_SCROLLBAR } from "@/lib/ui";
 
@@ -45,10 +47,11 @@ interface LegDraft {
   competition: string;
   // Tapping the selected sport again hides or shows the category row.
   categoriesOpen: boolean;
-  // Whether the non-sport strip is unfolded. Per leg, not per form:
-  // a parlay renders one picker per leg, so a shared flag would open
-  // every leg's door at once.
+  // Whether the non-sport path is unfolded, and which domain inside
+  // it is open. Per leg, not per form: a parlay renders one picker
+  // per leg, so a shared flag would open every leg's door at once.
   notSportOpen: boolean;
+  notSportDomain: Domain | null;
 }
 
 type PercentState =
@@ -67,6 +70,7 @@ function emptyLeg(): LegDraft {
     competition: "",
     categoriesOpen: true,
     notSportOpen: false,
+    notSportDomain: null,
   };
 }
 
@@ -99,7 +103,32 @@ const QUICK_STAKES = ["20", "50", "100"];
 // which is not a sport and is filtered out here the same way the
 // Performance chips do it, so the sport strip holds sports only.
 const SPORT_CHIPS = SPORTS.filter((s) => !NOT_SPORTS.has(s));
-const NOT_SPORT_CHIPS = [...KALSHI_CATEGORIES, "Other"] as Sport[];
+
+// THE NON-SPORT PATH IS TWO STEPS, DOMAIN THEN TOPIC. The first
+// version put every non-sport in one flat row, which set Politics
+// and Economics (domains) beside Crypto and Weather (topics under
+// them) as if they were peers. The owner, correctly: "crypto is a
+// topic under economics. it requires you to click non sport +
+// economics to be able to see it."
+//
+// Sports keep their single tap. Everything else costs one more.
+const NOT_SPORT_DOMAINS: Domain[] = [
+  "Politics",
+  "Economics",
+  "Culture",
+  "Other",
+];
+
+// Every non-sport topic, filed under the domain the taxonomy already
+// says it belongs to. Built from domainOf so this list can never
+// drift from the taxonomy: adding a topic there puts it here.
+const TOPICS_BY_DOMAIN: Record<string, Sport[]> = (() => {
+  const out: Record<string, Sport[]> = {};
+  for (const topic of [...KALSHI_CATEGORIES, "Other"] as Sport[]) {
+    (out[domainOf(topic)] ??= []).push(topic);
+  }
+  return out;
+})();
 
 // The hint on the free-text competition box, shown whenever a topic
 // has no chip list. Boxing was the only one until the non-sports
@@ -346,6 +375,7 @@ export default function NewBetForm({
             // Folded: an imported slip already has its topic, so the
             // door only gets in the way of reviewing what arrived.
             notSportOpen: false,
+    notSportDomain: null,
           })
         )
       );
@@ -742,44 +772,89 @@ export default function NewBetForm({
             </button>
           </div>
 
-          {/* Open on request, and ALWAYS open while the selection is
-              a non-sport, because that is the only place it is
-              allowed to be shown. */}
+          {/* STEP ONE: the four non-sport domains. Open on request,
+              and always open while the selection is a non-sport,
+              because that is the only place a non-sport may show. */}
           {(leg.notSportOpen ||
             (leg.sport !== null && NOT_SPORTS.has(leg.sport))) && (
-            <div
-              className={`-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1 ${NO_SCROLLBAR}`}
-            >
-              {NOT_SPORT_CHIPS.map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  onClick={() =>
-                    updateLeg(
-                      index,
-                      leg.sport === s
-                        ? { categoriesOpen: !leg.categoriesOpen }
-                        : {
-                            sport: s,
-                            subcategory: null,
-                            market: null,
-                            period: null,
-                            competition: "",
-                            categoriesOpen: true,
-                            notSportOpen: false,
-                          }
-                    )
-                  }
-                  className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
-                    leg.sport === s
-                      ? "border-brand-mark bg-brand-top text-white"
-                      : "border-neutral-300 dark:border-white/15"
-                  }`}
-                >
-                  {SPORT_EMOJI[s]} {s}
-                </button>
-              ))}
-            </div>
+            <>
+              <div
+                className={`-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1 ${NO_SCROLLBAR}`}
+              >
+                {NOT_SPORT_DOMAINS.map((d) => {
+                  // The chosen domain, or the domain of whatever is
+                  // already selected, so reopening the form lands on
+                  // the right shelf instead of a blank one.
+                  const active =
+                    leg.notSportDomain ??
+                    (leg.sport !== null && NOT_SPORTS.has(leg.sport)
+                      ? domainOf(leg.sport)
+                      : null);
+                  return (
+                    <button
+                      key={d}
+                      type="button"
+                      onClick={() =>
+                        updateLeg(index, {
+                          notSportDomain: active === d ? null : d,
+                        })
+                      }
+                      className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
+                        active === d
+                          ? "border-brand-mark text-brand-mark"
+                          : "border-neutral-300 dark:border-white/15"
+                      }`}
+                    >
+                      {d}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* STEP TWO: the topics inside that domain. */}
+              {(() => {
+                const active =
+                  leg.notSportDomain ??
+                  (leg.sport !== null && NOT_SPORTS.has(leg.sport)
+                    ? domainOf(leg.sport)
+                    : null);
+                if (active === null) return null;
+                return (
+                  <div
+                    className={`-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1 ${NO_SCROLLBAR}`}
+                  >
+                    {(TOPICS_BY_DOMAIN[active] ?? []).map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() =>
+                          updateLeg(
+                            index,
+                            leg.sport === s
+                              ? { categoriesOpen: !leg.categoriesOpen }
+                              : {
+                                  sport: s,
+                                  subcategory: null,
+                                  market: null,
+                                  period: null,
+                                  competition: "",
+                                  categoriesOpen: true,
+                                }
+                          )
+                        }
+                        className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
+                          leg.sport === s
+                            ? "border-brand-mark bg-brand-top text-white"
+                            : "border-neutral-300 dark:border-white/15"
+                        }`}
+                      >
+                        {SPORT_EMOJI[s]} {s}
+                      </button>
+                    ))}
+                  </div>
+                );
+              })()}
+            </>
           )}
 
           {leg.sport !== null &&
