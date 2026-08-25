@@ -722,28 +722,31 @@ export default function NewBetForm({
             ))}
 
             {/* THE DOOR. Last chip on the strip, so the sports keep
-                the whole first screen. It lights up when the chosen
-                topic is one of the non-sports, so the strip always
-                shows what is selected even when the selection is not
-                a sport. */}
+                the whole first screen.
+
+                IT NEVER BORROWS THE SELECTED TOPIC'S NAME OR EMOJI.
+                The first version did, which put a purple "Crypto"
+                chip immediately after Table Tennis, wearing a coin
+                icon and looking exactly like a sport. The owner: "it
+                is and always will be wrong". This strip holds sports
+                and only sports. The selection shows in the strip
+                below, which stays open while a non-sport is chosen. */}
             <button
               type="button"
               onClick={() =>
                 updateLeg(index, { notSportOpen: !leg.notSportOpen })
               }
-              className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
-                leg.sport !== null && NOT_SPORTS.has(leg.sport)
-                  ? "border-brand-mark bg-brand-top text-white"
-                  : "border-dashed border-neutral-300 dark:border-white/15"
-              }`}
+              className="shrink-0 whitespace-nowrap rounded-xl border border-dashed border-neutral-300 px-3 py-2 text-sm font-semibold dark:border-white/15"
             >
-              {leg.sport !== null && NOT_SPORTS.has(leg.sport)
-                ? `${SPORT_EMOJI[leg.sport]} ${leg.sport}`
-                : "Not a sport"}
+              Not a sport
             </button>
           </div>
 
-          {leg.notSportOpen && (
+          {/* Open on request, and ALWAYS open while the selection is
+              a non-sport, because that is the only place it is
+              allowed to be shown. */}
+          {(leg.notSportOpen ||
+            (leg.sport !== null && NOT_SPORTS.has(leg.sport))) && (
             <div
               className={`-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1 ${NO_SCROLLBAR}`}
             >
