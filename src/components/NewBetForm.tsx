@@ -112,7 +112,11 @@ const SPORT_CHIPS = SPORTS.filter((s) => !NOT_SPORTS.has(s));
 // economics to be able to see it."
 //
 // Sports keep their single tap. Everything else costs one more.
-const NOT_SPORT_DOMAINS: Domain[] = [
+// All five, Sports included, because the row IS the domain level.
+// Tapping Sports there goes back to the sport chips, so there is one
+// model rather than a back button that exists only in this corner.
+const ALL_DOMAINS: Domain[] = [
+  "Sports",
   "Politics",
   "Economics",
   "Culture",
@@ -708,132 +712,138 @@ export default function NewBetForm({
             </div>
           )}
 
-          {/* SPORTS FIRST, THEN A DOOR. Ruled by the owner, 24 August
-              2026, over a two-step domain picker and over one long
-              grouped list: logging a football bet must stay one tap,
-              and everything else is one tap deeper.
+          {/* ONE ROW AT A TIME. Sports and domains are never on
+              screen together: tapping the door REPLACES the sports
+              chips with the domain row, and picking a domain opens
+              its topics underneath.
 
-              The non-sports could only arrive by Kalshi sync before
-              this. Nobody decided that; it was a leftover from how
-              the sync project introduced them. */}
+              The first build stacked all three rows at once, which
+              put domains directly beneath a row of sports. The
+              owner: "domains can never be under a row of sports."
+
+              Sports is one of the five domains, so it sits in that
+              row too, and tapping it returns you to the sport chips.
+              That keeps one model (domain, then topic) instead of a
+              back button that only exists here. */}
           <p className="mt-3 text-sm font-semibold">
             {leg.sport !== null && NOT_SPORTS.has(leg.sport)
               ? "What you bet on"
               : "Sport"}
           </p>
-          <div className={`-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1 ${NO_SCROLLBAR}`}>
-            {SPORT_CHIPS.map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() =>
-                  updateLeg(
-                    index,
-                    leg.sport === s
-                      ? { categoriesOpen: !leg.categoriesOpen }
-                      : {
-                          sport: s,
-                          subcategory: null,
-                          market: null,
-                          period: null,
-                          competition: "",
-                          categoriesOpen: true,
-                        }
-                  )
-                }
-                className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
-                  leg.sport === s
-                    ? "border-brand-mark bg-brand-top text-white"
-                    : "border-neutral-300 dark:border-white/15"
-                }`}
-              >
-                {SPORT_EMOJI[s]} {s}
-              </button>
-            ))}
 
-            {/* THE DOOR. Last chip on the strip, so the sports keep
-                the whole first screen.
+          {(() => {
+            // Non-sport mode is on when asked for, and stays on while
+            // a non-sport is selected: that selection has nowhere
+            // else it may be shown.
+            const inNotSport =
+              leg.notSportOpen ||
+              (leg.sport !== null && NOT_SPORTS.has(leg.sport));
+            const openDomain =
+              leg.notSportDomain ??
+              (leg.sport !== null && NOT_SPORTS.has(leg.sport)
+                ? domainOf(leg.sport)
+                : null);
 
-                IT NEVER BORROWS THE SELECTED TOPIC'S NAME OR EMOJI.
-                The first version did, which put a purple "Crypto"
-                chip immediately after Table Tennis, wearing a coin
-                icon and looking exactly like a sport. The owner: "it
-                is and always will be wrong". This strip holds sports
-                and only sports. The selection shows in the strip
-                below, which stays open while a non-sport is chosen. */}
-            <button
-              type="button"
-              onClick={() =>
-                updateLeg(index, { notSportOpen: !leg.notSportOpen })
-              }
-              className="shrink-0 whitespace-nowrap rounded-xl border border-dashed border-neutral-300 px-3 py-2 text-sm font-semibold dark:border-white/15"
-            >
-              Not a sport
-            </button>
-          </div>
-
-          {/* STEP ONE: the four non-sport domains. Open on request,
-              and always open while the selection is a non-sport,
-              because that is the only place a non-sport may show. */}
-          {(leg.notSportOpen ||
-            (leg.sport !== null && NOT_SPORTS.has(leg.sport))) && (
-            <>
-              <div
-                className={`-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1 ${NO_SCROLLBAR}`}
-              >
-                {NOT_SPORT_DOMAINS.map((d) => {
-                  // The chosen domain, or the domain of whatever is
-                  // already selected, so reopening the form lands on
-                  // the right shelf instead of a blank one.
-                  const active =
-                    leg.notSportDomain ??
-                    (leg.sport !== null && NOT_SPORTS.has(leg.sport)
-                      ? domainOf(leg.sport)
-                      : null);
-                  return (
+            if (!inNotSport) {
+              return (
+                <div
+                  className={`-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1 ${NO_SCROLLBAR}`}
+                >
+                  {SPORT_CHIPS.map((sp) => (
                     <button
-                      key={d}
+                      key={sp}
                       type="button"
                       onClick={() =>
-                        updateLeg(index, {
-                          notSportDomain: active === d ? null : d,
-                        })
+                        updateLeg(
+                          index,
+                          leg.sport === sp
+                            ? { categoriesOpen: !leg.categoriesOpen }
+                            : {
+                                sport: sp,
+                                subcategory: null,
+                                market: null,
+                                period: null,
+                                competition: "",
+                                categoriesOpen: true,
+                              }
+                        )
                       }
                       className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
-                        active === d
-                          ? "border-brand-mark text-brand-mark"
+                        leg.sport === sp
+                          ? "border-brand-mark bg-brand-top text-white"
                           : "border-neutral-300 dark:border-white/15"
                       }`}
                     >
-                      {d}
+                      {SPORT_EMOJI[sp]} {sp}
                     </button>
-                  );
-                })}
-              </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => updateLeg(index, { notSportOpen: true })}
+                    className="shrink-0 whitespace-nowrap rounded-xl border border-dashed border-neutral-300 px-3 py-2 text-sm font-semibold dark:border-white/15"
+                  >
+                    Something else
+                  </button>
+                </div>
+              );
+            }
 
-              {/* STEP TWO: the topics inside that domain. */}
-              {(() => {
-                const active =
-                  leg.notSportDomain ??
-                  (leg.sport !== null && NOT_SPORTS.has(leg.sport)
-                    ? domainOf(leg.sport)
-                    : null);
-                if (active === null) return null;
-                return (
+            return (
+              <>
+                <div
+                  className={`-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1 ${NO_SCROLLBAR}`}
+                >
+                  {ALL_DOMAINS.map((d) =>
+                    d === "Sports" ? (
+                      <button
+                        key={d}
+                        type="button"
+                        onClick={() =>
+                          updateLeg(index, {
+                            notSportOpen: false,
+                            notSportDomain: null,
+                          })
+                        }
+                        className="shrink-0 whitespace-nowrap rounded-xl border border-neutral-300 px-3 py-2 text-sm font-semibold dark:border-white/15"
+                      >
+                        Sports
+                      </button>
+                    ) : (
+                      <button
+                        key={d}
+                        type="button"
+                        onClick={() =>
+                          updateLeg(index, {
+                            notSportDomain: openDomain === d ? null : d,
+                          })
+                        }
+                        className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
+                          openDomain === d
+                            ? "border-brand-mark text-brand-mark"
+                            : "border-neutral-300 dark:border-white/15"
+                        }`}
+                      >
+                        {d}
+                      </button>
+                    )
+                  )}
+                </div>
+
+                {openDomain !== null && (
                   <div
                     className={`-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1 ${NO_SCROLLBAR}`}
                   >
-                    {(TOPICS_BY_DOMAIN[active] ?? []).map((s) => (
+                    {(TOPICS_BY_DOMAIN[openDomain] ?? []).map((sp) => (
                       <button
-                        key={s}
+                        key={sp}
                         type="button"
                         onClick={() =>
                           updateLeg(
                             index,
-                            leg.sport === s
+                            leg.sport === sp
                               ? { categoriesOpen: !leg.categoriesOpen }
                               : {
-                                  sport: s,
+                                  sport: sp,
                                   subcategory: null,
                                   market: null,
                                   period: null,
@@ -843,19 +853,19 @@ export default function NewBetForm({
                           )
                         }
                         className={`shrink-0 whitespace-nowrap rounded-xl border px-3 py-2 text-sm font-semibold ${
-                          leg.sport === s
+                          leg.sport === sp
                             ? "border-brand-mark bg-brand-top text-white"
                             : "border-neutral-300 dark:border-white/15"
                         }`}
                       >
-                        {SPORT_EMOJI[s]} {s}
+                        {SPORT_EMOJI[sp]} {sp}
                       </button>
                     ))}
                   </div>
-                );
-              })()}
-            </>
-          )}
+                )}
+              </>
+            );
+          })()}
 
           {leg.sport !== null &&
             categoriesForSport(leg.sport).length > 0 &&
