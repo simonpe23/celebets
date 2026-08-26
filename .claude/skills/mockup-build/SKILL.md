@@ -1,0 +1,82 @@
+---
+name: mockup-build
+description: Building a screen from one of the owner's mockup images. Use whenever he supplies a design to match. Covers sampling colours with Pillow, copying anatomy before palette, and the habits that got two builds rejected.
+---
+
+# Building from a mockup
+
+**The mockups are the spec, to the pixel.** Two attempts were rejected
+outright ("a reskin is far from enough", "a fake cheap copy") because
+the mockup had been poured into the existing design system instead of
+replacing it.
+
+## 1. Copy the anatomy, not the palette
+
+**A mockup is an anatomy, not a palette.** Copy the skeleton first:
+what is in the card, in what order, at what size. Then the colour.
+
+**The old system's habits are the tell** that you reskinned instead of
+rebuilt:
+
+- Uppercase labels everywhere. The mockup uses sentence case, and
+  uppercase survives only where the mockup itself shouts.
+- Full width action bars.
+- Three-column stat grids.
+- Five rows of text where the mockup has two.
+
+## 2. Sample the colours, never eyeball them
+
+**This is the rule that ended three rounds of argument.** Use Pillow to
+read the actual pixels:
+
+```python
+from PIL import Image
+im = Image.open("public/mockups/....png").convert("RGB")
+print(im.getpixel((x, y)))
+```
+
+Two guesses had been wrong for weeks and neither was visible in
+isolation:
+
+- The dark page is NAVY `#04081B`, not the neutral grey-black that was
+  built. The note said "a cool near-black, barely blue"; the blue
+  channel actually runs about four times the red. That single error is
+  why the build looked flat beside the mockup while each piece looked
+  right.
+- The purple was DARKER than the mockup, not brighter. The correction
+  had overshot past his own design.
+
+Sampling took ten minutes and settled six rounds.
+
+**Keep the mockup files.** If they are lost, ask for them again rather
+than matching by eye.
+
+## 3. Measure the geometry too
+
+The build ran about a fifth larger than the mockups for weeks, which is
+why the mockup fits Pending Bets on the first screen and the build did
+not. Measure card heights, radii and gaps rather than guessing.
+
+## 4. Improve his design, never replace it
+
+Nine drafts of the Track page taught this twice. When you think
+something in the mockup is wrong, **say so and show a comparison.** Do
+not quietly fix it.
+
+## 5. Diverge only on purpose, and write it down
+
+Where the build deliberately differs from the sheet, say which and why
+in the message, and record it. `ROADMAP.md` and `PORTFOLIO-VIEWS.md`
+both carry divergence lists.
+
+## 6. Then run the ui-change pre-flight
+
+Use the `ui-change` skill before any screenshot reaches him.
+
+## A trap specific to mockups
+
+**The mockups can disagree with each other, and with his current
+words.** When they do, **his current words win.** Say plainly which
+source you followed, and flag the conflict rather than silently
+resolving it. He confirmed this directly: "what i have said is more true
+than the mockup."

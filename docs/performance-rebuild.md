@@ -1,0 +1,91 @@
+# The Performance rebuild (in flight)
+
+Status as of 26 August 2026. **Nothing here is shipped.** `/stats` still
+serves the old Analytics page.
+
+## Where the work lives
+
+- `src/app/preview/pf/`, the Portfolio prototype, walkable end to end.
+  Its engine (`engine.ts`), skin (`theme.tsx`) and motion
+  (`motion.tsx`) are reusable regardless of which views survive.
+- `PORTFOLIO-VIEWS.md`, the view-by-view build log.
+- `docs/open-questions.md`, what still blocks drawing Lab.
+
+## The shape the owner wants
+
+**One Performance page, three tabs at the top.**
+
+| Tab | Job |
+|---|---|
+| **Home** (was Review, name revisitable) | The ranked list mixing everything: Moneyline next to Premier League next to Low odds. Tell the user what they are good at within seconds. |
+| **Lab** | The builder. Chips plus a `+`. Click Moneyline, then Tennis, and the answer re-scopes in place. |
+| **Third tab** (name open) | Today's live `/stats` content: sports breakdown, odds groups, singles vs parlays, categories. The quick scan of every slice. |
+
+**Also alive:** the heatmap (on Home), insights (a popup reachable
+everywhere, plus a real page), What Changed, and betting history.
+
+**Cut:** the prototype insight card modal, and All Facts as a page.
+
+## Lab's rules so far
+
+- **Six groups**, from the mockup: SPORT, WHAT YOU BET, WHERE, WHEN,
+  HOW, RISK. Three of those group definitions are still open questions.
+- **Every chip is priced at the intersection it would create.** With
+  Moneyline selected, the Football chip reads Moneyline-in-Football, not
+  Football overall. That is what makes the grid a preview of its own
+  result.
+- **Removing the last chip lands on a clean, empty Lab**, not back on
+  Home. The owner asked for this explicitly: "i want a view inside the
+  lab that is clean from selections."
+- **Compare only works within one group.** Cross-group selections
+  combine instead.
+- **The rule teaches itself by dimming** chips you cannot pair with, not
+  by colour-coding the groups.
+
+## What Home does
+
+- Ranked rows written as sentences: "Moneyline is making you +$2,658",
+  each labelled with its family (EARNER · WHAT YOU BET).
+- **Tapping a row jumps to Lab with that fact selected.** Same for a
+  heatmap tile.
+- Keeps a door to Lab: "Check out our Lab, Build your Performance View".
+- Sort by Profit, ROI or Hit rate, **all three visible at once.** No
+  cycling control that hides its options.
+
+## Engine notes worth keeping
+
+`src/app/preview/pf/engine.ts` computes every number for the prototype.
+Two things in it were hard won:
+
+**`dedupeFacts` is not applied to the vocabulary.** It hides a fact
+whose record exactly matches a higher-ranked one, which is right for a
+ranked list or a treemap (two rows for one set of bets lies about size)
+and catastrophic anywhere else. Applied everywhere, it deleted every
+sport that had exactly one league. See `failed-approaches.md`.
+
+**Ranking by "impact" was removed.** The owner could not explain the
+number, so neither could a user. The problem it solved (thin evidence
+climbing the list) is still open.
+
+## Motion
+
+Levels A and B are built and tested by `motiontest.mjs`.
+
+- **A:** direction. Deeper slides in from the right, back slides in from
+  the left. Sheets rise from the bottom and play back down. This is
+  information, not decoration: without it a sheet and a page appear
+  identically and you cannot tell what Back will do.
+- **B:** the chart line draws itself, money travels to its new value
+  instead of snapping, ranked rows arrive in sequence.
+- **C** (shared-element flights) is parked as IDEAS.md idea 30, with a
+  written trigger: build it when the layouts stop moving.
+- Everything is off under `prefers-reduced-motion`.
+
+## Before this can ship
+
+Not design work, and nobody has scoped it:
+
+1. **Empty states.** Every view assumes a full record.
+2. **Loading states.** The prototype computes instantly on demo data.
+3. **The swap.** Replace `/stats` in one go, or run both behind a
+   switch while the numbers are checked.
