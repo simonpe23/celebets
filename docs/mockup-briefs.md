@@ -320,10 +320,14 @@ Design HOME, the first tab of Performance and the first thing a user
 sees when they open the page.
 
 The job: a performance review, not a statistics page. Within seconds
-the user knows what they are good at and where the money leaks. It
-opens with findings, never with graphs. The founding question of the
-whole product is the one this screen answers on sight: "where am I
-leaking, baseball, hockey or football?"
+the user knows where they stand and where the money leaks. The founding
+question of the whole product is the one this screen answers on sight:
+"where am I leaking, baseball, hockey or football?"
+
+Two beats, in this order. **First the result**: your net profit and the
+line that draws it, so you know how you are doing. **Then the
+findings**: the ranked reasons why. A statistics page would stop after
+the first beat; a review does not.
 
 ### The result panel, and it opens the page
 
