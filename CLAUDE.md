@@ -27,7 +27,8 @@ The owner has no coding experience. These rules are permanent.
   Label your own inferences as inferences.
 - **His past reactions are not constraints.** Never argue for keeping
   something because he once liked it. His current words are the only
-  spec. Decisions he marks permanent (the fonts) stay permanent.
+  spec. Decisions he marks permanent stay permanent until he reopens
+  them himself (he reopened the fonts, 26 August 2026).
 - **Challenge him.** He has asked for this directly. If something does
   not hold together, say so before it is built.
 - This is a v1: prefer simple and working over clever.
@@ -63,9 +64,12 @@ need a script: `scrubtest.mjs`, `motiontest.mjs`, `pftest.mjs`.
   **`claude/celebets-v1-build-fhio4a`**. Pushing that branch deploys
   production.
 - Next.js App Router, TypeScript, Tailwind v4, Supabase with RLS.
-- **Three tabs and only three:** Track (capture data), Performance
-  (understand yourself), Research (understand the game before your next
-  bet). Settings is reached from the gear on Track, not a tab.
+- **Four tabs:** Track (capture data), Performance (understand
+  yourself), Research (understand the game before your next bet),
+  Profile (new, contents undecided, bottom right). Ruled 26 August
+  2026, replacing "three tabs and only three". Settings is still
+  reached from the gear on Track; whether it moves into Profile is
+  open, so ask before moving it.
 - Performance lives at `/stats` and Research at `/recommendations`. The
   addresses were kept from the old names on purpose.
 - USD, 2 decimals. Decimal odds, 2 decimals.
@@ -82,10 +86,14 @@ need a script: `scrubtest.mjs`, `motiontest.mjs`, `pftest.mjs`.
 Keep it current: when a job finishes, delete its line.
 
 - **The Performance page rebuild.** Three tabs inside `/stats`: Home,
-  Lab, and a third tab. Being designed on branch
-  `performance-rebuild`. **Do not redesign `/stats`, `StatsView.tsx` or
-  anything under `src/app/preview/pf/` in another chat.** See
-  `docs/performance-rebuild.md` and `docs/open-questions.md`.
+  Lab, Totals. **Do not redesign `/stats`, `StatsView.tsx` or anything
+  under `src/app/preview/pf/` in another chat.**
+  - The thinking is settled and written: read
+    **`docs/performance-brief.md`** first. It is the argument.
+  - The designer prompts live in **`docs/mockup-briefs.md`**.
+  - What is still undecided is in `docs/open-questions.md`.
+  - Current stage: **mockups**, with the owner's external designer.
+    Nothing is being built in the app yet.
 - **App Store submission**, in a separate chat with the owner. Settings
   and store config, not code.
 

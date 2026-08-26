@@ -16,8 +16,15 @@ Full reference: `docs/design-system.md`. The rules that bite:
 - **Never change a font without asking.** Family, weight AND size. Words
   are Geist, numbers are Inter Tight through `font-money` at weight 500
   on hero figures. `design-check` rule 8 fails the build if this moves.
+  The faces are under review (owner reopened them 26 August 2026, the
+  mockup designer is proposing new ones), but the build keeps these
+  until he approves replacements.
 - **`font-medium` does not exist here.** Only normal, semibold, bold.
-- **Purple means one thing: something you press.** Primary button,
+- **Purple means two things, and only two.** Something you press, AND
+  the profit chart line (with its gradient). The line was ruled back to
+  purple on 26 August 2026. Nothing else: no purple links, badges or
+  decoration.
+- **Pressable purple:** Primary button,
   active tab, selected chip, primary capture tile. Nothing else.
 - **Green and red mean money moved.** Never an action colour. The one
   survivor is the Won button on a pending pick, `#16A34A`.

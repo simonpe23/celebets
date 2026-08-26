@@ -49,19 +49,15 @@ old words, and every provider mapper points at them.
 
 ## Not blocking, still open
 
-**The third Performance tab's name.** Totals, Lists, Breakdown, or
-something else.
+**New fonts.** He reopened the fonts on 26 August 2026: "i do not like
+our font." The mockup designer will propose; nothing is chosen and the
+build keeps Geist and Inter Tight until he approves.
 
-**Whether that third tab is real, or is Lab with nothing selected.**
-Raised and not yet answered.
-
-**Where Compare lives.** He floated a Compare button appearing when two
-things are selected in Lab, then immediately doubted it: "this is not
-clear for me yet." His mockup shows a different mechanism: comparing a
-whole family at once, scoped to the selection.
-
-**Where betting history sits.** He said Home, Lab and the third tab are
-all plausible.
+**How Compare is presented.** WHERE it lives is settled (inside Lab, 26
+August 2026). The mechanism is not: he floated a Compare button, then
+doubted it ("this is not clear for me yet"), and his mockup shows a
+whole family compared at once. The mockup designer is asked to propose;
+whatever comes back is a proposal, not a decision.
 
 **The topic picker's door label.** He asked for a new name and did not
 give one. "Something else" is a placeholder. "Category" is the obvious
@@ -72,12 +68,24 @@ Four new words (Other Sport, Other Politics, Other Economics, Other
 Culture) plus a migration, and it pushes the non-sports row toward
 domain headings.
 
-**Four tabs or three.** Deferred. It must land before the rebuild ships,
-because the tab bar is on every screen.
+**THE CHART LINE COLOUR CONTRADICTS ITSELF, and it needs him.**
+Raised 26 August 2026, when he saw a green chart in a mockup: "the
+chart in the ugly mockup for example: green. when we settled on purple."
 
-**Pills or squared buttons in the rebuild.** His own mockups disagree
-with each other: the insight card draws pills, the fact page and Compare
-draw rounded rectangles.
+Three sources disagree:
+
+1. **`docs/design-system.md` says the opposite**, explicitly: "Green up,
+   red down... **There is no purple data line.**" That line came out of
+   the purple cleanup, where purple was doing seven jobs and the data
+   line was one of the jobs deliberately taken away from it.
+2. **His own mockups draw a purple line** with a purple gradient fading
+   beneath it, in both the Portfolio home and the Lab V1 sheet.
+3. **His current words say purple**, and current words win.
+
+The mockup briefs now say purple, following 2 and 3. **Nothing in the
+app has been changed.** Before a chart is built, he has to say which
+one stands, because if it is purple then `design-system.md` is wrong
+and the "no purple data line" rule has to come out with him watching.
 
 **Dead ends still in the prototype.** "See the N bets", "View all
 changes", "Ask Actuals" in two places, share and the three dots, the

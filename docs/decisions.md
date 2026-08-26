@@ -11,13 +11,25 @@ See `failed-approaches.md` for the rule about quoting old preferences.
 
 ## Product shape
 
-**Three tabs and only three: Track, Performance, Research.**
-Insights does not get a tab. It is a layer inside Performance, the way
-Apple Health puts insights inside the health data rather than beside it.
+**FOUR tabs: Track, Performance, Research, Profile.** Ruled 26 August
+2026: "i think i want 4 tabs at the bottom. A Profile Page at the right
+bottom corner."
+
+This reverses "three tabs and only three", which had held for months and
+was listed as an open question ("four tabs or three") that had to land
+before the Performance rebuild shipped. It landed.
 
 - Track means capture data.
 - Performance means understand yourself.
 - Research means understand the game before your next bet.
+- Profile is new and its contents are not yet decided.
+
+The first three are a timeline: before the bet, the bet, after the bet.
+Profile sits outside that sequence, which is why it goes last.
+
+**Insights still does not get a tab.** It is a layer inside Performance,
+the way Apple Health puts insights inside the health data rather than
+beside it.
 
 **Insights and Research are opposite ends of one timeline.** Research
 happens BEFORE a bet and is active: the user goes looking. Insights
@@ -27,8 +39,26 @@ from the user's own data.
 **Performance is a performance review, not a statistics page.** Opening
 it should not land on graphs.
 
-**Settings has no tab.** It is reached from the gear on Track. The
-avatar used to be the log out button, so one stray tap ended the
+**REFINED 26 August 2026: the result and the chart open Home.** Seeing
+the first Home mockup without them: "There's no chart and result at the
+top of the home page."
+
+The old rule was never "no chart". It was "do not land on a chart
+INSTEAD of findings". The order is: your net profit and the line that
+draws it first, then the findings underneath. A brief that flattened
+this into "no graphs at the top" produced a Home page with no headline
+number at all.
+
+**PROFILE IS THE NEW SETTINGS PAGE.** Ruled 26 August 2026: "Profile is
+the new settings page. gonna be reworked, but that's the deal." So the
+fourth tab is not a new surface to invent. It is Settings, promoted to
+the tab bar and due a rework.
+
+**Track keeps a small profile button in its top corner, for now.** His
+words, and the "for now" is his too. Getting to your account does not
+become tab-bar-only just because the tab exists.
+
+The avatar used to be the log out button, so one stray tap ended the
 session; log out now sits at the foot of Settings.
 
 ## Money and honesty
@@ -144,8 +174,10 @@ produced the heatmap, the ranked home, What Changed, and the proof that
 Lab was the right spine.
 
 **Three tabs inside Performance:** Home (renamed from Review, name still
-revisitable), Lab, and a third tab whose name is open (Totals / Lists /
-Breakdown).
+revisitable), Lab, and **Totals**. He named the third tab Totals on
+26 August 2026 while briefing the mockup designer, and confirmed it is a
+real tab: it holds today's live `/stats` content, the quick scan of
+every slice.
 
 **DOMAINS NEVER COMBINE.** Ruled 26 August 2026: "Things from different
 domains will never be possible to combine. they are not from the same
@@ -240,12 +272,38 @@ and no accessibility problem.
 was removed: a number nobody can explain does not belong in a product.
 The cycling control that hid its own options was rejected as annoying.
 
-**Betting history is one page with many doors**, and it accepts a
-filter, so "See these 26 bets" from Lab and the full list from Home are
-the same page.
+**Compare lives inside Lab.** Ruled 26 August 2026. How it is presented
+is still open; the mockup designer is asked to propose.
+
+**All bets live at the bottom of Totals.** Ruled 26 August 2026: the
+latest 50 bets inline, then a button that opens the full All Bets page.
+That page accepts a filter, so "See these 26 bets" from Lab lands on the
+same page. This settles where betting history sits.
+
+**Every Performance mockup shows the three tab switcher.** Home, Lab,
+Totals, on every screen, active tab marked.
+
+**The Insights page gets a new mockup.** Ruled 26 August 2026: "The
+insights page is bleak today." It is currently a heading over a flat
+list of sentence rows.
 
 **Insights are reachable from everywhere in the app**, triggered by the
 sparkle.
+
+**The tab switcher may be a pill; everything below it is squared.**
+Ruled 26 August 2026: "pills goes at the top when switching from home to
+lab to totals... and then squares below, similar to earlier mockups."
+
+**The fonts are reopened.** Ruled 26 August 2026, while briefing the
+mockup designer: "i do not like our font, so please change them." The
+permanent marking is lifted by his own words. The current faces (Geist
+for words, Inter Tight for numbers) stay in the build until he approves
+replacements from the mockups.
+
+**The mockup designer designs inside the structure, free on style.** For
+the Performance mockups, nothing visual is fixed: palette and type are
+his to evolve. The product rules (domains never combine, records not
+percents, the taxonomy) are law. Phone width only.
 
 **Cut:** the prototype insight card modal, and All Facts as a standalone
 page.
