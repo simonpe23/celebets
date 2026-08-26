@@ -86,10 +86,14 @@ need a script: `scrubtest.mjs`, `motiontest.mjs`, `pftest.mjs`.
 Keep it current: when a job finishes, delete its line.
 
 - **The Performance page rebuild.** Three tabs inside `/stats`: Home,
-  Lab, and a third tab. Being designed on branch
-  `performance-rebuild`. **Do not redesign `/stats`, `StatsView.tsx` or
-  anything under `src/app/preview/pf/` in another chat.** See
-  `docs/performance-rebuild.md` and `docs/open-questions.md`.
+  Lab, Totals. **Do not redesign `/stats`, `StatsView.tsx` or anything
+  under `src/app/preview/pf/` in another chat.**
+  - The thinking is settled and written: read
+    **`docs/performance-brief.md`** first. It is the argument.
+  - The designer prompts live in **`docs/mockup-briefs.md`**.
+  - What is still undecided is in `docs/open-questions.md`.
+  - Current stage: **mockups**, with the owner's external designer.
+    Nothing is being built in the app yet.
 - **App Store submission**, in a separate chat with the owner. Settings
   and store config, not code.
 
