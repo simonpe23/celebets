@@ -68,15 +68,24 @@ Four new words (Other Sport, Other Politics, Other Economics, Other
 Culture) plus a migration, and it pushes the non-sports row toward
 domain headings.
 
-**What is actually ON the Profile page.** He ruled four tabs on 26
-August 2026 and named the fourth Profile, bottom right. Its contents
-were not discussed. The obvious candidates (settings, account, the
-tracking balance, connected accounts, the restart line) are guesses,
-not his words.
+**THE CHART LINE COLOUR CONTRADICTS ITSELF, and it needs him.**
+Raised 26 August 2026, when he saw a green chart in a mockup: "the
+chart in the ugly mockup for example: green. when we settled on purple."
 
-**Whether Settings moves into Profile.** Today it is the gear on Track.
-A Profile tab makes moving it look inevitable, which is exactly why it
-needs asking rather than assuming.
+Three sources disagree:
+
+1. **`docs/design-system.md` says the opposite**, explicitly: "Green up,
+   red down... **There is no purple data line.**" That line came out of
+   the purple cleanup, where purple was doing seven jobs and the data
+   line was one of the jobs deliberately taken away from it.
+2. **His own mockups draw a purple line** with a purple gradient fading
+   beneath it, in both the Portfolio home and the Lab V1 sheet.
+3. **His current words say purple**, and current words win.
+
+The mockup briefs now say purple, following 2 and 3. **Nothing in the
+app has been changed.** Before a chart is built, he has to say which
+one stands, because if it is purple then `design-system.md` is wrong
+and the "no purple data line" rule has to come out with him watching.
 
 **Dead ends still in the prototype.** "See the N bets", "View all
 changes", "Ask Actuals" in two places, share and the three dots, the

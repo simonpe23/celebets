@@ -49,13 +49,17 @@ draws it first, then the findings underneath. A brief that flattened
 this into "no graphs at the top" produced a Home page with no headline
 number at all.
 
-**Settings has no tab of its own.** It is reached from the gear on
-Track. The avatar used to be the log out button, so one stray tap ended
-the session; log out now sits at the foot of Settings.
+**PROFILE IS THE NEW SETTINGS PAGE.** Ruled 26 August 2026: "Profile is
+the new settings page. gonna be reworked, but that's the deal." So the
+fourth tab is not a new surface to invent. It is Settings, promoted to
+the tab bar and due a rework.
 
-**Open, and NOT yet ruled: whether Settings moves into Profile.** It is
-the obvious guess and it is only a guess. The owner named a Profile tab
-and said nothing about Settings. Do not move it without asking him.
+**Track keeps a small profile button in its top corner, for now.** His
+words, and the "for now" is his too. Getting to your account does not
+become tab-bar-only just because the tab exists.
+
+The avatar used to be the log out button, so one stray tap ended the
+session; log out now sits at the foot of Settings.
 
 ## Money and honesty
 
