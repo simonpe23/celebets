@@ -147,6 +147,87 @@ Lab was the right spine.
 revisitable), Lab, and a third tab whose name is open (Totals / Lists /
 Breakdown).
 
+**DOMAINS NEVER COMBINE.** Ruled 26 August 2026: "Things from different
+domains will never be possible to combine. they are not from the same
+tree. So there's no world where you click football, moneyline and price
+prediction."
+
+This is structural, not a preference. Football plus Moneyline is fine,
+both are Sports. Football plus Price Direction is impossible: no leg can
+be both, so the answer would always be zero.
+
+**Domain is a MODE in Lab, not a chip.** It sits above the six groups
+and rescopes them.
+
+- The **SPORT** header carries a small arrow. Sports is the default and
+  keeps its single tap. The arrow drops down the other four domains,
+  deliberately quieter than the chips, "you see they're clearly more
+  hidden, which we want as of now at least."
+- Picking Economics **rescopes the whole page**, confirmed by the owner.
+  WHAT YOU BET then shows Price Direction, not Moneyline. Otherwise the
+  page would wear one domain's heading over another domain's vocabulary.
+- **HOW and RISK do not rescope.** Singles vs parlays and odds bands
+  mean the same thing in every domain.
+
+The taxonomy's "independent dimensions, not a ladder" rule still holds,
+**within a domain**. Inside Sports, topic, competition and period
+combine freely in any order.
+
+**PERIODS EXIST FOR EVERY SPORT NOW.** Ruled 26 August 2026, when the
+proposal was to hide the WHEN group because only Football had periods:
+"Let's add the periods now rather than hide WHEN. I don't want us to
+make a UI decision around the fact that the taxonomy is incomplete."
+
+He supplied the whole vocabulary, 14 sports. It lives in SPORT_PERIODS.
+
+**The UI rule, his words:** WHEN is sport-aware and only surfaces
+periods that are relevant to the current sport AND actually exist in
+the user's data. A sport with nothing to show hides the group, but as a
+DATA state, never as a workaround for a missing vocabulary.
+
+**The whole game is stored as NULL, not as text.** Every sport names it
+differently (Full Time, Full Game, Full Match, Full Fight, Race), which
+is precisely why it cannot be one stored string. It is element [0] of
+each list and is used only as a label. This also meant no migration:
+every existing leg without a period already means the whole game.
+
+**WHAT YOU BET shows categories, and a category opens its markets.**
+Ruled 26 August 2026. The group is not a flat mix of the two levels.
+Tapping a category reveals the markets underneath it, where real markets
+exist. Categories with no market vocabulary yet simply do not open, so
+the UI degrades quietly instead of showing an empty drawer.
+
+**A league row sits under SPORT.** Ruled 26 August 2026. Three or four
+leagues for the current sport, **one row only**, then a way to reach the
+rest: "or else click more leagues."
+
+**Baseball and MLB are two different things.** His words, and the reason
+the league row is its own row rather than more sport chips. A sport is
+not its biggest league, even when every bet on that sport happens to sit
+in that league.
+
+**Chips show the record, never a percent.** Ruled 26 August 2026:
+"you're not showing 100%, you are showing 1-0. i dont care about the
+percent."
+
+The reason is that a percent flatters thin evidence. "30-16 is a better
+and more impressive hit rate than 5-0 in betting." The record carries
+its own sample size, so the user needs no statistics to see which fact
+is worth trusting.
+
+**Profit ranks Home. Hit rate scores Lab chips.** He settled the earlier
+Impact argument this way: "i thought we decided profit on the home page
+and hit rate on the lab page."
+
+- Home answers "where is the money", so it ranks by a clear dollar
+  number.
+- Lab answers "am I good at this", where money is misleading because a
+  chip's stake size is not its skill.
+
+**Thin groups are not hidden.** "do not hide thin groups. i think they
+still serve a purpose." A group with two bets in it still tells the user
+they have barely tried that thing, which is itself a finding.
+
 **Compare only works within one group.** Sports vs sports, leagues vs
 leagues. Cross-group selections combine instead.
 

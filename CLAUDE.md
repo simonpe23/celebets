@@ -76,6 +76,19 @@ need a script: `scrubtest.mjs`, `motiontest.mjs`, `pftest.mjs`.
 - **Every money rule lives in `src/lib/stats.ts`.**
 - Peak Street 6 LLC. The mark is not filed, so no trademark claims.
 
+## What is in flight right now
+
+**Check this before starting anything, so two chats do not collide.**
+Keep it current: when a job finishes, delete its line.
+
+- **The Performance page rebuild.** Three tabs inside `/stats`: Home,
+  Lab, and a third tab. Being designed on branch
+  `performance-rebuild`. **Do not redesign `/stats`, `StatsView.tsx` or
+  anything under `src/app/preview/pf/` in another chat.** See
+  `docs/performance-rebuild.md` and `docs/open-questions.md`.
+- **App Store submission**, in a separate chat with the owner. Settings
+  and store config, not code.
+
 ## How work reaches the live site
 
 1. **`main` is the live code.** actuals.cc shows whatever is on `main`.
@@ -86,6 +99,21 @@ need a script: `scrubtest.mjs`, `motiontest.mjs`, `pftest.mjs`.
 **Do not improvise a different model of this.** It was re-litigated
 across several chats and he had to referee. Full detail, and the words
 that get confused (push, deploy, merge), in `docs/git-workflow.md`.
+
+## When a task is finished
+
+**Do this yourself, before telling him it is done. Do not ask him to
+remember any of it.** His only job is clicking Merge.
+
+1. **Write down anything he ruled on**, into `docs/decisions.md`. A
+   ruling that lives only in a chat dies with that chat.
+2. **Delete this task's line** from "What is in flight right now", if it
+   had one. A stale in-flight list is worse than none.
+3. **Update the docs the work changed.** New route, new rule, new
+   gotcha.
+4. **Run `npm run check`, then commit and push.**
+5. **Tell him in one bullet what to merge**, and what it changes on the
+   live site.
 
 ## Secrets
 

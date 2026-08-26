@@ -88,13 +88,10 @@ How this file works:
     with "OK for now. But remind me to fix this later." THIS IS THAT
     REMINDER. Ordered by his own ranking:
 
-    a. PERIODS EXIST FOR FOOTBALL ONLY, and he called this the most
-       important of the three. Every other sport has no half, no
-       quarter, no set, no innings to choose, so a first-quarter NBA
-       bet and a full-game one sit in the same analytics row and
-       nothing tells them apart. SPORT_PERIODS in src/lib/taxonomy.ts
-       is where the lists go. Needs his approved vocabulary per
-       sport, the same way he approved the competitions.
+    a. DONE, 26 August 2026. He supplied the period vocabulary
+       for all 14 sports rather than let the UI work around a thin
+       taxonomy. SPORT_PERIODS carries it. No migration was needed:
+       legs.period is plain text, and the whole game stays null.
 
     b. THE SCREENSHOT IMPORT DOES NOT CLASSIFY. Paste bet slip and
        Upload image read the sport and nothing else, so category,

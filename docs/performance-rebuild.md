@@ -29,7 +29,19 @@ everywhere, plus a real page), What Changed, and betting history.
 ## Lab's rules so far
 
 - **Six groups**, from the mockup: SPORT, WHAT YOU BET, WHERE, WHEN,
-  HOW, RISK. Three of those group definitions are still open questions.
+  HOW, RISK. All six definitions are now settled.
+- **SPORT carries the domain arrow.** Sports is default and keeps its
+  single tap. Picking another domain rescopes the whole page. HOW and
+  RISK do not rescope; they mean the same in every domain.
+- **A league row sits under SPORT**, three or four for the current
+  sport, one row only, then "More leagues".
+- **WHAT YOU BET lists categories**, and tapping one opens its markets
+  where real markets exist.
+- **WHEN is sport-aware.** It offers only the periods that belong to the
+  current sport and actually appear in the user's data.
+- **Chips read as a record (12-4), never a percent.** Hit rate is the
+  score in Lab; profit is the score on Home.
+- **Thin groups stay visible.** Two bets is a finding, not noise.
 - **Every chip is priced at the intersection it would create.** With
   Moneyline selected, the Football chip reads Moneyline-in-Football, not
   Football overall. That is what makes the grid a preview of its own
@@ -64,8 +76,9 @@ and catastrophic anywhere else. Applied everywhere, it deleted every
 sport that had exactly one league. See `failed-approaches.md`.
 
 **Ranking by "impact" was removed.** The owner could not explain the
-number, so neither could a user. The problem it solved (thin evidence
-climbing the list) is still open.
+number, so neither could a user. The problem it solved, thin evidence
+climbing the list, is now answered by showing the record instead of a
+percent: 5-0 no longer looks like 100%.
 
 ## Motion
 

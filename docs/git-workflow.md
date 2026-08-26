@@ -21,6 +21,52 @@ chat B ──> branch B ──┼─ owner clicks Merge ─> main ─> actuals.c
 chat C ──> branch C ──┘
 ```
 
+## Starting a new task, click by click
+
+For the owner. This is the whole procedure.
+
+1. **Start a new chat** and pick the repo `simonpe23/celebets`.
+2. **In the branch dropdown, pick `main`.** Always. Every time.
+3. **Type the task.**
+4. **Stop. Branches are done.**
+
+**The owner never creates a branch and never types a branch name.** The
+system creates one automatically, off whatever was picked in step 2.
+
+**"Pick main" means "start from the current real code".** It does not
+mean "work inside main". Those two got confused repeatedly and it is the
+single most likely thing to confuse him again.
+
+**Optional:** he can ask a chat for a readable branch name at the start
+("work on a branch called footer-fix") instead of the auto-generated
+`claude/footer-about-link-one6lq`. Purely cosmetic.
+
+### When the task is finished
+
+**The owner's whole job is one word: Merge.**
+
+1. Open the repo on GitHub. A banner offers a Pull Request from that
+   chat's branch.
+2. Click it, then **Merge**.
+3. That is the moment it goes live.
+
+**Everything else belongs to the chat, not to him.** Before it says a
+task is done it must have written down any rulings, cleared its line
+from the in-flight list, updated the docs it changed, run
+`npm run check`, and pushed. That checklist lives in CLAUDE.md under
+"When a task is finished".
+
+**Never hand him a checklist to remember.** If a step matters, it goes
+in CLAUDE.md so every chat performs it automatically. This is the same
+principle as the design checks: when something reaches him that a
+machine could have caught, the fix is a rule, not a promise to be
+careful.
+
+### Template for briefing a new chat
+
+> Read CLAUDE.md first, then docs/git-workflow.md. Work on your own
+> branch, never push to main. [The task.] Answer in bullets.
+
 ## Words that get confused, defined once
 
 | Word | Means |

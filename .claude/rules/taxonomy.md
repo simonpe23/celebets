@@ -54,11 +54,24 @@ sports or you mean topics.**
   into two analytics rows forever.
 - Adding a topic is a **database migration** (`legs_sport_check`).
 - Adding a category or market is a **code change only**.
+- Adding a period is a **code change only**. `legs.period` is free text
+  with no constraint.
+
+## Periods
+
+`SPORT_PERIODS` holds the owner's vocabulary for all 14 sports.
+
+- **Element [0] is the whole-game term** (Full Time, Full Game, Full
+  Match, Full Fight, Race). Every sport names it differently, which is
+  exactly why it is never stored. It is a label only.
+- **The whole game is stored as NULL.** Read it back with
+  `periodLabel(sport, period)`.
+- **Offer periods with `periodsFor(sport)`**, never by indexing
+  `SPORT_PERIODS` directly. Raw indexing puts the whole-game term in the
+  chip list and lets it be written to the database as text.
 
 ## Known gaps
 
-- **Periods exist for Football only.** Every other sport has no half,
-  quarter, set or innings, so those picks are indistinguishable.
 - **Categories exist for Sports and Economics only.** Politics and
   Culture picks are honestly `Unclassified`.
 - Several non-sport topic names duplicate their own domain name. Those
