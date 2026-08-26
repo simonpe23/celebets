@@ -84,6 +84,11 @@ moves between them constantly. Home hands questions to Lab. Lab hands
 lists of bets to the ledger at the bottom of Totals. Nothing is a dead
 end.
 
+**One thing sits on all three, and on every other screen in the app: the
+sparkle.** It is a small amber control in the top right, and it opens
+Insights. Insights are reachable from everywhere, so the sparkle is
+drawn everywhere. It is the only amber thing in Actuals.
+
 ---
 
 ## Lab, the heart of it
@@ -138,8 +143,20 @@ Chips in the **same** group compare: Football against Tennis, Premier
 League against La Liga.
 
 That rule is not arbitrary. Two sports are alternatives to each other; a
-sport and a category are not. Compare lives inside Lab, and how it
-presents itself is the one part of this design still genuinely open.
+sport and a category are not.
+
+**Compare lives inside Lab, and it needs a visible control.** When two
+chips in the same group are selected, a Compare button appears and
+opens the comparison. It must be drawn.
+
+What the comparison has to answer, in this order: which one is better
+for me, by how much in both profit and record, and how many bets sit
+behind each side. A comparison that hides its sample sizes lies.
+
+The exact form of that screen is the one place where we want the
+designer's own proposal rather than our instruction. Draw it. We will
+treat it as a proposal, and that is the only part of Lab where that is
+true.
 
 ### Domains never combine
 
