@@ -33,7 +33,12 @@ Full reference: `docs/design-system.md`. The rules that bite:
 - **Links are ink plus a chevron.** "View all ›", never a coloured link.
 - **Buttons are squared.** `rounded-md` primary. Not pills.
 - **Cards are defined by their edge, not a shadow.**
-- **Never use em dashes**, including in UI copy and comments.
+- **Never use em dashes**, including in UI copy, comments and docs.
+  `design-check` rule 11 fails the build on one, in `.tsx`, `.ts`,
+  `.mjs`, `.css` and `.md` alike.
+- **The previews are exempt from the COLOUR rules only**, until the new
+  palette is approved. Every other rule applies to them in full. See
+  `.claude/rules/preview-pages.md`.
 
 ## Banned vocabulary in user-facing copy
 

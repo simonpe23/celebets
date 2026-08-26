@@ -4,8 +4,9 @@
 
 - **Next.js App Router**, TypeScript, Tailwind v4.
 - **Supabase** for auth and Postgres, with Row Level Security on every table.
-- **Vercel**, deployed from branch `claude/celebets-v1-build-fhio4a`.
-  Pushing that branch deploys production.
+- **Vercel**, deployed from `main`. Merging into `main` is what
+  reaches the live site. The Vercel production branch setting must
+  match the default branch. See `docs/git-workflow.md`.
 - Live at **actuals.cc** (domain at Hostinger, DNS at Hostinger, pointed
   at Vercel). The `vercel.app` address still resolves.
 
@@ -99,7 +100,11 @@ values and ON for the rest.
 
 `npm run check` runs, in order:
 
-1. `design-check.mjs`, the design system rules (fonts, purple, money face).
+1. `design-check.mjs`, the design system rules (fonts, purple, money
+   face, em dashes). It reads every `.tsx` under `src/`, previews
+   included, and the em dash rule also reads the docs and the build
+   scripts. The three COLOUR rules are exempt under `/preview` until the
+   new palette is approved. See `.claude/rules/preview-pages.md`.
 2. `synctest.mjs`, the Kalshi money maths and taxonomy round-trips.
 3. `tsc --noEmit`.
 4. `next build`, **required**, because ESLint's rules-of-hooks only

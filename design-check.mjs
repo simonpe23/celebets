@@ -1,4 +1,4 @@
-// Checks the app against the design system in CLAUDE.md.
+// Checks the app against the design system in docs/design-system.md.
 //
 // This exists because font and spacing drift cost the owner six rounds
 // of review. A machine should catch this, not a person.
@@ -91,8 +91,45 @@ const ALLOWED_HEX = new Set([
   "#EA4335", // Google logo
 ]);
 
-// The preview folder is local only and never ships.
-const SKIP = ["preview"];
+// WHAT IS CHECKED UNDER /preview. Nothing is skipped any more.
+//
+// The whole folder used to be skipped, on the belief that it "is local
+// only and never ships". That stopped being true on 24 August 2026,
+// when the previews were committed and deployed behind the login gate.
+// The rule audit of 26 August 2026 found the stale comment and the
+// owner ruled the same day: the checker must look at the previews.
+const skipped = () => false;
+
+// THE PALETTE EXEMPTION, and why it exists.
+//
+// The owner, 26 August 2026: his mockup designer is better at design
+// than the current palette, and "the mockups are the spec, to the
+// pixel" is already a standing rule in docs/decisions.md. The previews
+// are where the NEW design is being explored, so holding them to the
+// OLD palette is backwards. A prototype's whole job is to carry colours
+// the design system has not adopted yet.
+//
+// So the three COLOUR rules do not run under /preview:
+//   4   is this hex in the product palette
+//   4b  green is not an action colour
+//   8b  the brand purple must come from globals.css, not a raw hex
+//
+// 8b is in that list on purpose. Forcing a preview to write
+// var(--brand-top) forces the OLD purple, which is the exact thing this
+// exemption exists to stop.
+//
+// EVERY OTHER RULE STILL APPLIES to every preview file: the font lock,
+// the banned finance vocabulary, em dashes, the old brand name, the
+// hand cursor, the money face, the shared components. Those are not
+// design taste, they are correctness, and a prototype gets them wrong
+// as easily as a page does.
+//
+// THIS EXEMPTION ENDS WHEN THE NEW PALETTE IS APPROVED. At that moment
+// the new palette becomes the checked palette, ALLOWED_HEX is rewritten
+// from it, and the previews go back under all three colour rules.
+// Delete this function then. The palette is not chosen yet; it sits in
+// docs/open-questions.md.
+const paletteExempt = (file) => file.includes("/preview/");
 
 // Files that ARE artwork. The brand mark's gradient stops are the
 // owner's logo, drawn as inline svg so it stays crisp at header size.
@@ -101,7 +138,7 @@ const SKIP = ["preview"];
 const ARTWORK_OK = ["BrandMark.tsx"];
 
 for (const file of files) {
-  if (SKIP.some((dir) => file.includes(`/${dir}/`))) continue;
+  if (skipped(file)) continue;
   const short = file.split("/").pop();
   const lines = readFileSync(file, "utf8").split("\n");
 
@@ -154,7 +191,7 @@ for (const file of files) {
     // dropped survives next to the code.
     const isComment = line.trim().startsWith("//") || line.trim().startsWith("*");
     const isArtwork = ARTWORK_OK.includes(short);
-    for (const hex of isComment || isArtwork
+    for (const hex of isComment || isArtwork || paletteExempt(file)
       ? []
       : (line.match(/#[0-9A-Fa-f]{6}/g) ?? [])) {
       if (!ALLOWED_HEX.has(hex.toUpperCase().replace("#", "#"))) {
@@ -172,7 +209,12 @@ for (const file of files) {
     // Comments are exempt, the same as rule 4 above. A note explaining
     // why a colour may not be used has to be able to name it, and this
     // rule failed the build on its own explanation.
-    if (!isComment && /#16A34A|#15803D/.test(line) && short !== "LiveBets.tsx") {
+    if (
+      !isComment &&
+      !paletteExempt(file) &&
+      /#16A34A|#15803D/.test(line) &&
+      short !== "LiveBets.tsx"
+    ) {
       note(file, n, "green #16A34A outside the Won button, actions are purple");
     }
 
@@ -220,7 +262,7 @@ const PROSE = [
 ];
 
 for (const file of files) {
-  if (SKIP.some((dir) => file.includes(`/${dir}/`))) continue;
+  if (skipped(file)) continue;
   const lines = readFileSync(file, "utf8").split("\n");
 
   lines.forEach((line, i) => {
@@ -278,7 +320,7 @@ const VOCAB_EXEMPT = [
 ];
 
 for (const file of files) {
-  if (SKIP.some((dir) => file.includes(`/${dir}/`))) continue;
+  if (skipped(file)) continue;
   if (VOCAB_EXEMPT.includes(file)) continue;
   const lines = readFileSync(file, "utf8").split("\n");
 
@@ -328,8 +370,9 @@ for (const file of files) {
 const BRAND_HEX = /#5525C6|#4915AD|#3D0F94|#7C3AED|#9A57FC|#5B21B6|#4C1D95|#3B1578|#6D28D9/i;
 
 for (const file of files) {
-  if (SKIP.some((dir) => file.includes(`/${dir}/`))) continue;
+  if (skipped(file)) continue;
   const lines = readFileSync(file, "utf8").split("\n");
+  if (paletteExempt(file)) continue;
   lines.forEach((line, i) => {
     const trimmed = line.trim();
     if (trimmed.startsWith("//") || trimmed.startsWith("*")) return;
@@ -400,7 +443,7 @@ for (const lock of FONT_LOCK) {
   }
 
   for (const file of files) {
-    if (SKIP.some((dir) => file.includes(`/${dir}/`))) continue;
+    if (skipped(file)) continue;
     readFileSync(file, "utf8")
       .split("\n")
       .forEach((line, i) => {
@@ -442,7 +485,7 @@ for (const lock of FONT_LOCK) {
   ];
 
   for (const file of files) {
-    if (SKIP.some((dir) => file.includes(`/${dir}/`))) continue;
+    if (skipped(file)) continue;
     readFileSync(file, "utf8")
       .split("\n")
       .forEach((line, i) => {
@@ -463,6 +506,42 @@ for (const lock of FONT_LOCK) {
         }
       });
   }
+}
+
+// 11. NO EM DASHES.
+//
+// Added 26 August 2026. The owner named this as a rule the checker
+// already enforced. It did not. The ban is written in CLAUDE.md, in
+// docs/decisions.md and in .claude/rules/design-system.md, and nothing
+// anywhere was watching for it, which is exactly the failure this file
+// exists to prevent: a rule nobody enforces is a rule that reaches him.
+//
+// It covers everything, comments included, because the ban is written
+// that way: "not in code, comments, UI copy, commit messages, or
+// documentation". So this rule walks wider than the rest of the file:
+// the docs and the build scripts too, not only .tsx. A preview is not
+// exempt either. This is punctuation, not palette.
+//
+// The en dash is NOT banned. Only the em dash.
+const PROSE_FILES = [];
+(function walkAll(dir) {
+  for (const name of readdirSync(dir)) {
+    if (name === "node_modules" || name.startsWith(".git")) continue;
+    if (name === ".next" || name === "public") continue;
+    const path = join(dir, name);
+    if (statSync(path).isDirectory()) walkAll(path);
+    else if (/\.(tsx|ts|mjs|md|css)$/.test(path)) PROSE_FILES.push(path);
+  }
+})(".");
+
+for (const file of PROSE_FILES) {
+  readFileSync(file, "utf8")
+    .split("\n")
+    .forEach((line, i) => {
+      if (line.includes("\u2014")) {
+        note(file, i + 1, "em dash. Use a comma, a period, a colon or brackets");
+      }
+    });
 }
 
 if (problems.length === 0) {

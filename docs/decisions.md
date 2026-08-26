@@ -149,6 +149,93 @@ Sampling with Pillow took ten minutes and settled six rounds.
 **Buttons are squared, not pills.** `rounded-md` is the primary.
 `rounded-xl` and `rounded-lg` were both rejected as too round.
 
+**Heading, title and button sizes: the code decides.** 26 August 2026
+the rule audit found the design doc giving two different sizes for each
+of these. He delegated the call: "pick what the code already ships and
+make the docs match." Counted across `src/`, and these are CLAUDE's
+picks under that instruction, not his own rulings:
+
+- **Card heading: 17px bold.** 16 places ship it against 12 on
+  `text-lg`, and 17px is the size measured off his mockups during the
+  Track rebuild.
+- **Page title: 22px bold.** 7 places ship it against 2 on `text-2xl`.
+  The two stragglers are Balance history and the legal pages.
+- **Primary button: `rounded-md`, 13px semibold, 44px tall.** That is
+  the shared `BTN` in `src/lib/ui.ts`, which is the only one that
+  matters: every page reuses it.
+
+The losing values are not wrong pages, they are stragglers. Nobody has
+been asked to sweep them, and doing so is a UI change of its own.
+
+**The chart line is PURPLE. Purple stands.** Ruled August 2026, his
+wording: "Purple line for profit and red for losses."
+
+This one had two confident sources disagreeing for weeks.
+`PORTFOLIO-VIEWS.md` recorded the ruling and his own mockups drew the
+purple line. `docs/design-system.md` said flatly "there is no purple
+data line". Neither knew about the other, and it only surfaced because a
+designer drew a green chart and he happened to notice.
+
+The lesson is the reason for the rule audit of 26 August 2026: a rule
+written in two places will eventually say two things, and nobody finds
+out until it costs a mockup round.
+
+**The audit asked him two follow-ups and he closed both, 26 August
+2026.**
+
+- **Which purple:** `#7C3AED` light, `#9A57FC` dark. His instruction:
+  "use the app's existing purple, do not add a new one." Those two
+  values are already the `--brand-mark` property, so the line is
+  `var(--brand-mark)` and the palette gains nothing.
+- **How far it reaches:** "It applies to every chart in the app, not
+  only the rebuild." So `ProfitChart` and every `Sparkline` too, not
+  just the Performance prototype.
+
+**This does NOT reopen "purple has one job".** A chart line is not a
+control. The one-job rule is about things you press.
+
+**Not built yet.** The live charts still draw green and red. Recolouring
+them is a UI change across several files and needs the `ui-change`
+pre-flight.
+
+**THE PREVIEWS ARE EXEMPT FROM THE PALETTE RULES, AND ONLY THOSE.**
+Ruled 26 August 2026, when the rule audit turned `design-check` on for
+the preview folder and it returned 189 colour failures.
+
+His reasoning, in his words: **the mockup colours win.** "My mockup
+designer is better at design than our current palette", and "the
+mockups are the spec, to the pixel" is already a standing rule on this
+page. The previews are where the NEW design is being explored, so
+holding them to the OLD palette is backwards.
+
+**The line is drawn at colour, not at previews.**
+
+- Exempt under `/preview`: the three colour rules. Is this hex in the
+  palette (4), green is not an action colour (4b), and the brand purple
+  must come from `globals.css` (8b). 8b is in that list on purpose:
+  forcing a preview to use the brand variable forces the OLD purple,
+  which is the exact thing the exemption exists to stop.
+- **Still enforced in every preview:** the font lock, the banned finance
+  vocabulary, em dashes, the old brand name, the hand cursor, the money
+  numeral face, the shared components. His words: "those are not design
+  taste, they are correctness."
+- Nothing under `/preview` is skipped any more. The old code skipped the
+  whole folder on the belief that it "never ships", which stopped being
+  true on 24 August 2026.
+
+**THE EXEMPTION HAS AN END DATE, and it is written into the code.** When
+the new palette is approved it becomes the checked palette, `ALLOWED_HEX`
+is rewritten from it, and the previews go back under all three colour
+rules. The new palette is not chosen yet; it sits in
+`docs/open-questions.md`.
+
+**Em dashes are now machine-checked.** Ruled the same day, and it is the
+repo's own principle applied to itself: he named the em dash ban as
+something the checker enforced, and it did not. The ban was written in
+three places and watched by nobody. Rule 11 now reads every `.tsx`,
+`.ts`, `.mjs`, `.css` and `.md` file in the repo, because the ban covers
+documentation too, not just UI copy.
+
 **The mockups are the spec, to the pixel.** Two attempts were rejected
 ("a reskin is far from enough", "a fake cheap copy") because the mockup
 had been poured into the old design system instead of replacing it.

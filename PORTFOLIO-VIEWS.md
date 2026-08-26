@@ -94,7 +94,13 @@ corrected to purple.
 - "Create custom fact" = save-and-name an intersection as a reusable
   fact. Confirmed. Built late.
 - CHART RULE (owner's wording): "Purple line for profit and red for
-  losses." Applies everywhere: a leaking fact's chart draws red;
+  losses." CONFIRMED, and it stands. `docs/design-system.md` contradicted
+  it for weeks by saying "there is no purple data line"; that page is
+  corrected. Two parts are still open: the exact purple (the sheets were
+  sampled at #430EDB and #8538EA, neither of which is in the palette),
+  and whether the live Track chart changes too. See
+  `docs/open-questions.md`.
+  Applies everywhere: a leaking fact's chart draws red;
   compare lines color by each side's sign (two-profitable-facts case
   to be solved with two purple weights and shown at the Compare
   round).

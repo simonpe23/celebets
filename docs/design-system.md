@@ -49,8 +49,15 @@ Words are **Geist**. Numbers are **Inter Tight**, through the
 | Caption | `text-xs`, neutral 500 light / neutral 400 dark |
 | Body | `text-sm` |
 | Label | `text-sm font-semibold` |
-| Card heading | `text-lg font-bold` |
-| Page title | `text-2xl font-bold` |
+| Card heading | `text-[17px] font-bold` |
+| Page title | `text-[22px] font-bold tracking-tight` |
+
+**Both were settled on 26 August 2026 by counting the code**, after the
+rule audit found this page giving two sizes for each. 17px beats
+`text-lg` 16 places to 12; 22px beats `text-2xl` 7 places to 2. The
+stragglers still ship the losing value (Balance history and the legal
+pages are `text-2xl`), and sweeping them is a UI change nobody has been
+asked for yet.
 
 ## The number ladder
 
@@ -64,14 +71,15 @@ presence.
 | 14px | bold | money inside a bet card row |
 | 16px | semibold | StatTile value, inside a card |
 | 18px | bold | the row under the headline, bare on the page |
-| 32px | 500 | wallet balance |
+| 32px | 500 | net profit, on a card with no balance set |
+| 40px | 500 | the tracking balance |
 | 42px | 500 | analytics headline |
 
 ## Buttons, three tiers
 
 | Tier | Spec | Used for |
 |---|---|---|
-| One | `text-sm font-bold`, `px-3 py-2.5`, `rounded-xl` | Log out, Start here, Paste bet slip, Upload image, Add leg. The two popup buttons use `text-base` because they are taller. |
+| One | `BTN` from `src/lib/ui.ts`: `rounded-md`, `text-[13px] font-semibold`, 44px tall (`h-11`) | Log out, Start here, Paste bet slip, Upload image, Add leg. `BTN` is the source of truth, settled 26 August 2026 by counting the code. Compact `h-8` and `h-9` variants exist for a button sitting inside a card row. The two popup buttons use `text-base` because they are taller. |
 | Two | chips: `text-sm font-semibold`, `px-3 py-2`, `rounded-xl`, 38px tall | Sport, money, category, filters. |
 | Three | `text-xs font-semibold` | Only inside a dense card row: Won, Lost, Cash out, Delete, Add money, Remove. |
 
@@ -91,11 +99,15 @@ capture tile. That is all.
 | `#7C3AED`, `#9A57FC` | Only the border and icon of a purple control. |
 | `#9A57FC` | The active tab in dark, because `#5525C6` on the `#0C1125` bar is a contrast ratio of about 2.3 and reads as switched off. |
 
-`design-check` rule 8b fails on purple in any file not on its allowlist,
-and every entry on that list names the control it is for.
+`design-check` rule 8b fails on ANY brand purple written by hand in a
+`.tsx` file, with no allowlist. The brand purple lives in `globals.css`
+as four custom properties and is reached through `bg-brand-top`,
+`to-brand-bottom`, `active:to-brand-press` and `text-brand-mark`. There
+is no rule 4c; an earlier version of this page invented one.
 
-**Retired, and rule 4c fails on all of them:** `#6D28D9`, `#4C1D95`,
-`#3B1578`, and any filled `#7C3AED` button.
+**Retired, and rule 8b fails on all of them:** `#6D28D9`, `#4C1D95`,
+`#3B1578`, `#5B21B6`, and `#7C3AED` written as a raw hex anywhere,
+filled button or not.
 
 ### What replaced purple everywhere else
 
@@ -163,8 +175,12 @@ The build ran about a fifth larger than the mockups for weeks, which is
 why the mockup fits Pending Bets on the first screen and the build did
 not.
 
-Greeting 22px, card headings 17px, hero balance 34px, primary button
-52px tall at 16px.
+Greeting 22px, card headings 17px, hero balance 40px, primary button
+44px tall at 13px.
+
+**Those last two were settled by counting the code**, 26 August 2026.
+This section used to say 52px at 16px, which nothing in the app has ever
+shipped.
 
 ## Other rules from the mockups
 
@@ -197,6 +213,24 @@ not collect.
 
 **THE LINE IS PURPLE.** Ruled 26 August 2026: "purple stands, update the
 design system."
+
+**Which purple, and where it applies.** Ruled 26 August 2026:
+
+- `#7C3AED` light, `#9A57FC` dark. **That is the app's existing purple**,
+  the `--brand-mark` custom property, which already carries exactly
+  those two values. His instruction: "use the app's existing purple, do
+  not add a new one." So the line reads `var(--brand-mark)`. Nothing new
+  goes in the palette, and `design-check` rule 8b stays satisfied
+  because no hex is written by hand.
+- **It applies to EVERY chart in the app**, not only the Performance
+  rebuild. His words. That includes `ProfitChart.tsx` and every
+  `Sparkline.tsx` (the balance card and the four on the Performance
+  Snapshot).
+- A line that is not money, like a win rate, stays neutral `#94A3B8`.
+
+**NOT BUILT YET.** The live charts still draw green and red. The
+recolour is a UI change across several files and needs the `ui-change`
+pre-flight, so it is its own job with the owner's go.
 
 This reverses "there is no purple data line", which was written during
 the purple cleanup. That cleanup was right about six of purple's seven

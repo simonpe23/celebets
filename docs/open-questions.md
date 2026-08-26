@@ -91,6 +91,54 @@ and the "no purple data line" rule has to come out with him watching.
 changes", "Ask Actuals" in two places, share and the three dots, the
 gear on the prototype home. Several are pure removals.
 
+## The rule audit, 26 August 2026: ALL SEVEN CLOSED
+
+The audit found seven places where two written rules disagreed. He ruled
+on every one the same day. Kept here only so nobody reopens them.
+
+1. **Which purple is the chart line.** `#7C3AED` light, `#9A57FC` dark,
+   which is the app's existing `--brand-mark`. No new colour.
+2. **How far the purple line reaches.** Every chart in the app, not only
+   the rebuild. NOT BUILT YET: the live charts still draw green and red.
+3. **Three tabs or four.** FOUR: Track, Performance, Research, Profile.
+4. **Card heading size.** 17px, by counting the code.
+5. **Page title size.** 22px, by counting the code.
+6. **Primary button size.** The shared `BTN`: `rounded-md`, 13px
+   semibold, 44px tall.
+7. **Should the checker inspect the previews.** Yes, and it now does.
+   Nothing under `/preview` is skipped. The COLOUR rules are exempt
+   there and only those, because the previews are where the new design
+   is being explored. See the open question directly below, and
+   `docs/decisions.md` for his reasoning.
+
+4, 5 and 6 were delegated ("pick what the code already ships and make
+the docs match"), so they are CLAUDE's picks, not his own rulings. The
+reasoning is in `docs/decisions.md`.
+
+## The new palette
+
+**Not chosen. This one has a deadline built into the code.**
+
+The preview pages are currently exempt from the three colour rules in
+`design-check`, because they carry the mockup designer's colours rather
+than the app's. That exemption is temporary by ruling, 26 August 2026.
+
+**What has to happen to close it:**
+
+1. The owner approves the new palette, from the mockups.
+2. Those values become the app's palette: `ALLOWED_HEX` in
+   `design-check.mjs` is rewritten from them, and the brand values in
+   `globals.css` follow.
+3. The `paletteExempt` function in `design-check.mjs` is deleted, and
+   the previews go back under all three colour rules.
+
+**Until then the previews and the app are two different palettes**, and
+only one of them is checked. That is the accepted cost of exploring a
+new design, not a state anybody should get used to.
+
+**What is not decided:** which mockup sheet is the palette, whether the
+app's purple changes with it, and when. Nothing here may be built.
+
 ## Not design questions, but unscoped
 
 **Empty states.** Every view assumes a full record. Someone who signed
@@ -105,13 +153,14 @@ run both behind a switch while the numbers are checked?
 
 ## Long-standing, recorded in IDEAS.md
 
-- **Idea 29:** the three taxonomy gaps. Periods per sport first, then
-  the screenshot importer not classifying, then categories for Politics
-  and Culture.
+- **Idea 29:** the three taxonomy gaps. Periods per sport is DONE,
+  26 August 2026. Still open: the screenshot importer not classifying,
+  and categories for Politics and Culture.
 - **Idea 30:** motion level C, the shared-element flights. Parked with a
   written trigger.
-- **Idea 31:** manual entry for the non-sports. Partly built now; the
-  category vocabulary behind it is still empty for three domains.
+- **Idea 31:** manual entry for the non-sports. The picker is BUILT and
+  logs any of the five domains. The category vocabulary behind it is
+  still empty for three domains, which is gap (c) of idea 29.
 - **Per-sport ROI.** Still has no honest formula, because a parlay stake
   spans sports. Needs a rule from the owner before Performance can show
   it.

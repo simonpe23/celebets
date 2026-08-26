@@ -22,8 +22,15 @@ export const SPORTS = [
 // Kalshi trades that is not a sport gets a real name instead of
 // "Other": the names mirror Kalshi's own category field, normalised
 // in kalshiSync.ts, so any user's markets resolve the same way and a
-// category we have never seen still lands safely in Other. These are
-// import-only for now: manual entry keeps the SPORTS picker above.
+// category we have never seen still lands safely in Other.
+//
+// THESE ARE NOT IMPORT-ONLY. This comment used to say they were, and
+// that manual entry keeps the SPORTS picker above. Both stopped being
+// true when the topic picker shipped: manual entry logs any of the
+// five domains, one level at a time (sports chips, then a door that
+// REPLACES them with the domain row, then that domain's topics). The
+// stale line survived the change and was found by the rule audit on
+// 26 August 2026. See `docs/decisions.md`.
 export const KALSHI_CATEGORIES = [
   "Politics",
   "Economics",

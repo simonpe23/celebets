@@ -580,7 +580,11 @@ export default function Explorer({
 
         {atRoot && (
           <p className="pb-2 text-center text-xs text-neutral-400">
-            Net profit {formatSignedMoney(round2(netProfit))} · preview data
+            Net profit{" "}
+            <span className="font-money tabular-nums">
+              {formatSignedMoney(round2(netProfit))}
+            </span>{" "}
+            · preview data
           </p>
         )}
       </div>

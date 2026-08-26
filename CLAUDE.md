@@ -60,9 +60,9 @@ need a script: `scrubtest.mjs`, `motiontest.mjs`, `pftest.mjs`.
 
 - **Actuals**, a mobile-first manual sports bet tracker. Renamed from
   Celebet, August 2026.
-- Live at **actuals.cc**. Deployed on Vercel from branch
-  **`claude/celebets-v1-build-fhio4a`**. Pushing that branch deploys
-  production.
+- Live at **actuals.cc**. Deployed on Vercel from **`main`**. Merging
+  into `main` is what reaches the live site. The old build branch was
+  renamed to `main` on 26 August 2026. See `docs/git-workflow.md`.
 - Next.js App Router, TypeScript, Tailwind v4, Supabase with RLS.
 - **Four tabs:** Track (capture data), Performance (understand
   yourself), Research (understand the game before your next bet),

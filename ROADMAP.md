@@ -4,6 +4,13 @@ Written August 2026, from the four mockups (mobile and web, dark and
 light). This file is the shared to do list. Nothing here is approved
 for building until the owner says so, phase by phase.
 
+**STATUS, 26 August 2026.** Most of this shipped. The Track page was
+built to the mockups and refined across nine drafts, Settings exists
+with the theme switch, purple became the action colour, and the four
+open questions at the foot are all answered. What is left is marked
+below. The settled parts are kept so nobody re-argues them. Where this
+file and `docs/decisions.md` disagree, decisions wins.
+
 ## The short version
 
 All four mockups are buildable. Nothing in them needs a technology we
@@ -54,8 +61,8 @@ Everything below is live today and only needs restyling.
 
 ## Pile 2: new, but cheap
 
-- **Greeting ("Good afternoon, Simon").** Needs a display name. Can be
-  derived from the email until a settings page exists.
+- **Greeting ("Good afternoon, Simon").** DONE. The name lives in the
+  auth user's metadata and is edited in Settings.
 - **"Recommended" and "Soon" badges.** Pure styling.
 - **Performance Snapshot with four sparklines.** Data exists, the
   component exists.
@@ -67,11 +74,10 @@ Everything below is live today and only needs restyling.
 ## Pile 3: new and structural
 
 ### 3a. Purple becomes the action color
-Today green #4F7A57 is "a button you press" and purple #58287F means
-recommendations. Every mockup makes purple the primary action and keeps
-green and red strictly for money going up and down. That is a cleaner
-rule than the one we have, but it is a change to every button in the
-app. Mechanical, and `design-check.mjs` will catch anything missed.
+**DONE.** Purple has one job now: something you press. Green and red
+mean money moved and are never an action colour. The old green #4F7A57
+and purple #58287F are gone. `design-check` rules 4b and 8b hold the
+line. See `docs/design-system.md`.
 
 ### 3b. Web layout
 The whole app is `max-w-md`, a phone column, on every page. The web
@@ -79,8 +85,8 @@ mockups are a real two column dashboard with a top nav. Same
 components, new shell. This is layout work, not logic work.
 
 ### 3c. A theme toggle
-Dark mode exists but follows the phone. The owner wants both on demand,
-which needs somewhere to put the switch, which means the settings page.
+**DONE.** Settings carries System / Light / Dark, stored per device, and
+the whole app keys off `data-theme` rather than a media query.
 
 ### 3d. Event start time
 The mockups show "Today, 7:00 PM" on pending bets. We store when a bet
@@ -102,8 +108,8 @@ field in the form and in the slip parser.
 2. **Settings page.** Name, theme toggle, odds format. Unblocks the
    greeting and the light/dark switch.
 3. **Web layout.** Two columns, top nav, responsive down to the phone.
-4. **Performance page**, rebuilt per the flow doc in CLAUDE.md, with
-   Today's Insight first.
+4. **Performance page**, rebuilt per `docs/performance-rebuild.md`,
+   with Today's Insight first.
 5. **Research tab**, shell only until ActualsBOT exists.
 
 No database migration is needed for any of the five phases above. That
@@ -111,13 +117,17 @@ became true the moment Push was ruled out. Event start time (3d) is the
 only remaining item in this document that would touch the database, and
 it is not scheduled.
 
-## Open questions for the owner
+## Open questions for the owner: ALL FOUR ANSWERED
 
-1. Purple as the primary action color everywhere, with green and red
-   kept only for money? Recommended.
-2. Keep or drop the Recent Form pip strip? It is not in the mockups.
-3. Dead links for product shots, or "Soon" badges? Recommended: badges.
-   They photograph the same and never feel broken. The bell is the one
-   exception: draw it without the dot until notifications exist, since
-   a dot promises something to open.
-4. Mobile shot or web shot first? It decides what phase 1 builds.
+1. Purple as the primary action colour everywhere? **YES**, ruled
+   August 2026. See `docs/decisions.md`.
+2. The Recent Form pip strip? **Not built.** It is not on the live
+   Track page and no ruling was recorded, so it lapsed rather than
+   being decided.
+3. Dead links or "Soon" badges? **Badges**, ruled. See
+   `docs/decisions.md`.
+4. Mobile or web shot first? **Mobile**, and it shipped as Track v9.3.
+
+**Still not scheduled from this file:** the web two-column layout (3b)
+and event start time (3d), which is the only item here that would touch
+the database.

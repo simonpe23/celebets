@@ -37,6 +37,28 @@ Do not "fix" this by adding another gate.
 - Everything else under `/preview` is an older, rejected concept. Kept
   so the history is not lost, not because it is worth reading.
 
+## design-check reads every preview now
+
+Ruled 26 August 2026, after the rule audit found the checker skipping
+the whole folder on a stale belief that it "never ships". Nothing under
+`/preview` is skipped any more.
+
+**Exempt here, and only here: the three COLOUR rules.** Is this hex in
+the palette (4), green is not an action colour (4b), and the brand
+purple must come from `globals.css` (8b). The previews are where the new
+design is being explored, and the owner ruled that the mockup colours
+win: "my mockup designer is better at design than our current palette."
+Holding a preview to the old palette is backwards.
+
+**Everything else applies in full:** the font lock, the banned finance
+vocabulary, em dashes, the old brand name, the hand cursor, the money
+numeral face, the shared components. Those are correctness, not taste.
+
+**The exemption ends when the new palette is approved.** At that point
+the new palette becomes the checked palette and the previews go back
+under all three colour rules. Delete `paletteExempt` in
+`design-check.mjs` then. See `docs/open-questions.md`.
+
 ## Testing them
 
 - `pftest.mjs <port>` proves every topic is reachable in the prototype's
