@@ -27,7 +27,10 @@ his to evolve (including the fonts, reopened); the product rules in the
 briefs are law.
 
 **Also alive:** the heatmap (on Home), insights (a popup reachable
-everywhere, plus a real page), What Changed, and betting history.
+everywhere, plus a real page getting a new mockup), What Changed, and
+betting history: the latest 50 bets at the bottom of Totals, then a
+button to a full All Bets page (a new page to build). Compare lives
+inside Lab.
 
 **Cut:** the prototype insight card modal, and All Facts as a page.
 

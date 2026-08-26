@@ -53,13 +53,11 @@ old words, and every provider mapper points at them.
 our font." The mockup designer will propose; nothing is chosen and the
 build keeps Geist and Inter Tight until he approves.
 
-**Where Compare lives.** He floated a Compare button appearing when two
-things are selected in Lab, then immediately doubted it: "this is not
-clear for me yet." His mockup shows a different mechanism: comparing a
-whole family at once, scoped to the selection.
-
-**Where betting history sits.** He said Home, Lab and the third tab are
-all plausible.
+**How Compare is presented.** WHERE it lives is settled (inside Lab, 26
+August 2026). The mechanism is not: he floated a Compare button, then
+doubted it ("this is not clear for me yet"), and his mockup shows a
+whole family compared at once. The mockup designer is asked to propose;
+whatever comes back is a proposal, not a decision.
 
 **The topic picker's door label.** He asked for a new name and did not
 give one. "Something else" is a placeholder. "Category" is the obvious

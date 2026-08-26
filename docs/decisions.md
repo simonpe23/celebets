@@ -242,9 +242,20 @@ and no accessibility problem.
 was removed: a number nobody can explain does not belong in a product.
 The cycling control that hid its own options was rejected as annoying.
 
-**Betting history is one page with many doors**, and it accepts a
-filter, so "See these 26 bets" from Lab and the full list from Home are
-the same page.
+**Compare lives inside Lab.** Ruled 26 August 2026. How it is presented
+is still open; the mockup designer is asked to propose.
+
+**All bets live at the bottom of Totals.** Ruled 26 August 2026: the
+latest 50 bets inline, then a button that opens the full All Bets page.
+That page accepts a filter, so "See these 26 bets" from Lab lands on the
+same page. This settles where betting history sits.
+
+**Every Performance mockup shows the three tab switcher.** Home, Lab,
+Totals, on every screen, active tab marked.
+
+**The Insights page gets a new mockup.** Ruled 26 August 2026: "The
+insights page is bleak today." It is currently a heading over a flat
+list of sentence rows.
 
 **Insights are reachable from everywhere in the app**, triggered by the
 sparkle.
