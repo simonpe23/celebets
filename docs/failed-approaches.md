@@ -172,6 +172,42 @@ real work ("Last 30 days profit") instead of repeating a control.
 
 ---
 
+## Briefing the mockup designer with requirements and no reference
+
+**What happened:** The Home brief specified the architecture in great
+detail (every section, every state, every rule), described the palette
+in words, and told the designer "nothing visual is locked, if you can
+beat the palette, beat it." No previous mockup was attached.
+
+**Why it failed:** He satisfied every requirement and produced a
+generic fintech dashboard. Eight findings each in its own outlined box,
+a six-cell bordered table for the facts, red and green tag pills on
+every row, a loud tiled map. His own verdict: "I optimized for fitting
+the brief rather than preserving the Actuals visual language... it does
+not feel premium."
+
+**The two causes, and only one was his:**
+
+1. **No visual anchor.** The reference images existed in
+   `public/mockups/performance/` the whole time and were never
+   attached. Words cannot carry craft.
+2. **The brief removed his anchor deliberately.** "Beat the palette"
+   was an escalation of the owner's actual words, which were that the
+   designer "knows our style, he is free to work with what he already
+   knows."
+
+**The lesson:** separate the two passes. Architecture is a specification
+and can be exhaustive. Visual direction is a reference and must be
+shown, not described. A visual brief that grows past a page is
+compensating for a missing image.
+
+**What was NOT wasted:** every product rule in the brief was obeyed.
+The anatomy came back correct on the first try, and so did all six
+defects fixed from the round before. The skeleton was right; only the
+skin was wrong. That is the cheap half to redo.
+
+---
+
 ## A test that found its target by copy
 
 **What happened:** `scrubtest.mjs` located the chart panel by searching

@@ -13,8 +13,13 @@ the prompts one at a time.
 6. Insights
 
 Rules for future edits: the "structure that cannot move" list is drawn
-from `docs/decisions.md`. Style is deliberately open, including the
-fonts, which the owner reopened on 26 August 2026.
+from `docs/decisions.md`.
+
+**Always attach the designer's own earlier mockups**, from
+`public/mockups/performance/`. The first Home round was drawn without
+them and came back as a generic fintech dashboard. A brief that lists
+requirements without showing the visual standard produces a page that
+satisfies every rule and looks like nothing.
 
 ---
 
@@ -94,34 +99,66 @@ Research). Inside Performance sit three sub tabs: **Home, Lab, Totals**.
   is. A big "Performance review" heading is height we have already
   rejected once.
 
-### Style, where you are free
+### The visual language: YOUR OWN PREVIOUS WORK
 
-Our current profile, so you know the starting point. **Design these
-mockups in LIGHT MODE.** Our light theme is a very soft off-white page
-(#F7F7FB) carrying white cards, each drawn by a hairline ring rather
-than a shadow. One purple accent means exactly one thing, "you can
-press this". A warm amber (#B45309 in light) marks AI insights only.
-Green and red are reserved for money outcomes. Links are written as
-ink with a chevron, never coloured.
+**Attached are your earlier Actuals mockups. They are the visual
+standard. Match them.** Not their layout, which the architecture below
+replaces, but their craft: their restraint, their typography, their
+spacing, their confidence.
+
+We do not want this language evolved, beaten or modernised. We want the
+new architecture rendered IN it. Keep the breakthrough, keep the
+look you already found.
+
+Read off the attachments, and hold to these:
+
+- **Numbers carry the page, not boxes.** The hero figure is enormous
+  and set in colour, with a small grey uppercase label under it. That
+  contrast, huge number over tiny label, is the app's signature.
+- **Facts are bare columns, never a bordered table.** Value large and
+  bold on top, tiny grey uppercase label beneath, separated by space or
+  at most a hairline. Never a grid of outlined cells.
+- **Rows in a list share one card and are divided by hairlines.** Never
+  give each row its own outlined box. Eight boxed rows is eight things
+  competing; eight divided rows is one calm list.
+- **A sparkline per row** gives a ranked list its personality. Use it.
+- **The chart is a purple line with a soft gradient fading beneath it.**
+- **Section headers are small grey uppercase**, with a purple text link
+  on the right where one is needed. Quiet.
+- **Emoji, at a real size, in soft grey circles**, are part of the
+  language. They do more work than abstract arrow icons and they carry
+  the personality.
+- **Purple is the only accent**: the chart line, text links, the one
+  selected chip. It never fills large areas and never decorates.
+- **Green and red are for money figures only.** Not tag backgrounds,
+  not row badges, not tinted blocks.
+- **Cards are a very light hairline at a generous radius**, with real
+  padding. Never a heavy border, never a shadow.
+- **White space is the material.** When in doubt, remove a container,
+  not a margin.
+
+**The governing principle, in your own words: make fewer things feel
+more important.** If satisfying every requirement below would produce a
+dense dashboard, satisfy the requirements with less chrome, not more.
+Nothing in the architecture requires a border.
+
+### Palette and type
+
+**Light mode.** Page a very soft off-white (#F7F7FB), cards white with
+a hairline ring. Purple as above. A warm amber (#B45309 in light) marks
+AI insights only. Green and red for money.
 
 The app also has a dark theme (a near-black navy, #04081B) and every
 screen must eventually work in both, but this round is light only.
 
-You are free to evolve all of it. Nothing visual is locked. If you can
-beat the palette, beat it. The one discipline worth keeping in some
-form: each accent colour keeps a single meaning. A colour that means
-seven things means nothing; that lesson cost us weeks.
-
-**The fonts are explicitly open.** Today words are Geist and numbers
-are Inter Tight, and the owner does not love them. Propose better,
-especially for the numerals: this app is wall to wall money figures and
-records, the numbers are the voice of the product. Tabular figures are
-a must. Show your proposed faces working at three sizes: a hero money
-figure, a chip record, a table row.
+**The fonts are the one thing genuinely open.** Today words are Geist
+and numbers are Inter Tight, and the owner does not love them. Propose
+better, especially for the numerals: this app is wall to wall money
+figures and records, the numbers are the voice of the product. Tabular
+figures are a must. Editorial presence, not generic dashboard type.
 
 Shape language: the Home / Lab / Totals switcher may be a pill.
-Everything below it is squared (rounded rectangles), as in the earlier
-mockups.
+Everything below it is squared (rounded rectangles).
 
 ### The demo record, use it on every screen
 
