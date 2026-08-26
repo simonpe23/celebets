@@ -173,6 +173,24 @@ The taxonomy's "independent dimensions, not a ladder" rule still holds,
 **within a domain**. Inside Sports, topic, competition and period
 combine freely in any order.
 
+**PERIODS EXIST FOR EVERY SPORT NOW.** Ruled 26 August 2026, when the
+proposal was to hide the WHEN group because only Football had periods:
+"Let's add the periods now rather than hide WHEN. I don't want us to
+make a UI decision around the fact that the taxonomy is incomplete."
+
+He supplied the whole vocabulary, 14 sports. It lives in SPORT_PERIODS.
+
+**The UI rule, his words:** WHEN is sport-aware and only surfaces
+periods that are relevant to the current sport AND actually exist in
+the user's data. A sport with nothing to show hides the group, but as a
+DATA state, never as a workaround for a missing vocabulary.
+
+**The whole game is stored as NULL, not as text.** Every sport names it
+differently (Full Time, Full Game, Full Match, Full Fight, Race), which
+is precisely why it cannot be one stored string. It is element [0] of
+each list and is used only as a label. This also meant no migration:
+every existing leg without a period already means the whole game.
+
 **Compare only works within one group.** Sports vs sports, leagues vs
 leagues. Cross-group selections combine instead.
 

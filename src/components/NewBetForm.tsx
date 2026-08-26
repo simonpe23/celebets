@@ -20,7 +20,7 @@ import {
   type Sport,
 } from "@/lib/types";
 import {
-  SPORT_PERIODS,
+  periodsFor,
   categoriesForSport,
   coerceManualCategory,
   competitionsFor,
@@ -979,12 +979,12 @@ export default function NewBetForm({
                   )}
 
                 {leg.subcategory !== null &&
-                  (SPORT_PERIODS[leg.sport] ?? []).length > 0 && (
+                  periodsFor(leg.sport).length > 0 && (
                     <div className={`-mx-1 mt-2 flex items-center gap-2 overflow-x-auto px-1 pb-1 ${NO_SCROLLBAR}`}>
                       <span className="shrink-0 text-xs text-neutral-500 dark:text-neutral-400">
                         Period, optional
                       </span>
-                      {(SPORT_PERIODS[leg.sport] ?? []).map((p) => {
+                      {periodsFor(leg.sport).map((p) => {
                         const selected = leg.period === p;
                         return (
                           <button

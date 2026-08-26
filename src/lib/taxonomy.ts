@@ -215,9 +215,149 @@ export function categoriesForSport(sport: Sport): readonly string[] {
 // assumption. Only sports with real period bets in the data have
 // one; null stored means full match / unspecified, and no fake
 // "Full match" default is ever written.
+// THE PERIOD VOCABULARY, given by the owner on 26 August 2026 when he
+// refused to hide the WHEN group just because the taxonomy was thin:
+// "I don't want us to make a UI decision around the fact that the
+// taxonomy is incomplete."
+//
+// ELEMENT [0] IS THE WHOLE GAME, and it is stored as NULL, not as
+// text. Every sport calls it something different (Full Time, Full
+// Game, Full Match, Full Fight, Race), which is exactly why it cannot
+// be one stored string. Keeping null also means no existing row has to
+// be migrated: every leg without a period already means the whole
+// game.
+//
+// No database change: legs.period is plain text with no constraint.
+//
+// THE UI RULE, also his: WHEN is sport-aware and surfaces only the
+// periods that both belong to the current sport AND appear in the
+// user's data. A sport with nothing to show hides the group, but as a
+// DATA state, never as a workaround for a missing vocabulary.
 export const SPORT_PERIODS: Partial<Record<Sport, readonly string[]>> = {
-  Football: ["1st Half", "2nd Half"],
+  Football: [
+    "Full Time",
+    "1st Half",
+    "2nd Half",
+    "Extra Time",
+    "Penalty Shootout",
+  ],
+  "American Football": [
+    "Full Game",
+    "1st Half",
+    "2nd Half",
+    "1st Quarter",
+    "2nd Quarter",
+    "3rd Quarter",
+    "4th Quarter",
+    "Overtime",
+  ],
+  Basketball: [
+    "Full Game",
+    "1st Half",
+    "2nd Half",
+    "1st Quarter",
+    "2nd Quarter",
+    "3rd Quarter",
+    "4th Quarter",
+    "Overtime",
+  ],
+  Baseball: [
+    "Full Game",
+    "1st Inning",
+    "2nd Inning",
+    "3rd Inning",
+    "4th Inning",
+    "5th Inning",
+    "6th Inning",
+    "7th Inning",
+    "8th Inning",
+    "9th Inning",
+    "Extra Innings",
+    "1st 5 Innings",
+    "1st 7 Innings",
+  ],
+  "Ice Hockey": [
+    "Full Game",
+    "1st Period",
+    "2nd Period",
+    "3rd Period",
+    "Overtime",
+    "Shootout",
+  ],
+  Tennis: ["Full Match", "1st Set", "2nd Set", "3rd Set", "4th Set", "5th Set"],
+  Golf: [
+    "Full Tournament",
+    "Round 1",
+    "Round 2",
+    "Round 3",
+    "Round 4",
+    "Front 9",
+    "Back 9",
+  ],
+  "Table Tennis": [
+    "Full Match",
+    "1st Set",
+    "2nd Set",
+    "3rd Set",
+    "4th Set",
+    "5th Set",
+    "6th Set",
+    "7th Set",
+  ],
+  Cricket: ["Full Match", "1st Innings", "2nd Innings", "Overs"],
+  Rugby: ["Full Time", "1st Half", "2nd Half", "Extra Time"],
+  Motorsport: ["Race", "Qualifying", "Sprint", "Practice", "Session"],
+  MMA: [
+    "Full Fight",
+    "1st Round",
+    "2nd Round",
+    "3rd Round",
+    "4th Round",
+    "5th Round",
+  ],
+  Boxing: [
+    "Full Fight",
+    "1st Round",
+    "2nd Round",
+    "3rd Round",
+    "4th Round",
+    "5th Round",
+    "6th Round",
+    "7th Round",
+    "8th Round",
+    "9th Round",
+    "10th Round",
+    "11th Round",
+    "12th Round",
+  ],
+  esports: [
+    "Full Match",
+    "Map 1",
+    "Map 2",
+    "Map 3",
+    "Map 4",
+    "Map 5",
+    "Round",
+  ],
 };
+
+// What this sport calls the whole game. Used as the label for a leg
+// whose period is null.
+export function wholeGameTerm(sport: Sport): string {
+  return SPORT_PERIODS[sport]?.[0] ?? "Full Time";
+}
+
+// The periods a sport can offer, whole game excluded: those are the
+// values actually written to legs.period.
+export function periodsFor(sport: Sport): readonly string[] {
+  return (SPORT_PERIODS[sport] ?? []).slice(1);
+}
+
+// What a leg's period should READ as. Null means the whole game, and
+// every sport names that differently.
+export function periodLabel(sport: Sport, period: string | null): string {
+  return period ?? wholeGameTerm(sport);
+}
 
 // ---------------------------------------------------------------
 // COMPETITIONS. A registered list per sport, approved by the owner

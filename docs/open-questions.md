@@ -20,10 +20,11 @@ are separate dimensions. The mockup merges them into one row. That may
 well be right for humans, but nobody has decided it, and splitting it
 later means redrawing Lab.
 
-**3. WHEN is empty for anyone not betting football.**
-Periods exist for Football only, so a baseball bettor opens WHEN and
-finds one chip, "Full time". Either the vocabulary gets filled per sport
-or Lab hides any group with fewer than two chips.
+**3. RESOLVED 26 August 2026.** The owner supplied the period
+vocabulary for all 14 sports rather than let the UI work around a thin
+taxonomy. WHEN is sport-aware and data-driven. See `docs/decisions.md`.
+
+**All three Lab-blocking questions are now closed.**
 
 ## Not blocking, still open
 
