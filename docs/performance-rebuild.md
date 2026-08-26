@@ -19,10 +19,18 @@ serves the old Analytics page.
 |---|---|
 | **Home** (was Review, name revisitable) | The ranked list mixing everything: Moneyline next to Premier League next to Low odds. Tell the user what they are good at within seconds. |
 | **Lab** | The builder. Chips plus a `+`. Click Moneyline, then Tennis, and the answer re-scopes in place. |
-| **Third tab** (name open) | Today's live `/stats` content: sports breakdown, odds groups, singles vs parlays, categories. The quick scan of every slice. |
+| **Totals** (named 26 August 2026) | Today's live `/stats` content: sports breakdown, odds groups, singles vs parlays, categories. The quick scan of every slice. |
+
+**Mockups come first.** The owner's mockup designer, in another tool, is
+briefed per page. The briefs live in `docs/mockup-briefs.md`. Style is
+his to evolve (including the fonts, reopened); the product rules in the
+briefs are law.
 
 **Also alive:** the heatmap (on Home), insights (a popup reachable
-everywhere, plus a real page), What Changed, and betting history.
+everywhere, plus a real page getting a new mockup), What Changed, and
+betting history: the latest 50 bets at the bottom of Totals, then a
+button to a full All Bets page (a new page to build). Compare lives
+inside Lab.
 
 **Cut:** the prototype insight card modal, and All Facts as a page.
 

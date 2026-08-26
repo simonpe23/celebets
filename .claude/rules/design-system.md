@@ -16,8 +16,15 @@ Full reference: `docs/design-system.md`. The rules that bite:
 - **Never change a font without asking.** Family, weight AND size. Words
   are Geist, numbers are Inter Tight through `font-money` at weight 500
   on hero figures. `design-check` rule 8 fails the build if this moves.
+  The faces are under review (owner reopened them 26 August 2026, the
+  mockup designer is proposing new ones), but the build keeps these
+  until he approves replacements.
 - **`font-medium` does not exist here.** Only normal, semibold, bold.
-- **Purple means one thing: something you press.** Primary button,
+- **Purple means two things, and only two.** Something you press, AND
+  the profit chart line (with its gradient). The line was ruled back to
+  purple on 26 August 2026. Nothing else: no purple links, badges or
+  decoration.
+- **Pressable purple:** Primary button,
   active tab, selected chip, primary capture tile. Nothing else.
 - **Green and red mean money moved.** Never an action colour. The one
   survivor is the Won button on a pending pick, `#16A34A`.
@@ -26,7 +33,12 @@ Full reference: `docs/design-system.md`. The rules that bite:
 - **Links are ink plus a chevron.** "View all ›", never a coloured link.
 - **Buttons are squared.** `rounded-md` primary. Not pills.
 - **Cards are defined by their edge, not a shadow.**
-- **Never use em dashes**, including in UI copy and comments.
+- **Never use em dashes**, including in UI copy, comments and docs.
+  `design-check` rule 11 fails the build on one, in `.tsx`, `.ts`,
+  `.mjs`, `.css` and `.md` alike.
+- **The previews are exempt from the COLOUR rules only**, until the new
+  palette is approved. Every other rule applies to them in full. See
+  `.claude/rules/preview-pages.md`.
 
 ## Banned vocabulary in user-facing copy
 

@@ -100,7 +100,11 @@ values and ON for the rest.
 
 `npm run check` runs, in order:
 
-1. `design-check.mjs`, the design system rules (fonts, purple, money face).
+1. `design-check.mjs`, the design system rules (fonts, purple, money
+   face, em dashes). It reads every `.tsx` under `src/`, previews
+   included, and the em dash rule also reads the docs and the build
+   scripts. The three COLOUR rules are exempt under `/preview` until the
+   new palette is approved. See `.claude/rules/preview-pages.md`.
 2. `synctest.mjs`, the Kalshi money maths and taxonomy round-trips.
 3. `tsc --noEmit`.
 4. `next build`, **required**, because ESLint's rules-of-hooks only

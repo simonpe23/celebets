@@ -156,9 +156,29 @@ surfaced by luck.
 - `CONCEPTS.md` had every Lab concept marked "IN REVIEW" months after
   the round ended.
 
-**Sent to him to rule on, in `docs/open-questions.md`:** seven places
-where two rules genuinely disagree and no ruling settles it, including
-how far the purple chart line reaches and which purple it is.
+**Sent to him to rule on:** seven places where two rules genuinely
+disagreed. He closed all seven the same day. The chart line is
+`--brand-mark` (`#7C3AED` light, `#9A57FC` dark) on every chart in the
+app; four tabs, not three; and the checker now inspects the live
+Performance prototype under `src/app/preview/pf/`. The heading, title
+and button sizes he delegated, and they were settled by counting what
+the code already ships. See `docs/decisions.md`.
+
+**The previews are checked now, minus the palette.** Turning the checker
+on for `/preview` returned 189 colour failures, because the prototypes
+carry the mockup designer's colours rather than the app's. He ruled that
+the mockup colours win and exempted the three colour rules there, with
+an end date: the exemption dies when the new palette is approved. Every
+other rule applies to previews in full.
+
+**A rule nobody was enforcing.** He named the em dash ban as something
+the checker already caught. It did not. The ban was written in three
+places and watched by nothing, which is the same failure shape as the
+purple line. It is rule 11 now, across the docs as well as the code.
+
+**Still to build from those rulings:** the charts are still green and
+red. Recolouring them touches `ProfitChart`, `Sparkline` and the theme
+variables, so it is its own job with the `ui-change` pre-flight.
 
 **The lesson, and it is the same one as the previous three:** a rule
 written in two places will eventually say two things. Where a value can

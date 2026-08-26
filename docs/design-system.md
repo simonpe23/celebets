@@ -49,8 +49,15 @@ Words are **Geist**. Numbers are **Inter Tight**, through the
 | Caption | `text-xs`, neutral 500 light / neutral 400 dark |
 | Body | `text-sm` |
 | Label | `text-sm font-semibold` |
-| Card heading | CONTESTED. `text-lg font-bold` (18px) and `text-[17px] font-bold` are both shipping. See `docs/open-questions.md`. |
-| Page title | CONTESTED. `text-2xl font-bold` (24px) and `text-[22px] font-bold` are both shipping. See `docs/open-questions.md`. |
+| Card heading | `text-[17px] font-bold` |
+| Page title | `text-[22px] font-bold tracking-tight` |
+
+**Both were settled on 26 August 2026 by counting the code**, after the
+rule audit found this page giving two sizes for each. 17px beats
+`text-lg` 16 places to 12; 22px beats `text-2xl` 7 places to 2. The
+stragglers still ship the losing value (Balance history and the legal
+pages are `text-2xl`), and sweeping them is a UI change nobody has been
+asked for yet.
 
 ## The number ladder
 
@@ -72,7 +79,7 @@ presence.
 
 | Tier | Spec | Used for |
 |---|---|---|
-| One | `rounded-md`, `px-3 py-2.5` | Log out, Start here, Paste bet slip, Upload image, Add leg. The two popup buttons use `text-base` because they are taller. The shared `BTN` in `src/lib/ui.ts` is the source of truth for the primary: it is `rounded-md text-[13px] font-semibold`. Its type size and weight are an OPEN QUESTION, see `docs/open-questions.md`. |
+| One | `BTN` from `src/lib/ui.ts`: `rounded-md`, `text-[13px] font-semibold`, 44px tall (`h-11`) | Log out, Start here, Paste bet slip, Upload image, Add leg. `BTN` is the source of truth, settled 26 August 2026 by counting the code. Compact `h-8` and `h-9` variants exist for a button sitting inside a card row. The two popup buttons use `text-base` because they are taller. |
 | Two | chips: `text-sm font-semibold`, `px-3 py-2`, `rounded-xl`, 38px tall | Sport, money, category, filters. |
 | Three | `text-xs font-semibold` | Only inside a dense card row: Won, Lost, Cash out, Delete, Add money, Remove. |
 
@@ -107,7 +114,7 @@ filled button or not.
 | Job | Treatment |
 |---|---|
 | links | Ink plus a chevron. "View all ›", never a coloured link. |
-| data | On the LIVE app: green up, red down. A line that is not money (a win rate) is neutral `#94A3B8`. On the PERFORMANCE REBUILD: the owner ruled a purple profit line, "Purple line for profit and red for losses." Purple stands. This page used to say flatly "there is no purple data line", which was wrong and sat here for weeks. Two things are still undecided: the exact purple, and whether the live Track chart changes too. See `docs/open-questions.md`. |
+| data | **The profit chart line is PURPLE**, with a soft purple gradient fading beneath it. Ruled 26 August 2026 (see below). A line that is not money (a win rate) is neutral `#94A3B8`. Money FIGURES stay green up, red down; the rule below is about the line only. |
 | insights | **The accent**, the app's one secondary colour: warm amber, `#B45309` light and `#FBBF24` dark, trophy a `#FBBF24` → `#B45309` gradient. It marks insights ONLY: the sparkle, the AI badge, the trophy. Never a button, never a link. |
 | badges | Neutral. A count is data, a type is a label; neither is a control. |
 
@@ -168,10 +175,12 @@ The build ran about a fifth larger than the mockups for weeks, which is
 why the mockup fits Pending Bets on the first screen and the build did
 not.
 
-Greeting 22px, hero balance 40px.
+Greeting 22px, card headings 17px, hero balance 40px, primary button
+44px tall at 13px.
 
-**Card heading size and primary button size are an OPEN QUESTION.** The
-app currently ships two of each. See `docs/open-questions.md`.
+**Those last two were settled by counting the code**, 26 August 2026.
+This section used to say 52px at 16px, which nothing in the app has ever
+shipped.
 
 ## Other rules from the mockups
 
@@ -202,10 +211,46 @@ not collect.
 
 ## The chart
 
+**THE LINE IS PURPLE.** Ruled 26 August 2026: "purple stands, update the
+design system."
+
+**Which purple, and where it applies.** Ruled 26 August 2026:
+
+- `#7C3AED` light, `#9A57FC` dark. **That is the app's existing purple**,
+  the `--brand-mark` custom property, which already carries exactly
+  those two values. His instruction: "use the app's existing purple, do
+  not add a new one." So the line reads `var(--brand-mark)`. Nothing new
+  goes in the palette, and `design-check` rule 8b stays satisfied
+  because no hex is written by hand.
+- **It applies to EVERY chart in the app**, not only the Performance
+  rebuild. His words. That includes `ProfitChart.tsx` and every
+  `Sparkline.tsx` (the balance card and the four on the Performance
+  Snapshot).
+- A line that is not money, like a win rate, stays neutral `#94A3B8`.
+
+**NOT BUILT YET.** The live charts still draw green and red. The
+recolour is a UI change across several files and needs the `ui-change`
+pre-flight, so it is its own job with the owner's go.
+
+This reverses "there is no purple data line", which was written during
+the purple cleanup. That cleanup was right about six of purple's seven
+jobs and wrong about this one: the owner's own mockups had always drawn
+a purple line with a purple gradient under it, and the cleanup took the
+line away without him asking for that.
+
+**Purple therefore means two things now, not one:** something you press,
+and the profit line. That is a deliberate exception and the only one.
+Everything else the cleanup removed from purple stays removed: no purple
+links, no purple badges, no purple decoration.
+
+Green and red are unaffected. **Money figures are still green up and red
+down.** The rule above is about the drawn line, not the numbers.
+
 - Drawn by hand as SVG. No chart library.
-- **No panel in light mode.** It draws straight on the page with the
-  app's ordinary money greens and reds and no glow. Chosen from three
-  options after "a black panel on a light page does not go".
+- **No panel in light mode.** It draws straight on the page, with no
+  glow. Chosen from three options after "a black panel on a light page
+  does not go". (This bullet used to say the line drew in the app's
+  money greens and reds. Superseded by the purple ruling above.)
 - **Dark mode keeps the navy panel and the glow.**
 - The chart's colours are CSS variables the panel sets, because they are
   SVG attributes and an attribute cannot carry a `dark:` variant.

@@ -49,19 +49,15 @@ old words, and every provider mapper points at them.
 
 ## Not blocking, still open
 
-**The third Performance tab's name.** Totals, Lists, Breakdown, or
-something else.
+**New fonts.** He reopened the fonts on 26 August 2026: "i do not like
+our font." The mockup designer will propose; nothing is chosen and the
+build keeps Geist and Inter Tight until he approves.
 
-**Whether that third tab is real, or is Lab with nothing selected.**
-Raised and not yet answered.
-
-**Where Compare lives.** He floated a Compare button appearing when two
-things are selected in Lab, then immediately doubted it: "this is not
-clear for me yet." His mockup shows a different mechanism: comparing a
-whole family at once, scoped to the selection.
-
-**Where betting history sits.** He said Home, Lab and the third tab are
-all plausible.
+**How Compare is presented.** WHERE it lives is settled (inside Lab, 26
+August 2026). The mechanism is not: he floated a Compare button, then
+doubted it ("this is not clear for me yet"), and his mockup shows a
+whole family compared at once. The mockup designer is asked to propose;
+whatever comes back is a proposal, not a decision.
 
 **The topic picker's door label.** He asked for a new name and did not
 give one. "Something else" is a placeholder. "Category" is the obvious
@@ -72,56 +68,76 @@ Four new words (Other Sport, Other Politics, Other Economics, Other
 Culture) plus a migration, and it pushes the non-sports row toward
 domain headings.
 
-**Four tabs or three.** Deferred. It must land before the rebuild ships,
-because the tab bar is on every screen.
+**THE CHART LINE COLOUR CONTRADICTS ITSELF, and it needs him.**
+Raised 26 August 2026, when he saw a green chart in a mockup: "the
+chart in the ugly mockup for example: green. when we settled on purple."
 
-**Pills or squared buttons in the rebuild.** His own mockups disagree
-with each other: the insight card draws pills, the fact page and Compare
-draw rounded rectangles.
+Three sources disagree:
+
+1. **`docs/design-system.md` says the opposite**, explicitly: "Green up,
+   red down... **There is no purple data line.**" That line came out of
+   the purple cleanup, where purple was doing seven jobs and the data
+   line was one of the jobs deliberately taken away from it.
+2. **His own mockups draw a purple line** with a purple gradient fading
+   beneath it, in both the Portfolio home and the Lab V1 sheet.
+3. **His current words say purple**, and current words win.
+
+The mockup briefs now say purple, following 2 and 3. **Nothing in the
+app has been changed.** Before a chart is built, he has to say which
+one stands, because if it is purple then `design-system.md` is wrong
+and the "no purple data line" rule has to come out with him watching.
 
 **Dead ends still in the prototype.** "See the N bets", "View all
 changes", "Ask Actuals" in two places, share and the three dots, the
 gear on the prototype home. Several are pure removals.
 
-## Found by the rule audit, 26 August 2026
+## The rule audit, 26 August 2026: ALL SEVEN CLOSED
 
-These are places where two written rules disagree and no ruling settles
-it. Nothing here may be built until he rules. Full context in
-`docs/history.md`.
+The audit found seven places where two written rules disagreed. He ruled
+on every one the same day. Kept here only so nobody reopens them.
 
-**1. The purple chart line: how far does it reach?** `PORTFOLIO-VIEWS.md`
-records his wording, "Purple line for profit and red for losses", and
-purple stands. What is not written anywhere: whether the LIVE Track and
-Performance charts turn purple too, or only the Performance rebuild.
-They draw green and red today.
+1. **Which purple is the chart line.** `#7C3AED` light, `#9A57FC` dark,
+   which is the app's existing `--brand-mark`. No new colour.
+2. **How far the purple line reaches.** Every chart in the app, not only
+   the rebuild. NOT BUILT YET: the live charts still draw green and red.
+3. **Three tabs or four.** FOUR: Track, Performance, Research, Profile.
+4. **Card heading size.** 17px, by counting the code.
+5. **Page title size.** 22px, by counting the code.
+6. **Primary button size.** The shared `BTN`: `rounded-md`, 13px
+   semibold, 44px tall.
+7. **Should the checker inspect the previews.** Yes, and it now does.
+   Nothing under `/preview` is skipped. The COLOUR rules are exempt
+   there and only those, because the previews are where the new design
+   is being explored. See the open question directly below, and
+   `docs/decisions.md` for his reasoning.
 
-**2. Which purple is the chart line?** The rebuild sheets were sampled
-at `#430EDB` light and `#8538EA` dark. Neither is a brand purple, and
-neither is in the palette. Until one is chosen and added to
-`globals.css`, `design-check` fails any file that draws a purple line,
-so the ruling cannot actually be built.
+4, 5 and 6 were delegated ("pick what the code already ships and make
+the docs match"), so they are CLAUDE's picks, not his own rulings. The
+reasoning is in `docs/decisions.md`.
 
-**3. Three tabs or four.** `CLAUDE.md` and `docs/decisions.md` say
-"three tabs and only three". His own overview sheet draws four (Track,
-Performance, Research, Profile) and this file already carries "four tabs
-or three, deferred". One of those two has to give.
+## The new palette
 
-**4. How big is a card heading?** The app ships both `text-lg` (18px)
-and 17px. `docs/design-system.md` stated both, in two different tables.
+**Not chosen. This one has a deadline built into the code.**
 
-**5. How big is a page title?** Same shape: `text-2xl` (24px) in one
-table, 22px in another. The app ships both.
+The preview pages are currently exempt from the three colour rules in
+`design-check`, because they carry the mockup designer's colours rather
+than the app's. That exemption is temporary by ruling, 26 August 2026.
 
-**6. How big is the primary button?** `docs/design-system.md` said 52px
-tall at 16px text. The shared button in `src/lib/ui.ts` is 44px at 13px,
-and `design-check`'s own error message says buttons are "text-sm font-bold"
-while that button is 13px semibold. Three sources, three answers.
+**What has to happen to close it:**
 
-**7. Should `design-check` check the preview pages?** It skips them, and
-its comment says the folder "is local only and never ships". That has
-been false since 24 August 2026: previews are committed and deployed.
-The whole Performance rebuild is being designed in a folder no check
-looks at.
+1. The owner approves the new palette, from the mockups.
+2. Those values become the app's palette: `ALLOWED_HEX` in
+   `design-check.mjs` is rewritten from them, and the brand values in
+   `globals.css` follow.
+3. The `paletteExempt` function in `design-check.mjs` is deleted, and
+   the previews go back under all three colour rules.
+
+**Until then the previews and the app are two different palettes**, and
+only one of them is checked. That is the accepted cost of exploring a
+new design, not a state anybody should get used to.
+
+**What is not decided:** which mockup sheet is the palette, whether the
+app's purple changes with it, and when. Nothing here may be built.
 
 ## Not design questions, but unscoped
 

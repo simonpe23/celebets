@@ -11,13 +11,25 @@ See `failed-approaches.md` for the rule about quoting old preferences.
 
 ## Product shape
 
-**Three tabs and only three: Track, Performance, Research.**
-Insights does not get a tab. It is a layer inside Performance, the way
-Apple Health puts insights inside the health data rather than beside it.
+**FOUR tabs: Track, Performance, Research, Profile.** Ruled 26 August
+2026: "i think i want 4 tabs at the bottom. A Profile Page at the right
+bottom corner."
+
+This reverses "three tabs and only three", which had held for months and
+was listed as an open question ("four tabs or three") that had to land
+before the Performance rebuild shipped. It landed.
 
 - Track means capture data.
 - Performance means understand yourself.
 - Research means understand the game before your next bet.
+- Profile is new and its contents are not yet decided.
+
+The first three are a timeline: before the bet, the bet, after the bet.
+Profile sits outside that sequence, which is why it goes last.
+
+**Insights still does not get a tab.** It is a layer inside Performance,
+the way Apple Health puts insights inside the health data rather than
+beside it.
 
 **Insights and Research are opposite ends of one timeline.** Research
 happens BEFORE a bet and is active: the user goes looking. Insights
@@ -27,8 +39,26 @@ from the user's own data.
 **Performance is a performance review, not a statistics page.** Opening
 it should not land on graphs.
 
-**Settings has no tab.** It is reached from the gear on Track. The
-avatar used to be the log out button, so one stray tap ended the
+**REFINED 26 August 2026: the result and the chart open Home.** Seeing
+the first Home mockup without them: "There's no chart and result at the
+top of the home page."
+
+The old rule was never "no chart". It was "do not land on a chart
+INSTEAD of findings". The order is: your net profit and the line that
+draws it first, then the findings underneath. A brief that flattened
+this into "no graphs at the top" produced a Home page with no headline
+number at all.
+
+**PROFILE IS THE NEW SETTINGS PAGE.** Ruled 26 August 2026: "Profile is
+the new settings page. gonna be reworked, but that's the deal." So the
+fourth tab is not a new surface to invent. It is Settings, promoted to
+the tab bar and due a rework.
+
+**Track keeps a small profile button in its top corner, for now.** His
+words, and the "for now" is his too. Getting to your account does not
+become tab-bar-only just because the tab exists.
+
+The avatar used to be the log out button, so one stray tap ended the
 session; log out now sits at the foot of Settings.
 
 ## Money and honesty
@@ -119,6 +149,24 @@ Sampling with Pillow took ten minutes and settled six rounds.
 **Buttons are squared, not pills.** `rounded-md` is the primary.
 `rounded-xl` and `rounded-lg` were both rejected as too round.
 
+**Heading, title and button sizes: the code decides.** 26 August 2026
+the rule audit found the design doc giving two different sizes for each
+of these. He delegated the call: "pick what the code already ships and
+make the docs match." Counted across `src/`, and these are CLAUDE's
+picks under that instruction, not his own rulings:
+
+- **Card heading: 17px bold.** 16 places ship it against 12 on
+  `text-lg`, and 17px is the size measured off his mockups during the
+  Track rebuild.
+- **Page title: 22px bold.** 7 places ship it against 2 on `text-2xl`.
+  The two stragglers are Balance history and the legal pages.
+- **Primary button: `rounded-md`, 13px semibold, 44px tall.** That is
+  the shared `BTN` in `src/lib/ui.ts`, which is the only one that
+  matters: every page reuses it.
+
+The losing values are not wrong pages, they are stragglers. Nobody has
+been asked to sweep them, and doing so is a UI change of its own.
+
 **The chart line is PURPLE. Purple stands.** Ruled August 2026, his
 wording: "Purple line for profit and red for losses."
 
@@ -130,12 +178,63 @@ designer drew a green chart and he happened to notice.
 
 The lesson is the reason for the rule audit of 26 August 2026: a rule
 written in two places will eventually say two things, and nobody finds
-out until it costs a mockup round. Two parts of this are still open (the
-exact purple, and whether the live Track chart changes too) and sit in
-`docs/open-questions.md`.
+out until it costs a mockup round.
+
+**The audit asked him two follow-ups and he closed both, 26 August
+2026.**
+
+- **Which purple:** `#7C3AED` light, `#9A57FC` dark. His instruction:
+  "use the app's existing purple, do not add a new one." Those two
+  values are already the `--brand-mark` property, so the line is
+  `var(--brand-mark)` and the palette gains nothing.
+- **How far it reaches:** "It applies to every chart in the app, not
+  only the rebuild." So `ProfitChart` and every `Sparkline` too, not
+  just the Performance prototype.
 
 **This does NOT reopen "purple has one job".** A chart line is not a
 control. The one-job rule is about things you press.
+
+**Not built yet.** The live charts still draw green and red. Recolouring
+them is a UI change across several files and needs the `ui-change`
+pre-flight.
+
+**THE PREVIEWS ARE EXEMPT FROM THE PALETTE RULES, AND ONLY THOSE.**
+Ruled 26 August 2026, when the rule audit turned `design-check` on for
+the preview folder and it returned 189 colour failures.
+
+His reasoning, in his words: **the mockup colours win.** "My mockup
+designer is better at design than our current palette", and "the
+mockups are the spec, to the pixel" is already a standing rule on this
+page. The previews are where the NEW design is being explored, so
+holding them to the OLD palette is backwards.
+
+**The line is drawn at colour, not at previews.**
+
+- Exempt under `/preview`: the three colour rules. Is this hex in the
+  palette (4), green is not an action colour (4b), and the brand purple
+  must come from `globals.css` (8b). 8b is in that list on purpose:
+  forcing a preview to use the brand variable forces the OLD purple,
+  which is the exact thing the exemption exists to stop.
+- **Still enforced in every preview:** the font lock, the banned finance
+  vocabulary, em dashes, the old brand name, the hand cursor, the money
+  numeral face, the shared components. His words: "those are not design
+  taste, they are correctness."
+- Nothing under `/preview` is skipped any more. The old code skipped the
+  whole folder on the belief that it "never ships", which stopped being
+  true on 24 August 2026.
+
+**THE EXEMPTION HAS AN END DATE, and it is written into the code.** When
+the new palette is approved it becomes the checked palette, `ALLOWED_HEX`
+is rewritten from it, and the previews go back under all three colour
+rules. The new palette is not chosen yet; it sits in
+`docs/open-questions.md`.
+
+**Em dashes are now machine-checked.** Ruled the same day, and it is the
+repo's own principle applied to itself: he named the em dash ban as
+something the checker enforced, and it did not. The ban was written in
+three places and watched by nobody. Rule 11 now reads every `.tsx`,
+`.ts`, `.mjs`, `.css` and `.md` file in the repo, because the ban covers
+documentation too, not just UI copy.
 
 **The mockups are the spec, to the pixel.** Two attempts were rejected
 ("a reskin is far from enough", "a fake cheap copy") because the mockup
@@ -162,8 +261,10 @@ produced the heatmap, the ranked home, What Changed, and the proof that
 Lab was the right spine.
 
 **Three tabs inside Performance:** Home (renamed from Review, name still
-revisitable), Lab, and a third tab whose name is open (Totals / Lists /
-Breakdown).
+revisitable), Lab, and **Totals**. He named the third tab Totals on
+26 August 2026 while briefing the mockup designer, and confirmed it is a
+real tab: it holds today's live `/stats` content, the quick scan of
+every slice.
 
 **DOMAINS NEVER COMBINE.** Ruled 26 August 2026: "Things from different
 domains will never be possible to combine. they are not from the same
@@ -258,12 +359,38 @@ and no accessibility problem.
 was removed: a number nobody can explain does not belong in a product.
 The cycling control that hid its own options was rejected as annoying.
 
-**Betting history is one page with many doors**, and it accepts a
-filter, so "See these 26 bets" from Lab and the full list from Home are
-the same page.
+**Compare lives inside Lab.** Ruled 26 August 2026. How it is presented
+is still open; the mockup designer is asked to propose.
+
+**All bets live at the bottom of Totals.** Ruled 26 August 2026: the
+latest 50 bets inline, then a button that opens the full All Bets page.
+That page accepts a filter, so "See these 26 bets" from Lab lands on the
+same page. This settles where betting history sits.
+
+**Every Performance mockup shows the three tab switcher.** Home, Lab,
+Totals, on every screen, active tab marked.
+
+**The Insights page gets a new mockup.** Ruled 26 August 2026: "The
+insights page is bleak today." It is currently a heading over a flat
+list of sentence rows.
 
 **Insights are reachable from everywhere in the app**, triggered by the
 sparkle.
+
+**The tab switcher may be a pill; everything below it is squared.**
+Ruled 26 August 2026: "pills goes at the top when switching from home to
+lab to totals... and then squares below, similar to earlier mockups."
+
+**The fonts are reopened.** Ruled 26 August 2026, while briefing the
+mockup designer: "i do not like our font, so please change them." The
+permanent marking is lifted by his own words. The current faces (Geist
+for words, Inter Tight for numbers) stay in the build until he approves
+replacements from the mockups.
+
+**The mockup designer designs inside the structure, free on style.** For
+the Performance mockups, nothing visual is fixed: palette and type are
+his to evolve. The product rules (domains never combine, records not
+percents, the taxonomy) are law. Phone width only.
 
 **Cut:** the prototype insight card modal, and All Facts as a standalone
 page.
