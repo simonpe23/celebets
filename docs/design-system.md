@@ -102,7 +102,7 @@ and every entry on that list names the control it is for.
 | Job | Treatment |
 |---|---|
 | links | Ink plus a chevron. "View all ›", never a coloured link. |
-| data | Green up, red down. A line that is not money (a win rate) is neutral `#94A3B8`. There is no purple data line. |
+| data | **The profit chart line is PURPLE**, with a soft purple gradient fading beneath it. Ruled 26 August 2026 (see below). A line that is not money (a win rate) is neutral `#94A3B8`. Money FIGURES stay green up, red down; the rule below is about the line only. |
 | insights | **The accent**, the app's one secondary colour: warm amber, `#B45309` light and `#FBBF24` dark, trophy a `#FBBF24` → `#B45309` gradient. It marks insights ONLY: the sparkle, the AI badge, the trophy. Never a button, never a link. |
 | badges | Neutral. A count is data, a type is a label; neither is a control. |
 
@@ -195,10 +195,28 @@ not collect.
 
 ## The chart
 
+**THE LINE IS PURPLE.** Ruled 26 August 2026: "purple stands, update the
+design system."
+
+This reverses "there is no purple data line", which was written during
+the purple cleanup. That cleanup was right about six of purple's seven
+jobs and wrong about this one: the owner's own mockups had always drawn
+a purple line with a purple gradient under it, and the cleanup took the
+line away without him asking for that.
+
+**Purple therefore means two things now, not one:** something you press,
+and the profit line. That is a deliberate exception and the only one.
+Everything else the cleanup removed from purple stays removed: no purple
+links, no purple badges, no purple decoration.
+
+Green and red are unaffected. **Money figures are still green up and red
+down.** The rule above is about the drawn line, not the numbers.
+
 - Drawn by hand as SVG. No chart library.
-- **No panel in light mode.** It draws straight on the page with the
-  app's ordinary money greens and reds and no glow. Chosen from three
-  options after "a black panel on a light page does not go".
+- **No panel in light mode.** It draws straight on the page, with no
+  glow. Chosen from three options after "a black panel on a light page
+  does not go". (This bullet used to say the line drew in the app's
+  money greens and reds. Superseded by the purple ruling above.)
 - **Dark mode keeps the navy panel and the glow.**
 - The chart's colours are CSS variables the panel sets, because they are
   SVG attributes and an attribute cannot carry a `dark:` variant.
