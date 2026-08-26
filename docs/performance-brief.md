@@ -31,7 +31,7 @@ arranged around it.
 
 ## What Performance is for
 
-Actuals has three tabs and only three.
+Actuals has four tabs along the bottom.
 
 **Track** is where you capture data. You type in the bet you placed, the
 stake, and the exact amount you stand to collect. You never type odds;
@@ -42,6 +42,15 @@ happens before, and it is active: you go looking.
 
 **Performance** is where you understand yourself. It happens after, and
 much of it is passive: we noticed something and we are telling you.
+
+**Profile** sits in the bottom right corner. It is new, decided after
+the rest of this brief was written, and its contents are not designed
+yet. What matters for the screens described here is only that the tab
+bar now carries four items rather than three, and that Performance is
+no longer the middle one.
+
+The first three are a timeline: before a bet, the bet itself, after the
+bet. Profile stands outside that, which is why it sits at the end.
 
 Performance is a **performance review, not a statistics page**. That
 distinction has done more work than any other in this project. A
@@ -55,10 +64,11 @@ Performance is judged on how fast it answers that.
 
 ---
 
-## Three tabs inside it
+## The three tabs inside it
 
-Performance opens onto a switcher with three tabs: **Home, Lab,
-Totals.**
+Performance itself opens onto a switcher with three tabs: **Home, Lab,
+Totals.** These sit at the top of the page and are separate from the
+four tabs along the bottom of the app.
 
 The cleanest way to hold them in your head:
 

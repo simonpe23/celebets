@@ -64,9 +64,12 @@ need a script: `scrubtest.mjs`, `motiontest.mjs`, `pftest.mjs`.
   **`claude/celebets-v1-build-fhio4a`**. Pushing that branch deploys
   production.
 - Next.js App Router, TypeScript, Tailwind v4, Supabase with RLS.
-- **Three tabs and only three:** Track (capture data), Performance
-  (understand yourself), Research (understand the game before your next
-  bet). Settings is reached from the gear on Track, not a tab.
+- **Four tabs:** Track (capture data), Performance (understand
+  yourself), Research (understand the game before your next bet),
+  Profile (new, contents undecided, bottom right). Ruled 26 August
+  2026, replacing "three tabs and only three". Settings is still
+  reached from the gear on Track; whether it moves into Profile is
+  open, so ask before moving it.
 - Performance lives at `/stats` and Research at `/recommendations`. The
   addresses were kept from the old names on purpose.
 - USD, 2 decimals. Decimal odds, 2 decimals.

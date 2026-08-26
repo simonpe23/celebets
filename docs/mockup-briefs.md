@@ -43,16 +43,19 @@ betting: where the money leaks and what they are actually good at. The
 tone of the whole product follows from that: honest, calm, never
 salesy, never a casino.
 
-Performance is one of three tabs in the app (Track, Performance,
-Research). Inside Performance sit three sub tabs: **Home, Lab, Totals**.
+Performance is one of four tabs along the bottom of the app (Track,
+Performance, Research, Profile). Inside Performance sit three sub tabs:
+**Home, Lab, Totals**.
 
 ### On every single screen, no exceptions
 
 - **The three tab switcher at the top: Home, Lab, Totals.** Active tab
   clearly marked. This switcher may be a pill; it is the one pill
   allowed on the page.
-- **The app's bottom tab bar** (Track, Performance, Research) with
-  Performance active.
+- **The app's bottom tab bar**, FOUR items: Track, Performance,
+  Research, Profile, with Performance active. Profile is a new tab in
+  the bottom right corner; its own page is not designed yet, but the
+  bar carries it on every screen.
 - Screens that are NOT one of the three tabs (All Bets, Insights, the
   opened Compare view) still live inside Performance: they keep the
   bottom tab bar and need a clear way back.

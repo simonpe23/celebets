@@ -11,13 +11,25 @@ See `failed-approaches.md` for the rule about quoting old preferences.
 
 ## Product shape
 
-**Three tabs and only three: Track, Performance, Research.**
-Insights does not get a tab. It is a layer inside Performance, the way
-Apple Health puts insights inside the health data rather than beside it.
+**FOUR tabs: Track, Performance, Research, Profile.** Ruled 26 August
+2026: "i think i want 4 tabs at the bottom. A Profile Page at the right
+bottom corner."
+
+This reverses "three tabs and only three", which had held for months and
+was listed as an open question ("four tabs or three") that had to land
+before the Performance rebuild shipped. It landed.
 
 - Track means capture data.
 - Performance means understand yourself.
 - Research means understand the game before your next bet.
+- Profile is new and its contents are not yet decided.
+
+The first three are a timeline: before the bet, the bet, after the bet.
+Profile sits outside that sequence, which is why it goes last.
+
+**Insights still does not get a tab.** It is a layer inside Performance,
+the way Apple Health puts insights inside the health data rather than
+beside it.
 
 **Insights and Research are opposite ends of one timeline.** Research
 happens BEFORE a bet and is active: the user goes looking. Insights
@@ -37,9 +49,13 @@ draws it first, then the findings underneath. A brief that flattened
 this into "no graphs at the top" produced a Home page with no headline
 number at all.
 
-**Settings has no tab.** It is reached from the gear on Track. The
-avatar used to be the log out button, so one stray tap ended the
-session; log out now sits at the foot of Settings.
+**Settings has no tab of its own.** It is reached from the gear on
+Track. The avatar used to be the log out button, so one stray tap ended
+the session; log out now sits at the foot of Settings.
+
+**Open, and NOT yet ruled: whether Settings moves into Profile.** It is
+the obvious guess and it is only a guess. The owner named a Profile tab
+and said nothing about Settings. Do not move it without asking him.
 
 ## Money and honesty
 

@@ -68,8 +68,15 @@ Four new words (Other Sport, Other Politics, Other Economics, Other
 Culture) plus a migration, and it pushes the non-sports row toward
 domain headings.
 
-**Four tabs or three.** Deferred. It must land before the rebuild ships,
-because the tab bar is on every screen.
+**What is actually ON the Profile page.** He ruled four tabs on 26
+August 2026 and named the fourth Profile, bottom right. Its contents
+were not discussed. The obvious candidates (settings, account, the
+tracking balance, connected accounts, the restart line) are guesses,
+not his words.
+
+**Whether Settings moves into Profile.** Today it is the gear on Track.
+A Profile tab makes moving it look inevitable, which is exactly why it
+needs asking rather than assuming.
 
 **Dead ends still in the prototype.** "See the N bets", "View all
 changes", "Ask Actuals" in two places, share and the three dots, the
