@@ -76,6 +76,17 @@ need a script: `scrubtest.mjs`, `motiontest.mjs`, `pftest.mjs`.
 - **Every money rule lives in `src/lib/stats.ts`.**
 - Peak Street 6 LLC. The mark is not filed, so no trademark claims.
 
+## How work reaches the live site
+
+1. **`main` is the live code.** actuals.cc shows whatever is on `main`.
+2. **Every chat works on its own branch, never directly on `main`.**
+3. **Work reaches the site by being merged into `main`.**
+4. **The owner clicks Merge.** Nothing goes live without it.
+
+**Do not improvise a different model of this.** It was re-litigated
+across several chats and he had to referee. Full detail, and the words
+that get confused (push, deploy, merge), in `docs/git-workflow.md`.
+
 ## Secrets
 
 - **Never put a key in the repo or in chat.** He types them straight
@@ -96,6 +107,7 @@ need a script: `scrubtest.mjs`, `motiontest.mjs`, `pftest.mjs`.
 | `docs/open-questions.md` | Live, undecided. Nothing here may be built. |
 | `docs/design-system.md` | The full colour, type and component reference. |
 | `docs/performance-rebuild.md` | The in-flight Performance work. |
+| `docs/git-workflow.md` | Branches, merging, and what push / deploy / merge each mean. Settled, do not contradict. |
 | `docs/history.md` | What has shipped, dated. |
 | `IDEAS.md` | Future work, in NOW / SOON / FUTURE buckets. |
 | `ROADMAP.md` | Track page divergences from the mockups. |
