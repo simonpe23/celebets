@@ -14,17 +14,38 @@ he actually said it. "Not a terrible idea" is not "settled".
 switcher. Domains never combine, and picking one rescopes the whole
 page. See `docs/decisions.md`.
 
-**2. WHAT YOU BET is two taxonomy levels in one group.**
-Category (Moneyline, Player Props) and Market (Match Winner, To Advance)
-are separate dimensions. The mockup merges them into one row. That may
-well be right for humans, but nobody has decided it, and splitting it
-later means redrawing Lab.
+**2. RESOLVED 26 August 2026.** WHAT YOU BET shows categories. Tapping
+one reveals its markets, where real markets exist. See
+`docs/decisions.md`.
 
 **3. RESOLVED 26 August 2026.** The owner supplied the period
 vocabulary for all 14 sports rather than let the UI work around a thin
 taxonomy. WHEN is sport-aware and data-driven. See `docs/decisions.md`.
 
 **All three Lab-blocking questions are now closed.**
+
+## Parked with his consent, its own session
+
+**The category and market vocabulary rewrite.** Raised 26 August 2026
+and deliberately set aside so it would not swallow the Lab design: "let's
+focus on that another time."
+
+**It is two problems, not one, and they must not be confused.**
+
+1. **The words.** He cannot read them, and he is the founder: "None of
+   these words is truly understandable for me. moneyline and match
+   winner sounds the same to me?" Moneyline is American. Props is
+   jargon. Roughly 60 category and market words came in from Kalshi and
+   from American sportsbooks, never from a decision.
+2. **The grouping.** Separate and possibly worse: "why does not correct
+   score go under match props for example?" The tree itself may be wrong,
+   not only its labels.
+
+**Nothing may be renamed until both are answered together.** Renaming
+words inside a broken tree just makes the wrong shape easier to read.
+
+**This is a data migration, not a copy edit.** Existing rows carry the
+old words, and every provider mapper points at them.
 
 ## Not blocking, still open
 
@@ -50,11 +71,6 @@ word and is already taken by the taxonomy.
 Four new words (Other Sport, Other Politics, Other Economics, Other
 Culture) plus a migration, and it pushes the non-sports row toward
 domain headings.
-
-**Default sort on the ranked list.** He chose Hit rate, then saw that it
-puts the thinnest evidence on top and asked for options. Four were
-offered: net wins, plain profit, a minimum-bets floor, or profit on Home
-with hit rate as a plain number on Lab chips. Tabled, not resolved.
 
 **Four tabs or three.** Deferred. It must land before the rebuild ships,
 because the tab bar is on every screen.

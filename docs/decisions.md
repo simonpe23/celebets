@@ -191,6 +191,43 @@ is precisely why it cannot be one stored string. It is element [0] of
 each list and is used only as a label. This also meant no migration:
 every existing leg without a period already means the whole game.
 
+**WHAT YOU BET shows categories, and a category opens its markets.**
+Ruled 26 August 2026. The group is not a flat mix of the two levels.
+Tapping a category reveals the markets underneath it, where real markets
+exist. Categories with no market vocabulary yet simply do not open, so
+the UI degrades quietly instead of showing an empty drawer.
+
+**A league row sits under SPORT.** Ruled 26 August 2026. Three or four
+leagues for the current sport, **one row only**, then a way to reach the
+rest: "or else click more leagues."
+
+**Baseball and MLB are two different things.** His words, and the reason
+the league row is its own row rather than more sport chips. A sport is
+not its biggest league, even when every bet on that sport happens to sit
+in that league.
+
+**Chips show the record, never a percent.** Ruled 26 August 2026:
+"you're not showing 100%, you are showing 1-0. i dont care about the
+percent."
+
+The reason is that a percent flatters thin evidence. "30-16 is a better
+and more impressive hit rate than 5-0 in betting." The record carries
+its own sample size, so the user needs no statistics to see which fact
+is worth trusting.
+
+**Profit ranks Home. Hit rate scores Lab chips.** He settled the earlier
+Impact argument this way: "i thought we decided profit on the home page
+and hit rate on the lab page."
+
+- Home answers "where is the money", so it ranks by a clear dollar
+  number.
+- Lab answers "am I good at this", where money is misleading because a
+  chip's stake size is not its skill.
+
+**Thin groups are not hidden.** "do not hide thin groups. i think they
+still serve a purpose." A group with two bets in it still tells the user
+they have barely tried that thing, which is itself a finding.
+
 **Compare only works within one group.** Sports vs sports, leagues vs
 leagues. Cross-group selections combine instead.
 
