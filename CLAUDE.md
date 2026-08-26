@@ -76,6 +76,19 @@ need a script: `scrubtest.mjs`, `motiontest.mjs`, `pftest.mjs`.
 - **Every money rule lives in `src/lib/stats.ts`.**
 - Peak Street 6 LLC. The mark is not filed, so no trademark claims.
 
+## What is in flight right now
+
+**Check this before starting anything, so two chats do not collide.**
+Keep it current: when a job finishes, delete its line.
+
+- **The Performance page rebuild.** Three tabs inside `/stats`: Home,
+  Lab, and a third tab. Being designed on branch
+  `performance-rebuild`. **Do not redesign `/stats`, `StatsView.tsx` or
+  anything under `src/app/preview/pf/` in another chat.** See
+  `docs/performance-rebuild.md` and `docs/open-questions.md`.
+- **App Store submission**, in a separate chat with the owner. Settings
+  and store config, not code.
+
 ## How work reaches the live site
 
 1. **`main` is the live code.** actuals.cc shows whatever is on `main`.

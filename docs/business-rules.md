@@ -73,6 +73,54 @@ at all. Before it, per-sport ROI showed a dash.
 several sports. There is no agreed rule, so Performance does not show
 it, and the Track snapshot shows Best Sport by profit rather than ROI.
 
+## Settlement
+
+**You settle a PICK, not a bet.** The bet's status is always derived
+from its legs, by `set_leg_result` in `supabase/phase3.sql`.
+
+The whole thing happens in **one transaction**, so the balance can never
+drift out of sync with the legs.
+
+### How the bet's status is decided
+
+```
+one leg lost         -> the bet is LOST
+every leg won        -> the bet is WON
+anything else        -> the bet stays PENDING
+```
+
+That is the parlay rule falling out of the data rather than being
+written twice: one wrong leg kills the bet, and the bet only wins when
+every leg is in.
+
+### What the payout becomes
+
+| New status | `payout` |
+|---|---|
+| won | `round(stake * total_odds, 2)` |
+| lost | nothing |
+| pending | `null` |
+
+### Undo is not a separate feature
+
+**Setting a leg back to `pending` IS the undo.** The same function
+recalculates the bet, and the payout returns to `null`. There is no
+separate undo path that could disagree with the settle path.
+
+### There is no void, push or half-won
+
+`legs.result` and `bets.status` both accept exactly three values:
+`pending`, `won`, `lost`. A void or a push has never been asked for and
+is not representable. **Do not add a fourth value without the owner
+deciding what it means for the money**, because every split rule in this
+file assumes three.
+
+### The 15 minute window
+
+A settled bet stays visible in **Live now** for about fifteen minutes
+before moving to history, so a mistake can be undone where it happened
+rather than hunted down later.
+
 ## Cash out
 
 A pending bet can settle at the exact amount received.
