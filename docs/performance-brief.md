@@ -111,6 +111,12 @@ These are independent dimensions, not a ladder. You can ask about 1st
 Half picks across every league without first walking down through a
 league, which is exactly what an earlier breadcrumb design got wrong.
 
+Two of the groups have a second level inside them. **What you bet lists
+categories, and tapping one opens the markets underneath it**: Moneyline
+opens Match Winner and To Advance. Categories with no markets simply do
+not open. **League shows only three or four** for the current sport,
+one row and never two, with a way to reach the rest.
+
 ### The signature behaviour
 
 **Every chip is priced at the intersection it would create.** With
@@ -210,10 +216,25 @@ product.
 good at this", where money misleads, because a chip's stake size is not
 its skill.
 
-Below that sits **the map**: a mosaic where each tile is one slice of
-the record, sized by how much was bet and coloured by whether it came
-back. It is the one-glance version of the founding question. Big tiles
-are where the money went; the colour says whether that was a good idea.
+Below that sits **the heatmap**, and it is not a decoration. When the
+owner re-listed what survives from the old work, this was the first
+thing he named: "of course, the heat map. I forgot about it. The heat
+map stays."
+
+It is a mosaic. Each tile is one slice of the record, **sized by how
+much was bet** and **coloured by whether that money came back**. Big
+tiles are where the money went; the colour says whether that was a good
+idea. It is the one-glance version of the founding question, and it
+answers it faster than the ranked list does, because size and colour
+land before words do.
+
+Two things it must actually do. **The sizing has to be real**: a sport
+with $3,100 staked draws a visibly bigger tile than one with $180. A
+uniform grid wearing a "sized by amount bet" caption is worse than no
+heatmap at all. And **the colour has to stay calm**: six saturated red
+and green blocks turn the quietest page in the app into a Christmas
+tree. It has been drawn with the label "Money map", which is a good
+name for it.
 
 Then **What changed**, a quiet strip of movement over the last 30 days:
 "Tennis flipped from leak to earner", with the before and after figures.
@@ -221,9 +242,13 @@ Then **What changed**, a quiet strip of movement over the last 30 days:
 Then a door into **Lab**, kept deliberately: "Check out our Lab. Build
 your Performance View."
 
-Tapping any finding, or any tile on the map, opens Lab with that fact
-already selected. Home never grows filters of its own. It hands
+Tapping any finding, or any tile on the heatmap, opens Lab with that
+fact already selected. Home never grows filters of its own. It hands
 questions to Lab.
+
+**Two things were cut from Home and should not come back.** A modal
+insight card that appeared over the page, and All Facts as a page of
+its own. Both duplicated work that Lab and Insights already do.
 
 ---
 
@@ -297,8 +322,26 @@ about money in a category built on not being honest about money.
 That has a look, and we already found it. Numbers carry the page rather
 than boxes: a large figure with a small quiet label beneath it. Lists
 share one card and are divided by hairlines rather than chopped into
-competing boxes. Purple means one thing, that you can press it. Green
-and red mean money moved, and nothing else. White space is the material.
+competing boxes. White space is the material.
+
+**Purple means exactly two things: something you can press, and the
+profit line on the chart.** The chart line is purple, with a soft purple
+gradient fading beneath it, the way it has always been drawn in our
+mockups. Nothing else is purple: no links, no badges, no decoration, no
+filled panels.
+
+**Green and red mean money moved, and nothing else.** They belong to
+figures and to the heatmap's tiles. Never to a tag background, never to
+a button, and never to the chart line.
+
+The type should have editorial presence rather than the look of a
+generic dashboard. **The typefaces are the one thing genuinely open**:
+today words are Geist and numbers are Inter Tight, and we do not love
+them. The numerals matter most, because this app is wall to wall money
+figures and records. Tabular figures are a requirement.
+
+**One shape note.** The Home / Lab / Totals switcher at the top may be a
+pill. Everything below it is squared: rounded rectangles, not pills.
 
 The principle we keep coming back to: **make fewer things feel more
 important.** Every screen described here can be built as a dense
