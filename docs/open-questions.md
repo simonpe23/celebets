@@ -10,13 +10,9 @@ he actually said it. "Not a terrible idea" is not "settled".
 
 ## Blocking the Lab design
 
-**1. Lab's first group is called SPORT. Where does Crypto go?**
-The mockup shows a SPORT group with Football, Tennis, Baseball chips,
-written before Crypto moved to Economics. A crypto bettor finds their
-biggest topic missing, or sitting under a heading that lies. This is the
-same bug already fixed in manual entry, on a different screen.
-Options: rename the group TOPIC and list everything flat; two levels
-inside Lab matching manual entry; or two separate groups.
+**1. RESOLVED 26 August 2026.** Lab's first group carries a domain
+switcher. Domains never combine, and picking one rescopes the whole
+page. See `docs/decisions.md`.
 
 **2. WHAT YOU BET is two taxonomy levels in one group.**
 Category (Moneyline, Player Props) and Market (Match Winner, To Advance)

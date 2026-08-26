@@ -147,6 +147,32 @@ Lab was the right spine.
 revisitable), Lab, and a third tab whose name is open (Totals / Lists /
 Breakdown).
 
+**DOMAINS NEVER COMBINE.** Ruled 26 August 2026: "Things from different
+domains will never be possible to combine. they are not from the same
+tree. So there's no world where you click football, moneyline and price
+prediction."
+
+This is structural, not a preference. Football plus Moneyline is fine,
+both are Sports. Football plus Price Direction is impossible: no leg can
+be both, so the answer would always be zero.
+
+**Domain is a MODE in Lab, not a chip.** It sits above the six groups
+and rescopes them.
+
+- The **SPORT** header carries a small arrow. Sports is the default and
+  keeps its single tap. The arrow drops down the other four domains,
+  deliberately quieter than the chips, "you see they're clearly more
+  hidden, which we want as of now at least."
+- Picking Economics **rescopes the whole page**, confirmed by the owner.
+  WHAT YOU BET then shows Price Direction, not Moneyline. Otherwise the
+  page would wear one domain's heading over another domain's vocabulary.
+- **HOW and RISK do not rescope.** Singles vs parlays and odds bands
+  mean the same thing in every domain.
+
+The taxonomy's "independent dimensions, not a ladder" rule still holds,
+**within a domain**. Inside Sports, topic, competition and period
+combine freely in any order.
+
 **Compare only works within one group.** Sports vs sports, leagues vs
 leagues. Cross-group selections combine instead.
 
