@@ -27,7 +27,8 @@ The owner has no coding experience. These rules are permanent.
   Label your own inferences as inferences.
 - **His past reactions are not constraints.** Never argue for keeping
   something because he once liked it. His current words are the only
-  spec. Decisions he marks permanent (the fonts) stay permanent.
+  spec. Decisions he marks permanent stay permanent until he reopens
+  them himself (he reopened the fonts, 26 August 2026).
 - **Challenge him.** He has asked for this directly. If something does
   not hold together, say so before it is built.
 - This is a v1: prefer simple and working over clever.

@@ -49,11 +49,9 @@ old words, and every provider mapper points at them.
 
 ## Not blocking, still open
 
-**The third Performance tab's name.** Totals, Lists, Breakdown, or
-something else.
-
-**Whether that third tab is real, or is Lab with nothing selected.**
-Raised and not yet answered.
+**New fonts.** He reopened the fonts on 26 August 2026: "i do not like
+our font." The mockup designer will propose; nothing is chosen and the
+build keeps Geist and Inter Tight until he approves.
 
 **Where Compare lives.** He floated a Compare button appearing when two
 things are selected in Lab, then immediately doubted it: "this is not
@@ -74,10 +72,6 @@ domain headings.
 
 **Four tabs or three.** Deferred. It must land before the rebuild ships,
 because the tab bar is on every screen.
-
-**Pills or squared buttons in the rebuild.** His own mockups disagree
-with each other: the insight card draws pills, the fact page and Compare
-draw rounded rectangles.
 
 **Dead ends still in the prototype.** "See the N bets", "View all
 changes", "Ask Actuals" in two places, share and the three dots, the

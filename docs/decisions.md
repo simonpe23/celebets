@@ -144,8 +144,10 @@ produced the heatmap, the ranked home, What Changed, and the proof that
 Lab was the right spine.
 
 **Three tabs inside Performance:** Home (renamed from Review, name still
-revisitable), Lab, and a third tab whose name is open (Totals / Lists /
-Breakdown).
+revisitable), Lab, and **Totals**. He named the third tab Totals on
+26 August 2026 while briefing the mockup designer, and confirmed it is a
+real tab: it holds today's live `/stats` content, the quick scan of
+every slice.
 
 **DOMAINS NEVER COMBINE.** Ruled 26 August 2026: "Things from different
 domains will never be possible to combine. they are not from the same
@@ -246,6 +248,21 @@ the same page.
 
 **Insights are reachable from everywhere in the app**, triggered by the
 sparkle.
+
+**The tab switcher may be a pill; everything below it is squared.**
+Ruled 26 August 2026: "pills goes at the top when switching from home to
+lab to totals... and then squares below, similar to earlier mockups."
+
+**The fonts are reopened.** Ruled 26 August 2026, while briefing the
+mockup designer: "i do not like our font, so please change them." The
+permanent marking is lifted by his own words. The current faces (Geist
+for words, Inter Tight for numbers) stay in the build until he approves
+replacements from the mockups.
+
+**The mockup designer designs inside the structure, free on style.** For
+the Performance mockups, nothing visual is fixed: palette and type are
+his to evolve. The product rules (domains never combine, records not
+percents, the taxonomy) are law. Phone width only.
 
 **Cut:** the prototype insight card modal, and All Facts as a standalone
 page.

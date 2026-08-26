@@ -16,6 +16,9 @@ Full reference: `docs/design-system.md`. The rules that bite:
 - **Never change a font without asking.** Family, weight AND size. Words
   are Geist, numbers are Inter Tight through `font-money` at weight 500
   on hero figures. `design-check` rule 8 fails the build if this moves.
+  The faces are under review (owner reopened them 26 August 2026, the
+  mockup designer is proposing new ones), but the build keeps these
+  until he approves replacements.
 - **`font-medium` does not exist here.** Only normal, semibold, bold.
 - **Purple means one thing: something you press.** Primary button,
   active tab, selected chip, primary capture tile. Nothing else.
