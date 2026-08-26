@@ -27,6 +27,16 @@ from the user's own data.
 **Performance is a performance review, not a statistics page.** Opening
 it should not land on graphs.
 
+**REFINED 26 August 2026: the result and the chart open Home.** Seeing
+the first Home mockup without them: "There's no chart and result at the
+top of the home page."
+
+The old rule was never "no chart". It was "do not land on a chart
+INSTEAD of findings". The order is: your net profit and the line that
+draws it first, then the findings underneath. A brief that flattened
+this into "no graphs at the top" produced a Home page with no headline
+number at all.
+
 **Settings has no tab.** It is reached from the gear on Track. The
 avatar used to be the log out button, so one stray tap ended the
 session; log out now sits at the foot of Settings.

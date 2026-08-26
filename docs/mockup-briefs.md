@@ -72,9 +72,27 @@ Research). Inside Performance sit three sub tabs: **Home, Lab, Totals**.
 - Words we never use anywhere: wallet, deposit, withdrawal, withdraw,
   bankroll. We say Tracking Balance, Add, Remove, Balance history.
 - Plain punctuation in all copy. No em dashes.
-- One statement of any fact per card. Never a period chip above a
-  control that repeats the same period. This exact duplication has been
-  rejected twice in our history.
+- **One statement of any fact per row, per card, per screen.** If a row
+  says "Moneyline is making you +$2,658.40", that figure does not
+  appear again on the right hand side of the same row. Never a period
+  chip above a control that repeats the same period. This exact
+  duplication has been rejected twice in our history.
+- **An icon must never contradict its own row.** If a row is an earner
+  with a green figure, its icon points the same way. One direction per
+  row.
+- **A caption must be true.** Do not label a grid "sized by amount bet"
+  unless the tiles really are different sizes. We would rather have an
+  honest uniform grid than a caption that lies.
+- **One door per destination on a screen.** Not a sparkle in the header
+  AND an insights card at the foot. Not a "Check out our Lab" card that
+  then repeats itself with a "Go to Lab" link inside it.
+- **Peers look like peers.** Three sort options are three of the same
+  object. One of them does not carry a value the others lack, and none
+  of them wears a dropdown chevron.
+- **Do not title a screen with the name of the tab that is already
+  selected.** The tab bar and the switcher already say where the user
+  is. A big "Performance review" heading is height we have already
+  rejected once.
 
 ### Style, where you are free
 
@@ -124,6 +142,9 @@ each other. Never lorem, never round numbers.
   losing record; that is realism, big odds pay for many misses.
 - The worked example used across prompts: Football + Moneyline is
   18-8, +$914.20, 26 bets.
+- The all-time totals, for the result panel on Home: net profit
+  +$1,227.80, record 65-58, 66 bets, staked $8,420.00, returned
+  $9,647.80, ROI 14.6%.
 
 ### Format
 
@@ -304,7 +325,43 @@ opens with findings, never with graphs. The founding question of the
 whole product is the one this screen answers on sight: "where am I
 leaking, baseball, hockey or football?"
 
-### What lives here, top to bottom is yours to arrange
+### The result panel, and it opens the page
+
+**This is the most refined object in Actuals today and it must survive
+the redesign.** It took many rounds to arrive at, and every part of it
+is there because something else was tried and failed. Improve its
+craft; do not remove its parts.
+
+It is ONE panel, not five floating things. Top to bottom inside it:
+
+1. **The headline result: net profit, all time.** +$1,227.80 for our
+   demo record. This is the number the user opens the app for. It sits
+   ON the panel, not floating above it, with the record beside it.
+2. **The chart**: a running profit line across time. It should be
+   scrubbable (dragging along it reads out that day's figure), so
+   design it as an instrument, not a decoration.
+3. **Six facts in a grid under the line**, on the same panel: Bets 66,
+   Record 65-58, Hit rate 30-16, Staked $8,420.00, Returned $9,647.80,
+   ROI 14.6%.
+
+Hard-won lessons about this panel, all from real rejections:
+
+- **A tall chart is dead space.** The owner: "so much white, ugly, not
+  exciting, dead space". A rising profit line leaves a big empty
+  triangle above it, so height makes it worse. The six facts sit under
+  the line precisely because facts fill a screen and stretching does
+  not.
+- **The number belongs ON the panel**, with the chart. It was once a
+  floating figure above a separate chart card and the gap between them
+  read as a hole.
+- **Never state the time period twice.** An "ALL TIME" label above the
+  number while "All" sits selected in the chart below it is the same
+  fact twice, and it was rejected.
+
+Then the findings. The panel answers "how am I doing"; everything below
+answers "why".
+
+### What lives below it, order is yours to argue
 
 **The ranked list, the core of the page.** Facts written as sentences,
 each with its evidence:
@@ -319,10 +376,21 @@ because the list deliberately mixes kinds (a category next to a sport
 next to a risk band). Rows must scan as a list yet each read as a
 finding, not a table row.
 
+**A row carries four things at most**: the sentence (with its money
+figure inside it), the record, the family tag, and one indicator of
+direction. The money figure appears ONCE. A row that prints
++$2,658.40 inside its sentence and again on its right edge is a bug,
+not a layout.
+
 **The sort control.** Profit, ROI, Hit rate. All three options visible
 at once, no cycling control that hides its choices (one was built and
 rejected as annoying). Profit is the default. Under Hit rate, rows lead
 with records (30-16), never percents.
+
+The three are peers and must be drawn as peers: same object, same
+size, no dropdown chevron on any of them, and none of them carrying a
+number the other two lack. The only difference between them is which
+one is on.
 
 **The map.** A mosaic where every tile is one slice of the record,
 sized by how much was bet, coloured by profit or loss, labelled with
@@ -330,16 +398,35 @@ name and record. The one-glance answer to "where is my money actually
 going". Big tiles are where the money went; green tiles are where it
 came back.
 
-**What Changed.** The movement since they last looked: "Tennis flipped
-from leak to earner." Quiet, a strip or a card, not a feed and not a
-timeline.
+Two warnings. **The sizing must be real**: Football at $3,100 staked
+draws a genuinely larger tile than Table Tennis at $180. A uniform grid
+wearing a "sized by amount bet" caption is worse than no map. And
+**the colour must not shout**: six saturated red and green blocks turn
+the page into a Christmas tree. Find the restrained version, where
+profit and loss are unmistakable at a glance and the page still feels
+calm.
+
+**What Changed.** The movement over the last 30 days: "Tennis flipped
+from leak to earner", with the before and after figures. Quiet, a strip
+or a card, not a feed and not a timeline. Write the heading in real
+English: "What changed" over "In the last 30 days", never "Since your
+last 30 days".
 
 **The door to Lab.** "Check out our Lab. Build your Performance View."
-The owner wants this door kept and visible.
+The owner wants this door kept and visible. It is ONE door: the card
+does not then repeat itself with a "Go to Lab" link inside it. The
+whole card is the button.
 
 **The sparkle.** Our amber insight trigger, present here as everywhere
 in the app. Amber marks insights only; it is never a button colour for
 anything else.
+
+**Exactly one way into insights on this screen.** Either the sparkle in
+the header or an insights card lower down, not both. If you choose the
+card, it must carry a real insight ("Tennis flipped from leak to
+earner this month") and not an empty promise like "AI insights found,
+tap to see what stands out". Actuals never teases; it states what is
+true.
 
 ### Behaviour
 
@@ -352,15 +439,22 @@ anything else.
 
 ### What to avoid, learned the hard way
 
-- No graphs at the top. It is a review, not a chart page.
-- No dead space at the top; the old page was rejected for exactly
-  that.
-- No duplicated statements of the time period.
+- **No page title.** The tab bar says Performance and the switcher says
+  Home. A "Performance review" heading is height we already rejected
+  once, and a subtitle promising "the truth at a glance" is worse if
+  the glance is not delivered above the fold.
+- **No dead space at the top.** The old page was rejected for exactly
+  that, and the fix was facts, not stretching.
+- **No number stated twice** in one row or one card.
+- **No duplicated statements of the time period.**
+- **Nothing on this page grows its own filters.** Questions go to Lab.
 
 ### Draw two screens
 
-1. Home as it opens.
-2. The scroll: the map, What Changed, the door to Lab.
+1. **Home as it opens**: the result panel (net profit, the chart, the
+   six facts), then the sort control and the first findings.
+2. **The scroll**: the rest of the findings, the map, What changed, and
+   the door to Lab.
 
 ---
 
