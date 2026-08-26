@@ -4,8 +4,9 @@
 
 - **Next.js App Router**, TypeScript, Tailwind v4.
 - **Supabase** for auth and Postgres, with Row Level Security on every table.
-- **Vercel**, deployed from branch `claude/celebets-v1-build-fhio4a`.
-  Pushing that branch deploys production.
+- **Vercel**, deployed from `main`. Merging into `main` is what
+  reaches the live site. The Vercel production branch setting must
+  match the default branch. See `docs/git-workflow.md`.
 - Live at **actuals.cc** (domain at Hostinger, DNS at Hostinger, pointed
   at Vercel). The `vercel.app` address still resolves.
 

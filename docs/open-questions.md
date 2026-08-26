@@ -83,6 +83,46 @@ draw rounded rectangles.
 changes", "Ask Actuals" in two places, share and the three dots, the
 gear on the prototype home. Several are pure removals.
 
+## Found by the rule audit, 26 August 2026
+
+These are places where two written rules disagree and no ruling settles
+it. Nothing here may be built until he rules. Full context in
+`docs/history.md`.
+
+**1. The purple chart line: how far does it reach?** `PORTFOLIO-VIEWS.md`
+records his wording, "Purple line for profit and red for losses", and
+purple stands. What is not written anywhere: whether the LIVE Track and
+Performance charts turn purple too, or only the Performance rebuild.
+They draw green and red today.
+
+**2. Which purple is the chart line?** The rebuild sheets were sampled
+at `#430EDB` light and `#8538EA` dark. Neither is a brand purple, and
+neither is in the palette. Until one is chosen and added to
+`globals.css`, `design-check` fails any file that draws a purple line,
+so the ruling cannot actually be built.
+
+**3. Three tabs or four.** `CLAUDE.md` and `docs/decisions.md` say
+"three tabs and only three". His own overview sheet draws four (Track,
+Performance, Research, Profile) and this file already carries "four tabs
+or three, deferred". One of those two has to give.
+
+**4. How big is a card heading?** The app ships both `text-lg` (18px)
+and 17px. `docs/design-system.md` stated both, in two different tables.
+
+**5. How big is a page title?** Same shape: `text-2xl` (24px) in one
+table, 22px in another. The app ships both.
+
+**6. How big is the primary button?** `docs/design-system.md` said 52px
+tall at 16px text. The shared button in `src/lib/ui.ts` is 44px at 13px,
+and `design-check`'s own error message says buttons are "text-sm font-bold"
+while that button is 13px semibold. Three sources, three answers.
+
+**7. Should `design-check` check the preview pages?** It skips them, and
+its comment says the folder "is local only and never ships". That has
+been false since 24 August 2026: previews are committed and deployed.
+The whole Performance rebuild is being designed in a folder no check
+looks at.
+
 ## Not design questions, but unscoped
 
 **Empty states.** Every view assumes a full record. Someone who signed
@@ -97,13 +137,14 @@ run both behind a switch while the numbers are checked?
 
 ## Long-standing, recorded in IDEAS.md
 
-- **Idea 29:** the three taxonomy gaps. Periods per sport first, then
-  the screenshot importer not classifying, then categories for Politics
-  and Culture.
+- **Idea 29:** the three taxonomy gaps. Periods per sport is DONE,
+  26 August 2026. Still open: the screenshot importer not classifying,
+  and categories for Politics and Culture.
 - **Idea 30:** motion level C, the shared-element flights. Parked with a
   written trigger.
-- **Idea 31:** manual entry for the non-sports. Partly built now; the
-  category vocabulary behind it is still empty for three domains.
+- **Idea 31:** manual entry for the non-sports. The picker is BUILT and
+  logs any of the five domains. The category vocabulary behind it is
+  still empty for three domains, which is gap (c) of idea 29.
 - **Per-sport ROI.** Still has no honest formula, because a parlay stake
   spans sports. Needs a rule from the owner before Performance can show
   it.

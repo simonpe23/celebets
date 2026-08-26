@@ -1,5 +1,13 @@
 # The Lab concepts (August 2026)
 
+**STATUS, 26 August 2026: THIS ROUND IS OVER. Read it as history.**
+Every concept below is marked "IN REVIEW", and none of them still is.
+The Portfolio won the round, ten views were built from it, and then the
+owner returned to Lab V1 as the spine. Its "meaningfulness" ranking, the
+thing several concepts here are built on, was removed: "remove impact
+(no idea what it means)". The live plan is `docs/performance-rebuild.md`
+and the rulings are in `docs/decisions.md`.
+
 The Performance rebuild produced one shipped-quality candidate and a
 field of challengers. This file tracks them so nothing blurs across
 days. The judging frame is fixed: every concept is shown on the same

@@ -1,4 +1,4 @@
-# Celebet idea backlog
+# Actuals idea backlog
 
 How this file works:
 - The owner says "I have a new idea" and tells Claude to store it.
@@ -57,32 +57,27 @@ How this file works:
     line draws, numbers count, rows arrive in sequence) were built
     on 23 August and are not part of this.
 
-31. MANUAL ENTRY CANNOT LOG A NON-SPORT. Raised by the owner on
-    24 August 2026: "why is only sports available for manual entry?
-    i was hoping everything was manual entry as well." Parked by him
-    the same minute ("if it requires too much work now, leave it for
-    later, but dont forget"). THIS IS THAT REMINDER.
+31. MANUAL ENTRY FOR THE NON-SPORTS. MOSTLY BUILT, August 2026.
+    Raised by the owner on 24 August 2026: "why is only sports
+    available for manual entry? i was hoping everything was manual
+    entry as well."
 
-    WHAT IS WRONG. The Sport picker in NewBetForm maps over SPORTS,
-    so it offers the 15 sports and nothing else. Politics,
-    Economics, Entertainment, Weather, Companies, Tech & Science,
-    Health, World and Crypto can only arrive through the Kalshi
-    sync. Type a Bitcoin bet by hand and there is no subject to pick.
+    WHAT SHIPPED. Manual entry now logs any of the five domains. The
+    picker shows ONE LEVEL AT A TIME: sports chips, then a door that
+    replaces them with the domain row, then that domain's topics.
+    His words: "domains can never be under a row of sports." See
+    `docs/decisions.md`.
 
-    NOBODY DECIDED THIS. It was not an owner ruling. The non-sports
-    were introduced by the Kalshi sync project purely as labels for
-    imported bets, the comment in types.ts said "import-only for
-    now", and the manual picker was never revisited. An
-    implementation default that hardened into a rule.
+    WHAT IS LEFT. Gap (c) of idea 29: DOMAIN_CATEGORIES registers
+    categories for Sports and Economics only, so a manual Politics or
+    Culture bet still files itself as Unclassified. The owner
+    confirmed that is fine for now rather than inventing a taxonomy
+    with no real markets behind it.
 
-    THE FIX IS ONE LINE, AND THAT IS THE TRAP. Swapping SPORTS for
-    SUBJECTS in the picker makes all 24 subjects selectable, and the
-    database already accepts every one of them (legs_sport_check).
-    But DOMAIN_CATEGORIES only registers categories for Sports and
-    Economics, so a manual Politics or Culture bet would land on an
-    empty category list and file itself as Unclassified. The picker
-    change is trivial; making those bets classifiable is gap (c) of
-    idea 29. Do them together or the feature ships half working.
+    THE OLD WARNING IN THIS ENTRY, kept for the record: it said the
+    picker change must not ship before the categories existed, or the
+    feature ships half working. He overruled that and shipped the
+    picker on its own.
 
 29. THE THREE TAXONOMY GAPS. Parked by the owner on 21 August 2026
     with "OK for now. But remind me to fix this later." THIS IS THAT

@@ -49,8 +49,8 @@ Words are **Geist**. Numbers are **Inter Tight**, through the
 | Caption | `text-xs`, neutral 500 light / neutral 400 dark |
 | Body | `text-sm` |
 | Label | `text-sm font-semibold` |
-| Card heading | `text-lg font-bold` |
-| Page title | `text-2xl font-bold` |
+| Card heading | CONTESTED. `text-lg font-bold` (18px) and `text-[17px] font-bold` are both shipping. See `docs/open-questions.md`. |
+| Page title | CONTESTED. `text-2xl font-bold` (24px) and `text-[22px] font-bold` are both shipping. See `docs/open-questions.md`. |
 
 ## The number ladder
 
@@ -64,14 +64,15 @@ presence.
 | 14px | bold | money inside a bet card row |
 | 16px | semibold | StatTile value, inside a card |
 | 18px | bold | the row under the headline, bare on the page |
-| 32px | 500 | wallet balance |
+| 32px | 500 | net profit, on a card with no balance set |
+| 40px | 500 | the tracking balance |
 | 42px | 500 | analytics headline |
 
 ## Buttons, three tiers
 
 | Tier | Spec | Used for |
 |---|---|---|
-| One | `text-sm font-bold`, `px-3 py-2.5`, `rounded-xl` | Log out, Start here, Paste bet slip, Upload image, Add leg. The two popup buttons use `text-base` because they are taller. |
+| One | `rounded-md`, `px-3 py-2.5` | Log out, Start here, Paste bet slip, Upload image, Add leg. The two popup buttons use `text-base` because they are taller. The shared `BTN` in `src/lib/ui.ts` is the source of truth for the primary: it is `rounded-md text-[13px] font-semibold`. Its type size and weight are an OPEN QUESTION, see `docs/open-questions.md`. |
 | Two | chips: `text-sm font-semibold`, `px-3 py-2`, `rounded-xl`, 38px tall | Sport, money, category, filters. |
 | Three | `text-xs font-semibold` | Only inside a dense card row: Won, Lost, Cash out, Delete, Add money, Remove. |
 
@@ -91,18 +92,22 @@ capture tile. That is all.
 | `#7C3AED`, `#9A57FC` | Only the border and icon of a purple control. |
 | `#9A57FC` | The active tab in dark, because `#5525C6` on the `#0C1125` bar is a contrast ratio of about 2.3 and reads as switched off. |
 
-`design-check` rule 8b fails on purple in any file not on its allowlist,
-and every entry on that list names the control it is for.
+`design-check` rule 8b fails on ANY brand purple written by hand in a
+`.tsx` file, with no allowlist. The brand purple lives in `globals.css`
+as four custom properties and is reached through `bg-brand-top`,
+`to-brand-bottom`, `active:to-brand-press` and `text-brand-mark`. There
+is no rule 4c; an earlier version of this page invented one.
 
-**Retired, and rule 4c fails on all of them:** `#6D28D9`, `#4C1D95`,
-`#3B1578`, and any filled `#7C3AED` button.
+**Retired, and rule 8b fails on all of them:** `#6D28D9`, `#4C1D95`,
+`#3B1578`, `#5B21B6`, and `#7C3AED` written as a raw hex anywhere,
+filled button or not.
 
 ### What replaced purple everywhere else
 
 | Job | Treatment |
 |---|---|
 | links | Ink plus a chevron. "View all ›", never a coloured link. |
-| data | Green up, red down. A line that is not money (a win rate) is neutral `#94A3B8`. There is no purple data line. |
+| data | On the LIVE app: green up, red down. A line that is not money (a win rate) is neutral `#94A3B8`. On the PERFORMANCE REBUILD: the owner ruled a purple profit line, "Purple line for profit and red for losses." Purple stands. This page used to say flatly "there is no purple data line", which was wrong and sat here for weeks. Two things are still undecided: the exact purple, and whether the live Track chart changes too. See `docs/open-questions.md`. |
 | insights | **The accent**, the app's one secondary colour: warm amber, `#B45309` light and `#FBBF24` dark, trophy a `#FBBF24` → `#B45309` gradient. It marks insights ONLY: the sparkle, the AI badge, the trophy. Never a button, never a link. |
 | badges | Neutral. A count is data, a type is a label; neither is a control. |
 
@@ -163,8 +168,10 @@ The build ran about a fifth larger than the mockups for weeks, which is
 why the mockup fits Pending Bets on the first screen and the build did
 not.
 
-Greeting 22px, card headings 17px, hero balance 34px, primary button
-52px tall at 16px.
+Greeting 22px, hero balance 40px.
+
+**Card heading size and primary button size are an OPEN QUESTION.** The
+app currently ships two of each. See `docs/open-questions.md`.
 
 ## Other rules from the mockups
 

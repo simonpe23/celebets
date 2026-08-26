@@ -119,6 +119,24 @@ Sampling with Pillow took ten minutes and settled six rounds.
 **Buttons are squared, not pills.** `rounded-md` is the primary.
 `rounded-xl` and `rounded-lg` were both rejected as too round.
 
+**The chart line is PURPLE. Purple stands.** Ruled August 2026, his
+wording: "Purple line for profit and red for losses."
+
+This one had two confident sources disagreeing for weeks.
+`PORTFOLIO-VIEWS.md` recorded the ruling and his own mockups drew the
+purple line. `docs/design-system.md` said flatly "there is no purple
+data line". Neither knew about the other, and it only surfaced because a
+designer drew a green chart and he happened to notice.
+
+The lesson is the reason for the rule audit of 26 August 2026: a rule
+written in two places will eventually say two things, and nobody finds
+out until it costs a mockup round. Two parts of this are still open (the
+exact purple, and whether the live Track chart changes too) and sit in
+`docs/open-questions.md`.
+
+**This does NOT reopen "purple has one job".** A chart line is not a
+control. The one-job rule is about things you press.
+
 **The mockups are the spec, to the pixel.** Two attempts were rejected
 ("a reskin is far from enough", "a fake cheap copy") because the mockup
 had been poured into the old design system instead of replacing it.

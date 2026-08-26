@@ -124,3 +124,43 @@ only inside one temporary container.
 Not deployed and not saved are different problems, and one rule was
 treating them as one. They are committed now, and the login gate keeps
 them away from logged-out visitors.
+
+## The rule audit, 26 August 2026
+
+Every written rule in the repo was read against every other one, and
+against the code. It happened because `docs/design-system.md` said
+"there is no purple data line" while the owner's own mockups drew one
+and `PORTFOLIO-VIEWS.md` recorded him ruling it in. Both sounded
+confident. Neither knew about the other. It sat there for weeks and only
+surfaced by luck.
+
+**Fixed, because a dated ruling already settled them:**
+
+- `CLAUDE.md` and `docs/architecture.md` still named the old Vercel
+  branch `claude/celebets-v1-build-fhio4a`. It was renamed to `main` on
+  26 August 2026.
+- `docs/design-system.md` claimed a `design-check` "rule 4c" that has
+  never existed, and described rule 8b as having an allowlist. It does
+  not: it fails on ANY hand-written brand purple in a `.tsx` file.
+- `docs/design-system.md` gave the tracking balance as 32px in one table
+  and 34px in another. It is 40px.
+- `docs/design-system.md` specified the primary button as `rounded-xl`,
+  which he had already rejected as too round.
+- `README.md` described password auth, told you to turn email
+  confirmation OFF, listed migrations only to phase 8, and gave the
+  parlay odds rule backwards.
+- `IDEAS.md` idea 31 still said manual entry cannot log a non-sport. It
+  can, and has been able to since the picker shipped.
+- `ROADMAP.md` carried four open questions that were all answered, and
+  described purple, the theme toggle and the greeting as unbuilt.
+- `CONCEPTS.md` had every Lab concept marked "IN REVIEW" months after
+  the round ended.
+
+**Sent to him to rule on, in `docs/open-questions.md`:** seven places
+where two rules genuinely disagree and no ruling settles it, including
+how far the purple chart line reaches and which purple it is.
+
+**The lesson, and it is the same one as the previous three:** a rule
+written in two places will eventually say two things. Where a value can
+live in one place, it should. Where it cannot, the copies have to name
+each other.
