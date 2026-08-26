@@ -146,6 +146,17 @@ each other. Never lorem, never round numbers.
   +$1,227.80, record 65-58, 66 bets, staked $8,420.00, returned
   $9,647.80, ROI 14.6%.
 
+### What to deliver
+
+**Your output is the mockups themselves, drawn.** Not an analysis of
+the brief, not a plan, not a summary of what you understood, not a
+question about whether to start. Each page prompt ends by naming the
+screens it wants; draw exactly those.
+
+If something in the brief genuinely blocks you, draw your best reading
+of it and note the assumption in one line underneath. Do not stop and
+wait.
+
 ### Format
 
 - Phone screens only, 390 wide.
@@ -253,7 +264,7 @@ listing; design it like that.
 - Removing the last chip returns to that clean state, never bounces to
   Home.
 
-### Draw four screens
+### Deliverable: draw these four screens now
 
 1. Clean Lab, nothing selected.
 2. Football + Moneyline selected: dimming, re-priced chips, the answer
@@ -304,7 +315,7 @@ combined view, or to a clean Lab), and what a three-way comparison
 looks like (Football vs Basketball vs Tennis), or make the case that
 two is the maximum.
 
-### Draw three screens
+### Deliverable: draw these three screens now
 
 1. The moment two same-group chips are selected: whatever your
    mechanism is, mid-flow.
@@ -453,7 +464,7 @@ true.
 - **No duplicated statements of the time period.**
 - **Nothing on this page grows its own filters.** Questions go to Lab.
 
-### Draw two screens
+### Deliverable: draw these two screens now
 
 1. **Home as it opens**: the result panel (net profit, the chart, the
    six facts), then the sort control and the first findings.
@@ -501,7 +512,7 @@ must read differently from a win at a glance without the page turning
 into a Christmas tree. If section headers need to do work (counts,
 mini-summaries), propose it.
 
-### Draw two screens
+### Deliverable: draw these two screens now
 
 1. The top: sports breakdown, odds groups, singles vs parlays.
 2. The scroll: categories, then the ledger with the "Show all bets"
@@ -539,7 +550,7 @@ This page is the record of truth, the place a user goes when they doubt
 a number elsewhere in the app. It should feel like a well-kept ledger:
 dense, calm, trustworthy. No editing, no swipe actions in this round.
 
-### Draw two screens
+### Deliverable: draw these two screens now
 
 1. Unfiltered, mid-scroll, a month boundary visible.
 2. Filtered from Lab: "26 bets · Football · Moneyline" with the clear
@@ -584,7 +595,7 @@ The feeling to hit: opening this page should feel like a sharp friend
 looked at your record overnight and left you notes. Personal, precise,
 a little delightful, never gimmicky.
 
-### Draw two screens
+### Deliverable: draw these two screens now
 
 1. The Insights page, five to seven insights, your hierarchy visible.
 2. The arrival moment from the sparkle (sheet, page transition, or
