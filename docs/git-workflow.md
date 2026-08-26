@@ -43,10 +43,24 @@ single most likely thing to confuse him again.
 
 ### When the task is finished
 
+**The owner's whole job is one word: Merge.**
+
 1. Open the repo on GitHub. A banner offers a Pull Request from that
    chat's branch.
 2. Click it, then **Merge**.
 3. That is the moment it goes live.
+
+**Everything else belongs to the chat, not to him.** Before it says a
+task is done it must have written down any rulings, cleared its line
+from the in-flight list, updated the docs it changed, run
+`npm run check`, and pushed. That checklist lives in CLAUDE.md under
+"When a task is finished".
+
+**Never hand him a checklist to remember.** If a step matters, it goes
+in CLAUDE.md so every chat performs it automatically. This is the same
+principle as the design checks: when something reaches him that a
+machine could have caught, the fix is a rule, not a promise to be
+careful.
 
 ### Template for briefing a new chat
 

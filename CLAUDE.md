@@ -100,6 +100,21 @@ Keep it current: when a job finishes, delete its line.
 across several chats and he had to referee. Full detail, and the words
 that get confused (push, deploy, merge), in `docs/git-workflow.md`.
 
+## When a task is finished
+
+**Do this yourself, before telling him it is done. Do not ask him to
+remember any of it.** His only job is clicking Merge.
+
+1. **Write down anything he ruled on**, into `docs/decisions.md`. A
+   ruling that lives only in a chat dies with that chat.
+2. **Delete this task's line** from "What is in flight right now", if it
+   had one. A stale in-flight list is worse than none.
+3. **Update the docs the work changed.** New route, new rule, new
+   gotcha.
+4. **Run `npm run check`, then commit and push.**
+5. **Tell him in one bullet what to merge**, and what it changes on the
+   live site.
+
 ## Secrets
 
 - **Never put a key in the repo or in chat.** He types them straight
