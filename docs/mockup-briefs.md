@@ -78,11 +78,16 @@ Research). Inside Performance sit three sub tabs: **Home, Lab, Totals**.
 
 ### Style, where you are free
 
-Our current profile, so you know the starting point: a near-black navy
-(#04081B) dark theme; one purple accent that means exactly one thing,
-"you can press this"; a warm amber that marks AI insights only; green
-and red reserved for money outcomes; cards drawn by a hairline edge,
-not a shadow; links written as ink with a chevron, never coloured.
+Our current profile, so you know the starting point. **Design these
+mockups in LIGHT MODE.** Our light theme is a very soft off-white page
+(#F7F7FB) carrying white cards, each drawn by a hairline ring rather
+than a shadow. One purple accent means exactly one thing, "you can
+press this". A warm amber (#B45309 in light) marks AI insights only.
+Green and red are reserved for money outcomes. Links are written as
+ink with a chevron, never coloured.
+
+The app also has a dark theme (a near-black navy, #04081B) and every
+screen must eventually work in both, but this round is light only.
 
 You are free to evolve all of it. Nothing visual is locked. If you can
 beat the palette, beat it. The one discipline worth keeping in some
@@ -122,7 +127,9 @@ each other. Never lorem, never round numbers.
 
 ### Format
 
-- Phone screens only, 390 wide. Dark theme first, as before.
+- Phone screens only, 390 wide.
+- **Light mode only.** Every screen on the soft off-white page, not on
+  a dark one. The dark theme is a later round.
 - Design the full-record state. Empty and loading states are a later
   round, do not spend screens on them.
 
