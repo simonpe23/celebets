@@ -357,7 +357,10 @@ for (const file of files) {
 // just too much purple, everywhere." Twelve purple objects sat on the
 // Track page's first screen, because purple was doing seven jobs:
 // brand, button, active tab, link, badge, data line and decoration.
-// Purple now means one thing, something you press.
+// The "purple means one thing" rule was WITHDRAWN 26 August 2026:
+// "Purple blends through the site. Does not have to be something you
+// press or a button." This rule is not about that. It is about keeping
+// the colour in ONE PLACE.
 //
 // The brand color also lives in exactly one place now, as four custom
 // properties in globals.css, reached through bg-brand-top,

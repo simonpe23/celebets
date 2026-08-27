@@ -42,18 +42,27 @@ happens BEFORE a bet and is active: the user goes looking. Insights
 happen AFTER a bet and are passive: Actuals surfaced them on its own,
 from the user's own data.
 
-**Performance is a performance review, not a statistics page.** Opening
-it should not land on graphs.
+**Performance is an intelligent statistics page about your own
+performance.** His words, 26 August 2026, replacing the older
+"a performance review, not a statistics page. Opening it should not
+land on graphs."
 
-**REFINED 26 August 2026: the result and the chart open Home.** Seeing
-the first Home mockup without them: "There's no chart and result at the
-top of the home page."
+Review your own betting data, build different charts and see high
+scores from leagues, sports, markets and the rest. Here you learn
+everything about your data. **Charts and graphs are key elements of the
+Performance page.** It comes in three tabs: Home, Lab, Totals.
 
-The old rule was never "no chart". It was "do not land on a chart
-INSTEAD of findings". The order is: your net profit and the line that
-draws it first, then the findings underneath. A brief that flattened
-this into "no graphs at the top" produced a Home page with no headline
-number at all.
+**This is a real reversal, so do not quote the old rule back at him.**
+The old wording produced a Home mockup with no headline number and no
+chart at all, because a brief flattened "should not land on graphs"
+into "no graphs at the top". Charts are wanted here.
+
+**Charts live on BOTH the Track page and the Performance page.**
+Confirmed 26 August 2026 so nobody removes one thinking charts belong
+only to Performance.
+
+**The result and the chart open Home.** Your net profit and the line
+that draws it come first, then the findings underneath.
 
 **PROFILE IS THE NEW SETTINGS PAGE.** Ruled 26 August 2026: "Profile is
 the new settings page. gonna be reworked, but that's the deal." So the
@@ -129,14 +138,26 @@ the Sports totals wrong.
 
 ## Design
 
-**Purple has one job: something you press.** Ruled August 2026: "the
-purple color is too overwhelming, it's just too much purple,
-everywhere."
+**PURPLE DOES NOT HAVE ONE JOB. Withdrawn 26 August 2026** in his own
+words: "Remove: Purple has one job: something you press. Because it's
+not true. Purple blends through the site. Does not have to be something
+you press or a button."
 
-He was right and the shade was never the problem. Purple was doing seven
-jobs at once (brand, button, active tab, link, badge, data line,
-decoration) with twelve purple objects on the Track page's first screen.
-A colour that means seven things means nothing.
+Purple is the brand colour and it may appear anywhere it works: charts,
+surfaces, accents, decoration. It is not restricted to controls.
+
+**The complaint that produced the old rule was still real**, so keep the
+lesson without the rule. In August 2026 he said "the purple color is too
+overwhelming, it's just too much purple, everywhere", with twelve purple
+objects on the Track page's first screen. The answer is restraint and
+judgement about how much and where, not a law that purple may only mean
+one thing.
+
+**One purple rule does survive, and it is about code, not design.** The
+brand colour lives in exactly one place, four custom properties in
+`globals.css`, reached through `bg-brand-top` and friends. Changing the
+app's purple is four lines instead of 45 edits across 17 files. Writing
+a brand hex by hand anywhere in `src` still fails the build.
 
 **Sample the mockup, do not eyeball it.** The rule that ended three
 rounds of colour argument. Two guesses had been wrong for weeks:
@@ -353,13 +374,29 @@ and hit rate on the lab page."
 still serve a purpose." A group with two bets in it still tells the user
 they have barely tried that thing, which is itself a finding.
 
-**Compare only works within one group.** Sports vs sports, leagues vs
-leagues. Cross-group selections combine instead.
+**COMPARE WORKS ACROSS GROUPS. Ruled 26 August 2026**, replacing "compare
+only works within one group", which he says was never true:
 
-**Colour is the wrong tool for that rule.** The groups are already
-separated by their headers. Dimming the chips you cannot pair with
-teaches the rule at the moment you try to break it, with no new colours
-and no accessibility problem.
+"Compare works across categories, topics, groups, markets. I want to
+compare Football vs NBA for e.g. Anything in Lab can be compared as long
+as they're in the same domain."
+
+So Football against NBA is a valid comparison, and so is Moneyline
+against 1st Half. **The only limit is the domain**, which is the
+structural one that cannot move: nothing from Sports is ever compared
+with anything from Economics.
+
+**OPEN, and it needs him. This ruling creates a question nobody has
+answered:** if any two chips can now be compared, how does the user say
+"combine these" rather than "compare these"? Under the old rule the
+groups decided it for them. See `docs/open-questions.md`. Do not guess
+at a mechanism in a mockup brief without flagging it as a proposal.
+
+**Dimming still teaches the domain rule.** The groups are separated by
+their headers already, and dimming the chips you cannot pair with
+teaches the limit at the moment you try to break it, with no new colours
+and no accessibility problem. What it teaches is now narrower: only that
+domains never mix.
 
 **Sort by Profit, ROI or Hit rate, all three visible at once.** "Impact"
 was removed: a number nobody can explain does not belong in a product.

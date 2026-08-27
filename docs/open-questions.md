@@ -53,11 +53,28 @@ old words, and every provider mapper points at them.
 our font." The mockup designer will propose; nothing is chosen and the
 build keeps Geist and Inter Tight until he approves.
 
-**How Compare is presented.** WHERE it lives is settled (inside Lab, 26
-August 2026). The mechanism is not: he floated a Compare button, then
-doubted it ("this is not clear for me yet"), and his mockup shows a
-whole family compared at once. The mockup designer is asked to propose;
-whatever comes back is a proposal, not a decision.
+**HOW THE USER SAYS "COMBINE" RATHER THAN "COMPARE".** This one is new
+and it matters, because his 26 August ruling opened it.
+
+Compare now works across groups: Football against NBA, Moneyline against
+1st Half, anything against anything inside one domain. Under the old
+rule the groups decided for the user (same group compared, different
+groups combined), and that is gone.
+
+So Football plus Moneyline is now ambiguous. It could mean "my Football
+Moneyline record" (combine, one answer) or "Football against Moneyline"
+(compare, two answers side by side). **Both are things a user would
+want, and nothing currently distinguishes them.**
+
+The obvious guess is that selecting chips combines, and a Compare
+control switches the same selection into a comparison. **That is an
+inference, not his ruling.** He has not been asked.
+
+**Where Compare lives is settled**: inside Lab. How it presents itself
+is not. He floated a Compare button, then doubted it ("this is not clear
+for me yet"), and his own mockup shows a whole family compared at once.
+The mockup designer is asked to propose; whatever comes back is a
+proposal, not a decision.
 
 **The topic picker's door label.** He asked for a new name and did not
 give one. "Something else" is a placeholder. "Category" is the obvious

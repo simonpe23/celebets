@@ -20,12 +20,12 @@ Full reference: `docs/design-system.md`. The rules that bite:
   mockup designer is proposing new ones), but the build keeps these
   until he approves replacements.
 - **`font-medium` does not exist here.** Only normal, semibold, bold.
-- **Purple means two things, and only two.** Something you press, AND
-  the profit chart line (with its gradient). The line was ruled back to
-  purple on 26 August 2026. Nothing else: no purple links, badges or
-  decoration.
-- **Pressable purple:** Primary button,
-  active tab, selected chip, primary capture tile. Nothing else.
+- **Purple is the brand colour and is NOT restricted to controls.**
+  The "one job" rule was withdrawn 26 August 2026: "Purple blends
+  through the site." It covers the profit chart line too. Use judgement
+  about how much, not a law about meaning.
+- **Purple for certain:** primary button, active tab, selected chip,
+  primary capture tile, and the profit chart line.
 - **Green and red mean money moved.** Never an action colour. The one
   survivor is the Won button on a pending pick, `#16A34A`.
 - **Amber is the insight accent** and marks insights only: the sparkle,

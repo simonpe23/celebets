@@ -87,10 +87,19 @@ presence.
 
 ## Colour
 
-### Purple has one job: something you press
+### Purple is the brand colour, and it is not restricted to controls
 
-The primary button, the active tab, the selected chip, the primary
-capture tile. That is all.
+**Withdrawn 26 August 2026:** "Purple blends through the site. Does not
+have to be something you press or a button." The old rule said purple
+had one job. It does not.
+
+It is still the colour of the primary button, the active tab, the
+selected chip and the primary capture tile. It is ALSO the profit chart
+line, and it may be used elsewhere where it works.
+
+**The judgement that remains:** he once had twelve purple objects on one
+screen and called it "too much purple, everywhere". That was about
+quantity and restraint, not about meaning.
 
 | Value | Use |
 |---|---|
@@ -99,8 +108,11 @@ capture tile. That is all.
 | `#7C3AED`, `#9A57FC` | Only the border and icon of a purple control. |
 | `#9A57FC` | The active tab in dark, because `#5525C6` on the `#0C1125` bar is a contrast ratio of about 2.3 and reads as switched off. |
 
+**One purple rule survives, and it is about code, not design.**
 `design-check` rule 8b fails on ANY brand purple written by hand in a
-`.tsx` file, with no allowlist. The brand purple lives in `globals.css`
+`.tsx` file, with no allowlist. That rule is about keeping the colour in
+one place so it can be changed in four lines, not about what purple is
+allowed to mean. The brand purple lives in `globals.css`
 as four custom properties and is reached through `bg-brand-top`,
 `to-brand-bottom`, `active:to-brand-press` and `text-brand-mark`. There
 is no rule 4c; an earlier version of this page invented one.
