@@ -8,6 +8,12 @@ foundations, such as top lists from this page."
 
 So this is not a page to reproduce. It is a page to harvest.
 
+**HE CALLS THIS PAGE OLD.** His words on seeing it written up: "it's old
+and not relevant anymore." Treat it as a parts bin, never as a spec, and
+do not raise its inconsistencies with him as if they were live problems.
+The only reason it is recorded at all is his line above about Totals
+grabbing foundations from it.
+
 ---
 
 ## What is on it, top to bottom
@@ -91,10 +97,11 @@ Winner 1-1 -$49.99, Unclassified 1-0 $0.00.
 
 ---
 
-## Three things this page does that the new rules forbid
+## Three habits NOT to carry into Totals
 
-Not bugs to fix tonight. Things whoever briefs Totals has to decide
-about, because copying this page copies these.
+Not live bugs, and not to be raised with him. He considers this page
+old. They are listed only so that harvesting from it does not drag them
+into the new design.
 
 1. **It shows percentages.** HIT RATE 33%, "55% right (36 of 66)", "41%
    (92 of 227)". The rule since 26 August is records, never percents.
