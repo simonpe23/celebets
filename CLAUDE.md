@@ -165,6 +165,9 @@ remember any of it.** His only job is clicking Merge.
 | `docs/open-questions.md` | Live, undecided. Nothing here may be built. |
 | `docs/design-system.md` | The full colour, type and component reference. |
 | `docs/performance-rebuild.md` | The in-flight Performance work. |
+| `docs/owner-summary-performance.md` | **His own written summary of the Performance redesign. Primary source, outranks the rest.** |
+| `docs/performance-brief.md` | The Performance redesign argued through, for the mockup designer. |
+| `docs/todays-stats-page.md` | What live `/stats` actually looks like, for briefing Totals. |
 | `docs/git-workflow.md` | Branches, merging, and what push / deploy / merge each mean. Settled, do not contradict. |
 | `docs/history.md` | What has shipped, dated. |
 | `IDEAS.md` | Future work, in NOW / SOON / FUTURE buckets. |
