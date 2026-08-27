@@ -1,9 +1,29 @@
 # Mockup briefs: the Performance redesign
 
-Written 26 August 2026 for the owner's mockup designer, who works in
-another tool. **Seven blocks: one shared brief, then one prompt per
-surface.** Paste the shared brief at the top of every prompt, then send
-the prompts one at a time.
+## THIS FILE IS REFERENCE. IT IS NOT RULES.
+
+**The owner's instruction, 26 August 2026:** "they are absolutely not
+rules... these rules might be old in 5 minutes, so its stupid to have
+laws or words like 'Structure that cannot move'. Sentences like that
+should never be shared to a new chat. it's delusional."
+
+He is right. Nothing in this file is settled by being in this file.
+
+- **Do not quote anything here as law**, to him or to anyone else.
+- **A lot of it is my writing, not his.** Where it says "the owner's
+  reason", that is him. Everything else is my judgement, and his
+  current words beat all of it.
+- **`docs/decisions.md` is where his actual rulings live.** Check there
+  before treating anything below as decided.
+- **It goes stale fast.** Several things in here were already reversed
+  within hours of being written.
+- **He writes his own designer prompts now.** This file is kept because
+  he likes parts of it and it may be useful to hand his designer, not
+  because it is in use.
+
+---
+
+Written 26 August 2026, six draft prompts plus a shared preamble:
 
 1. Lab
 2. Compare (inside Lab)
@@ -12,14 +32,11 @@ the prompts one at a time.
 5. All Bets
 6. Insights
 
-Rules for future edits: the "structure that cannot move" list is drawn
-from `docs/decisions.md`.
-
-**Always attach the designer's own earlier mockups**, from
+**One thing in here that is worth keeping whatever else changes:**
+attach the designer's own earlier mockups from
 `public/mockups/performance/`. The first Home round was drawn without
-them and came back as a generic fintech dashboard. A brief that lists
-requirements without showing the visual standard produces a page that
-satisfies every rule and looks like nothing.
+them and came back as a generic fintech dashboard. Words do not carry
+craft.
 
 ---
 
@@ -47,7 +64,7 @@ Performance is one of four tabs along the bottom of the app (Track,
 Performance, Research, Profile). Inside Performance sit three sub tabs:
 **Home, Lab, Totals**.
 
-### On every single screen, no exceptions
+### On every screen
 
 - **The three tab switcher at the top: Home, Lab, Totals.** Active tab
   clearly marked. This switcher may be a pill; it is the one pill
@@ -60,7 +77,12 @@ Performance, Research, Profile). Inside Performance sit three sub tabs:
   opened Compare view) still live inside Performance: they keep the
   bottom tab bar and need a clear way back.
 
-### Structure that cannot move (product law, not style)
+### How the product works today
+
+Not laws. This is how things stand as of 26 August 2026, and any of it
+can change the moment the owner says so. The taxonomy items and the
+records-not-percents line are his; the rest of the list is my judgement
+after a mockup came back with those problems in it.
 
 - The taxonomy: five domains (Sports, Politics, Economics, Culture,
   Other), each with its own topics (Football, Crypto), categories
@@ -105,7 +127,7 @@ Performance, Research, Profile). Inside Performance sit three sub tabs:
 ### The visual language: YOUR OWN PREVIOUS WORK
 
 **Attached are your earlier Actuals mockups. They are the visual
-standard. Match them.** Not their layout, which the architecture below
+standard we are asking you to match.** Not their layout, which the architecture below
 replaces, but their craft: their restraint, their typography, their
 spacing, their confidence.
 
@@ -113,7 +135,8 @@ We do not want this language evolved, beaten or modernised. We want the
 new architecture rendered IN it. Keep the breakthrough, keep the
 look you already found.
 
-Read off the attachments, and hold to these:
+Read off the attachments. What follows is what I read in them, so
+correct me where I have read them wrong:
 
 - **Numbers carry the page, not boxes.** The hero figure is enormous
   and set in colour, with a small grey uppercase label under it. That

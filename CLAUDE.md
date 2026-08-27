@@ -112,7 +112,8 @@ Keep it current: when a job finishes, delete its line.
   under `src/app/preview/pf/` in another chat.**
   - The thinking is settled and written: read
     **`docs/performance-brief.md`** first. It is the argument.
-  - The designer prompts live in **`docs/mockup-briefs.md`**.
+  - `docs/mockup-briefs.md` holds draft designer prompts. **Reference
+    only, not rules.** He writes his own prompts now.
   - What is still undecided is in `docs/open-questions.md`.
   - Current stage: **mockups**, with the owner's external designer.
     Nothing is being built in the app yet.
@@ -168,6 +169,7 @@ remember any of it.** His only job is clicking Merge.
 | `docs/owner-summary-performance.md` | **His own written summary of the Performance redesign. Primary source, outranks the rest.** |
 | `docs/performance-brief.md` | The Performance redesign argued through, for the mockup designer. |
 | `docs/todays-stats-page.md` | What live `/stats` actually looks like, for briefing Totals. |
+| `docs/mockup-briefs.md` | Draft designer prompts. Reference, NOT rules. |
 | `docs/git-workflow.md` | Branches, merging, and what push / deploy / merge each mean. Settled, do not contradict. |
 | `docs/history.md` | What has shipped, dated. |
 | `IDEAS.md` | Future work, in NOW / SOON / FUTURE buckets. |
