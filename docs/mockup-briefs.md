@@ -649,8 +649,13 @@ Rules of the page:
 - Records not percents, money signed with two decimals, as everywhere.
 - An insight should be tappable into Lab with the relevant fact
   selected; show that affordance.
-- The page is reachable from the sparkle everywhere in the app, and
-  arrives as a page inside Performance (bottom tab bar, way back).
+- **Two ways in.** The sparkle opens insights as a POPUP, and the popup
+  carries a "View all insights" link that opens this full page. Draw
+  both moments.
+- **The sparkle sits on every Performance screen and on Track.** Not on
+  Research, not on Profile. It is amber, and it is the trigger.
+- The page arrives inside Performance: it keeps the four-item bottom
+  tab bar with Performance active, and needs a clear way back.
 - If you propose hierarchy (a lead insight above the rest, grouping by
   kind, freshness), make the ranking legible: why is this one first?
 
@@ -660,6 +665,6 @@ a little delightful, never gimmicky.
 
 ### Deliverable: draw these two screens now
 
-1. The Insights page, five to seven insights, your hierarchy visible.
-2. The arrival moment from the sparkle (sheet, page transition, or
-   whatever you propose): how an insight presents when it is fresh.
+1. The Insights PAGE, five to seven insights, your hierarchy visible.
+2. The POPUP that the sparkle opens, with its "View all insights" link
+   through to that page.
