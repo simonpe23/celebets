@@ -36,6 +36,26 @@ The owner has no coding experience. These rules are permanent.
   shipping, say "I will store it, let us finish X first". If he insists,
   drop it and do as he asks.
 
+## Before he sees any document meant for someone else
+
+A brief, a prompt, anything he will forward. Two rules, both bought on
+26 August 2026 at the cost of three rejected mockup rounds.
+
+- **QUOTE HIM. DO NOT PARAPHRASE.** Both disasters that day were a small
+  reword with a huge result. "Opening it should not land on graphs"
+  became "no graphs at the top", which deleted the chart panel. "He
+  knows our style, he is free to work with what he already knows" became
+  "beat the palette", and the designer threw the style away. Where a
+  summary is unavoidable, mark it as your summary, not his rule.
+- **Audit it before handing it over, not when he pushes back.** Read the
+  document against `docs/decisions.md` line by line and report what is
+  missing, unasked. That check takes two minutes and it found six
+  omissions he should never have had to find himself.
+
+**"Are you sure?" must never be answered with confidence.** If he asks,
+name the check you ran and what it returned. If you cannot name one, you
+did not run one: go and run it.
+
 ## Before he sees any UI change
 
 - **Run `npm run check`.** Never show a screenshot while it is failing.
