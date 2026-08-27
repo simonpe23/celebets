@@ -43,24 +43,31 @@ happens before, and it is active: you go looking.
 **Performance** is where you understand yourself. It happens after, and
 much of it is passive: we noticed something and we are telling you.
 
-**Profile** sits in the bottom right corner. It is new, decided after
-the rest of this brief was written, and its contents are not designed
-yet. What matters for the screens described here is only that the tab
-bar now carries four items rather than three, and that Performance is
-no longer the middle one.
+**Profile** sits in the bottom right corner. It is today's Settings
+page, promoted to a tab and due a rework of its own. What matters for
+the screens described here is only that the tab bar now carries four
+items rather than three, and that Performance is no longer the middle
+one.
 
-The first three are a timeline: before a bet, the bet itself, after the
-bet. Profile stands outside that, which is why it sits at the end.
+The first three are the stages of a bet: Track is the bet itself,
+Performance is after it, Research is before it. Profile stands outside
+that, which is why it sits at the end.
 
-Performance is a **performance review, not a statistics page**. That
-distinction has done more work than any other in this project. A
-statistics page shows you every number it has. A review tells you how
-you are doing, then explains why. The difference is that a review has an
-opinion about what matters.
+Performance is **an intelligent statistics page about your own
+performance**. You review your own betting data, build different charts,
+and see high scores from leagues, sports, markets and the rest. Here you
+learn everything about your data.
 
-The founding question of the whole product, in the owner's words, is
-"where am I leaking, baseball, hockey or football?" Every screen inside
-Performance is judged on how fast it answers that.
+**Charts and graphs are key elements of this page**, not a garnish on
+it. An earlier version of this brief said the opposite, and it produced
+a Home screen with no headline number and no chart at all. Charts are
+wanted. They live on the Track page too.
+
+What "intelligent" means here: the page does not just print every number
+it has. It has an opinion about which of them matter, and it says so
+first. The founding question of the whole product, in the owner's words,
+is "where am I leaking, baseball, hockey or football?" Every screen
+inside Performance is judged on how fast it answers that.
 
 ---
 
@@ -136,18 +143,28 @@ anything else on the screen.
 
 ### Combining and comparing
 
-Chips in **different** groups combine and narrow: Football plus
-Moneyline plus 1st Half.
+**Chips combine and narrow.** Football plus Moneyline plus 1st Half is
+one answer: your record on Football Moneyline picks in the first half.
 
-Chips in the **same** group compare: Football against Tennis, Premier
-League against La Liga.
+**Anything can also be compared against anything, inside one domain.**
+Football against NBA. Tennis against Premier League. Moneyline against
+1st Half. The owner's words: "Anything in Lab can be compared as long as
+they're in the same domain." Comparison is not restricted to two chips
+of the same kind.
 
-That rule is not arbitrary. Two sports are alternatives to each other; a
-sport and a category are not.
+The only thing that can never be compared or combined is across domains,
+because no bet can be in two domains at once.
 
-**Compare lives inside Lab, and it needs a visible control.** When two
-chips in the same group are selected, a Compare button appears and
-opens the comparison. It must be drawn.
+**Compare lives inside Lab, and it needs a visible control.** It must be
+drawn.
+
+**One thing is genuinely undecided, and we want your proposal.** Since
+any two chips can now be compared, there is nothing that tells the app
+whether Football plus Moneyline means "combine these into one answer" or
+"show these two side by side". Our guess is that selecting chips
+combines, and a Compare control turns the same selection into a
+comparison. That is a guess, not a decision. Draw what you think is
+right.
 
 What the comparison has to answer, in this order: which one is better
 for me, by how much in both profit and record, and how many bets sit

@@ -86,10 +86,12 @@ need a script: `scrubtest.mjs`, `motiontest.mjs`, `pftest.mjs`.
 - Next.js App Router, TypeScript, Tailwind v4, Supabase with RLS.
 - **Four tabs:** Track (capture data), Performance (understand
   yourself), Research (understand the game before your next bet),
-  Profile (new, contents undecided, bottom right). Ruled 26 August
-  2026, replacing "three tabs and only three". Settings is still
-  reached from the gear on Track; whether it moves into Profile is
-  open, so ask before moving it.
+  Profile (bottom right). Ruled 26 August 2026, replacing "three tabs
+  and only three".
+- **The three are stages of a bet:** Track is the bet, Performance is
+  after it, Research is before it. **Profile IS today's Settings page**,
+  promoted to a tab and due a rework. Track keeps its small profile
+  button in the top corner for now.
 - Performance lives at `/stats` and Research at `/recommendations`. The
   addresses were kept from the old names on purpose.
 - USD, 2 decimals. Decimal odds, 2 decimals.
