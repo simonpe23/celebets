@@ -405,6 +405,18 @@ The cycling control that hid its own options was rejected as annoying.
 **Compare lives inside Lab.** Ruled 26 August 2026. How it is presented
 is still open; the mockup designer is asked to propose.
 
+**The heatmap lives on HOME, not in Lab.** Confirmed 26 August 2026: "I
+lives on home page. might add to lab later but that page is already
+kinda busy." His own written summary had put it under Lab; this
+correction supersedes that line.
+
+**Tapping a ranked row on Home jumps to Lab with that fact selected.**
+Confirmed 26 August 2026. Same for a heatmap tile. This is the seam
+between the two biggest tabs and it is now settled, not a guess.
+
+**Home's door to Lab lands on an EMPTY Lab**, nothing selected.
+Confirmed 26 August 2026. The button is "Build your Performance View".
+
 **All bets live at the bottom of Totals.** Ruled 26 August 2026: the
 latest 50 bets inline, then a button that opens the full All Bets page.
 That page accepts a filter, so "See these 26 bets" from Lab lands on the
