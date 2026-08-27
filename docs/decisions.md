@@ -19,13 +19,19 @@ This reverses "three tabs and only three", which had held for months and
 was listed as an open question ("four tabs or three") that had to land
 before the Performance rebuild shipped. It landed.
 
-- Track means capture data.
-- Performance means understand yourself.
-- Research means understand the game before your next bet.
-- Profile is new and its contents are not yet decided.
+**The three tabs represent different stages of the bet.** His words,
+26 August 2026:
 
-The first three are a timeline: before the bet, the bet, after the bet.
-Profile sits outside that sequence, which is why it goes last.
+1. **Track = The Bet.** PNL Overview, plus connect to markets and add
+   your bet.
+2. **Performance = After the bet.** The core product. Learn everything
+   about your betting performance. Wins and Leaks.
+3. **Research = Before the bet.** Study data, see results and browse
+   stats to make better decisions.
+
+**Profile is the same as today's Settings page.** See "Profile is the
+new Settings page" below. It sits outside the three stages, which is
+why it goes last.
 
 **Insights still does not get a tab.** It is a layer inside Performance,
 the way Apple Health puts insights inside the health data rather than

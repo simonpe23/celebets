@@ -43,14 +43,15 @@ happens before, and it is active: you go looking.
 **Performance** is where you understand yourself. It happens after, and
 much of it is passive: we noticed something and we are telling you.
 
-**Profile** sits in the bottom right corner. It is new, decided after
-the rest of this brief was written, and its contents are not designed
-yet. What matters for the screens described here is only that the tab
-bar now carries four items rather than three, and that Performance is
-no longer the middle one.
+**Profile** sits in the bottom right corner. It is today's Settings
+page, promoted to a tab and due a rework of its own. What matters for
+the screens described here is only that the tab bar now carries four
+items rather than three, and that Performance is no longer the middle
+one.
 
-The first three are a timeline: before a bet, the bet itself, after the
-bet. Profile stands outside that, which is why it sits at the end.
+The first three are the stages of a bet: Track is the bet itself,
+Performance is after it, Research is before it. Profile stands outside
+that, which is why it sits at the end.
 
 Performance is a **performance review, not a statistics page**. That
 distinction has done more work than any other in this project. A
