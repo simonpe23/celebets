@@ -8,6 +8,15 @@ foundations, such as top lists from this page."
 
 So this is not a page to reproduce. It is a page to harvest.
 
+**He calls the page old**, "it's old and not relevant anymore", so it is
+a reference rather than a target. That does not mean it is worthless:
+his words are that Totals grabs foundations from it, and he has said he
+likes parts of it.
+
+**So the useful posture is the middle one.** He may point at any part of
+this page and say "keep that". Ask him which parts, rather than
+assuming the whole thing is in or the whole thing is out.
+
 ---
 
 ## What is on it, top to bottom
@@ -91,10 +100,11 @@ Winner 1-1 -$49.99, Unclassified 1-0 $0.00.
 
 ---
 
-## Three things this page does that the new rules forbid
+## Three things on this page that the newer rules changed
 
-Not bugs to fix tonight. Things whoever briefs Totals has to decide
-about, because copying this page copies these.
+Written down so that harvesting from the page is a deliberate choice
+rather than an accident. They are observations, not verdicts, and he has
+not ruled on any of them.
 
 1. **It shows percentages.** HIT RATE 33%, "55% right (36 of 66)", "41%
    (92 of 227)". The rule since 26 August is records, never percents.
