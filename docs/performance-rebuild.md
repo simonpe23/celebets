@@ -5,24 +5,26 @@ serves the old Analytics page.
 
 ## The build from finished mockups (current stage)
 
-- **`src/app/preview/performance-home/`, the new Home**, built
-  28 August 2026 identically from the owner's mockup
-  `14. Chat Aug 27.png` (repo root). Static, light only, phone first.
-  Awaiting his review at `/preview/performance-home`.
-- His build instruction, quoted: "Make an identical version. Pixel by
-  pixel." The one allowed edit: "The purple color. Use Actuals
-  pre-defined purple colors instead." So fills use brand-top to
-  brand-bottom and lines, links and icons use brand-mark.
-- The mockup's word face is matched with Plus Jakarta Sans (closest
-  free stand-in for the Circular family). The numerals measured out as
-  Inter Tight, the app's own numeral face, and use `font-money`.
-- Known divergences from the sheet, all deliberate: no fake status bar
-  or home indicator (the real phone provides them), and the purple
-  swap above. One oddity copied as drawn and flagged to the owner: the
-  small green dot on the football icon.
-- The process: he shares a mockup, it is built identically on this
-  chat's branch, he merges, then reviews on his phone at the preview
-  address. Ship order: Home first, then Lab, then Totals.
+- **RESET, 28 August 2026. Both Home builds of this date are
+  DISCARDED.** The identical build of `14. Chat Aug 27.png` and the
+  four-sheet area rebuild after it were both rejected. His ruling, in
+  his words: "the last 2 previews that you have created from my
+  mockups = discard them. erase from your memory. do not make new
+  version based on the template. what im giving you now is not
+  refinements, its a new layout."
+- **Nothing in `src/app/preview/performance-home/` is reference
+  material.** No future build may start from it, borrow its scale, its
+  sizes or its layout. The next build starts from an empty file when
+  the owner uploads the new layout mockups to the repo and reports
+  back. Waiting on that upload now.
+- From the discarded round, history only: the standing instructions
+  were "Make an identical version. Pixel by pixel" with one allowed
+  edit, the mockup purple replaced by the app's pre-defined purple.
+  Whether the purple swap carries to the NEW layout is unconfirmed;
+  ask him when the upload lands.
+- The process stands: he shares a mockup, it is built identically on
+  this chat's branch, he merges, then reviews on his phone at the
+  preview address. Ship order: Home first, then Lab, then Totals.
 
 ## Where the older work lives
 
@@ -78,8 +80,10 @@ inside Lab.
 - **Removing the last chip lands on a clean, empty Lab**, not back on
   Home. The owner asked for this explicitly: "i want a view inside the
   lab that is clean from selections."
-- **Compare only works within one group.** Cross-group selections
-  combine instead.
+- **Compare works across groups**, ruled 26 August 2026: anything can
+  be compared inside one domain. Selecting combines; a Compare button
+  appears at exactly two selections and flips them to side by side,
+  ruled 28 August 2026. See `docs/decisions.md`.
 - **The rule teaches itself by dimming** chips you cannot pair with, not
   by colour-coding the groups.
 
