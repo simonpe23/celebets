@@ -62,26 +62,27 @@ export async function middleware(request: NextRequest) {
   const isPublicPage =
     pathname.startsWith("/terms") ||
     pathname.startsWith("/privacy") ||
-    pathname.startsWith("/about");
+    pathname.startsWith("/about") ||
+    // THE DESIGN PREVIEWS ARE PUBLIC. The owner's ruling, 28 August
+    // 2026: "open the preview without login, nothing needs to be
+    // locked." They carry made up demo numbers, never user data, and
+    // he reviews them on his phone without a session. Public means
+    // public for everyone: they must be here with the footer pages,
+    // NOT in isAuthPage below, because an auth page bounces a
+    // logged-IN visitor to /app, which would lock the owner himself
+    // out of his own previews.
+    pathname.startsWith("/preview");
 
   if (isPublicPage) return supabaseResponse;
 
   // Pages reachable without being logged in. /signup, /forgot-password
   // and /reset-password used to be here; they are redirects to /login
   // now (next.config.ts) and never reach the middleware.
-  const isAuthPage =
-    pathname.startsWith("/login") ||
-    // THE DESIGN PREVIEWS. They ARE deployed now (the owner ruled on
-    // 23 August 2026 that they should be committed, so the work is
-    // backed up rather than living in one temporary container). This
-    // line is what keeps them out of a stranger's hands: in
-    // production /preview is not an auth page, so a logged-OUT
-    // visitor who guesses the address is bounced to /login like any
-    // other private page. A logged-IN user reaches them, which is
-    // the point, because that is how the owner and the testers look
-    // at a preview on their own phones.
-    (process.env.NODE_ENV === "development" &&
-      pathname.startsWith("/preview"));
+  // The previews used to sit here behind a development-only
+  // exception, which kept them login-gated in production. That gate
+  // was lifted 28 August 2026 by the owner's ruling; they are public
+  // pages above now.
+  const isAuthPage = pathname.startsWith("/login");
 
   // The /auth routes turn emailed links into sessions, so they are
   // never redirected. The demo login route is in the same business:

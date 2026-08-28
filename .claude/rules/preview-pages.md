@@ -21,13 +21,15 @@ Committed since 24 August 2026, by the owner's ruling.
 applies.** Utility classes generate here normally now. Inline styles are
 no longer required as a workaround.
 
-## They are private, without any extra code
+## They are public, by ruling
 
-`src/middleware.ts` treats `/preview/*` as public **only in
-development**. In production a logged-out visitor who guesses the URL is
-bounced to `/login`. A logged-in user reaches it, which is the point.
+Since 28 August 2026, `src/middleware.ts` treats `/preview/*` as a
+public page in every environment, like the footer pages. The owner's
+words: "open the preview without login, nothing needs to be locked."
+They carry made up demo numbers, never user data.
 
-Do not "fix" this by adding another gate.
+Do not "fix" this by adding a gate back. And never put real user data
+on a preview page: public is the standing state.
 
 ## What is live here
 

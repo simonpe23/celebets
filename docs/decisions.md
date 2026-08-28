@@ -452,6 +452,13 @@ badge, the app's existing pattern for a door that is not open yet.
 tabs, but we have expanded to 3): Home, Lab, Totals." So a mockup
 drawn with a two tab switcher is still built with three.
 
+**THE PREVIEWS ARE PUBLIC, NO LOGIN.** Ruled 28 August 2026: "open the
+preview without login, nothing needs to be locked. im gonna move fast
+so we're only talking about a day or two before we go live anyway."
+This lifts the production login gate that had protected `/preview/*`
+since the previews were first deployed. They show made up demo numbers
+only; real user data must never appear on one.
+
 **The heatmap lives on HOME, not in Lab.** Confirmed 26 August 2026: "I
 lives on home page. might add to lab later but that page is already
 kinda busy." His own written summary had put it under Lab; this
