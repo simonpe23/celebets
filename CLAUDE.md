@@ -121,6 +121,9 @@ Keep it current: when a job finishes, delete its line.
     Build order, his words: "Home, Lab, Totals are the main pages.
     Other pages inside Performance are: Compare, All Bets, Insights."
     Nothing is built before he shares the mockup and approves.
+    Home ships first and goes live alone: on day one Totals holds
+    today's `/stats` content unredesigned and Lab wears a Soon badge.
+    A mockup showing a two tab switcher is still built with three.
 - **App Store submission**, in a separate chat with the owner. Settings
   and store config, not code.
 

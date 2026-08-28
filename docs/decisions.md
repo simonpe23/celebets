@@ -436,6 +436,22 @@ Performance + from Track." Not on Research, not on Profile. The older
 later". Recorded as idea 32 in `IDEAS.md`; ask him when Track is next
 touched.
 
+**THE BUILD SHIPS TAB BY TAB. Ruled 28 August 2026**, his words: "We
+start with Home. We go live with home. We build the infrastructure to
+add more tabs and pages. Then when Home is approved, we move on to Labs
+and start building that one."
+
+**Day one of Home live: Totals holds today's page, Lab says Soon.**
+Ruled 28 August 2026, he picked this from a question. The Totals tab
+shows today's live `/stats` content unredesigned until its own mockup
+is built, so nothing a user can do today disappears. Lab wears a Soon
+badge, the app's existing pattern for a door that is not open yet.
+
+**Three tabs even where a mockup shows two.** His words, 28 August
+2026: "inside performance we have 3 tabs (some mockups might show 2
+tabs, but we have expanded to 3): Home, Lab, Totals." So a mockup
+drawn with a two tab switcher is still built with three.
+
 **The heatmap lives on HOME, not in Lab.** Confirmed 26 August 2026: "I
 lives on home page. might add to lab later but that page is already
 kinda busy." His own written summary had put it under Lab; this
