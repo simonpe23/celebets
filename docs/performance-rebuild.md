@@ -12,12 +12,17 @@ serves the old Analytics page.
   mockups = discard them. erase from your memory. do not make new
   version based on the template. what im giving you now is not
   refinements, its a new layout."
-- **The new Home is BUILT from the six sheets**, 28 August 2026, from
-  an empty file: `Performance Menu .png` and `_2`, `hero chart.png`,
-  `kpi row + insights row_2.png`, `mini buttons.png`, `top list.png`
-  (repo root). Colours pixel sampled, geometry measured per sheet at
-  its own scale. The one ruled exception: the sheets' indigo wears the
-  app's purple. Under his review at `/preview/performance-home`.
+- **Round 2, 28 August 2026: the Home is rebuilt to the two full
+  mockups** `1. mockup_Aug 28.png` (the spec from the KPI row down) and
+  `2. big chart Aug 28.png` (the top: menu row with Heat Map, result,
+  full width chart, no card). His round 2 orders applied: menu higher,
+  one cohesive KPI row blended into the chart, subtler texture behind
+  the chart, page runs to the bottom, and a taller bottom tab bar with
+  more prominent icons regardless of the mockup (his instruction 6).
+  The wash behind chart and KPI row is the sheet's own background,
+  extracted to `public/preview-assets/home-wash.png` with his approval
+  of a background image. Indigo wears the app's purple, his ruling.
+  Under his review at `/preview/performance-home`.
 - The process stands: he shares a mockup, it is built identically on
   this chat's branch, he merges, then reviews on his phone at the
   preview address. Ship order: Home first, then Lab, then Totals.

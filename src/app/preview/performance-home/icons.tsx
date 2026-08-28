@@ -278,34 +278,36 @@ export function ProfileTabIcon({ size = 13 }: { size?: number }) {
   );
 }
 
-// The faint contour lines and dot grid living inside the hero wash.
+// The faint contour lines and dot grid living inside the wash. Round
+// 2 note from the owner: subtle, and behind the chart. Kept close to
+// invisible on purpose.
 export function WashTexture() {
   return (
     <svg
       className="absolute inset-0 h-full w-full"
       preserveAspectRatio="none"
-      viewBox="0 0 390 320"
+      viewBox="0 0 390 372"
       fill="none"
       aria-hidden
     >
-      {[0, 14, 28, 42, 56, 70].map((o) => (
+      {[0, 16, 32, 48, 64].map((o) => (
         <path
           key={o}
-          d={`M-20 ${180 + o * 0.9} C 60 ${150 + o} 130 ${230 - o * 0.4} 220 ${205 + o * 0.5} S 380 ${170 + o} 410 ${190 + o}`}
-          stroke="#CFC2EC"
-          strokeWidth="0.8"
-          opacity="0.4"
+          d={`M-20 ${268 + o * 0.8} C 70 ${240 + o} 150 ${310 - o * 0.4} 250 ${288 + o * 0.5} S 380 ${252 + o} 410 ${272 + o}`}
+          stroke="#C9BCE8"
+          strokeWidth="0.7"
+          opacity="0.15"
         />
       ))}
-      {Array.from({ length: 9 }, (_, r) =>
-        Array.from({ length: 13 }, (_, c) => (
+      {Array.from({ length: 7 }, (_, r) =>
+        Array.from({ length: 11 }, (_, c) => (
           <circle
             key={`${r}-${c}`}
-            cx={190 + c * 16}
-            cy={140 + r * 16}
-            r="0.9"
-            fill="#D6C9EE"
-            opacity="0.22"
+            cx={210 + c * 17}
+            cy={200 + r * 17}
+            r="0.8"
+            fill="#CFC3EA"
+            opacity="0.12"
           />
         ))
       )}

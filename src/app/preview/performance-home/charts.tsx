@@ -1,10 +1,9 @@
-// The hero chart and the row sparklines for the new Home, measured
-// from the sheets of 28 August 2026. The hero line is the app's
-// purple (owner's ruling: "keep apps purple") over the soft wash, with
-// a dotted zero line and the scale $3K to -$1.5K on the right. Row
-// sparklines carry no end dots in these sheets. Series are
-// deterministic: the same line every render. Hand drawn SVG, no chart
-// library.
+// The hero chart and the row sparklines, measured from the round 2
+// mockups of 28 August 2026 (1. mockup_Aug 28.png and 2. big chart
+// Aug 28.png). The hero line spans the full width and blends into the
+// page: no card, the wash behind it is the real background lifted from
+// the sheet. The line wears the app's purple, the owner's standing
+// ruling. Deterministic series, hand drawn SVG, no chart library.
 
 function mulberry32(seed: number) {
   let a = seed;
@@ -48,29 +47,29 @@ function toPoints(
     .join(" ");
 }
 
-// The hero sheet's line: opens near -$1.1K, stumbles once, then climbs
-// all month and ends top right on about +$2.9K with a solid dot.
+// The big chart sheet's line: opens near -$1.15K, wobbles low through
+// the first days, then a long steady climb with shelves and a strong
+// final week to +$2.9K, ending on a solid dot.
 const HERO = series(
-  23,
-  [-1050, -1250, -900, -500, -150, 150, -50, 450, 800, 700, 1150, 1500, 1350, 1750, 2100, 1950, 2450, 2800, 2900],
-  150,
-  120
+  31,
+  [-1150, -1300, -1000, -650, -750, -300, 100, 0, 450, 800, 700, 1100, 1450, 1350, 1700, 2050, 1950, 2400, 2750, 2900],
+  160,
+  110
 );
 
-export const HERO_MIN = -1500;
-export const HERO_MAX = 3000;
+const MIN = -1500;
+const MAX = 3000;
 
 export function HeroChart({
-  width = 295,
-  height = 126,
+  width = 314,
+  height = 130,
 }: {
   width?: number;
   height?: number;
 }) {
-  const pts = toPoints(HERO, width, height, HERO_MIN, HERO_MAX);
-  const zeroY = height - ((0 - HERO_MIN) / (HERO_MAX - HERO_MIN)) * height;
+  const pts = toPoints(HERO, width, height, MIN, MAX);
   const last = HERO[HERO.length - 1];
-  const lastY = height - ((last - HERO_MIN) / (HERO_MAX - HERO_MIN)) * height;
+  const lastY = height - ((last - MIN) / (MAX - MIN)) * height;
   return (
     <svg
       width="100%"
@@ -84,12 +83,13 @@ export function HeroChart({
           <stop offset="1" style={{ stopColor: "var(--brand-mark)" }} stopOpacity="0.01" />
         </linearGradient>
       </defs>
+      {/* the faint dotted reference line, rising a touch like the sheet */}
       <line
         x1="0"
-        y1={zeroY}
-        x2={width + 12}
-        y2={zeroY}
-        stroke="#B9B3C6"
+        y1={height * 0.76}
+        x2={width}
+        y2={height * 0.68}
+        stroke="#C4BED2"
         strokeWidth="1"
         strokeDasharray="2 4"
       />
@@ -104,14 +104,13 @@ export function HeroChart({
         strokeWidth="2"
         strokeLinejoin="round"
       />
-      <circle cx={width} cy={lastY} r="4" style={{ fill: "var(--brand-mark)" }} />
+      <circle cx={width} cy={lastY} r="4.5" style={{ fill: "var(--brand-mark)" }} />
     </svg>
   );
 }
 
 // Sparklines: purple and rising on the earners, red and falling on the
-// leak. A soft fade under each, no end dot, as the top list sheet
-// draws them.
+// leak, a soft fade under each, no end dot.
 const SPARKS: Record<string, number[]> = {
   up1: series(11, [14, 30, 18, 8, 26, 34, 30, 44, 40, 56, 52, 66], 70, 6),
   up2: series(22, [10, 18, 26, 22, 36, 32, 46, 42, 54, 66], 64, 5),
