@@ -18,11 +18,6 @@ serves the old Analytics page.
   (repo root). Colours pixel sampled, geometry measured per sheet at
   its own scale. The one ruled exception: the sheets' indigo wears the
   app's purple. Under his review at `/preview/performance-home`.
-- From the discarded round, history only: the standing instructions
-  were "Make an identical version. Pixel by pixel" with one allowed
-  edit, the mockup purple replaced by the app's pre-defined purple.
-  Whether the purple swap carries to the NEW layout is unconfirmed;
-  ask him when the upload lands.
 - The process stands: he shares a mockup, it is built identically on
   this chat's branch, he merges, then reviews on his phone at the
   preview address. Ship order: Home first, then Lab, then Totals.
