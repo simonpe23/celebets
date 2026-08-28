@@ -17,20 +17,14 @@ serves the old Analytics page.
   sizes or its layout. The next build starts from an empty file when
   the owner uploads the new layout mockups to the repo and reports
   back. Waiting on that upload now.
-- His build instruction, quoted: "Make an identical version. Pixel by
-  pixel." The one allowed edit: "The purple color. Use Actuals
-  pre-defined purple colors instead." So fills use brand-top to
-  brand-bottom and lines, links and icons use brand-mark.
-- The mockup's word face is matched with Plus Jakarta Sans (closest
-  free stand-in for the Circular family). The numerals measured out as
-  Inter Tight, the app's own numeral face, and use `font-money`.
-- Known divergences from the sheet, all deliberate: no fake status bar
-  or home indicator (the real phone provides them), and the purple
-  swap above. One oddity copied as drawn and flagged to the owner: the
-  small green dot on the football icon.
-- The process: he shares a mockup, it is built identically on this
-  chat's branch, he merges, then reviews on his phone at the preview
-  address. Ship order: Home first, then Lab, then Totals.
+- From the discarded round, history only: the standing instructions
+  were "Make an identical version. Pixel by pixel" with one allowed
+  edit, the mockup purple replaced by the app's pre-defined purple.
+  Whether the purple swap carries to the NEW layout is unconfirmed;
+  ask him when the upload lands.
+- The process stands: he shares a mockup, it is built identically on
+  this chat's branch, he merges, then reviews on his phone at the
+  preview address. Ship order: Home first, then Lab, then Totals.
 
 ## Where the older work lives
 
