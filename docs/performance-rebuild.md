@@ -5,10 +5,16 @@ serves the old Analytics page.
 
 ## The build from finished mockups (current stage)
 
-- **`src/app/preview/performance-home/`, the new Home**, built
+- **`src/app/preview/performance-home/`, the new Home.** First built
   28 August 2026 identically from the owner's mockup
-  `14. Chat Aug 27.png` (repo root). Static, light only, phone first.
-  Awaiting his review at `/preview/performance-home`.
+  `14. Chat Aug 27.png` (repo root), then rebuilt the same day area by
+  area to four sheets he shared in chat ("i want my page to look like
+  this. i love it"): the purple result and chart with a This month
+  selector, the four fact strip, the Actuals noticed card, the ranked
+  numbered list, the lavender Lab card, the new tab marks. The four
+  sheets exist only in that chat until he uploads them to the repo;
+  colours were read by eye and await pixel sampling. Static, light
+  only, phone first. Under review at `/preview/performance-home`.
 - His build instruction, quoted: "Make an identical version. Pixel by
   pixel." The one allowed edit: "The purple color. Use Actuals
   pre-defined purple colors instead." So fills use brand-top to

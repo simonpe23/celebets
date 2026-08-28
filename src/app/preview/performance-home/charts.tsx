@@ -1,8 +1,8 @@
-// The big profit chart and the row sparklines, drawn to match the
-// owner's Home mockup. Series are deterministic: a seeded generator
-// shaped through anchor points, so every render draws the same line
-// the mockup drew. No chart library, hand drawn SVG like the rest of
-// the app.
+// The big profit chart and the row sparklines, matched to the owner's
+// area mockups of 28 August 2026: a purple line with a purple wash, a
+// dotted zero line, purple sparklines on the earners and a red one on
+// the leak. Series are deterministic so every render draws the same
+// line. No chart library, hand drawn SVG like the rest of the app.
 
 // Deterministic PRNG so the jagged daily noise never changes between
 // renders or builds.
@@ -50,30 +50,32 @@ function toPoints(
     .join(" ");
 }
 
-// The mockup's line: starts just under zero, sinks to about -$1.2K in
-// June, climbs across zero in mid July and ends at the top right on
-// about +$2.85K with a solid dot.
+// The month sheet's line: starts under zero, finds its feet early and
+// climbs all month with small stumbles, ending top right on about
+// +$2.9K with a solid dot.
 const BIG = series(
-  7,
-  [-250, -700, -1200, -900, -400, 200, 650, 400, 1100, 1500, 1250, 1900, 2300, 1950, 2500, 2850],
-  150,
-  170
+  19,
+  [-450, -800, -350, 150, 600, 450, 1000, 1400, 1200, 1800, 1650, 2100, 2500, 2350, 2750, 2900],
+  140,
+  140
 );
 
+// $3K at the top, -$1.5K at the bottom, the sheet's own scale.
+export const BIG_MIN = -1500;
+export const BIG_MAX = 3000;
+export const zeroFraction = (0 - BIG_MIN) / (BIG_MAX - BIG_MIN);
+
 export function BigChart({
-  width = 366,
-  height = 87,
+  width = 330,
+  height = 112,
 }: {
   width?: number;
   height?: number;
 }) {
-  // $3K at the top, -$1.5K at the bottom, the mockup's own scale.
-  const MIN = -1500;
-  const MAX = 3000;
-  const pts = toPoints(BIG, width, height, MIN, MAX);
-  const zeroY = height - ((0 - MIN) / (MAX - MIN)) * height;
+  const pts = toPoints(BIG, width, height, BIG_MIN, BIG_MAX);
+  const zeroY = height - zeroFraction * height;
   const last = BIG[BIG.length - 1];
-  const lastY = height - ((last - MIN) / (MAX - MIN)) * height;
+  const lastY = height - ((last - BIG_MIN) / (BIG_MAX - BIG_MIN)) * height;
   return (
     <svg
       width="100%"
@@ -83,12 +85,20 @@ export function BigChart({
     >
       <defs>
         <linearGradient id="ph-big-fill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#12A012" stopOpacity="0.20" />
-          <stop offset="1" stopColor="#12A012" stopOpacity="0.02" />
+          <stop offset="0" style={{ stopColor: "var(--brand-mark)" }} stopOpacity="0.22" />
+          <stop offset="1" style={{ stopColor: "var(--brand-mark)" }} stopOpacity="0.02" />
         </linearGradient>
       </defs>
-      {/* the zero line */}
-      <line x1="0" y1={zeroY} x2={width} y2={zeroY} stroke="#B9B5B2" strokeWidth="1" />
+      {/* the dotted zero line */}
+      <line
+        x1="0"
+        y1={zeroY}
+        x2={width}
+        y2={zeroY}
+        stroke="#B9B7C4"
+        strokeWidth="1"
+        strokeDasharray="2.5 4"
+      />
       {/* the wash under the line, down to the chart floor */}
       <polygon
         points={`0,${height} ${pts} ${width},${height}`}
@@ -97,18 +107,17 @@ export function BigChart({
       <polyline
         points={pts}
         fill="none"
-        stroke="#12A012"
-        strokeWidth="1.8"
+        style={{ stroke: "var(--brand-mark)" }}
+        strokeWidth="2"
         strokeLinejoin="round"
       />
-      <circle cx={width} cy={lastY} r="4.5" fill="#12A012" />
+      <circle cx={width} cy={lastY} r="4.5" style={{ fill: "var(--brand-mark)" }} />
     </svg>
   );
 }
 
-// One sparkline per ranked row: purple for the lead row, green for
-// earners, red and falling for the leak. Gradient fades under each,
-// solid dot on the end, as the mockup draws them.
+// One sparkline per ranked row: purple on the earners, red and falling
+// on the leak. Gradient fades under each, solid dot on the end.
 const SPARKS: Record<string, number[]> = {
   up1: series(11, [5, 18, 14, 30, 26, 42, 40, 55, 70], 60, 7),
   up2: series(22, [8, 16, 24, 20, 34, 30, 44, 52, 66], 60, 6),
@@ -120,8 +129,8 @@ const SPARKS: Record<string, number[]> = {
 export function Spark({
   shape,
   color,
-  width = 122,
-  height = 40,
+  width = 96,
+  height = 34,
 }: {
   shape: keyof typeof SPARKS;
   color: string;
@@ -145,8 +154,8 @@ export function Spark({
     >
       <defs>
         <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor={color} stopOpacity="0.22" />
-          <stop offset="1" stopColor={color} stopOpacity="0" />
+          <stop offset="0" style={{ stopColor: color }} stopOpacity="0.22" />
+          <stop offset="1" style={{ stopColor: color }} stopOpacity="0" />
         </linearGradient>
       </defs>
       <polygon
@@ -156,11 +165,11 @@ export function Spark({
       <polyline
         points={pts}
         fill="none"
-        stroke={color}
+        style={{ stroke: color }}
         strokeWidth="1.6"
         strokeLinejoin="round"
       />
-      <circle cx={width} cy={lastY} r="3.4" fill={color} />
+      <circle cx={width} cy={lastY} r="3" style={{ fill: color }} />
     </svg>
   );
 }
