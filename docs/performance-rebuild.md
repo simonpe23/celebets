@@ -84,8 +84,10 @@ inside Lab.
 - **Removing the last chip lands on a clean, empty Lab**, not back on
   Home. The owner asked for this explicitly: "i want a view inside the
   lab that is clean from selections."
-- **Compare only works within one group.** Cross-group selections
-  combine instead.
+- **Compare works across groups**, ruled 26 August 2026: anything can
+  be compared inside one domain. Selecting combines; a Compare button
+  appears at exactly two selections and flips them to side by side,
+  ruled 28 August 2026. See `docs/decisions.md`.
 - **The rule teaches itself by dimming** chips you cannot pair with, not
   by colour-coding the groups.
 
