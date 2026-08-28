@@ -217,3 +217,30 @@ when it was fine.
 
 **What replaced it:** `data-chart-panel`, a test hook that is not a
 style. Never let a test find its target by copy.
+
+---
+
+## Pouring the new sheets into the old build's density
+
+**What happened:** 28 August 2026 the owner shared four area sheets for
+the new Home and asked for an identical copy. The areas were rebuilt
+inside the existing preview's scale: its 12px margins, its 25px
+switcher, its 10px metas, its cramped rhythm. The new parts were all
+there, wearing the old page's density.
+
+**Why it failed:** his words: "the ugliest preview I've seen in my
+entire life... It looks just like the old one, but it's an uglier
+version... nothing like the screenshots that I have provided."
+
+**The lesson, two halves:**
+
+1. **A new sheet brings its own scale and its own air.** Measure the
+   new sheet. Never inherit the previous build's density, even on the
+   same page in the same week. The sheets were generous and airy; the
+   build squeezed them into the old compactness, which is the same
+   disease as the reskin failure above, one level up.
+2. **The parts no sheet covers cannot be silently carried over.** The
+   title and the switcher came from the old design because no new
+   sheet showed them, and they made the whole page read as "the old
+   one". When an area has no sheet, ask what it should be. Do not fill
+   the gap with the past.

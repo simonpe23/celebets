@@ -80,3 +80,16 @@ words.** When they do, **his current words win.** Say plainly which
 source you followed, and flag the conflict rather than silently
 resolving it. He confirmed this directly: "what i have said is more true
 than the mockup."
+
+## A second trap: inheriting density
+
+Bought 28 August 2026, the same day the scale rules above were followed
+for one sheet and then silently reused for the next.
+
+- **Each new sheet brings its own scale and its own air.** Measure the
+  new sheet's geometry from zero. Never carry the previous build's
+  margins, control heights or type sizes into a new sheet's build, even
+  for the same page.
+- **When an area has no sheet, ask.** Filling the gap with the old
+  design made the whole page read as the old page. The owner: "It looks
+  just like the old one, but it's an uglier version."
