@@ -5,16 +5,18 @@ serves the old Analytics page.
 
 ## The build from finished mockups (current stage)
 
-- **`src/app/preview/performance-home/`, the new Home.** First built
-  28 August 2026 identically from the owner's mockup
-  `14. Chat Aug 27.png` (repo root), then rebuilt the same day area by
-  area to four sheets he shared in chat ("i want my page to look like
-  this. i love it"): the purple result and chart with a This month
-  selector, the four fact strip, the Actuals noticed card, the ranked
-  numbered list, the lavender Lab card, the new tab marks. The four
-  sheets exist only in that chat until he uploads them to the repo;
-  colours were read by eye and await pixel sampling. Static, light
-  only, phone first. Under review at `/preview/performance-home`.
+- **RESET, 28 August 2026. Both Home builds of this date are
+  DISCARDED.** The identical build of `14. Chat Aug 27.png` and the
+  four-sheet area rebuild after it were both rejected. His ruling, in
+  his words: "the last 2 previews that you have created from my
+  mockups = discard them. erase from your memory. do not make new
+  version based on the template. what im giving you now is not
+  refinements, its a new layout."
+- **Nothing in `src/app/preview/performance-home/` is reference
+  material.** No future build may start from it, borrow its scale, its
+  sizes or its layout. The next build starts from an empty file when
+  the owner uploads the new layout mockups to the repo and reports
+  back. Waiting on that upload now.
 - His build instruction, quoted: "Make an identical version. Pixel by
   pixel." The one allowed edit: "The purple color. Use Actuals
   pre-defined purple colors instead." So fills use brand-top to
