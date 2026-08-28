@@ -12,11 +12,12 @@ serves the old Analytics page.
   mockups = discard them. erase from your memory. do not make new
   version based on the template. what im giving you now is not
   refinements, its a new layout."
-- **Nothing in `src/app/preview/performance-home/` is reference
-  material.** No future build may start from it, borrow its scale, its
-  sizes or its layout. The next build starts from an empty file when
-  the owner uploads the new layout mockups to the repo and reports
-  back. Waiting on that upload now.
+- **The new Home is BUILT from the six sheets**, 28 August 2026, from
+  an empty file: `Performance Menu .png` and `_2`, `hero chart.png`,
+  `kpi row + insights row_2.png`, `mini buttons.png`, `top list.png`
+  (repo root). Colours pixel sampled, geometry measured per sheet at
+  its own scale. The one ruled exception: the sheets' indigo wears the
+  app's purple. Under his review at `/preview/performance-home`.
 - From the discarded round, history only: the standing instructions
   were "Make an identical version. Pixel by pixel" with one allowed
   edit, the mockup purple replaced by the app's pre-defined purple.
