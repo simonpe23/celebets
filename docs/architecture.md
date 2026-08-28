@@ -19,6 +19,7 @@ Public (no login):
 | `/` | Landing page. Logged-in users are redirected to `/app`. |
 | `/login` | The only auth page. |
 | `/about`, `/privacy`, `/terms` | Legal and footer pages. |
+| `/demo/<code>` | The shareable demo link: one click into the demo account. The page forwards the code from the address to `/api/demo-login`. A wrong code renders "That link is not active." |
 
 Private (login gate in `src/middleware.ts`):
 
@@ -57,6 +58,8 @@ these exceptions:
 - `/`, `/about`, `/privacy`, `/terms` are public to everyone.
 - `/login` and `/auth/*` are reachable logged out by definition.
 - `/api/demo-login` is exempt: its whole job is being called logged out.
+- `/demo/` pages are exempt for the same reason: the link's whole
+  audience is logged out.
 - `/preview/*` is treated as public **only in development**. In
   production the previews are deployed but gated, so a stranger who
   guesses the URL is bounced to login while the owner and testers can

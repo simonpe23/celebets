@@ -23,8 +23,12 @@ import { chromium } from "playwright";
 const ARG = process.argv[2] ?? "3105";
 const BASE = ARG.startsWith("http") ? ARG.replace(/\/$/, "") : `http://localhost:${ARG}`;
 
-// Everything a logged out visitor can reach.
-const PUBLIC = ["/", "/login", "/terms", "/privacy", "/about"];
+// Everything a logged out visitor can reach. /demo/check is the demo
+// link page knocked with a wrong code on purpose: it must RENDER its
+// "not active" state, never redirect to /login and never 500. The
+// real code is only in Vercel, so the working link cannot be tested
+// from here, but the door's failure mode can.
+const PUBLIC = ["/", "/login", "/terms", "/privacy", "/about", "/demo/check"];
 // The password era's addresses. They must land on /login (redirects in
 // next.config.ts), because old bookmarks and old emailed links still
 // point at them.
@@ -120,8 +124,16 @@ for (const theme of ["light", "dark"]) {
     const page = await ctx.newPage();
     const errors = [];
     const failedRequests = [];
+    // /demo/check knocks on /api/demo-login with a wrong code ON
+    // PURPOSE, and the browser logs every non-2xx response as a
+    // console error. That one rejection is the door working, so it is
+    // not a finding. Everything else on the page still is.
+    const expectedKnock =
+      path === "/demo/check" && /the server responded with a status of (401|404|500)/;
     page.on("console", (m) => {
-      if (m.type() === "error") errors.push(m.text());
+      if (m.type() !== "error") return;
+      if (expectedKnock && expectedKnock.test(m.text())) return;
+      errors.push(m.text());
     });
     page.on("pageerror", (e) => errors.push(String(e)));
     // Next.js prefetches the next page's data in the background and
