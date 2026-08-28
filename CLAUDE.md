@@ -8,6 +8,10 @@ The owner has no coding experience. These rules are permanent.
   skim only the bold bullet openings and miss nothing that needs him?
 - **Anything that needs his eyes goes FIRST**, as its own bullet, never
   buried mid-paragraph and never after a comma.
+- **Any click he must make comes with a full pasted link.** His words,
+  28 August 2026: "u have to paste a full link if you want me to click
+  on anything." Never say "merge the branch" or name a button without
+  the URL that leads to it.
 - **Be brief.** A handful of bullets, not a report. Cut reasoning unless
   it changes a decision. Do not list every test that passed; say it
   works. Do not restate the question.
