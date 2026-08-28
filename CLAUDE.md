@@ -115,8 +115,12 @@ Keep it current: when a job finishes, delete its line.
   - `docs/mockup-briefs.md` holds draft designer prompts. **Reference
     only, not rules.** He writes his own prompts now.
   - What is still undecided is in `docs/open-questions.md`.
-  - Current stage: **mockups**, with the owner's external designer.
-    Nothing is being built in the app yet.
+  - Current stage: **building from finished mockups**, 28 August 2026.
+    The owner shares each mockup in the rebuild chat and it is built
+    identically, screen by screen, on that chat's branch. He merges.
+    Build order, his words: "Home, Lab, Totals are the main pages.
+    Other pages inside Performance are: Compare, All Bets, Insights."
+    Nothing is built before he shares the mockup and approves.
 - **App Store submission**, in a separate chat with the owner. Settings
   and store config, not code.
 

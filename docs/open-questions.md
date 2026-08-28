@@ -53,28 +53,21 @@ old words, and every provider mapper points at them.
 our font." The mockup designer will propose; nothing is chosen and the
 build keeps Geist and Inter Tight until he approves.
 
-**HOW THE USER SAYS "COMBINE" RATHER THAN "COMPARE".** This one is new
-and it matters, because his 26 August ruling opened it.
+**RESOLVED 28 August 2026: how the user says "combine" rather than
+"compare".** He was asked and confirmed his written summary as the
+ruling: selecting chips combines, and "a Compare button appears that
+flips the same two selections from 'added together' to 'side by side'".
+"Compare appears whenever exactly two things are selected, whatever
+they are, and disappears at three." Two is the maximum. See
+`docs/decisions.md`. The exact look of the comparison view is still the
+designer's to propose.
 
-Compare now works across groups: Football against NBA, Moneyline against
-1st Half, anything against anything inside one domain. Under the old
-rule the groups decided for the user (same group compared, different
-groups combined), and that is gone.
-
-So Football plus Moneyline is now ambiguous. It could mean "my Football
-Moneyline record" (combine, one answer) or "Football against Moneyline"
-(compare, two answers side by side). **Both are things a user would
-want, and nothing currently distinguishes them.**
-
-The obvious guess is that selecting chips combines, and a Compare
-control switches the same selection into a comparison. **That is an
-inference, not his ruling.** He has not been asked.
-
-**Where Compare lives is settled**: inside Lab. How it presents itself
-is not. He floated a Compare button, then doubted it ("this is not clear
-for me yet"), and his own mockup shows a whole family compared at once.
-The mockup designer is asked to propose; whatever comes back is a
-proposal, not a decision.
+**What the purple chart line does below zero.** His ruling on the chart
+was recorded as "Purple line for profit and red for losses." Today's
+live chart flips from green to red where the line crosses zero. Whether
+the purple line turns red below zero, or red stays only on money
+figures, has not been asked. Needed at the latest when Home's chart is
+built.
 
 **The topic picker's door label.** He asked for a new name and did not
 give one. "Something else" is a placeholder. "Category" is the obvious

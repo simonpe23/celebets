@@ -91,10 +91,11 @@ moves between them constantly. Home hands questions to Lab. Lab hands
 lists of bets to the ledger at the bottom of Totals. Nothing is a dead
 end.
 
-**One thing sits on all three, and on every other screen in the app: the
-sparkle.** It is a small amber control in the top right, and it opens
-Insights. Insights are reachable from everywhere, so the sparkle is
-drawn everywhere. It is the only amber thing in Actuals.
+**One thing sits on all three, and on every Performance screen, plus
+Track: the sparkle.** It is a small amber control in the top right, and
+it opens the Insights popup. His answer, 28 August 2026: "Everywhere in
+Performance + from Track." Not on Research, not on Profile. It is the
+only amber thing in Actuals.
 
 ---
 
@@ -158,13 +159,11 @@ because no bet can be in two domains at once.
 **Compare lives inside Lab, and it needs a visible control.** It must be
 drawn.
 
-**One thing is genuinely undecided, and we want your proposal.** Since
-any two chips can now be compared, there is nothing that tells the app
-whether Football plus Moneyline means "combine these into one answer" or
-"show these two side by side". Our guess is that selecting chips
-combines, and a Compare control turns the same selection into a
-comparison. That is a guess, not a decision. Draw what you think is
-right.
+**This was undecided and he ruled it, 28 August 2026.** Selecting chips
+combines. When exactly two chips are selected, "a Compare button
+appears that flips the same two selections from 'added together' to
+'side by side'". It "disappears at three", so two is the maximum: no
+three-way comparison.
 
 What the comparison has to answer, in this order: which one is better
 for me, by how much in both profit and record, and how many bets sit
@@ -270,15 +269,19 @@ and green blocks turn the quietest page in the app into a Christmas
 tree. It has been drawn with the label "Money map", which is a good
 name for it.
 
-Then **What changed**, a quiet strip of movement over the last 30 days:
-"Tennis flipped from leak to earner", with the before and after figures.
+Then **What changed**, a button. Ruled 28 August 2026, in his own
+words: "an exciting button, living in Home. Once clicked, the page
+stays the same, but the top list changes, from your all time top list
+to a new top list of what has changed. Can still filter on 1 day,
+1 week, 1 month etc." A movement like "Tennis flipped from leak to
+earner" carries its before and after figures.
 
 Then a door into **Lab**, kept deliberately: "Check out our Lab. Build
 your Performance View."
 
 Tapping any finding, or any tile on the heatmap, opens Lab with that
-fact already selected. Home never grows filters of its own. It hands
-questions to Lab.
+fact already selected. Home grows no filters of its own, with one ruled
+exception: What Changed keeps its time filter. Questions go to Lab.
 
 **Two things were cut from Home and should not come back.** A modal
 insight card that appeared over the page, and All Facts as a page of
@@ -310,9 +313,10 @@ opens unfiltered. From Lab, "See these 26 bets" opens the same page
 already filtered to exactly those 26. It is the record of truth: the
 place a user goes when they doubt a number somewhere else in the app.
 
-**Insights** is the page behind the sparkle, reachable from anywhere.
-Insights are statements Actuals surfaced on its own, after the fact,
-from the user's own data. They always carry their evidence in the
+**Insights** live behind the sparkle, reachable from anywhere in
+Performance and from Track. The sparkle opens a popup, and the popup's
+"view all insights" link opens the full page. Insights are statements
+Actuals surfaced on its own, after the fact, from the user's own data. They always carry their evidence in the
 sentence itself:
 
 > Your 1st Half picks (7-4) beat your Full Time picks (20-11).
@@ -358,11 +362,13 @@ than boxes: a large figure with a small quiet label beneath it. Lists
 share one card and are divided by hairlines rather than chopped into
 competing boxes. White space is the material.
 
-**Purple means exactly two things: something you can press, and the
-profit line on the chart.** The chart line is purple, with a soft purple
-gradient fading beneath it, the way it has always been drawn in our
-mockups. Nothing else is purple: no links, no badges, no decoration, no
-filled panels.
+**Purple is the brand colour and it is not restricted to controls.** He
+withdrew the one-job rule on 26 August 2026: "Purple blends through the
+site. Does not have to be something you press or a button." The
+restraint lesson behind the old rule still stands ("too much purple,
+everywhere" was a real complaint), so judgement, not a law. The chart
+line is purple, with a soft purple gradient fading beneath it, the way
+it has always been drawn in our mockups.
 
 **Green and red mean money moved, and nothing else.** They belong to
 figures and to the heatmap's tiles. Never to a tag background, never to

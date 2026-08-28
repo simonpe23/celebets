@@ -386,11 +386,8 @@ against 1st Half. **The only limit is the domain**, which is the
 structural one that cannot move: nothing from Sports is ever compared
 with anything from Economics.
 
-**OPEN, and it needs him. This ruling creates a question nobody has
-answered:** if any two chips can now be compared, how does the user say
-"combine these" rather than "compare these"? Under the old rule the
-groups decided it for them. See `docs/open-questions.md`. Do not guess
-at a mechanism in a mockup brief without flagging it as a proposal.
+**RESOLVED 28 August 2026: the question of how the user says "combine"
+rather than "compare" is answered.** See "COMBINE VS COMPARE" below.
 
 **Dimming still teaches the domain rule.** The groups are separated by
 their headers already, and dimming the chips you cannot pair with
@@ -402,8 +399,42 @@ domains never mix.
 was removed: a number nobody can explain does not belong in a product.
 The cycling control that hid its own options was rejected as annoying.
 
-**Compare lives inside Lab.** Ruled 26 August 2026. How it is presented
-is still open; the mockup designer is asked to propose.
+**Compare lives inside Lab.** Ruled 26 August 2026.
+
+**COMBINE VS COMPARE: RULED 28 August 2026.** He confirmed that his own
+written summary is the ruling. Selecting chips combines. His words, from
+the summary:
+
+- "select Football and Baseball in Lab, see the combined total, and a
+  Compare button appears that flips the same two selections from 'added
+  together' to 'side by side'."
+- "Compare appears whenever exactly two things are selected, whatever
+  they are, and disappears at three."
+
+So two is the maximum: no three-way comparison. This closes the open
+question in `docs/open-questions.md`. The exact look of the comparison
+view is still the designer's to propose.
+
+**WHAT CHANGED IS A BUTTON THAT SWAPS THE LIST. Ruled 28 August 2026**,
+choosing his summary's version over the brief's "quiet strip". His
+words, from the summary:
+
+"What changed page: survives, an exciting button, living in Home. Once
+clicked, the page stays the same, but the top list changes, from your
+all time top list to a new top list of what has changed. Can still
+filter on 1 day, 1 week, 1 month etc."
+
+This narrows the brief's old rule that Home never grows filters: the
+What Changed view keeps its time filter. Questions still go to Lab.
+
+**THE SPARKLE LIVES IN PERFORMANCE AND ON TRACK ONLY. Ruled 28 August
+2026**, confirming his Q&A answer in the summary: "Everywhere in
+Performance + from Track." Not on Research, not on Profile. The older
+"reachable from everywhere in the app" line is corrected by this.
+
+**A Track door into All bets is parked.** 28 August 2026, "decide
+later". Recorded as idea 32 in `IDEAS.md`; ask him when Track is next
+touched.
 
 **The heatmap lives on HOME, not in Lab.** Confirmed 26 August 2026: "I
 lives on home page. might add to lab later but that page is already
@@ -429,8 +460,10 @@ Totals, on every screen, active tab marked.
 insights page is bleak today." It is currently a heading over a flat
 list of sentence rows.
 
-**Insights are reachable from everywhere in the app**, triggered by the
-sparkle.
+**Insights are reachable from everywhere in Performance and from
+Track**, triggered by the sparkle. Narrowed 28 August 2026 from
+"everywhere in the app": his answer is "Everywhere in Performance +
+from Track", so Research and Profile carry no sparkle.
 
 **The tab switcher may be a pill; everything below it is squared.**
 Ruled 26 August 2026: "pills goes at the top when switching from home to
