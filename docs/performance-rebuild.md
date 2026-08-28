@@ -1,9 +1,30 @@
 # The Performance rebuild (in flight)
 
-Status as of 26 August 2026. **Nothing here is shipped.** `/stats` still
+Status as of 28 August 2026. **Nothing here is shipped.** `/stats` still
 serves the old Analytics page.
 
-## Where the work lives
+## The build from finished mockups (current stage)
+
+- **`src/app/preview/performance-home/`, the new Home**, built
+  28 August 2026 identically from the owner's mockup
+  `14. Chat Aug 27.png` (repo root). Static, light only, phone first.
+  Awaiting his review at `/preview/performance-home`.
+- His build instruction, quoted: "Make an identical version. Pixel by
+  pixel." The one allowed edit: "The purple color. Use Actuals
+  pre-defined purple colors instead." So fills use brand-top to
+  brand-bottom and lines, links and icons use brand-mark.
+- The mockup's word face is matched with Plus Jakarta Sans (closest
+  free stand-in for the Circular family). The numerals measured out as
+  Inter Tight, the app's own numeral face, and use `font-money`.
+- Known divergences from the sheet, all deliberate: no fake status bar
+  or home indicator (the real phone provides them), and the purple
+  swap above. One oddity copied as drawn and flagged to the owner: the
+  small green dot on the football icon.
+- The process: he shares a mockup, it is built identically on this
+  chat's branch, he merges, then reviews on his phone at the preview
+  address. Ship order: Home first, then Lab, then Totals.
+
+## Where the older work lives
 
 - `src/app/preview/pf/`, the Portfolio prototype, walkable end to end.
   Its engine (`engine.ts`), skin (`theme.tsx`) and motion
