@@ -911,7 +911,7 @@ Moneyline, Parlays, Medium odds and Football all drew the same money:
 eight tiles summed to $11,637 on a $2,637 record, under a caption
 saying size meant impact.
 
-**Six places the Heat Map knowingly differs from the sheet. CLAUDE's
+**Seven places the Heat Map knowingly differs from the sheet. CLAUDE's
 calls, not his rulings, all reversible:**
 
 1. **The map splits by ONE group at a time**, with a quiet "BY SPORT"
@@ -948,6 +948,21 @@ calls, not his rulings, all reversible:**
    impact on your results"). `docs/performance-brief.md` says the
    tiles are "sized by how much was bet". The sheet is the newer
    instruction, so it wins; the brief's line is now out of date.
+7. **The tile icons are Lab's icons, not the sheet's.** The sheet
+   draws a monochrome green glyph inside each disc. The build draws
+   the platform emoji for sports and leagues and the quiet outline
+   glyph for the abstract groups, which is the language he accepted
+   for Lab after rejecting round 1: "i particularly hate your icons.
+   they all look the same." Totals uses the same emoji. A monochrome
+   map would be the only screen in Performance that did.
+
+**A Crypto tile sits beside the Football tile, and that is on
+purpose.** "DOMAINS NEVER COMBINE" is about selecting two chips from
+two trees, which is still impossible: the map never combines, each
+tile is one fact on its own, and tapping the Crypto tile opens Lab in
+Economics mode with the right groups. Totals already lists Crypto in
+Profit by Sport beside Football, and he accepted that page. The map
+is a picture of his whole record, so it shows the whole record.
 
 **Home's Heat Map pill is a link now. CLAUDE's call, flagged.** The
 ruling above says Home's ranked rows, the Explore Lab button and the
