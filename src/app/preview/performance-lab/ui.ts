@@ -58,6 +58,10 @@ export const HAIRLINE = "#EFEFF1";
 export const SEL_EDGE = "#B3A4F6";
 export const TRAY_EDGE = "rgba(55,8,228,0.45)";
 export const EDGE_SOFT = "#E7E7EC";
+// The floating tab bar: its frosted ground and the hairline inside
+// it. The one hex that had escaped the dial, on every page at once.
+export const TAB_GLASS = "rgba(252,251,253,0.92)";
+export const TAB_EDGE = "#EFEFF2";
 export const DIVIDER = "#E6E7EC";
 export const CHEV = "#C3C4C9";
 export const DOT_MUTED = "#9B9DA5";
@@ -69,9 +73,47 @@ export const AMBER_EDGE = "#F6E9CC";
 export const AMBER_TILE = "#FEEFD4";
 export const AMBER_INK = "#2E3138";
 
+// Soft result tints, sampled from "2. Totals.png". They back a row
+// whose result is good, mixed or bad, and they are the palest step
+// of the same green, amber and red the money figures use.
+export const TINT_GOOD = "#EBF9EE";
+export const TINT_MID = "#FEF6E7";
+export const TINT_BAD = "#FEEDEE";
+
+// The heat map's tiles, sampled pixel by pixel from "2. heat map.png".
+// The tint strengthens with the size of the result WITHIN ITS OWN
+// SIGN, so the biggest leak reads as deep a red as the biggest earner
+// reads green. Ramped against one shared maximum instead, every red on
+// this record would sit at the palest step and the page would whisper
+// exactly the thing it exists to shout.
+export const TILE_GOOD_STRONG = "#DAF1D8";
+export const TILE_GOOD_SOFT = "#E8F4E4";
+export const TILE_BAD_STRONG = "#FDE0E1";
+export const TILE_BAD_SOFT = "#FDE6E7";
+export const TILE_NEUTRAL = "#EEEDF1";
+
+// A tile's icon disc and its hairline edge are the same colour in the
+// sheet: the tile's own tint, deepened. Sampled at the same points.
+export const TILE_EDGE_GOOD_STRONG = "#BDE9BC";
+export const TILE_EDGE_GOOD_SOFT = "#D2ECC7";
+export const TILE_EDGE_BAD_STRONG = "#FEC8CA";
+export const TILE_EDGE_BAD_SOFT = "#FED6D7";
+export const TILE_EDGE_NEUTRAL = "#E2E1E6";
+
 // Chart parts. The lighter weights exist so two lines of the same
 // sign can be told apart on Compare.
 export const LIGHT_INDIGO = "#8B79F3";
 export const LIGHT_RED = "#FB8A8B";
 export const ZERO_LINE = "#C6C2D2";
 export const GRID_LINE = "#F1F1F4";
+
+// Totals' donut ramps: four steps of the brand purple for the slices
+// that earned, four of the red for the ones that leaked, and the ring
+// behind a slice with nothing in it.
+export const DONUT_EARNER = ["#3708E4", "#5B37EE", "#8B79F3", "#B3A4F6"];
+export const DONUT_LEAK = ["#FC1B1D", "#FB5B5C", "#FB8A8B", "#FDB9B9"];
+export const DONUT_EMPTY = "#E6E7EC";
+
+// Compare's winner orb, a lit sphere of the brand purple.
+export const ORB_LIGHT = "#7E5BF5";
+export const ORB_MID = "#5A2CF0";

@@ -136,12 +136,27 @@ Keep it current: when a job finishes, delete its line.
     The copy phase is over ("we're now passed copying it. WE're now
     improving what we have"), so his edit lists rule, not the mockup
     files. Status lives in `docs/performance-rebuild.md`.
-    **Compare is built and awaiting his reaction**, its own page at
-    `/preview/performance-compare`, from his sheet `1. Compare.png`.
-    It is reached from Lab at exactly two selections.
-    Still unstarted: Totals, and the go-live work (real numbers, dark
-    theme, empty states, the `/stats` swap). Nothing else starts
-    before he says so.
+    **Compare is built and merged**, its own page at
+    `/preview/performance-compare`, from his sheet `1. Compare.png`,
+    reached from Lab at exactly two selections. He merged it without
+    a verdict, so it is live but not marked accepted.
+    **Totals and the Heat Map are built and waiting on him.**
+    Totals at `/preview/performance-totals` from `2. Totals.png`
+    ("totals looks good", not yet merged, he was in the car). The
+    Heat Map at `/preview/performance-heatmap` from
+    `2. heat map.png`, reached from Home's Heat Map pill. Its map
+    has NO filter, his ruling: the tiles are Home's own ranked
+    facts across every group. The differences from the sheet are in
+    `docs/decisions.md`.
+    **Colours: Lab, Compare, Totals and the Heat Map read one dial**,
+    `src/app/preview/performance-lab/ui.ts`. Home keeps its own
+    copies because its folder is protected, and he ruled 29 August
+    2026 that this stays: colour work happens later, "even after the
+    pages are live".
+    The three menu tabs reach each other.
+    Still unstarted: the go-live work (real numbers, dark theme,
+    empty states, the `/stats` swap). Nothing else starts before he
+    says so.
     Build order, his words: "Home, Lab, Totals are the main pages.
     Other pages inside Performance are: Compare, All Bets, Insights."
     Home ships first and goes live alone: on day one Totals holds

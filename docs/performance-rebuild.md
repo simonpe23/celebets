@@ -142,7 +142,14 @@ a time, a screenshot after each, his reaction before the next.
 - **The menu taps are live both ways**, and the other chat's jump
   doors from Home's ranked rows land correctly in this Lab: all
   seven cases of `jumptest.mjs` pass against the merged tree.
-- **COMPARE IS BUILT, awaiting his reaction.** Its own page at
+- **TOTALS IS BUILT, awaiting his reaction.** At
+  `src/app/preview/performance-totals/`, from his sheet
+  `2. Totals.png`. All three menu tabs now reach each other and
+  `jumptest.mjs` proves all four menu doors. Its four deliberate
+  differences from the sheet are in `docs/decisions.md`.
+- **COMPARE IS BUILT AND MERGED, 29 August 2026.** He merged it
+  without a verdict and moved on, so it is live at
+  `/preview/performance-compare` and NOT recorded as accepted. Its own page at
   `src/app/preview/performance-compare/`, built to his sheet
   `1. Compare.png` with Home and Lab's colours and face, his order
   of 29 August 2026. Reached from Lab's door at exactly two
@@ -152,10 +159,29 @@ a time, a screenshot after each, his reaction before the next.
   reasons in `docs/decisions.md`, along with his first edit list
   (lavender winner tint out, insights strip out, bigger cards, the
   wins pill folded into the grey one), all applied.
-- **Colours are one dial now**: every colour Lab and Compare draw
-  comes from `performance-lab/ui.ts` and neither folder contains a
-  raw hex. Home still holds its own copies until its folder is
-  opened. See `docs/decisions.md`.
+- **THE HEAT MAP IS BUILT, awaiting his reaction.** At
+  `src/app/preview/performance-heatmap/`, from his sheet
+  `2. heat map.png`, on his order of 29 August 2026. Its own page at
+  `/preview/performance-heatmap`, reached from the Heat Map pill on
+  Home, back arrow returns there. Four compact insight cards
+  (Strongest Edge, Biggest Leak, New Pattern, Cooling Off) in two
+  rows of two, 64px each, then a tall squarified
+  treemap where a tile's area is the money that fact moved and every
+  tile opens Lab on that fact. **No filter on the map**, his ruling
+  of 29 August 2026: the tiles are `rankedFacts([], 5)`, the same
+  call Home's ranked rows make, so the map shows the best and worst
+  facts across every group at once. Those facts overlap, so the
+  tiles do not add up to the record and there is no Others tile.
+  **Eight tiles, with the top three earners and the top three leaks
+  guaranteed a seat**, his ruling. `jumptest.mjs` asserts the map
+  mixes groups, shows eight tiles with three of each colour, and
+  crops no figure.
+  The deliberate differences from the sheet are in
+  `docs/decisions.md`.
+- **Colours are one dial now**: every colour Lab, Compare, Totals and
+  the Heat Map draw comes from `performance-lab/ui.ts` and none of
+  those folders contains a raw hex. Home still holds its own copies
+  until its folder is opened. See `docs/decisions.md`.
 - **`jumptest.mjs` now covers Compare**: the door exists at two
   selections and is gone at three, it opens on the two chosen
   facts, and back keeps them. Eleven cases, all passing.

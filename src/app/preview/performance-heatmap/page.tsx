@@ -1,12 +1,11 @@
-// The Compare preview shell: the page column, the Figtree face and
+// The Heat Map preview shell: the page column, the Figtree face and
 // the floating sticky tab bar, all the accepted Home's. The living
-// page is CompareApp.tsx.
+// page is HeatmapApp.tsx.
 //
-// Compare is its own screen by his ruling of 29 August 2026, reached
-// from Lab at exactly two selections. The Suspense boundary exists
-// because CompareApp reads the two selections from the address.
+// Its own screen, reached from the Heat Map pill on Home, with a back
+// arrow that returns there. The heat map lives on Home and nowhere
+// else for now, his ruling of 26 August 2026.
 
-import { Suspense } from "react";
 import { Figtree } from "next/font/google";
 import {
   PerformanceTabIcon,
@@ -14,7 +13,7 @@ import {
   ResearchTabIcon,
   TrackTabIcon,
 } from "../performance-home/icons";
-import CompareApp from "./CompareApp";
+import HeatmapApp from "./HeatmapApp";
 import { INDIGO, INK, PAGE_BG, TAB_EDGE, TAB_GLASS, TAB_IDLE } from "../performance-lab/ui";
 
 const fig = Figtree({
@@ -22,7 +21,7 @@ const fig = Figtree({
   variable: "--font-fig",
 });
 
-export default function PerformanceComparePreview() {
+export default function PerformanceHeatmapPreview() {
   return (
     <div
       className={`${fig.variable} flex min-h-svh flex-col`}
@@ -33,9 +32,7 @@ export default function PerformanceComparePreview() {
       }}
     >
       <div className="relative mx-auto flex w-full max-w-[390px] flex-1 flex-col">
-        <Suspense fallback={null}>
-          <CompareApp />
-        </Suspense>
+        <HeatmapApp />
         <div className="min-h-[6px] grow" />
       </div>
 

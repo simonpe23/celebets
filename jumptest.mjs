@@ -62,6 +62,29 @@ await page.click('a:has-text("Home")');
 await page.waitForURL("**/preview/performance-home**");
 console.log("PASS Lab menu returns to Home");
 
+// TOTALS joined the menu on 29 August 2026, so all three tabs must
+// reach each other. A menu that looks right and does nothing is
+// exactly what a screenshot cannot catch.
+for (const [from, label, to] of [
+  ["performance-home", "Totals", "performance-totals"],
+  ["performance-lab", "Totals", "performance-totals"],
+  ["performance-totals", "Home", "performance-home"],
+  ["performance-totals", "Lab", "performance-lab"],
+]) {
+  await page.goto(`http://localhost:${port}/preview/${from}`, {
+    waitUntil: "networkidle",
+  });
+  await page.click(`a:has-text("${label}")`);
+  let ok = true;
+  try {
+    await page.waitForURL(`**/preview/${to}**`, { timeout: 8000 });
+  } catch {
+    ok = false;
+  }
+  console.log(`${ok ? "PASS" : "FAIL"} ${from} menu reaches ${label}`);
+  if (!ok) fails++;
+}
+
 // COMPARE, its own page since 29 August 2026. The door appears at
 // exactly two selections, carries both to Compare, and the back
 // arrow returns to Lab with both still selected. Three things a
@@ -108,6 +131,120 @@ console.log(
   `${doorAtThree === 0 ? "PASS" : "FAIL"} the Compare door is gone at three selections`
 );
 if (doorAtThree !== 0) fails++;
+
+// THE HEAT MAP, its own page since 29 August 2026. Home's pill opens
+// it, every tile carries its fact into Lab (his ruling of 26 August
+// 2026), and the back arrow returns to Home.
+await page.goto(`http://localhost:${port}/preview/performance-home`, {
+  waitUntil: "networkidle",
+});
+await page.click('a:has-text("Heat Map")');
+let heatOk = true;
+try {
+  await page.waitForURL("**/preview/performance-heatmap**", { timeout: 8000 });
+} catch {
+  heatOk = false;
+}
+console.log(`${heatOk ? "PASS" : "FAIL"} Home's Heat Map pill opens the map`);
+if (!heatOk) fails++;
+
+await page.waitForTimeout(700);
+const heatText = await page.innerText("body");
+// The map must name a leak. Ranking tiles purely by size once buried
+// the biggest one inside a remainder tile.
+const showsLeak = heatText.includes("Basketball") && heatText.includes("-$926");
+console.log(`${showsLeak ? "PASS" : "FAIL"} the map shows the biggest leak by name`);
+if (!showsLeak) fails++;
+
+// The map shows the best and worst facts across EVERY group at once,
+// his ruling of 29 August 2026: "regardless of sport, league,
+// category, market". A screenshot cannot prove the mix, or that a
+// red tile is there at all.
+const mix = await page.evaluate(() => {
+  const head = [...document.querySelectorAll("p")].find((p) =>
+    p.textContent.startsWith("Performance map")
+  );
+  const map = head.nextElementSibling;
+  return [...map.children].map((c) => c.getAttribute("href") ?? "");
+});
+const groups = new Set(
+  mix.map((h) => (h.match(/sel=([a-z]+)(?:~|%7E)/) || [, ""])[1])
+);
+const mixed = groups.size >= 3;
+console.log(
+  `${mixed ? "PASS" : "FAIL"} the map mixes groups (${[...groups].join(", ")})`
+);
+if (!mixed) fails++;
+
+// EIGHT TILES, AT LEAST THREE OF EACH COLOUR. His ruling, 29 August
+// 2026: "i would like to have at least eight performance map cards,
+// and i want at least three red and at least three green... even if
+// all of them are red or all of them are green." Ranked purely by
+// size the record's biggest leak once came ninth and every tile was
+// green, which a screenshot of a winning record hides rather well.
+const shape = await page.evaluate(() => {
+  const head = [...document.querySelectorAll("p")].find((p) =>
+    p.textContent.startsWith("Performance map")
+  );
+  const tiles = [...head.nextElementSibling.children];
+  return {
+    total: tiles.length,
+    red: tiles.filter((c) => c.innerText.includes("-$")).length,
+    green: tiles.filter((c) => c.innerText.includes("+$")).length,
+  };
+});
+const shaped = shape.total >= 8 && shape.red >= 3 && shape.green >= 3;
+console.log(
+  `${shaped ? "PASS" : "FAIL"} the map shows 8 tiles, 3+ of each colour ` +
+    `(${shape.total} tiles, ${shape.green} green, ${shape.red} red)`
+);
+if (!shaped) fails++;
+
+// Every figure must be whole. A treemap will hand you a 41px tile, so
+// the money shrinks to fit; this proves it never gets cropped instead.
+const cropped = await page.evaluate(() => {
+  const head = [...document.querySelectorAll("p")].find((p) =>
+    p.textContent.startsWith("Performance map")
+  );
+  return [...head.nextElementSibling.children].filter((c) => {
+    const spans = [...c.querySelectorAll("span")];
+    const money = spans[spans.length - 1];
+    return money.scrollWidth > money.clientWidth + 1;
+  }).length;
+});
+console.log(
+  `${cropped === 0 ? "PASS" : "FAIL"} no tile crops its figure (${cropped} cropped)`
+);
+if (cropped !== 0) fails++;
+
+// Prove a tile carries its fact into Lab.
+// The Biggest Leak card names Basketball too, so the tile is the
+// last match, not the first.
+await page.locator('a[href*="sport~plain~Basketball"]').last().click();
+let tileOk = true;
+try {
+  await page.waitForURL("**/preview/performance-lab**", { timeout: 8000 });
+} catch {
+  tileOk = false;
+}
+await page.waitForTimeout(700);
+const labText = await page.innerText("body");
+const carriedTile = tileOk && labText.includes("5–9");
+console.log(`${carriedTile ? "PASS" : "FAIL"} a tile opens Lab on that fact`);
+if (!carriedTile) fails++;
+
+await page.goto(`http://localhost:${port}/preview/performance-heatmap`, {
+  waitUntil: "networkidle",
+});
+await page.click('a[aria-label="Back to Home"]');
+let backOk = true;
+try {
+  await page.waitForURL("**/preview/performance-home**", { timeout: 8000 });
+} catch {
+  backOk = false;
+}
+console.log(`${backOk ? "PASS" : "FAIL"} back from the map returns to Home`);
+if (!backOk) fails++;
 
 await browser.close();
 console.log(fails ? `${fails} jump(s) broken` : "All doors work.");

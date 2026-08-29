@@ -1,17 +1,8 @@
-// The new Performance Lab, built piece by piece on the accepted Home's
-// design. The owner's ruling, 29 August 2026: "the lab page has to
-// follow Home's design and style." The living reference is
-// src/app/preview/performance-home/ (read it, never edit it); the menu
-// geometry, colours and tab bar below are its, with Lab active.
-//
-// This file is the shell: the page column, the Home / Lab / Totals
-// menu with Lab active (Home is a real link, Totals has no page yet),
-// and the floating sticky tab bar. The living page, the tray, the
-// answer panel and the six chip groups, is LabApp.tsx. The Suspense
-// boundary exists because LabApp reads the selection from the URL,
-// which is how Home's taps will hand a fact over.
+// The Performance Totals shell, built to his sheet "2. Totals.png",
+// 29 August 2026. Same menu geometry, colours and tab bar as Home and
+// Lab, with Totals active and the other two as real links. The living
+// page is TotalsApp.tsx.
 
-import { Suspense } from "react";
 import Link from "next/link";
 import { Figtree } from "next/font/google";
 import {
@@ -20,7 +11,7 @@ import {
   ResearchTabIcon,
   TrackTabIcon,
 } from "../performance-home/icons";
-import LabApp from "./LabApp";
+import TotalsApp from "./TotalsApp";
 import {
   INDIGO,
   INDIGO_FILL,
@@ -31,14 +22,14 @@ import {
   TAB_EDGE,
   TAB_GLASS,
   TAB_IDLE,
-} from "./ui";
+} from "../performance-lab/ui";
 
 const fig = Figtree({
   subsets: ["latin"],
   variable: "--font-fig",
 });
 
-export default function PerformanceLabPreview() {
+export default function PerformanceTotalsPreview() {
   return (
     <div
       className={`${fig.variable} flex min-h-svh flex-col`}
@@ -50,7 +41,7 @@ export default function PerformanceLabPreview() {
     >
       <div className="relative mx-auto flex w-full max-w-[390px] flex-1 flex-col">
         {/* The Home / Lab / Totals menu, Home's exact geometry with the
-            pill moved to Lab. Label centers on Home: 59, 181, 296. */}
+            pill on Totals. Label centers on Home: 59, 181, 296. */}
         <div
           className="relative mx-[14px] mt-[7px] h-[36px] rounded-full"
           style={{ background: MENU_TRACK }}
@@ -62,25 +53,23 @@ export default function PerformanceLabPreview() {
           >
             Home
           </Link>
-          <span
-            className="absolute left-[126px] top-[4px] flex h-[28px] w-[110px] items-center justify-center rounded-full text-[10.5px] font-bold text-white"
-            style={{ background: INDIGO_FILL }}
-          >
-            Lab
-          </span>
           <Link
-            href="/preview/performance-totals"
-            className="absolute left-[296px] top-1/2 -translate-x-1/2 -translate-y-1/2 px-[18px] py-[10px] text-[10.5px] font-semibold"
+            href="/preview/performance-lab"
+            className="absolute left-[181px] top-1/2 -translate-x-1/2 -translate-y-1/2 px-[18px] py-[10px] text-[10.5px] font-semibold"
             style={{ color: MENU_IDLE }}
           >
-            Totals
+            Lab
           </Link>
+          <span
+            className="absolute left-[248px] top-[4px] flex h-[28px] w-[110px] items-center justify-center rounded-full text-[10.5px] font-bold text-white"
+            style={{ background: INDIGO_FILL }}
+          >
+            Totals
+          </span>
         </div>
 
-        <Suspense fallback={null}>
-          <LabApp />
-        </Suspense>
-        <div className="min-h-[8px] grow-[3]" />
+        <TotalsApp />
+        <div className="min-h-[6px] grow" />
       </div>
 
       {/* The tab bar: the same floating sticky card as the accepted

@@ -111,6 +111,7 @@ import {
   SELECTOR_INK,
   SEL_BG,
   SEL_EDGE,
+  TAB_EDGE,
   SUBGREEN,
   TRAY_EDGE,
 } from "./ui";
@@ -520,7 +521,7 @@ export default function LabApp() {
                     />
                     <div
                       className="absolute left-0 top-[20px] z-20 w-[150px] rounded-[12px] bg-white py-[5px]"
-                      style={{ boxShadow: "0 10px 24px rgba(28,24,58,0.14), inset 0 0 0 1px #EFEFF2" }}
+                      style={{ boxShadow: `0 10px 24px rgba(28,24,58,0.14), inset 0 0 0 1px ${TAB_EDGE}` }}
                     >
                       {DOMAINS.map((d) => (
                         <button

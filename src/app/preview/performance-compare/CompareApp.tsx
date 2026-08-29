@@ -38,6 +38,8 @@ import {
   INDIGO,
   INDIGO_FILL,
   INK,
+  ORB_LIGHT,
+  ORB_MID,
   LIGHT_INDIGO,
   LIGHT_RED,
   MENU_IDLE,
@@ -528,7 +530,7 @@ export default function CompareApp() {
               className="flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full"
               style={{
                 background:
-                  "radial-gradient(115% 115% at 32% 22%, #7E5BF5 0%, #5A2CF0 60%, #3708E4 100%)",
+                  `radial-gradient(115% 115% at 32% 22%, ${ORB_LIGHT} 0%, ${ORB_MID} 60%, ${INDIGO_FILL} 100%)`,
               }}
             >
               <RiseIcon />

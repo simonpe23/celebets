@@ -717,6 +717,62 @@ a Profit / ROI / Hit rate toggle, the two line chart card with its
 legend and period control, the Head to head table, and the Why X
 wins card.
 
+**TOTALS IS BUILT FROM `2. Totals.png`. His order, 29 August 2026:**
+"Build totals next. mockup uploaded to github named: /2. Totals.png
+Then after that, let me confirm and iterate." Built the same day at
+`/preview/performance-totals`, to the same two rules as Compare: the
+sheet's anatomy and measured sizes, Home and Lab's colours and face
+through the one dial.
+
+Sections, in the sheet's order: the All time selector, the result
+beside its line, a seven figure strip (Total bets, Record, Hit rate,
+ROI, Avg odds, Wagered, Returned), Profit by Sport with its ring,
+Per Category in two columns, Odds Groups beside Singles vs Parlays,
+and Recent Bets.
+
+**Totals also completes the menu:** all three tabs now reach each
+other. Home's menu gained a Totals link under the same menu-tap
+unlock he gave for Lab; nothing else in that folder was touched.
+
+**Four places the build knowingly differs from the sheet. CLAUDE's
+calls, not his rulings:**
+
+1. **Odds are DECIMAL, not the sheet's American ones.** The sheet
+   draws -110 in Recent Bets while its own figure strip says 1.68,
+   and the product rule is decimal to two places. The rule wins over
+   the drawing.
+2. **The Profit by Sport list shows EVERY sport, not the sheet's six
+   rows.** Cutting the list at six hid Basketball, the record's
+   single biggest leak, while the ring still drew its slice. That is
+   the `dedupeFacts` failure of August 2026 wearing a new shape, and
+   his founding question is "where am I leaking".
+3. **The ring is sized by how much each sport MOVED the result and
+   coloured by which way**, indigo weights for earners and red
+   weights for leaks. A profit donut cannot draw a negative slice,
+   and his record has losing sports in it.
+4. **Odds Groups rows are two lines**, name and range above, hit rate
+   and count below, where the sheet fits one line. At phone width one
+   line either truncates or shrinks past reading size.
+
+**THE PAGE PROTECTION STAYS, AND COLOURS WAIT. Ruled 29 August
+2026**, when offered the Home colour fold-in: "nah no need imo right
+now, i feel we can edit colors and details later, even after the
+pages are live." And the standing requirement in his own words:
+"it's important that pages stay protected and that we can edit
+colors and details across pages."
+
+So nothing about the protection changes. The accepted Home folder
+stays read-only to other chats, exactly as written in `CLAUDE.md`,
+and the proposal to narrow that rule for plumbing was declined for
+now.
+
+**The accepted cost, named so nobody is surprised later:** Lab and
+Compare change colour from one line in
+`src/app/preview/performance-lab/ui.ts`. Home is not on that dial,
+so a colour change touches two files until he opens the folder. He
+has accepted that, and he has accepted doing it after the pages are
+live.
+
 **HIS FIRST COMPARE EDIT LIST, 29 August 2026, all applied:**
 
 - **The soft lavender winner highlight is gone.** His words: "remove
@@ -741,11 +797,14 @@ the board at a later stage, that's possible to do later right? where
 we can decide a color change, and it'll update across the board. the
 code has to be built that way."
 
-It is now built that way. Every colour Lab and Compare draw lives in
-`src/app/preview/performance-lab/ui.ts`, one named line each, and
-nothing else in those folders contains a colour: a check for a raw
-hex outside that file returns nothing. Changing a line there changes
-that colour on both pages at once.
+It is now built that way. Every colour Lab, Compare, Totals and the
+Heat Map draw lives in `src/app/preview/performance-lab/ui.ts`, one
+named line each, and nothing else in those four folders contains a
+colour: a check for a raw hex outside that file returns nothing but a
+comment. Changing a line there changes that colour on all four pages
+at once. The last three that had escaped were folded in on 29 August
+2026: the tab bar's frosted ground and hairline (on every page at
+once), Totals' donut ramps, and Compare's winner orb.
 
 **The accepted Home is the one page still outside the dial**, because
 that folder is protected from this chat. It keeps its own copies of
@@ -832,6 +891,130 @@ with a selection handed to it, and the taps on Home. The top menu
 handles plain switching between Home, Lab and Totals." How the tap
 wiring squares with the protected Home folder is not settled; he has
 not been asked yet.
+
+**THE HEAT MAP IS ITS OWN PAGE, BUILT FROM HIS SHEET. Ordered 29
+August 2026**, his words: "Then we build Heat map. Mockup uploaded to
+github named: /2. heat map.png Then we iterate on heat map. until i
+approve", and then "totals looks good. I'm in the car right now so I
+cannot merge it yet, but you can start working on the heat map." It
+lives at `/preview/performance-heatmap`, reached from the Heat Map
+pill on Home, with a back arrow that returns there. Every tile opens
+Lab on that fact, his ruling of 26 August 2026.
+
+**NO FILTER ON THE MAP. Ruled 29 August 2026**, his words: "i don't
+want to filter on category or sport here. i want same mechanics as the
+home page - regardless of sport, league, category, market - this heat
+maps should show best performances regardless of what filter." The
+group control that a first build put on the map header is gone. The
+tiles now come from the engine's own `rankedFacts([], 5)`, the exact
+call Home's ranked rows and the prototype's old heat map both make:
+every fact in every group, scored by impact, nothing filtered.
+
+**The consequence, told to him in one line rather than hidden:** those
+facts overlap. One Moneyline bet on Arsenal is a Moneyline pick AND a
+Premier League pick AND a Football pick, so the tiles do not add up to
+his net profit and are not meant to. A tile's size is how much THAT
+fact moved, which is exactly what his sheet's caption claims: "Size
+shows impact on your results." The sizing is still real: a squarified
+treemap, so area is proportional to the money moved.
+
+**No Others tile, and this is the one place the sheet is not
+followed.** His sheet draws a small grey "Others". With overlapping
+facts it cannot be computed honestly: netting the leftovers counted
+the same money nineteen times and produced a +$3,225 tile, bigger than
+every real one on a $2,637 record. A number nobody can tap into and
+nobody can check does not belong here.
+
+**EIGHT TILES, AT LEAST THREE OF EACH COLOUR. Ruled 29 August 2026**,
+his words: "i would like to have at least eight performance map cards,
+and i want at least three red and at least three green. So even if all
+of them are red or all of them are green, at the top eight, I need to
+have top three from each color." So the top three earners and the top
+three leaks take their seats first, and the last two seats go to
+whatever moved the most money next, either colour. Ranked purely by
+size the record's biggest leak came ninth and the map had no red on it
+at all, which is the failure already on the record for Totals:
+"cutting the list at six hid Basketball, the record's single biggest
+leak."
+
+**Two assumptions stated rather than asked, both overrulable.** "At
+least eight" is built as eight, so the tiles stay big enough to read on
+a phone. A record with fewer than three losing facts shows every one it
+has rather than inventing a ninth; same for winners.
+
+**THE CARDS SHRANK AND THE MAP TOOK THE SPACE. Ruled 29 August 2026**,
+his words: "I want the heat map cards to take off more space, and I
+want the strongest edge, biggest leak, new pattern, and cooling off
+cards to be much smaller. They don't need to take up almost half the
+page. The performance map is the most important thing of this. We can
+still have two rows." Still two rows of two, as he asked. Each card's
+disc moved beside its text instead of above it, and the headline and
+the record now share one line: 119px of card down to 64px. The map
+went from 352px to 486px.
+
+`jumptest.mjs` now asserts the map mixes at least three groups, shows
+eight tiles with three of each colour, and crops no figure.
+
+**Seven places the Heat Map knowingly differs from the sheet. CLAUDE's
+calls, not his rulings, all reversible:**
+
+1. **There is no Others tile**, for the reason above.
+2. **The figure on a tile shrinks to fit rather than being cropped.**
+   A treemap hands you a 41px tile at the small end, and the money is
+   the one thing on this page that must always be whole. The name
+   truncates; the number never does. `jumptest.mjs` fails the build
+   if one is ever cropped.
+3. **The streak cards say "in last 10 picks" where the sheet says
+   "bets".** The count is picks (legs), not bet slips, and a parlay
+   is several picks. Saying bets would be a small lie on every
+   parlay.
+4. **A card is left out rather than invented.** An edge that loses
+   more often than it wins is not an edge, and a fact must clear
+   twelve picks before it can be called anything, his old rule:
+   "30-16 is a better and more impressive hit rate than 5-0". The
+   filler values the engine invents when a bet says nothing ("Full
+   time", "No category", "No competition set") can never be a
+   headline finding: the first build's Strongest Edge was "Full time
+   (Parlays)".
+5. **Every number is computed from Lab's fixture**, so the figures
+   differ from the sheet's invented ones. The four pages never
+   disagree, which is worth more than matching a drawing.
+6. **Size is net profit, per the sheet's own caption** ("Size shows
+   impact on your results"). `docs/performance-brief.md` says the
+   tiles are "sized by how much was bet". The sheet is the newer
+   instruction, so it wins; the brief's line is now out of date.
+7. **The tile icons are Lab's icons, not the sheet's.** The sheet
+   draws a monochrome green glyph inside each disc. The build draws
+   the platform emoji for sports and leagues and the quiet outline
+   glyph for the abstract groups, which is the language he accepted
+   for Lab after rejecting round 1: "i particularly hate your icons.
+   they all look the same." Totals uses the same emoji. A monochrome
+   map would be the only screen in Performance that did.
+
+**Domains on the map.** "DOMAINS NEVER COMBINE" is about selecting
+two chips from two trees, which is still impossible: the map never
+combines, each tile is one fact on its own. A tile carries a domain
+into Lab only when every pick under it agrees on one; reading the
+domain off the first matching leg once sent "Medium odds", a fact that
+spans the whole record, into Lab in Economics mode. Totals already
+lists Crypto in Profit by Sport beside Football, and he accepted that
+page.
+
+**Home's Heat Map pill is a link now. CLAUDE's call, flagged.** The
+ruling above says Home's ranked rows, the Explore Lab button and the
+Heat Map pill "stay static until he asks", but his standing order for
+the seam is "you build both sides", and the ranked rows and Explore
+Lab were wired under it. A Heat Map page with no door from Home is a
+page nobody can reach. Nothing about the pill's look changed: one
+`span` became a `Link`. Say the word and it goes back.
+
+**The tile colours were sampled from the sheet pixel by pixel**, into
+the one dial at `performance-lab/ui.ts`: fills, and the deeper shade
+the sheet uses for both a tile's icon disc and its hairline edge. The
+tint strengthens with the size of the result WITHIN ITS OWN SIGN. On
+one shared scale every red on a winning record sits at the palest
+step, and the leak the page exists to show is the quietest thing on
+it.
 
 ## Process
 
