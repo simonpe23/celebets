@@ -12,16 +12,17 @@ serves the old Analytics page.
   mockups = discard them. erase from your memory. do not make new
   version based on the template. what im giving you now is not
   refinements, its a new layout."
-- **Nothing in `src/app/preview/performance-home/` is reference
-  material.** No future build may start from it, borrow its scale, its
-  sizes or its layout. The next build starts from an empty file when
-  the owner uploads the new layout mockups to the repo and reports
-  back. Waiting on that upload now.
-- From the discarded round, history only: the standing instructions
-  were "Make an identical version. Pixel by pixel" with one allowed
-  edit, the mockup purple replaced by the app's pre-defined purple.
-  Whether the purple swap carries to the NEW layout is unconfirmed;
-  ask him when the upload lands.
+- **Round 2, 28 August 2026: the Home is rebuilt to the two full
+  mockups** `1. mockup_Aug 28.png` (the spec from the KPI row down) and
+  `2. big chart Aug 28.png` (the top: menu row with Heat Map, result,
+  full width chart, no card). His round 2 orders applied: menu higher,
+  one cohesive KPI row blended into the chart, subtler texture behind
+  the chart, page runs to the bottom, and a taller bottom tab bar with
+  more prominent icons regardless of the mockup (his instruction 6).
+  The wash behind chart and KPI row is the sheet's own background,
+  extracted to `public/preview-assets/home-wash.png` with his approval
+  of a background image. Indigo wears the app's purple, his ruling.
+  Under his review at `/preview/performance-home`.
 - The process stands: he shares a mockup, it is built identically on
   this chat's branch, he merges, then reviews on his phone at the
   preview address. Ship order: Home first, then Lab, then Totals.

@@ -452,6 +452,20 @@ badge, the app's existing pattern for a door that is not open yet.
 tabs, but we have expanded to 3): Home, Lab, Totals." So a mockup
 drawn with a two tab switcher is still built with three.
 
+**THE NEW HOME LAYOUT IS THE SIX SHEETS, WITH THE APP'S PURPLE.**
+Ruled 28 August 2026. The spec is six files in the repo root:
+`hero chart.png`, `kpi row + insights row_2.png`, `mini buttons.png`,
+`top list.png`, `Performance Menu .png`, `Performance Menu _2.png`.
+His instruction: "Look at these images, copy them, make the new
+Performance Home Page look identical. And I mean identical. Pixel by
+pixel." The sheets' indigo is the one exception: asked directly, he
+chose "Swap to the app's purple", and for the menu: "copy the design
+of them, but keep apps purple."
+
+**The top of Home is the menu, nothing above it.** From the menu
+sheets: no page title, the Home / Lab / Totals switcher sits under the
+status bar, no icons in the switcher.
+
 **THE PREVIEWS ARE PUBLIC, NO LOGIN.** Ruled 28 August 2026: "open the
 preview without login, nothing needs to be locked. im gonna move fast
 so we're only talking about a day or two before we go live anyway."
