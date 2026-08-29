@@ -107,6 +107,34 @@ i have only show the structure but has the old design."
 this page.** The previews' colour-rule exemption in `design-check`
 covers Lab's preview the same way it covered Home's.
 
+## The Lab build (in flight)
+
+Started 29 August 2026, in the Lab chat, on branch
+`claude/actuals-lab-redesign-onv3s8`. His process order: one piece at
+a time, a screenshot after each, his reaction before the next.
+
+- **Piece 1, the frame: BUILT, awaiting his reaction.** The page at
+  `src/app/preview/performance-lab/`: the Home / Lab / Totals menu
+  with Lab active in Home's exact geometry, the 390px column, the
+  floating sticky tab bar. Home in the menu is a real link and the
+  tap is test-proven; Totals is inert, no page exists yet. The route
+  is registered in `sitecheck.mjs`'s PREVIEW list.
+- **Where Lab's design values live:** `performance-lab/ui.ts`, copied
+  once from Home's `page.tsx`, because Home's constants are not
+  exported and that folder is protected. Icons and charts are
+  imported from `../performance-home/` directly: importing reads the
+  reference, it does not edit it.
+- **Not built yet:** the six chip groups, the answer panel (chart,
+  then Bets, Record, Hit Rate, ROI), the domain arrow, Compare at
+  two selections, the see-these-bets door, the empty state, the taps
+  on Home, and the selection handoff. Waiting on his reaction to
+  piece 1 and on his Lab structure mockup.
+- **Demo data note for later pieces:** the pf engine
+  (`src/app/preview/pf/engine.ts`, `statsFor`) is pure and reusable
+  for live chip pricing, but the shared demo fixture is thin where
+  Lab is widest: two 1st Half legs, no High odds leg, four parlays.
+  Lab will likely need its own richer demo dataset in its folder.
+
 ## Lab's rules so far
 
 - **Six groups, renamed and reordered by the owner, 29 August 2026,**

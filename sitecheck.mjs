@@ -41,6 +41,7 @@ const PREVIEW = [
   "/preview",
   "/preview/performance",
   "/preview/performance-home",
+  "/preview/performance-lab",
   "/preview/settings",
   "/preview/research",
   "/preview/insights",

@@ -648,6 +648,19 @@ for Lab, and `docs/design-system.md` still describes the old app, not
 this. The build notes for the Lab chat are in
 `docs/performance-rebuild.md`.
 
+**LAB IS BUILT ONE PIECE AT A TIME. Ruled 29 August 2026**, his words
+to the Lab chat: "Work in small steps. Build one piece, show me a
+screenshot, wait for my reaction before the next piece. Do not build
+the whole page and reveal it." Nothing goes live until he says so:
+Lab is a preview page, built the way Home was.
+
+**The Lab chat builds both sides of the Home to Lab seam.** His words,
+29 August 2026: "you build both sides: a Lab that can open empty or
+with a selection handed to it, and the taps on Home. The top menu
+handles plain switching between Home, Lab and Totals." How the tap
+wiring squares with the protected Home folder is not settled; he has
+not been asked yet.
+
 ## Process
 
 **Past reactions are not constraints.** Said twice in two days: "just
