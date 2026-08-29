@@ -143,12 +143,6 @@ Keep it current: when a job finishes, delete its line.
     A mockup showing a two tab switcher is still built with three.
 - **App Store submission**, in a separate chat with the owner. Settings
   and store config, not code.
-- **A one-click demo link at `/demo/<code>`**, another chat, on branch
-  `demo-link`. Noticed 28 August 2026 from its push; that chat should
-  own this line. Caution: it edits `src/middleware.ts` and
-  `sitecheck.mjs`, which the Performance rebuild branch also edited on
-  28 August. Whichever merges second must merge `main` in first and
-  re-run `npm run check`.
 
 ## How work reaches the live site
 
