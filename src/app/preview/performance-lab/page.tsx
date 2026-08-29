@@ -4,12 +4,14 @@
 // src/app/preview/performance-home/ (read it, never edit it); the menu
 // geometry, colours and tab bar below are its, with Lab active.
 //
-// Piece 1: the frame. The page column, the Home / Lab / Totals menu
-// with Lab active (Home is a real link, Totals has no page yet), and
-// the floating sticky tab bar. The six chip groups, the answer panel
-// and the rest arrive in later pieces, each shown to the owner before
-// the next starts.
+// This file is the shell: the page column, the Home / Lab / Totals
+// menu with Lab active (Home is a real link, Totals has no page yet),
+// and the floating sticky tab bar. The living page, the tray, the
+// answer panel and the six chip groups, is LabApp.tsx. The Suspense
+// boundary exists because LabApp reads the selection from the URL,
+// which is how Home's taps will hand a fact over.
 
+import { Suspense } from "react";
 import Link from "next/link";
 import { Figtree } from "next/font/google";
 import {
@@ -18,6 +20,7 @@ import {
   ResearchTabIcon,
   TrackTabIcon,
 } from "../performance-home/icons";
+import LabApp from "./LabApp";
 import { INDIGO, INDIGO_FILL, INK, MENU_IDLE, MENU_TRACK, PAGE_BG } from "./ui";
 
 const fig = Figtree({
@@ -63,7 +66,9 @@ export default function PerformanceLabPreview() {
           </span>
         </div>
 
-        {/* The Lab body builds here, piece by piece. */}
+        <Suspense fallback={null}>
+          <LabApp />
+        </Suspense>
         <div className="min-h-[8px] grow-[3]" />
       </div>
 
