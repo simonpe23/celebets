@@ -556,6 +556,39 @@ app's own sticky floating card pattern from `TabBar.tsx`, taller and
 with more prominent icons than the mockup, which is his standing round
 2 instruction 6.
 
+**THE COPY PHASE IS OVER. Ruled 29 August 2026**, after he approved
+the round 3 build ("much better!"). His words: "Let's focus on these
+few edits now regardless of what the mockups says. we're now passed
+copying it. WE're now improving what we have." And on mockup 0: "this
+mockup is not the truth, it just helped you go from helpless to
+solid." So `0. Chat Aug 28.png` is a baseline, not a spec, and his
+edit lists are what rule from here.
+
+**His 29 August improvement edits, all applied the same day:**
+
+- **The insight card keeps its spot but stands alone.** Asked
+  directly, he chose "Same spot, but standalone": the order stays
+  chart, KPI numbers, card, but the card gets clear space and a clean
+  background, outside the wash.
+- **The page must fit without Explore Lab hiding behind the bottom
+  menu**, and the bar must not leave "an ugly gap when having just a
+  slightly bigger screen... you have to solve this with code." Solved
+  with flexible spacers: the page's leftover height distributes across
+  the section gaps, so a taller screen breathes evenly instead of
+  ending in one void, and a shorter one scrolls with the bar in flow.
+- **The hero background is the big chart sheet's fade**, his words:
+  "Go back to the faded background on the chart that i showed you...
+  look at the chart on image 2. big chart Aug 28.png... make the hero
+  section look more alive." Re-extracted from that sheet, soft, fading
+  in at the top and out above the insight card.
+- **The net profit number is bold, not extrabold** ("Make Net profit
+  font less bold").
+- **The top menu is taller** (36px track, 28px pill).
+- **The KPI values sit closer together** (edit 7).
+- **The chart is shorter** (98px of line height, edit 8) **and the
+  saved pixels go to the list**: it moved up and its rows grew (edit
+  9, "make the list more prominent, move it up").
+
 ## Process
 
 **Past reactions are not constraints.** Said twice in two days: "just

@@ -4,7 +4,15 @@
 // sheet, not from eyeballing: the same probes measure the rendered page
 // and the two sets of boxes are diffed until they agree.
 //
-// The owner's final orders, 28 August 2026, all applied:
+// 29 August 2026 the copy phase ended: "we're now passed copying it.
+// We're now improving what we have." The mockup-0 measurements stay
+// the baseline; his nine improvement edits sit on top: insight card
+// standalone, taller menu, lighter number, shorter chart, tighter KPI
+// row, a more prominent list, the big-chart wash restored, and the
+// page distributes leftover height instead of pinning a gap above the
+// tab bar.
+//
+// The owner's orders of 28 August 2026, all applied:
 // - "pick the purple color from the mockup": indigo #3614F0 text and
 //   line, #3708E4 fills, sampled from the sheet. Replaces the app
 //   purple used in round 2.
@@ -70,7 +78,7 @@ const PILL_LAV = "#F0EEFB";
 const ROWS = [
   {
     rank: 1,
-    icon: <DollarIcon size={19} />,
+    icon: <DollarIcon size={20} />,
     tile: "#F0EEFB",
     name: "Moneyline",
     meta: "30–16",
@@ -82,7 +90,7 @@ const ROWS = [
   },
   {
     rank: 2,
-    icon: <BallIcon size={19} />,
+    icon: <BallIcon size={20} />,
     tile: "#F0EEFB",
     name: "Premier League",
     meta: "14–8",
@@ -94,7 +102,7 @@ const ROWS = [
   },
   {
     rank: 3,
-    icon: <TrendTileIcon size={19} />,
+    icon: <TrendTileIcon size={20} />,
     tile: "#F0EEFB",
     name: "Low odds",
     meta: "18–11",
@@ -106,7 +114,7 @@ const ROWS = [
   },
   {
     rank: 4,
-    icon: <LayersIcon size={19} />,
+    icon: <LayersIcon size={20} />,
     tile: "#F0EEFB",
     name: "Singles",
     meta: "24–18",
@@ -118,7 +126,7 @@ const ROWS = [
   },
   {
     rank: 5,
-    icon: <RedTarget size={19} />,
+    icon: <RedTarget size={20} />,
     tile: "#FEF0F0",
     name: "Player Props",
     meta: "7–11",
@@ -147,10 +155,12 @@ export default function PerformanceHomePreview() {
         fontFamily: "var(--font-fig)",
       }}
     >
-      <div className="relative mx-auto w-full max-w-[390px]">
-        {/* The colour wash behind the chart and KPI row. The designer
-            left it out of mockup 0; the owner keeps it. */}
-        <div className="pointer-events-none absolute inset-x-0 top-[36px] h-[330px]">
+      <div className="relative mx-auto flex w-full max-w-[390px] flex-1 flex-col">
+        {/* The colour wash behind the chart and KPI row, re-extracted
+            from "2. big chart Aug 28.png": his 29 August order to go
+            back to that sheet's fade. It ends before the insight card,
+            which stands on the plain page. */}
+        <div className="pointer-events-none absolute inset-x-0 top-[48px] h-[245px]">
           <Image
             src="/preview-assets/home-wash.png"
             alt=""
@@ -164,23 +174,23 @@ export default function PerformanceHomePreview() {
 
         {/* The Home / Lab / Totals menu, full width, high on the page. */}
         <div
-          className="relative mx-[14px] mt-[7px] flex h-[31px] items-center rounded-full px-[3px]"
+          className="relative mx-[14px] mt-[7px] flex h-[36px] items-center rounded-full px-[4px]"
           style={{ background: "#F2F3F7" }}
         >
           <span
-            className="flex h-[23px] w-[110px] shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white"
+            className="flex h-[28px] w-[110px] shrink-0 items-center justify-center rounded-full text-[10.5px] font-bold text-white"
             style={{ background: INDIGO_FILL }}
           >
             Home
           </span>
           <span
-            className="absolute left-[181px] top-1/2 -translate-x-1/2 -translate-y-1/2 text-[10px] font-semibold"
+            className="absolute left-[181px] top-1/2 -translate-x-1/2 -translate-y-1/2 text-[10.5px] font-semibold"
             style={{ color: "#6B6E7A" }}
           >
             Lab
           </span>
           <span
-            className="absolute left-[296px] top-1/2 -translate-x-1/2 -translate-y-1/2 text-[10px] font-semibold"
+            className="absolute left-[296px] top-1/2 -translate-x-1/2 -translate-y-1/2 text-[10.5px] font-semibold"
             style={{ color: "#6B6E7A" }}
           >
             Totals
@@ -207,7 +217,7 @@ export default function PerformanceHomePreview() {
 
         {/* The number. */}
         <p
-          className="relative mt-[4px] pl-[18px] text-[45px] font-extrabold leading-none"
+          className="relative mt-[4px] pl-[18px] text-[45px] font-bold leading-none"
           style={{ color: INDIGO }}
         >
           +$2,637
@@ -228,16 +238,16 @@ export default function PerformanceHomePreview() {
             right end rides up beside the number, like the sheet. */}
         <div className="relative mt-[-30px]">
           <div className="pl-[22px] pr-[54px]">
-            <HeroChart width={313.6} />
+            <HeroChart width={313.6} height={98} />
           </div>
           <div
             className="absolute right-0 top-0 w-[38px] text-[8px] font-semibold"
             style={{ color: GREY_TEXT }}
           >
-            <span className="absolute left-0 top-[-11px]">$3K</span>
-            <span className="absolute left-0 top-[33px]">$1.5K</span>
-            <span className="absolute left-0 top-[77px]">$0</span>
-            <span className="absolute left-0 top-[121px]">-$1.5K</span>
+            <span className="absolute left-0 top-[-9px]">$3K</span>
+            <span className="absolute left-0 top-[24px]">$1.5K</span>
+            <span className="absolute left-0 top-[58px]">$0</span>
+            <span className="absolute left-0 top-[91px]">-$1.5K</span>
           </div>
           <div
             className="mt-[12px] flex justify-between pl-[24px] pr-[52px] text-[7px] font-semibold"
@@ -251,10 +261,12 @@ export default function PerformanceHomePreview() {
           </div>
         </div>
 
-        {/* One cohesive KPI row on the wash. Group lefts, icon sizes and
-            the value/label sizes are the sheet's own measurements. */}
-        <div className="relative mt-[29px] flex items-center pl-[33px]">
-          {["96px", "188px", "283px"].map((left) => (
+        <div className="min-h-[16px] grow" />
+
+        {/* One cohesive KPI row on the wash, groups packed closer by
+            his 29 August edit 7. */}
+        <div className="relative flex items-center pl-[33px]">
+          {["90px", "172px", "260px"].map((left) => (
             <span
               key={left}
               className="absolute top-1/2 h-[28px] w-px -translate-y-1/2"
@@ -265,7 +277,7 @@ export default function PerformanceHomePreview() {
             <div
               key={f.label}
               className="flex items-center gap-[6px]"
-              style={{ width: ["83px", "87px", "95px", "auto"][i] }}
+              style={{ width: ["74px", "78px", "86px", "auto"][i] }}
             >
               <span className="relative top-[-3px]">{f.icon}</span>
               <div>
@@ -280,9 +292,11 @@ export default function PerformanceHomePreview() {
           ))}
         </div>
 
-        {/* Actuals noticed. */}
+        <div className="min-h-[12px] grow-[2]" />
+
+        {/* Actuals noticed: its own section on the plain page. */}
         <div
-          className="relative mx-[15px] mt-[14px] flex h-[45px] items-center rounded-[13px] pl-[7px] pr-[12px]"
+          className="relative mx-[15px] flex h-[45px] items-center rounded-[13px] pl-[7px] pr-[12px]"
           style={{
             background: "#FFF6E9",
             boxShadow: "inset 0 0 0 1px #F6E9CC",
@@ -305,8 +319,10 @@ export default function PerformanceHomePreview() {
           <Chev size={11} color={ORANGE} />
         </div>
 
+        <div className="min-h-[12px] grow-[2]" />
+
         {/* What drives your result. */}
-        <div className="relative mt-[11px] flex items-start justify-between pl-[20px] pr-[19px]">
+        <div className="relative flex items-start justify-between pl-[20px] pr-[19px]">
           <div>
             <h2 className="whitespace-nowrap text-[11.2px] font-bold">
               What drives your result
@@ -334,14 +350,14 @@ export default function PerformanceHomePreview() {
         </div>
 
         {/* The top list. */}
-        <div className="relative mt-[9px]">
+        <div className="relative mt-[8px]">
           {ROWS.map((row, i) => (
             <div
               key={row.name}
               className={
                 row.rank === 1
-                  ? "mx-[12px] mb-[4px] flex h-[47px] items-center rounded-[12px] bg-white pl-[8px] pr-[12px]"
-                  : "mx-[12px] flex h-[45.4px] items-center pl-[8px] pr-[12px]"
+                  ? "mx-[12px] mb-[4px] flex h-[49px] items-center rounded-[12px] bg-white pl-[8px] pr-[12px]"
+                  : "mx-[12px] flex h-[47px] items-center pl-[8px] pr-[12px]"
               }
               style={
                 row.rank === 1
@@ -350,7 +366,7 @@ export default function PerformanceHomePreview() {
               }
             >
               <span
-                className="flex h-[18.5px] w-[18.5px] shrink-0 items-center justify-center rounded-full text-[10px] font-bold"
+                className="flex h-[19.5px] w-[19.5px] shrink-0 items-center justify-center rounded-full text-[10.5px] font-bold"
                 style={
                   row.rank === 1
                     ? { background: INDIGO_FILL, color: "#FFFFFF" }
@@ -360,17 +376,17 @@ export default function PerformanceHomePreview() {
                 {row.rank}
               </span>
               <span
-                className="ml-[13px] flex h-[28.5px] w-[28.5px] shrink-0 items-center justify-center rounded-[9px]"
+                className="ml-[13px] flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-[10px]"
                 style={{ background: row.tile }}
               >
                 {row.icon}
               </span>
-              <div className="ml-[16px] w-[98px] shrink-0">
-                <p className="whitespace-nowrap text-[10.2px] font-bold leading-[1.2]">
+              <div className="ml-[16px] w-[100px] shrink-0">
+                <p className="whitespace-nowrap text-[11px] font-bold leading-[1.2]">
                   {row.name}
                 </p>
                 <p
-                  className="mt-[2px] flex items-center gap-[7px] whitespace-nowrap text-[7.7px] font-semibold"
+                  className="mt-[2px] flex items-center gap-[7px] whitespace-nowrap text-[8.2px] font-semibold"
                   style={{ color: GREY_TEXT }}
                 >
                   {row.meta}
@@ -381,18 +397,18 @@ export default function PerformanceHomePreview() {
                   {row.hit}
                 </p>
               </div>
-              <div className="ml-[12px] w-[74px] shrink-0">
+              <div className="ml-[8px] w-[74px] shrink-0">
                 <Spark shape={row.spark} />
               </div>
               <div className="ml-auto w-[58px] shrink-0 text-right">
-                <p className="text-[10.8px] font-bold leading-[1.2]" style={{ color: row.moneyColor }}>
+                <p className="text-[11.5px] font-bold leading-[1.2]" style={{ color: row.moneyColor }}>
                   {row.money}
                 </p>
-                <p className="mt-[1px] text-[7.3px] font-semibold" style={{ color: row.moneyColor }}>
+                <p className="mt-[1px] text-[7.6px] font-semibold" style={{ color: row.moneyColor }}>
                   {row.roi}
                 </p>
               </div>
-              <span className="ml-[10px] shrink-0">
+              <span className="ml-[6px] shrink-0">
                 <Chev size={10} color="#C3C4C9" />
               </span>
             </div>
@@ -401,7 +417,7 @@ export default function PerformanceHomePreview() {
 
         {/* The door to Lab. */}
         <div
-          className="relative mx-[14px] mt-[6px] flex h-[69px] items-center rounded-[14px] pl-[15px] pr-[15px]"
+          className="relative mx-[14px] mt-[8px] flex h-[69px] items-center rounded-[14px] pl-[15px] pr-[15px]"
           style={{ background: "#F8F6FC" }}
         >
           <span
@@ -438,7 +454,7 @@ export default function PerformanceHomePreview() {
           </span>
         </div>
 
-        <div className="h-[6px]" />
+        <div className="min-h-[8px] grow-[3]" />
       </div>
 
       {/* The tab bar: a floating card, sticky at the foot of the page
