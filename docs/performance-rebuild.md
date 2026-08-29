@@ -346,3 +346,14 @@ Not design work, and nobody has scoped it:
 2. **Loading states.** The prototype computes instantly on demo data.
 3. **The swap.** Replace `/stats` in one go, or run both behind a
    switch while the numbers are checked.
+4. **One colour dial for all pages.** Parked by the owner, 29 August
+   2026: "I don't feel the need to do anything drastic right now...
+   what is important is that pages stay consistent across the board
+   yet protected and not getting edited without my control. and the
+   biggest thing for me: that we can edit colors and details across
+   pages once this creation process is done." Lab and Compare already
+   share one colour file (`src/app/preview/performance-lab/ui.ts`);
+   Home keeps a verified-equal private copy. When Lab's design is
+   accepted, the Home chat folds Home onto the shared file, zero
+   visual change, proven by pixel comparison. Doing it mid-iteration
+   would couple the two builds, which is why it waits.
