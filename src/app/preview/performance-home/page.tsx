@@ -144,14 +144,14 @@ const FACTS = [
 export default function PerformanceHomePreview() {
   return (
     <div
-      className={`${pjs.variable} min-h-svh`}
+      className={`${pjs.variable} flex min-h-svh flex-col`}
       style={{
         background: "#FAF9FC",
         color: INK,
         fontFamily: "var(--font-pjs)",
       }}
     >
-      <div className="relative mx-auto max-w-[390px] pb-[86px] pt-2">
+      <div className="relative mx-auto w-full max-w-[390px] pb-2 pt-2">
         {/* The sheet's own background, behind the chart and KPI row. */}
         <div className="pointer-events-none absolute inset-x-0 top-[40px] h-[372px]">
           <Image
@@ -422,39 +422,46 @@ export default function PerformanceHomePreview() {
         </div>
       </div>
 
-      {/* The tab bar. Taller, icons more prominent: the owner's round 2
-          instruction 6, a deliberate step past the mockup. */}
-      <div
-        className="fixed inset-x-0 bottom-0"
-        style={{ background: "#FBFAFC", boxShadow: "0 -1px 0 #EFEFF2" }}
-      >
-        <div className="mx-auto flex max-w-[390px] items-start justify-between px-9 pb-[14px] pt-[10px]">
-          <span className="flex w-14 flex-col items-center gap-[4px]">
+      {/* The tab bar: a floating card, sticky at the foot of the page
+          like every other page in the app (see TabBar.tsx for why
+          sticky, mt-auto and last child are the mechanics). Taller,
+          icons more prominent: the owner's round 2 instruction 6. */}
+      <nav className="sticky bottom-0 z-40 mt-auto px-3 pb-[calc(0.625rem+env(safe-area-inset-bottom))] pt-3">
+        <div
+          className="mx-auto flex w-full max-w-[382px] items-stretch rounded-2xl p-1"
+          style={{
+            background: "rgba(252,251,253,0.92)",
+            backdropFilter: "blur(10px)",
+            WebkitBackdropFilter: "blur(10px)",
+            boxShadow: "0 6px 20px -10px rgba(16,16,26,0.35), inset 0 0 0 1px #EFEFF2",
+          }}
+        >
+          <span className="flex flex-1 flex-col items-center justify-center gap-[4px] py-1.5">
             <TrackTabIcon size={22} />
             <span className="text-[10.5px] font-semibold" style={{ color: "#26262B" }}>
               Track
             </span>
           </span>
-          <span className="flex w-[70px] flex-col items-center gap-[4px]">
+          <span className="flex flex-1 flex-col items-center justify-center gap-[4px] py-1.5">
             <PerformanceTabIcon size={22} />
             <span className="text-[10.5px] font-semibold text-brand-mark">
               Performance
             </span>
           </span>
-          <span className="flex w-14 flex-col items-center gap-[4px]">
+          <span className="flex flex-1 flex-col items-center justify-center gap-[4px] py-1.5">
             <ResearchTabIcon size={22} />
             <span className="text-[10.5px] font-semibold" style={{ color: "#26262B" }}>
               Research
             </span>
           </span>
-          <span className="flex w-14 flex-col items-center gap-[4px]">
+          <span className="flex flex-1 flex-col items-center justify-center gap-[4px] py-1.5">
             <ProfileTabIcon size={22} />
             <span className="text-[10.5px] font-semibold" style={{ color: "#26262B" }}>
               Profile
             </span>
           </span>
         </div>
-      </div>
+      </nav>
     </div>
   );
 }
