@@ -25,8 +25,15 @@ serves the old Analytics page.
   the mockup and the same probes measure a screenshot of the render,
   and the build was adjusted until every box agreed to about 2px. The
   chart line and the five sparklines are traced point by point from
-  the mockup's own pixels. Under his review at
-  `/preview/performance-home`.
+  the mockup's own pixels. Merged and approved 29 August 2026: "much
+  better!"
+- **Round 4, 29 August 2026: the improvement phase.** His ruling ended
+  the copying: "we're now passed copying it. WE're now improving what
+  we have." His nine edits are recorded in `docs/decisions.md` and
+  applied: standalone insight card, flexible page height (no gap, no
+  hidden Lab card), the big chart sheet's fade restored, lighter
+  number, taller menu, tighter KPI row, shorter chart, the list up and
+  more prominent. Under his review at `/preview/performance-home`.
 - The process stands: he shares a mockup, it is built identically on
   this chat's branch, he merges, then reviews on his phone at the
   preview address. Ship order: Home first, then Lab, then Totals.

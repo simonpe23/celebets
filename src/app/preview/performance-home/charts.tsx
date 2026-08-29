@@ -15,12 +15,20 @@ function path(pts: number[][]) {
   return pts.map((p, i) => `${i === 0 ? "M" : "L"}${p[0]} ${p[1]}`).join(" ");
 }
 
-export function HeroChart({ width = 313.6 }: { width?: number }) {
-  const h = HERO_H;
+export function HeroChart({
+  width = 313.6,
+  height = HERO_H,
+}: {
+  width?: number;
+  height?: number;
+}) {
+  const h = height;
   // The trace stops a few px short of the sheet's line end; stretch x so
-  // the line and its end dot reach the full width like the mockup.
+  // the line and its end dot reach the full width like the mockup, and
+  // scale y so the chart can render shorter than the traced height.
   const sx = width / HERO[HERO.length - 1][0];
-  const pts = HERO.map(([x, y]) => [x * sx, y]);
+  const sy = height / HERO_H;
+  const pts = HERO.map(([x, y]) => [x * sx, y * sy]);
   const last = pts[pts.length - 1];
   return (
     <svg
@@ -31,7 +39,7 @@ export function HeroChart({ width = 313.6 }: { width?: number }) {
     >
       <defs>
         <linearGradient id="ph-hero-fill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor={INDIGO} stopOpacity="0.18" />
+          <stop offset="0" stopColor={INDIGO} stopOpacity="0.24" />
           <stop offset="1" stopColor={INDIGO} stopOpacity="0.01" />
         </linearGradient>
       </defs>
