@@ -142,7 +142,9 @@ a time, a screenshot after each, his reaction before the next.
 - **The menu taps are live both ways**, and the other chat's jump
   doors from Home's ranked rows land correctly in this Lab: all
   seven cases of `jumptest.mjs` pass against the merged tree.
-- **COMPARE IS BUILT, awaiting his reaction.** Its own page at
+- **COMPARE IS BUILT AND MERGED, 29 August 2026.** He merged it
+  without a verdict and moved on, so it is live at
+  `/preview/performance-compare` and NOT recorded as accepted. Its own page at
   `src/app/preview/performance-compare/`, built to his sheet
   `1. Compare.png` with Home and Lab's colours and face, his order
   of 29 August 2026. Reached from Lab's door at exactly two

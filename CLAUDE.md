@@ -136,9 +136,15 @@ Keep it current: when a job finishes, delete its line.
     The copy phase is over ("we're now passed copying it. WE're now
     improving what we have"), so his edit lists rule, not the mockup
     files. Status lives in `docs/performance-rebuild.md`.
-    **Compare is built and awaiting his reaction**, its own page at
-    `/preview/performance-compare`, from his sheet `1. Compare.png`.
-    It is reached from Lab at exactly two selections.
+    **Compare is built and merged**, its own page at
+    `/preview/performance-compare`, from his sheet `1. Compare.png`,
+    reached from Lab at exactly two selections. He merged it without
+    a verdict, so it is live but not marked accepted.
+    **Colours: Lab and Compare read one dial**,
+    `src/app/preview/performance-lab/ui.ts`. Home keeps its own
+    copies because its folder is protected, and he ruled 29 August
+    2026 that this stays: colour work happens later, "even after the
+    pages are live".
     Still unstarted: Totals, and the go-live work (real numbers, dark
     theme, empty states, the `/stats` swap). Nothing else starts
     before he says so.

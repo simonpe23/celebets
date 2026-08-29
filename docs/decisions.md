@@ -717,6 +717,25 @@ a Profit / ROI / Hit rate toggle, the two line chart card with its
 legend and period control, the Head to head table, and the Why X
 wins card.
 
+**THE PAGE PROTECTION STAYS, AND COLOURS WAIT. Ruled 29 August
+2026**, when offered the Home colour fold-in: "nah no need imo right
+now, i feel we can edit colors and details later, even after the
+pages are live." And the standing requirement in his own words:
+"it's important that pages stay protected and that we can edit
+colors and details across pages."
+
+So nothing about the protection changes. The accepted Home folder
+stays read-only to other chats, exactly as written in `CLAUDE.md`,
+and the proposal to narrow that rule for plumbing was declined for
+now.
+
+**The accepted cost, named so nobody is surprised later:** Lab and
+Compare change colour from one line in
+`src/app/preview/performance-lab/ui.ts`. Home is not on that dial,
+so a colour change touches two files until he opens the folder. He
+has accepted that, and he has accepted doing it after the pages are
+live.
+
 **HIS FIRST COMPARE EDIT LIST, 29 August 2026, all applied:**
 
 - **The soft lavender winner highlight is gone.** His words: "remove
