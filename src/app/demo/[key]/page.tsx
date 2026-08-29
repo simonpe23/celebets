@@ -20,7 +20,12 @@ import { useParams, useRouter } from "next/navigation";
 export default function DemoLinkPage() {
   const { key } = useParams<{ key: string }>();
   const router = useRouter();
-  const [failed, setFailed] = useState(false);
+  // Null while trying. A wrong code and a misconfigured door used to
+  // show the identical sentence, which cost an evening of guessing:
+  // the owner could not tell "these six digits are wrong" from "the
+  // demo account's password is wrong". They are different problems
+  // with different fixes, so they now say different things.
+  const [failure, setFailure] = useState<string | null>(null);
   // React mounts twice in development. One knock on the door is plenty.
   const knocked = useRef(false);
 
@@ -36,18 +41,30 @@ export default function DemoLinkPage() {
       if (res?.ok) {
         router.replace("/app");
         router.refresh();
-      } else {
-        setFailed(true);
+        return;
       }
+      if (!res) {
+        setFailure("Could not reach the server. Check your connection.");
+        return;
+      }
+      if (res.status === 401) {
+        setFailure("That link is not active.");
+        return;
+      }
+      // Anything else is a setup problem on our side, not a bad link.
+      // Say what it actually was: these messages name a missing or
+      // wrong Vercel setting, and none of them contain a secret.
+      const body = await res.json().catch(() => null);
+      setFailure(body?.error ?? "Something went wrong. Try again.");
     })();
   }, [key, router]);
 
   return (
     <main className="flex min-h-svh items-center justify-center px-6">
-      {failed ? (
+      {failure ? (
         <div className="text-center">
           <p className="text-sm text-neutral-500 dark:text-neutral-400">
-            That link is not active.
+            {failure}
           </p>
           <Link
             href="/login"
