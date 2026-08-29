@@ -116,6 +116,50 @@ inside Lab.
 - Sort by Profit, ROI or Hit rate, **all three visible at once.** No
   cycling control that hides its options.
 
+## How Home connects to Lab (the state of the seam)
+
+Written 29 August 2026 for whichever chat builds Lab. Three jumps are
+ruled: a ranked row opens Lab with that fact selected, a heatmap tile
+does the same, and the Build your Performance View button lands on an
+empty Lab (all in `docs/decisions.md`).
+
+**On the accepted Home, NONE of the three jumps exist.**
+`src/app/preview/performance-home/page.tsx` is a static picture: it
+contains no onClick, no href and no Link anywhere (grep confirms
+zero). Concretely:
+
+- The five ranked rows are plain divs, the `ROWS.map` block.
+- The Explore Lab button is a `<span>` inside the Lab card block.
+- The Heat Map header pill is a `<span>`, and **no heatmap grid is
+  built at all**: the pill is the only trace of the heatmap on Home.
+- There is no Lab page to land on: `/preview/performance-home` is the
+  only screen of the new design. **The Lab chat is building both ends
+  of every jump**, and also choosing the transport: an address (a
+  query param carrying the selection survives refresh and can be
+  linked) or shared state (the prototype's way, which dies on
+  refresh). Nothing is ruled on this; it is an open build decision.
+
+**The old prototype has working jumps to mine**, but into its own
+fact view, which predates the six-group Lab design and is NOT Lab:
+
+- `src/app/preview/pf/App.tsx` holds the mechanism: a `path` array of
+  chips is the whole navigation state. Empty path renders Home; a
+  non-empty path renders `Fact.tsx`. Every jump is just `setPath`.
+- Ranked row: `Home.tsx` fires `onOpen(f.chip)` (line ~118) and
+  `App.tsx` does `setPath([chip])`.
+- Heatmap tile: `MapView.tsx` fires `onOpen(chip)`, same `setPath`.
+- Insight card: `InsightCard.tsx` fires `onExplore(finding.path)`,
+  landing on a pre-filled path.
+- The prototype's Build your Performance View button does NOT jump
+  anywhere: it opens the Add a fact sheet in place
+  (`setSheetOpen(true)` in `Home.tsx`). Its comment explains why.
+
+The engine those jumps select into (`engine.ts`) is reusable; the
+`path`-of-chips idea matches how Lab's chips are meant to combine.
+The seam to build is Home side (make row, tile, pill and button real
+controls), Lab side (a page that accepts an incoming selection or an
+empty one), and the transport between them.
+
 ## Engine notes worth keeping
 
 `src/app/preview/pf/engine.ts` computes every number for the prototype.
