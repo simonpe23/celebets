@@ -116,7 +116,11 @@ Keep it current: when a job finishes, delete its line.
   under `src/app/preview/pf/` in another chat.**
   **`src/app/preview/performance-home/` is the ACCEPTED Home and the
   design reference for Lab: read it, never edit it from another
-  chat.** The Lab chat builds in its own folder under `/preview`.
+  chat.** The Lab chat builds at `src/app/preview/performance-lab/`,
+  on branch `claude/actuals-lab-redesign-onv3s8`, started 29 August
+  2026. It also edits `sitecheck.mjs` (the PREVIEW list), which the
+  demo-link chat touches too: whichever merges second merges `main`
+  in first.
   - The thinking is settled and written: read
     **`docs/performance-brief.md`** first. It is the argument.
   - `docs/mockup-briefs.md` holds draft designer prompts. **Reference
@@ -126,10 +130,12 @@ Keep it current: when a job finishes, delete its line.
     words: "this version will do, good job." Live at
     `/preview/performance-home`. The copy phase is over ("we're now
     passed copying it. WE're now improving what we have"), so his edit
-    lists rule, not the mockup files. Next is either the Lab or Totals
-    mockup from him, or the unscoped go-live work (real numbers, dark
-    theme, empty states, the `/stats` swap). Nothing starts before he
-    says so.
+    lists rule, not the mockup files. The Lab build started 29 August
+    2026 in the Lab chat, one piece at a time, each screenshot waiting
+    on his reaction. Status lives in `docs/performance-rebuild.md`.
+    Still unstarted: Totals, and the go-live work (real numbers, dark
+    theme, empty states, the `/stats` swap). Nothing else starts
+    before he says so.
     Build order, his words: "Home, Lab, Totals are the main pages.
     Other pages inside Performance are: Compare, All Bets, Insights."
     Home ships first and goes live alone: on day one Totals holds

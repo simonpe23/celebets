@@ -648,6 +648,74 @@ for Lab, and `docs/design-system.md` still describes the old app, not
 this. The build notes for the Lab chat are in
 `docs/performance-rebuild.md`.
 
+**LAB ROUND 1 IS REJECTED. 29 August 2026**, his words: "this is the
+ugliest page ive never seen... it has no cohesiveness or premium app
+feel at all... this looks like its from 2006." The bar, his words:
+"our values are premium, exclusive, intuitive, modern."
+
+**THE CHIP AREA FOLLOWS THE MOCKUP'S LOOK, not a Home-derived icon
+set.** His words: "i particularly hate your icons. they all look the
+same... i prefer how it looks in the mockup instead." So round 2
+wears the mockup's anatomy: colour identity icons for sports and
+leagues (the platform's emoji, which his designer's mockup itself
+uses), quiet outline glyphs for Category, When, Bet Type and Risk,
+compact bare chips, small uppercase group headers with an All link.
+Chips still read records, never amounts: that ruling stands and was
+not reopened.
+
+**COMPARE IS PARKED. Ruled 29 August 2026**, his words: "compare page
+is ugly. we're not working on that one yet. it even says combine,
+which is wrong. verdict is = utter trash. do not even work on it
+yet." The built side by side view and its verdict sentence are
+deleted. The ruled trigger survives as a quiet door wearing a Soon
+badge at exactly two selections, and the word Combine appears
+nowhere. Nobody builds the comparison view until he reopens it.
+
+**LAB ROUND 2 WAS ALSO REJECTED, with a five point list. 29 August
+2026**, his words: "it's better but still absolutely hideous... feel
+the cohesiveness and balance. your version has nothing of that." His
+five orders, all applied in round 3:
+
+1. **Tray pills are transparent, never filled purple:** "Your current
+   view menu - look at the mockup. not purple, transparent pills.
+   more clean." Now white pills, thin indigo outline, small icon,
+   indigo text.
+2. **The green ROI and Record line returns under Net profit:** "Net
+   profit area - hideous. missing green ROI and Record under." The
+   earlier worry about repeating Record and ROI in the KPI row is
+   overruled: the mockup shows both, so both are shown.
+3. **The door cards wear the mockup's card look:** "See these bets +
+   compare buttons = ugly. look at mockup." White, soft shadow,
+   lavender icon tile, Compare subtitle now the mockup's own words,
+   "Compare two views".
+4. **Chips lose the drawn border:** "Cards under each category has a
+   cheap distasteful and ugly look." Now borderless white cards on a
+   whisper shadow, radius 12, like the mockup's; only the selected
+   state keeps its lavender fill and indigo edge.
+5. **The hero backdrop is beige, fading into the KPI row:** "the fade
+   is hideous, i hate the purple fade in the background. it's
+   supposed to be beige-ish and fade over into the KPI row," with
+   `0. Chat Aug 28.png` named as the reference. The wash now sits
+   exactly where Home puts it and is desaturated so it reads beige;
+   the chart order is shaped like Home's arc (early dip, then a
+   climb) so the lavender mass is the chart's own fill, not a blotch.
+
+He also re-pointed the build at both files: "please look at the
+mockup and the 0. Chat Aug 28.png - Find that look and copy it."
+
+**LAB IS BUILT ONE PIECE AT A TIME. Ruled 29 August 2026**, his words
+to the Lab chat: "Work in small steps. Build one piece, show me a
+screenshot, wait for my reaction before the next piece. Do not build
+the whole page and reveal it." Nothing goes live until he says so:
+Lab is a preview page, built the way Home was.
+
+**The Lab chat builds both sides of the Home to Lab seam.** His words,
+29 August 2026: "you build both sides: a Lab that can open empty or
+with a selection handed to it, and the taps on Home. The top menu
+handles plain switching between Home, Lab and Totals." How the tap
+wiring squares with the protected Home folder is not settled; he has
+not been asked yet.
+
 ## Process
 
 **Past reactions are not constraints.** Said twice in two days: "just
