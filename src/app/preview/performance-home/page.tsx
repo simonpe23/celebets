@@ -30,6 +30,7 @@
 //   prominent icons than the sheet: his round 2 instruction 6 stands.
 
 import Image from "next/image";
+import Link from "next/link";
 import { Figtree } from "next/font/google";
 import { HeroChart, Spark } from "./charts";
 import {
@@ -183,12 +184,17 @@ export default function PerformanceHomePreview() {
           >
             Home
           </span>
-          <span
-            className="absolute left-[181px] top-1/2 -translate-x-1/2 -translate-y-1/2 text-[10.5px] font-semibold"
+          {/* A real link since 29 August 2026, the owner's order once
+              Lab's preview existed: "make it so i can click lab and
+              home in the top menu." The padding is an invisible tap
+              target; nothing about the menu's look changes. */}
+          <Link
+            href="/preview/performance-lab"
+            className="absolute left-[181px] top-1/2 -translate-x-1/2 -translate-y-1/2 px-[18px] py-[10px] text-[10.5px] font-semibold"
             style={{ color: "#6B6E7A" }}
           >
             Lab
-          </span>
+          </Link>
           <span
             className="absolute left-[296px] top-1/2 -translate-x-1/2 -translate-y-1/2 text-[10.5px] font-semibold"
             style={{ color: "#6B6E7A" }}
