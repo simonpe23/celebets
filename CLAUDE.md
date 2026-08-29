@@ -117,23 +117,28 @@ Keep it current: when a job finishes, delete its line.
   under `src/app/preview/pf/` in another chat.**
   **`src/app/preview/performance-home/` is the ACCEPTED Home and the
   design reference for Lab: read it, never edit it from another
-  chat.** The Lab chat builds at `src/app/preview/performance-lab/`,
-  on branch `claude/actuals-lab-redesign-onv3s8`, started 29 August
-  2026. It also edits `sitecheck.mjs` (the PREVIEW list), which the
-  demo-link chat touches too: whichever merges second merges `main`
-  in first.
+  chat.** **`src/app/preview/performance-lab/` is the ACCEPTED Lab:
+  same rule, read it, never edit it from another chat.** The Lab
+  chat owns both that folder and Compare, on branch
+  `claude/actuals-lab-redesign-onv3s8`. It also edits
+  `sitecheck.mjs` (the PREVIEW list) and `jumptest.mjs`.
   - The thinking is settled and written: read
     **`docs/performance-brief.md`** first. It is the argument.
   - `docs/mockup-briefs.md` holds draft designer prompts. **Reference
     only, not rules.** He writes his own prompts now.
   - What is still undecided is in `docs/open-questions.md`.
-  - Current stage: **Home design ACCEPTED, 29 August 2026**, his
-    words: "this version will do, good job." Live at
-    `/preview/performance-home`. The copy phase is over ("we're now
-    passed copying it. WE're now improving what we have"), so his edit
-    lists rule, not the mockup files. The Lab build started 29 August
-    2026 in the Lab chat, one piece at a time, each screenshot waiting
-    on his reaction. Status lives in `docs/performance-rebuild.md`.
+  - Current stage: **Home and Lab are both ACCEPTED and live as
+    previews, 29 August 2026.** Home: "this version will do, good
+    job." Lab: "merged, checked the phone, works well." They sit at
+    `/preview/performance-home` and `/preview/performance-lab`, the
+    menu switches between them, and Home's ranked rows jump into Lab
+    with that fact selected (`jumptest.mjs` proves all seven doors).
+    The copy phase is over ("we're now passed copying it. WE're now
+    improving what we have"), so his edit lists rule, not the mockup
+    files. Status lives in `docs/performance-rebuild.md`.
+    **Compare is built and awaiting his reaction**, its own page at
+    `/preview/performance-compare`, from his sheet `1. Compare.png`.
+    It is reached from Lab at exactly two selections.
     Still unstarted: Totals, and the go-live work (real numbers, dark
     theme, empty states, the `/stats` swap). Nothing else starts
     before he says so.

@@ -62,6 +62,53 @@ await page.click('a:has-text("Home")');
 await page.waitForURL("**/preview/performance-home**");
 console.log("PASS Lab menu returns to Home");
 
+// COMPARE, its own page since 29 August 2026. The door appears at
+// exactly two selections, carries both to Compare, and the back
+// arrow returns to Lab with both still selected. Three things a
+// screenshot cannot show.
+await page.goto(
+  `http://localhost:${port}/preview/performance-lab?sel=${encodeURIComponent(
+    "sport~plain~Football|sport~plain~Basketball"
+  )}`,
+  { waitUntil: "networkidle" }
+);
+await page.waitForTimeout(600);
+const doorAtTwo = await page.locator('a:has-text("Compare")').count();
+console.log(
+  `${doorAtTwo === 1 ? "PASS" : "FAIL"} the Compare door is there at two selections`
+);
+if (doorAtTwo !== 1) fails++;
+
+await page.click('a:has-text("Compare")');
+await page.waitForURL("**/preview/performance-compare**");
+await page.waitForTimeout(700);
+const cmp = await page.innerText("body");
+const carried =
+  cmp.includes("Football") && cmp.includes("Basketball") && cmp.includes("24–16");
+console.log(`${carried ? "PASS" : "FAIL"} Compare opens on the two chosen facts`);
+if (!carried) fails++;
+
+await page.click('a[aria-label="Back to Lab"]');
+await page.waitForURL("**/preview/performance-lab**");
+await page.waitForTimeout(600);
+const backSel = page.url().includes("Football") && page.url().includes("Basketball");
+console.log(`${backSel ? "PASS" : "FAIL"} back from Compare keeps both selections`);
+if (!backSel) fails++;
+
+// At three selections the door is gone, his standing rule.
+await page.goto(
+  `http://localhost:${port}/preview/performance-lab?sel=${encodeURIComponent(
+    "sport~plain~Football|sport~plain~Basketball|risk~plain~Low odds"
+  )}`,
+  { waitUntil: "networkidle" }
+);
+await page.waitForTimeout(600);
+const doorAtThree = await page.locator('a:has-text("Compare")').count();
+console.log(
+  `${doorAtThree === 0 ? "PASS" : "FAIL"} the Compare door is gone at three selections`
+);
+if (doorAtThree !== 0) fails++;
+
 await browser.close();
 console.log(fails ? `${fails} jump(s) broken` : "All doors work.");
 process.exit(fails ? 1 : 0);

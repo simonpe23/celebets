@@ -14,10 +14,12 @@
 // icon tiles, and small uppercase group headers with an All link on
 // the right. Chip records stay, never amounts, by his standing rule.
 //
-// Compare is PARKED by his order the same day: "we're not working on
-// that one yet... do not even work on it yet." The ruled trigger
-// survives as a quiet door wearing a Soon badge at exactly two
-// selections; nothing opens.
+// Compare was parked, then reopened on 29 August 2026 and built as
+// its own page. The ruled trigger is unchanged: the door appears at
+// exactly two selections and is gone at three. It now opens
+// /preview/performance-compare, carrying the same two chips in the
+// address, and Compare's back arrow returns here with both still
+// selected.
 //
 // The behaviours ruled in docs/performance-rebuild.md, all live:
 // - Tap a chip and the whole page re-scopes in place. No submit.
@@ -31,6 +33,7 @@
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import type { Domain } from "@/lib/taxonomy";
 import { SPORT_EMOJI, type Sport } from "@/lib/types";
@@ -108,7 +111,9 @@ const GLYPH = "#6E7076";
 // when selected.
 // ---------------------------------------------------------------
 
-function chipIcon(
+// Exported so Compare dresses the same fact with the same icon. One
+// fact must never wear two icons across two pages.
+export function chipIcon(
   c: Chip,
   on: boolean,
   leagueSport?: string,
@@ -181,17 +186,6 @@ function selToUrl(sel: Chip[], domain: Domain): string {
   if (domain !== "Sports") p.set("domain", domain);
   const q = p.toString();
   return q ? `?${q}` : window.location.pathname;
-}
-
-function SoonPill() {
-  return (
-    <span
-      className="shrink-0 rounded-full px-[8px] py-[3px] text-[7.5px] font-bold uppercase tracking-wide"
-      style={{ background: "#ECECEF", color: GREY_TEXT }}
-    >
-      Soon
-    </span>
-  );
 }
 
 export default function LabApp() {
@@ -452,7 +446,10 @@ export default function LabApp() {
             <Chev size={9} color="#C3C4C9" />
           </button>
           {compareReady ? (
-            <div
+            <Link
+              href={`/preview/performance-compare?sel=${encodeURIComponent(
+                sel.map((c) => `${c.group}~${c.kind}~${c.value}`).join("|")
+              )}`}
               className="flex h-[50px] min-w-0 flex-1 items-center rounded-[14px] bg-white pl-[9px] pr-[10px]"
               style={{ boxShadow: "0 1px 4px rgba(24,20,50,0.06), 0 0 0 1px rgba(24,20,50,0.02)" }}
             >
@@ -470,8 +467,8 @@ export default function LabApp() {
                   Compare two views
                 </span>
               </span>
-              <SoonPill />
-            </div>
+              <Chev size={9} color="#C3C4C9" />
+            </Link>
           ) : null}
         </div>
       ) : null}
