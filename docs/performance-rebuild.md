@@ -116,7 +116,19 @@ a time, a screenshot after each, his reaction before the next.
 - **His structure mockup is `1. LAB-mock.png`**, repo root, uploaded
   29 August 2026. Structure only; its skin, order, some words, and
   its four recorded clashes are overruled (see the section below).
-- **Round 1, the working page: BUILT, awaiting his reaction.** At
+- **Round 1 was REJECTED the same day it was shown**, 29 August 2026:
+  "the ugliest page ive never seen... i particularly hate your
+  icons. they all look the same." Full quotes and the three rulings
+  it produced (mockup's look for the chip area, Compare parked, the
+  premium bar) are in `docs/decisions.md`.
+- **Round 2 rebuilt the chip area to the mockup's anatomy and
+  parked Compare**: colour identity icons for sports and leagues
+  (platform emoji, the mockup's own icon set), quiet slate outline
+  glyphs for the abstract groups, compact bare chips, uppercase
+  group headers with All links, the side by side view deleted, and a
+  Soon-badged Compare door at exactly two selections. Awaiting his
+  reaction.
+- **Round 1's mechanics, all still live and test-proven.** At
   `src/app/preview/performance-lab/`, on the accepted Home's design.
   Live and test-proven in a real browser: the current view tray with
   removal, the answer panel (net profit, the cumulative chart in

@@ -648,6 +648,29 @@ for Lab, and `docs/design-system.md` still describes the old app, not
 this. The build notes for the Lab chat are in
 `docs/performance-rebuild.md`.
 
+**LAB ROUND 1 IS REJECTED. 29 August 2026**, his words: "this is the
+ugliest page ive never seen... it has no cohesiveness or premium app
+feel at all... this looks like its from 2006." The bar, his words:
+"our values are premium, exclusive, intuitive, modern."
+
+**THE CHIP AREA FOLLOWS THE MOCKUP'S LOOK, not a Home-derived icon
+set.** His words: "i particularly hate your icons. they all look the
+same... i prefer how it looks in the mockup instead." So round 2
+wears the mockup's anatomy: colour identity icons for sports and
+leagues (the platform's emoji, which his designer's mockup itself
+uses), quiet outline glyphs for Category, When, Bet Type and Risk,
+compact bare chips, small uppercase group headers with an All link.
+Chips still read records, never amounts: that ruling stands and was
+not reopened.
+
+**COMPARE IS PARKED. Ruled 29 August 2026**, his words: "compare page
+is ugly. we're not working on that one yet. it even says combine,
+which is wrong. verdict is = utter trash. do not even work on it
+yet." The built side by side view and its verdict sentence are
+deleted. The ruled trigger survives as a quiet door wearing a Soon
+badge at exactly two selections, and the word Combine appears
+nowhere. Nobody builds the comparison view until he reopens it.
+
 **LAB IS BUILT ONE PIECE AT A TIME. Ruled 29 August 2026**, his words
 to the Lab chat: "Work in small steps. Build one piece, show me a
 screenshot, wait for my reaction before the next piece. Do not build

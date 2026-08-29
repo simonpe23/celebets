@@ -36,13 +36,16 @@ export function LabChart({ points }: { points: ChartPoint[] }) {
   const H = 98;
   const pathRef = useRef<SVGPathElement>(null);
   const [drawn, setDrawn] = useState(false);
+  const [len, setLen] = useState(0);
   const key = points.length > 0 ? `${points.length}:${points[points.length - 1].v}` : "empty";
 
   // The line draws itself when the question changes: motion level B,
-  // information that the answer is being recomputed. Off under
-  // reduced motion.
+  // information that the answer is being recomputed. The real path
+  // length is measured before the reveal, so the dash never cuts the
+  // line short. Off under reduced motion.
   useEffect(() => {
     setDrawn(false);
+    setLen(pathRef.current?.getTotalLength() ?? 0);
     const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (still) {
       setDrawn(true);
@@ -71,7 +74,6 @@ export function LabChart({ points }: { points: ChartPoint[] }) {
     .join(" ");
   const area = `${line} L${W} ${H} L0 ${H} Z`;
   const last = points[points.length - 1];
-  const pathLen = pathRef.current?.getTotalLength() ?? 900;
 
   const ticks: number[] = [hi, hi / 2, 0];
   if (loTick < 0) ticks.push(loTick);
@@ -109,9 +111,10 @@ export function LabChart({ points }: { points: ChartPoint[] }) {
             strokeWidth="1.8"
             strokeLinejoin="round"
             strokeLinecap="round"
-            strokeDasharray={pathLen}
-            strokeDashoffset={drawn ? 0 : pathLen}
-            style={{ transition: "stroke-dashoffset 800ms ease" }}
+            strokeDasharray={len || undefined}
+            strokeDashoffset={drawn ? 0 : len}
+            opacity={len === 0 && !drawn ? 0 : 1}
+            style={{ transition: "stroke-dashoffset 700ms ease" }}
           />
           <circle
             cx={x(last.t)}

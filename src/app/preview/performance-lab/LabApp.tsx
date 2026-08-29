@@ -5,12 +5,24 @@
 // pf engine, which speaks src/lib/stats.ts, so Lab agrees with every
 // other surface to the cent.
 //
-// The behaviours ruled in docs/performance-rebuild.md, all live here:
+// Round 2, 29 August 2026. Round 1's chip area was rejected ("i
+// particularly hate your icons. they all look the same... i prefer
+// how it looks in the mockup instead"), so the groups now wear the
+// mockup's anatomy: colour identity icons for sports and leagues
+// (the platform's emoji, which is what his designer used), quiet
+// outline glyphs for the abstract groups, compact bare chips with no
+// icon tiles, and small uppercase group headers with an All link on
+// the right. Chip records stay, never amounts, by his standing rule.
+//
+// Compare is PARKED by his order the same day: "we're not working on
+// that one yet... do not even work on it yet." The ruled trigger
+// survives as a quiet door wearing a Soon badge at exactly two
+// selections; nothing opens.
+//
+// The behaviours ruled in docs/performance-rebuild.md, all live:
 // - Tap a chip and the whole page re-scopes in place. No submit.
 // - Every chip is priced at the intersection it would create.
 // - Chips read as a record (12-4), never a percent, never an amount.
-// - Selecting combines. Compare appears at exactly two selections,
-//   flips the answer to side by side, and disappears at three.
 // - The Sport header carries the domain arrow. Picking a domain
 //   rescopes Sport, League, Category and When and clears the
 //   selection, because domains never combine.
@@ -21,8 +33,10 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import type { Domain } from "@/lib/taxonomy";
+import { SPORT_EMOJI, type Sport } from "@/lib/types";
 import {
   hitOf,
+  iconFor,
   makeEngine,
   money,
   roiOf,
@@ -30,39 +44,30 @@ import {
   type Stats,
 } from "../pf/engine";
 import {
-  BallIcon,
   Chev,
   ChevDown,
-  DollarIcon,
   FactNote,
   FactTarget,
   FactTrend,
   FactWave,
   GoldSparkle,
   InfoDot,
-  LayersIcon,
-  TrendTileIcon,
   WashTexture,
 } from "../performance-home/icons";
 import {
-  AmFootballIcon,
-  BaseballIcon,
-  BasketballIcon,
   ChainIcon,
   ClockIcon,
   CloseIcon,
-  CoinIcon,
   CompareIcon,
-  FlagIcon,
+  Emoji,
   GaugeIcon,
-  GoalIcon,
-  HockeyIcon,
+  MoneyIcon,
   PlusIcon,
   SpreadIcon,
+  StackIcon,
   TargetIcon,
-  TennisIcon,
   TotalsIcon,
-  TrophyIcon,
+  TrendLineIcon,
   WhistleIcon,
 } from "./lab-icons";
 import { labBets } from "./lab-data";
@@ -74,7 +79,6 @@ import {
   recordOf,
 } from "./lab-model";
 import {
-  GREEN,
   GREY_TEXT,
   HAIR,
   INDIGO,
@@ -88,45 +92,47 @@ import {
 } from "./ui";
 import { LabChart } from "./chart";
 
+// Sampled from "1. LAB-mock.png": the selected chip's lavender fill,
+// its border, and the header inks.
+const SEL_BG = "#F0EAFD";
+const SEL_EDGE = "#B3A4F6";
+const HEAD_INK = "#3A404F";
+const LINK_INK = "#626774";
+const GLYPH = "#6E7076";
+
 // ---------------------------------------------------------------
-// Icons per chip value. One fact keeps one icon: values Home's list
-// already draws reuse Home's exact icon.
+// Icons per chip. Concrete facts (sports, leagues) get colour
+// identity; abstract facts get a quiet outline that turns indigo
+// when selected.
 // ---------------------------------------------------------------
 
-function sportIcon(v: string): ReactNode {
-  if (v === "Football") return <BallIcon size={20} />;
-  if (v === "Basketball") return <BasketballIcon />;
-  if (v === "Baseball") return <BaseballIcon />;
-  if (v === "Tennis") return <TennisIcon />;
-  if (v === "Ice Hockey") return <HockeyIcon />;
-  if (v === "American Football") return <AmFootballIcon />;
-  if (v === "Crypto") return <CoinIcon />;
-  return <TargetIcon />;
-}
-
-function chipIcon(c: Chip, leagueSport?: string): ReactNode {
+function chipIcon(c: Chip, on: boolean, leagueSport?: string): ReactNode {
+  const color = on ? INDIGO : GLYPH;
   const v = c.value;
-  if (c.group === "sport") return sportIcon(v);
-  if (c.group === "what") {
-    if (v === "Moneyline") return <DollarIcon size={20} />;
-    if (v === "Spread / Handicap") return <SpreadIcon />;
-    if (v === "Totals (Over/Under)") return <TotalsIcon />;
-    if (v === "Player Props") return <TargetIcon />;
-    if (v === "Match Props") return <WhistleIcon />;
-    if (v === "Price Direction") return <TrendTileIcon size={20} />;
-    if (v === "BTTS") return <GoalIcon />;
-    if (v === "Corners") return <FlagIcon />;
-    return <DollarIcon size={20} />;
+  if (c.group === "sport")
+    return <Emoji e={SPORT_EMOJI[v as Sport] ?? "\u{1F4CA}"} />;
+  if (c.group === "where") {
+    const own = iconFor(v);
+    const fromSport = leagueSport
+      ? SPORT_EMOJI[leagueSport as Sport]
+      : undefined;
+    return <Emoji e={own !== "\u{1F4CA}" ? own : (fromSport ?? "\u{1F3C6}")} />;
   }
-  // A league wears its sport's mark; the trophy is the fallback for
-  // a competition whose sport the record does not name.
-  if (c.group === "where")
-    return leagueSport ? sportIcon(leagueSport) : <TrophyIcon />;
-  if (c.group === "when") return <ClockIcon half={v.includes("Half")} />;
+  if (c.group === "what") {
+    if (v === "Moneyline") return <MoneyIcon color={color} />;
+    if (v === "Spread / Handicap") return <SpreadIcon color={color} />;
+    if (v === "Totals (Over/Under)") return <TotalsIcon color={color} />;
+    if (v === "Player Props") return <TargetIcon color={color} />;
+    if (v === "Match Props") return <WhistleIcon color={color} />;
+    if (v === "Price Direction") return <TrendLineIcon color={color} />;
+    return <MoneyIcon color={color} />;
+  }
+  if (c.group === "when")
+    return <ClockIcon color={color} half={v.includes("Half")} />;
   if (c.group === "how")
-    return v === "Singles" ? <LayersIcon size={20} /> : <ChainIcon />;
+    return v === "Singles" ? <StackIcon color={color} /> : <ChainIcon color={color} />;
   const level = v === "Low odds" ? 0 : v === "Medium odds" ? 1 : 2;
-  return <GaugeIcon level={level} />;
+  return <GaugeIcon color={color} level={level} />;
 }
 
 const sameChip = (a: Chip, b: Chip) =>
@@ -161,6 +167,17 @@ function selToUrl(sel: Chip[], domain: Domain): string {
   return q ? `?${q}` : window.location.pathname;
 }
 
+function SoonPill() {
+  return (
+    <span
+      className="shrink-0 rounded-full px-[8px] py-[3px] text-[7.5px] font-bold uppercase tracking-wide"
+      style={{ background: "#ECECEF", color: GREY_TEXT }}
+    >
+      Soon
+    </span>
+  );
+}
+
 export default function LabApp() {
   const engine = useMemo(() => makeEngine(labBets), []);
   const params = useSearchParams();
@@ -169,13 +186,8 @@ export default function LabApp() {
     return (DOMAINS as string[]).includes(d ?? "") ? (d as Domain) : "Sports";
   });
   const [sel, setSel] = useState<Chip[]>(() => parseSel(params.get("sel")));
-  const [view, setView] = useState<"combined" | "side">("combined");
   const [domainOpen, setDomainOpen] = useState(false);
   const groupsRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (sel.length !== 2 && view === "side") setView("combined");
-  }, [sel.length, view]);
 
   useEffect(() => {
     window.history.replaceState(null, "", selToUrl(sel, domain));
@@ -234,8 +246,6 @@ export default function LabApp() {
     marketParents.get(market) ?? new Set<string>();
 
   const compareReady = sel.length === 2;
-  const sideA = compareReady ? engine.statsFor([sel[0]]) : null;
-  const sideB = compareReady ? engine.statsFor([sel[1]]) : null;
 
   return (
     <>
@@ -294,93 +304,48 @@ export default function LabApp() {
         ) : null}
       </div>
 
-      {view === "side" && sideA && sideB ? (
-        /* SIDE BY SIDE: the same two selections, read as rivals.
-           What it must answer, in order: which is better, by how
-           much in profit and record, and on how many picks. */
-        <div className="relative mt-[14px] px-[15px]">
-          <p className="pl-[7px] text-[10.5px] font-semibold" style={{ color: NET_LABEL }}>
-            Side by side
-          </p>
-          <p className="mt-[3px] pl-[7px] text-[13.5px] font-bold leading-snug">
-            {verdict(sel[0].value, sideA, sel[1].value, sideB)}
-          </p>
-          <div className="mt-[10px] flex gap-[8px]">
-            {[
-              { name: sel[0].value, s: sideA },
-              { name: sel[1].value, s: sideB },
-            ].map(({ name, s }) => (
-              <div
-                key={name}
-                className="flex-1 rounded-[13px] bg-white p-[12px]"
-                style={{ boxShadow: "0 6px 16px rgba(28,24,58,0.08)" }}
-              >
-                <p className="truncate text-[10.2px] font-bold">{name}</p>
-                <p className="mt-[6px] text-[21px] font-bold leading-none" style={{ color: INDIGO }}>
-                  {recordOf(s)}
-                </p>
-                <p className="mt-[3px] text-[8.2px] font-semibold" style={{ color: GREY_TEXT }}>
-                  {hitOf(s)} hit rate
-                </p>
-                <p
-                  className="mt-[8px] text-[13px] font-bold leading-none"
-                  style={{ color: s.profit < 0 ? RED : GREEN }}
-                >
-                  {money(s.profit)}
-                </p>
-                <p className="mt-[3px] text-[8.2px] font-semibold" style={{ color: GREY_TEXT }}>
-                  {s.wins + s.losses} picks · ROI {roiOf(s)}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
+      {/* THE ANSWER: net profit for the current view, the line that
+          drew it, and the four ruled KPIs. */}
+      <div className="relative mt-[10px] flex items-center gap-[1px] pl-[22px]">
+        <p className="text-[10.5px] font-semibold" style={{ color: NET_LABEL }}>
+          Net profit
+        </p>
+        <InfoDot size={13} />
+      </div>
+      <p
+        className="relative mt-[4px] pl-[18px] text-[45px] font-bold leading-none"
+        style={{ color: whole.profit < 0 ? RED : INDIGO }}
+      >
+        {money(whole.profit)}
+      </p>
+      {picks === 0 ? (
+        <p className="relative mt-[16px] pl-[22px] text-[10.5px]" style={{ color: GREY_TEXT }}>
+          No picks match this view yet.
+        </p>
       ) : (
-        /* THE ANSWER: net profit for the current view, the line that
-           drew it, and the four ruled KPIs. */
-        <>
-          <div className="relative mt-[10px] flex items-center gap-[1px] pl-[22px]">
-            <p className="text-[10.5px] font-semibold" style={{ color: NET_LABEL }}>
-              Net profit
-            </p>
-            <InfoDot size={13} />
-          </div>
-          <p
-            className="relative mt-[4px] pl-[18px] text-[45px] font-bold leading-none"
-            style={{ color: whole.profit < 0 ? RED : INDIGO }}
-          >
-            {money(whole.profit)}
-          </p>
-          {picks === 0 ? (
-            <p className="relative mt-[16px] pl-[22px] text-[10.5px]" style={{ color: GREY_TEXT }}>
-              No picks match this view yet.
-            </p>
-          ) : (
-            <div className="relative mt-[6px]">
-              <LabChart points={chartPoints} />
-            </div>
-          )}
-
-          <div className="relative mt-[14px] flex items-center pl-[24px]">
-            {[
-              { icon: <FactNote size={19} />, value: `${picks}`, label: "Bets" },
-              { icon: <FactWave size={19} />, value: recordOf(whole), label: "Record" },
-              { icon: <FactTarget size={19} />, value: hitOf(whole), label: "Hit rate" },
-              { icon: <FactTrend size={19} />, value: picks > 0 ? `${roiOf(whole)}` : "-", label: "ROI" },
-            ].map((f, i) => (
-              <div key={f.label} className="flex items-center gap-[6px]" style={{ width: ["82px", "94px", "92px", "auto"][i] }}>
-                <span className="relative top-[-3px]">{f.icon}</span>
-                <div>
-                  <p className="text-[12.5px] font-bold leading-none tracking-[-0.01em]">{f.value}</p>
-                  <p className="mt-[3px] text-[7.6px]" style={{ color: GREY_TEXT }}>
-                    {f.label}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </>
+        <div className="relative mt-[6px]">
+          <LabChart points={chartPoints} />
+        </div>
       )}
+
+      <div className="relative mt-[14px] flex items-center pl-[24px]">
+        {[
+          { icon: <FactNote size={19} />, value: `${picks}`, label: "Bets" },
+          { icon: <FactWave size={19} />, value: recordOf(whole), label: "Record" },
+          { icon: <FactTarget size={19} />, value: hitOf(whole), label: "Hit rate" },
+          { icon: <FactTrend size={19} />, value: picks > 0 ? `${roiOf(whole)}` : "-", label: "ROI" },
+        ].map((f, i) => (
+          <div key={f.label} className="flex items-center gap-[6px]" style={{ width: ["82px", "94px", "92px", "auto"][i] }}>
+            <span className="relative top-[-3px]">{f.icon}</span>
+            <div>
+              <p className="text-[12.5px] font-bold leading-none tracking-[-0.01em]">{f.value}</p>
+              <p className="mt-[3px] text-[7.6px]" style={{ color: GREY_TEXT }}>
+                {f.label}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
 
       {/* Actuals noticed. */}
       <div
@@ -404,8 +369,8 @@ export default function LabApp() {
         <Chev size={11} color={ORANGE} />
       </div>
 
-      {/* The doors: the bets behind the answer, and Compare when
-          exactly two things are selected. */}
+      {/* The doors: the bets behind the answer, and the parked
+          Compare door at exactly two selections, wearing Soon. */}
       {sel.length > 0 ? (
         <div className="relative mx-[15px] mt-[10px] flex gap-[8px]">
           <button
@@ -429,37 +394,25 @@ export default function LabApp() {
             <Chev size={9} color="#C3C4C9" />
           </button>
           {compareReady ? (
-            <button
-              onClick={() => setView(view === "side" ? "combined" : "side")}
-              className="flex h-[45px] min-w-0 flex-1 items-center rounded-[13px] pl-[8px] pr-[10px] text-left"
-              style={
-                view === "side"
-                  ? { background: INDIGO_FILL }
-                  : { background: PILL_LAV, boxShadow: "inset 0 0 0 1px #DDD6FA" }
-              }
+            <div
+              className="flex h-[45px] min-w-0 flex-1 items-center rounded-[13px] pl-[8px] pr-[10px]"
+              style={{ background: PILL_LAV, boxShadow: "inset 0 0 0 1px #DDD6FA" }}
             >
               <span
-                className="flex h-[29px] w-[29px] shrink-0 items-center justify-center rounded-[10px]"
-                style={{ background: view === "side" ? "rgba(255,255,255,0.16)" : "#FFFFFF" }}
+                className="flex h-[29px] w-[29px] shrink-0 items-center justify-center rounded-[10px] bg-white"
               >
-                <CompareIcon size={17} color={view === "side" ? "#FFFFFF" : undefined} />
+                <CompareIcon size={17} />
               </span>
               <span className="ml-[9px] min-w-0 flex-1 leading-[1.35]">
-                <span
-                  className="block truncate text-[9.6px] font-bold"
-                  style={{ color: view === "side" ? "#FFFFFF" : INDIGO }}
-                >
-                  {view === "side" ? "Combine" : "Compare"}
+                <span className="block truncate text-[9.6px] font-bold" style={{ color: INDIGO }}>
+                  Compare
                 </span>
-                <span
-                  className="block truncate text-[7.8px]"
-                  style={{ color: view === "side" ? "#DDD6FA" : GREY_TEXT }}
-                >
-                  {view === "side" ? "Add them together" : "These two, side by side"}
+                <span className="block truncate text-[7.8px]" style={{ color: GREY_TEXT }}>
+                  These two, side by side
                 </span>
               </span>
-              <Chev size={9} color={view === "side" ? "#DDD6FA" : "#C3C4C9"} />
-            </button>
+              <SoonPill />
+            </div>
           ) : null}
         </div>
       ) : null}
@@ -477,17 +430,17 @@ export default function LabApp() {
       </div>
 
       {groups.map((g) => (
-        <div key={g.key} className="relative mt-[14px]">
-          <div className="flex items-baseline justify-between pl-[20px] pr-[19px]">
+        <div key={g.key} className="relative mt-[15px]">
+          <div className="flex items-center justify-between pl-[20px] pr-[19px]">
             {g.key === "sport" ? (
               <div className="relative">
                 <button
                   onClick={() => setDomainOpen((o) => !o)}
-                  className="flex items-center gap-[4px] text-[11.2px] font-bold"
-                  style={{ color: INK }}
+                  className="flex items-center gap-[4px] text-[9px] font-semibold uppercase tracking-[0.08em]"
+                  style={{ color: HEAD_INK }}
                 >
                   {g.title}
-                  <ChevDown size={12} />
+                  <ChevDown size={11} />
                 </button>
                 {domainOpen ? (
                   <>
@@ -497,7 +450,7 @@ export default function LabApp() {
                       className="fixed inset-0 z-10"
                     />
                     <div
-                      className="absolute left-0 top-[22px] z-20 w-[150px] rounded-[12px] bg-white py-[5px]"
+                      className="absolute left-0 top-[20px] z-20 w-[150px] rounded-[12px] bg-white py-[5px]"
                       style={{ boxShadow: "0 10px 24px rgba(28,24,58,0.14), inset 0 0 0 1px #EFEFF2" }}
                     >
                       {DOMAINS.map((d) => (
@@ -522,13 +475,23 @@ export default function LabApp() {
                 ) : null}
               </div>
             ) : (
-              <p className="text-[11.2px] font-bold" style={{ color: INK }}>
+              <p
+                className="text-[9px] font-semibold uppercase tracking-[0.08em]"
+                style={{ color: HEAD_INK }}
+              >
                 {g.title}
               </p>
             )}
+            <span
+              className="flex items-center gap-[4px] text-[9.5px] font-semibold"
+              style={{ color: LINK_INK }}
+            >
+              {g.allLabel}
+              <Chev size={8} color="#9B9DA5" />
+            </span>
           </div>
           <div
-            className="mt-[7px] flex gap-[7px] overflow-x-auto pb-[2px] pl-[15px] pr-[15px] [&::-webkit-scrollbar]:hidden"
+            className="mt-[7px] flex gap-[7px] overflow-x-auto pb-[3px] pl-[15px] pr-[15px] [&::-webkit-scrollbar]:hidden"
             style={{ scrollbarWidth: "none" }}
           >
             {g.chips.map((c) => {
@@ -539,31 +502,26 @@ export default function LabApp() {
                 <button
                   key={c.value}
                   onClick={() => toggle(c)}
-                  className="flex h-[49px] shrink-0 items-center gap-[8px] rounded-[12px] pl-[8px] pr-[13px] transition-colors"
+                  className="flex h-[42px] shrink-0 items-center gap-[8px] rounded-[10px] pl-[10px] pr-[13px] transition-colors"
                   style={{
-                    background: on ? PILL_LAV : "#FFFFFF",
+                    background: on ? SEL_BG : "#FFFFFF",
                     boxShadow: on
-                      ? "inset 0 0 0 1px #C9BFF7"
-                      : `inset 0 0 0 1px ${HAIR}`,
+                      ? `inset 0 0 0 1.2px ${SEL_EDGE}`
+                      : `inset 0 0 0 1px #EFEFF1, 0 1px 2px rgba(20,16,50,0.04)`,
                     opacity: empty && !on ? 0.45 : 1,
                   }}
                 >
-                  <span
-                    className="flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-[10px]"
-                    style={{ background: on ? "#FFFFFF" : PILL_LAV }}
-                  >
-                    {chipIcon(c, c.group === "where" ? leagueSportMap.get(c.value) : undefined)}
-                  </span>
+                  {chipIcon(c, on, c.group === "where" ? leagueSportMap.get(c.value) : undefined)}
                   <span className="text-left leading-none">
                     <span
-                      className="block whitespace-nowrap text-[11px] font-bold"
+                      className="block whitespace-nowrap text-[10.5px] font-bold"
                       style={{ color: on ? INDIGO : INK }}
                     >
                       {c.value}
                     </span>
                     <span
-                      className="mt-[4px] block text-[8.6px] font-semibold"
-                      style={{ color: GREY_TEXT }}
+                      className="mt-[3px] block text-[8.4px] font-semibold"
+                      style={{ color: on ? INDIGO : GREY_TEXT }}
                     >
                       {recordOf(s)}
                     </span>
@@ -617,23 +575,4 @@ export default function LabApp() {
       </div>
     );
   }
-}
-
-// Which one is better for me, by how much in both profit and record,
-// and the samples are on the cards below it.
-function verdict(nameA: string, a: Stats, nameB: string, b: Stats): string {
-  if (a.profit === b.profit) return `${nameA} and ${nameB} are level on profit.`;
-  const [lead, tail, ls, ts] =
-    a.profit > b.profit ? [nameA, nameB, a, b] : [nameB, nameA, b, a];
-  const gap = money(ls.profit - ts.profit).slice(1);
-  const leadHit = ls.wins + ls.losses > 0 ? ls.wins / (ls.wins + ls.losses) : 0;
-  const tailHit = ts.wins + ts.losses > 0 ? ts.wins / (ts.wins + ts.losses) : 0;
-  const hitGap = Math.round((leadHit - tailHit) * 100);
-  const hitPart =
-    hitGap > 0
-      ? `and hits ${hitGap} points more often`
-      : hitGap < 0
-        ? `though ${tail} hits ${-hitGap} points more often`
-        : "on level hit rates";
-  return `${lead} is ${gap} ahead of ${tail}, ${hitPart}.`;
 }
