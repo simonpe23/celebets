@@ -520,6 +520,42 @@ percents, the taxonomy) are law. Phone width only.
 **Cut:** the prototype insight card modal, and All Facts as a standalone
 page.
 
+**THE MASTER HOME MOCKUP IS `0. Chat Aug 28.png`.** Ruled 28 August
+2026, evening. His designer combined the two full sheets
+(`1. mockup_Aug 28.png` and `2. big chart Aug 28.png`) into one file
+and that file is now the single spec for Home. Two things the designer
+left out stay in by his order: "he forgot the head map button next to
+What changed and the nice color fade behind the chart." So the Heat Map
+pill sits beside What changed?, and the colour wash stays behind the
+chart.
+
+**THE MOCKUP'S INDIGO WINS. Ruled 28 August 2026, evening**, replacing
+"keep apps purple" from the same morning. His words: "reg color: pick
+the purple color from the mockup." Sampled from the sheet: `#3614F0`
+for text, lines and icons, `#3708E4` for fills. The app's own purple
+stays untouched everywhere outside this preview.
+
+**A SIMILAR FONT IS FINE, THE SIZES ARE NOT NEGOTIABLE.** His words,
+28 August 2026: "reg font: pick a similar one, does not have to be the
+same. BUT SAME FONT SIZE IS IMPORTANT... i want the font size and
+proportions to be exact." The build uses Figtree, the closest free
+match by measured letter proportions, at sizes measured glyph by glyph
+from the mockup's own pixels. This does not touch the app's fonts,
+which keep their own rules.
+
+**Home must fit one phone screen.** His words, 28 August 2026: "all
+five rows and build your performance view must fit the screen. chart is
+too big." The whole page, menu through the Lab card, fits a 390x844
+viewport with the tab bar below it.
+
+**The bottom menu floats like the rest of the app.** From his
+screenshots, 28 August 2026: a bar glued to the viewport bottom
+"etiher covers the page or leaves a gap if i zoom out. on the rest of
+the pages, the menu is floating on top of it." The preview uses the
+app's own sticky floating card pattern from `TabBar.tsx`, taller and
+with more prominent icons than the mockup, which is his standing round
+2 instruction 6.
+
 ## Process
 
 **Past reactions are not constraints.** Said twice in two days: "just

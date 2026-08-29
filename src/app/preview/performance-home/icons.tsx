@@ -1,18 +1,19 @@
-// Icons for the new Home, drawn from the six sheets of 28 August 2026
-// (hero chart, kpi row + insights row_2, mini buttons, top list,
-// Performance Menu, Performance Menu _2). Line art, each in its own
-// sampled colour. The sheets' indigo is replaced by the app's purple,
-// the owner's ruling: "keep apps purple".
+// Icons for the new Home, drawn from "0. Chat Aug 28.png", the combined
+// master mockup. Line art, each in its sampled colour. The indigo is the
+// mockup's own, sampled at #3614F0 (fills #3708E4): the owner's final
+// ruling of 28 August 2026, "pick the purple color from the mockup",
+// which replaces the earlier "keep apps purple".
 
-const MARK = "var(--brand-mark)";
+const MARK = "#3614F0";
+const SLATE = "#454F5E";
 
 // The small circled i beside the Net profit label.
 export function InfoDot({ size = 13 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 20 20" fill="none" aria-hidden>
-      <circle cx="10" cy="10" r="8" stroke="#7C7E86" strokeWidth="1.6" />
-      <path d="M10 9 v4.4" stroke="#7C7E86" strokeWidth="1.6" strokeLinecap="round" />
-      <circle cx="10" cy="6.1" r="1.05" fill="#7C7E86" />
+      <circle cx="10" cy="10" r="8" stroke="#6E7076" strokeWidth="1.6" />
+      <path d="M10 9 v4.4" stroke="#6E7076" strokeWidth="1.6" strokeLinecap="round" />
+      <circle cx="10" cy="6.1" r="1.05" fill="#6E7076" />
     </svg>
   );
 }
@@ -33,7 +34,7 @@ export function ChevDown({ size = 10 }: { size?: number }) {
 }
 
 // The small green rise beside the ROI figure under the number.
-export function MiniTrend({ size = 12, color = "#3FA43C" }: { size?: number; color?: string }) {
+export function MiniTrend({ size = 12, color = "#25B132" }: { size?: number; color?: string }) {
   return (
     <svg width={size} height={size} viewBox="0 0 20 20" fill="none" aria-hidden>
       <path
@@ -52,8 +53,8 @@ export function MiniTrend({ size = 12, color = "#3FA43C" }: { size?: number; col
 export function FactNote({ size = 11 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect x="4.5" y="3.5" width="15" height="17" rx="2.5" stroke="#6F6F7E" strokeWidth="1.9" />
-      <path d="M8.5 8.5 h7 M8.5 12 h7 M8.5 15.5 h4" stroke="#6F6F7E" strokeWidth="1.9" strokeLinecap="round" />
+      <rect x="4.5" y="3.5" width="15" height="17" rx="2.5" stroke={SLATE} strokeWidth="2.2" />
+      <path d="M8.5 8.5 h7 M8.5 12 h7 M8.5 15.5 h4" stroke={SLATE} strokeWidth="2.2" strokeLinecap="round" />
     </svg>
   );
 }
@@ -61,9 +62,9 @@ export function FactNote({ size = 11 }: { size?: number }) {
 export function FactTarget({ size = 11 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
-      <circle cx="12" cy="12" r="8.5" stroke="#6F6F7E" strokeWidth="1.9" />
-      <circle cx="12" cy="12" r="4.5" stroke="#6F6F7E" strokeWidth="1.9" />
-      <circle cx="12" cy="12" r="1.4" fill="#6F6F7E" />
+      <circle cx="12" cy="12" r="8.5" stroke={SLATE} strokeWidth="2.2" />
+      <circle cx="12" cy="12" r="4.5" stroke={SLATE} strokeWidth="2.2" />
+      <circle cx="12" cy="12" r="1.4" fill={SLATE} />
     </svg>
   );
 }
@@ -73,12 +74,12 @@ export function FactTrend({ size = 11 }: { size?: number }) {
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
         d="M3.5 17.5 l5.5 -5.5 3.5 3 7.5 -7.5"
-        stroke="#6F6F7E"
-        strokeWidth="1.9"
+        stroke={SLATE}
+        strokeWidth="2.2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <path d="M14.5 7.5 h5.5 v5.5" stroke="#6F6F7E" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M14.5 7.5 h5.5 v5.5" stroke={SLATE} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -88,23 +89,23 @@ export function FactWave({ size = 11 }: { size?: number }) {
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
       <path
         d="M3 15.5 l4.5 -4.5 3.5 3 5 -5 4.5 2"
-        stroke="#6F6F7E"
-        strokeWidth="1.9"
+        stroke={SLATE}
+        strokeWidth="2.2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <path d="M3 19.5 h18" stroke="#6F6F7E" strokeWidth="1.9" strokeLinecap="round" />
+      <path d="M3 19.5 h18" stroke={SLATE} strokeWidth="2.2" strokeLinecap="round" />
     </svg>
   );
 }
 
-// The gold sparkle inside the Actuals noticed card.
+// The orange sparkle inside the Actuals noticed card, mockup 0.
 export function GoldSparkle({ size = 9 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none" aria-hidden>
       <path
         d="M16 2 C17.2 11 20.5 14.5 29 16 C20.5 17.5 17.2 21 16 30 C14.8 21 11.5 17.5 3 16 C11.5 14.5 14.8 11 16 2 Z"
-        fill="#C08A28"
+        fill="#EF8D08"
       />
     </svg>
   );
@@ -188,11 +189,11 @@ export function TrendTileIcon({ size = 17 }: { size?: number }) {
       <path
         d="M4 17.5 l5.5 -5.5 3.5 3 7 -7"
         stroke={MARK}
-        strokeWidth="1.9"
+        strokeWidth="2.2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <path d="M14.8 8 h5.2 v5.2" stroke={MARK} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M14.8 8 h5.2 v5.2" stroke={MARK} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
       <circle cx="6.2" cy="8" r="1" fill={MARK} />
     </svg>
   );
@@ -211,9 +212,9 @@ export function LayersIcon({ size = 17 }: { size?: number }) {
 export function RedTarget({ size = 17 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
-      <circle cx="12" cy="12" r="8" stroke="#E24C50" strokeWidth="1.8" />
-      <circle cx="12" cy="12" r="3.6" stroke="#E24C50" strokeWidth="1.8" />
-      <path d="M12 2.5 v3 M12 18.5 v3 M2.5 12 h3 M18.5 12 h3" stroke="#E24C50" strokeWidth="1.8" strokeLinecap="round" />
+      <circle cx="12" cy="12" r="8" stroke="#FB1D1F" strokeWidth="1.8" />
+      <circle cx="12" cy="12" r="3.6" stroke="#FB1D1F" strokeWidth="1.8" />
+      <path d="M12 2.5 v3 M12 18.5 v3 M2.5 12 h3 M18.5 12 h3" stroke="#FB1D1F" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }
@@ -240,17 +241,25 @@ export function TrackTabIcon({ size = 13 }: { size?: number }) {
   );
 }
 
+// A double zigzag rising arrow, like the mockup's Performance mark.
 export function PerformanceTabIcon({ size = 13 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none" aria-hidden>
       <path
-        d="M4 23 l8 -8 4.5 4 11 -11"
+        d="M5 20 l8 -8 4.5 4 9.5 -9.5"
         stroke={MARK}
-        strokeWidth="2.7"
+        strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <path d="M20 8 h7.5 v7.5" stroke={MARK} strokeWidth="2.7" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M20.5 6 h6.5 v6.5" stroke={MARK} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M5 26 l8 -8 4.5 4 6 -6"
+        stroke={MARK}
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
