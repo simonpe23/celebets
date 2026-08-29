@@ -717,6 +717,43 @@ a Profit / ROI / Hit rate toggle, the two line chart card with its
 legend and period control, the Head to head table, and the Why X
 wins card.
 
+**TOTALS IS BUILT FROM `2. Totals.png`. His order, 29 August 2026:**
+"Build totals next. mockup uploaded to github named: /2. Totals.png
+Then after that, let me confirm and iterate." Built the same day at
+`/preview/performance-totals`, to the same two rules as Compare: the
+sheet's anatomy and measured sizes, Home and Lab's colours and face
+through the one dial.
+
+Sections, in the sheet's order: the All time selector, the result
+beside its line, a seven figure strip (Total bets, Record, Hit rate,
+ROI, Avg odds, Wagered, Returned), Profit by Sport with its ring,
+Per Category in two columns, Odds Groups beside Singles vs Parlays,
+and Recent Bets.
+
+**Totals also completes the menu:** all three tabs now reach each
+other. Home's menu gained a Totals link under the same menu-tap
+unlock he gave for Lab; nothing else in that folder was touched.
+
+**Four places the build knowingly differs from the sheet. CLAUDE's
+calls, not his rulings:**
+
+1. **Odds are DECIMAL, not the sheet's American ones.** The sheet
+   draws -110 in Recent Bets while its own figure strip says 1.68,
+   and the product rule is decimal to two places. The rule wins over
+   the drawing.
+2. **The Profit by Sport list shows EVERY sport, not the sheet's six
+   rows.** Cutting the list at six hid Basketball, the record's
+   single biggest leak, while the ring still drew its slice. That is
+   the `dedupeFacts` failure of August 2026 wearing a new shape, and
+   his founding question is "where am I leaking".
+3. **The ring is sized by how much each sport MOVED the result and
+   coloured by which way**, indigo weights for earners and red
+   weights for leaks. A profit donut cannot draw a negative slice,
+   and his record has losing sports in it.
+4. **Odds Groups rows are two lines**, name and range above, hit rate
+   and count below, where the sheet fits one line. At phone width one
+   line either truncates or shrinks past reading size.
+
 **THE PAGE PROTECTION STAYS, AND COLOURS WAIT. Ruled 29 August
 2026**, when offered the Home colour fold-in: "nah no need imo right
 now, i feel we can edit colors and details later, even after the

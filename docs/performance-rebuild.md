@@ -142,6 +142,11 @@ a time, a screenshot after each, his reaction before the next.
 - **The menu taps are live both ways**, and the other chat's jump
   doors from Home's ranked rows land correctly in this Lab: all
   seven cases of `jumptest.mjs` pass against the merged tree.
+- **TOTALS IS BUILT, awaiting his reaction.** At
+  `src/app/preview/performance-totals/`, from his sheet
+  `2. Totals.png`. All three menu tabs now reach each other and
+  `jumptest.mjs` proves all four menu doors. Its four deliberate
+  differences from the sheet are in `docs/decisions.md`.
 - **COMPARE IS BUILT AND MERGED, 29 August 2026.** He merged it
   without a verdict and moved on, so it is live at
   `/preview/performance-compare` and NOT recorded as accepted. Its own page at

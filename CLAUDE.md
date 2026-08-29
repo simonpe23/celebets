@@ -145,9 +145,12 @@ Keep it current: when a job finishes, delete its line.
     copies because its folder is protected, and he ruled 29 August
     2026 that this stays: colour work happens later, "even after the
     pages are live".
-    Still unstarted: Totals, and the go-live work (real numbers, dark
-    theme, empty states, the `/stats` swap). Nothing else starts
-    before he says so.
+    **Totals is built** at `/preview/performance-totals`, from his
+    sheet `2. Totals.png`, and the three tabs now reach each other.
+    Next after his verdict: the Heat Map, from `2. heat map.png`.
+    Still unstarted: the go-live work (real numbers, dark theme,
+    empty states, the `/stats` swap). Nothing else starts before he
+    says so.
     Build order, his words: "Home, Lab, Totals are the main pages.
     Other pages inside Performance are: Compare, All Bets, Insights."
     Home ships first and goes live alone: on day one Totals holds

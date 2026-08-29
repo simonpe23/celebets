@@ -69,6 +69,13 @@ export const AMBER_EDGE = "#F6E9CC";
 export const AMBER_TILE = "#FEEFD4";
 export const AMBER_INK = "#2E3138";
 
+// Soft result tints, sampled from "2. Totals.png". They back a row
+// whose result is good, mixed or bad, and they are the palest step
+// of the same green, amber and red the money figures use.
+export const TINT_GOOD = "#EBF9EE";
+export const TINT_MID = "#FEF6E7";
+export const TINT_BAD = "#FEEDEE";
+
 // Chart parts. The lighter weights exist so two lines of the same
 // sign can be told apart on Compare.
 export const LIGHT_INDIGO = "#8B79F3";

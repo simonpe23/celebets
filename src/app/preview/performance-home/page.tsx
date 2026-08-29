@@ -200,12 +200,16 @@ export default function PerformanceHomePreview() {
           >
             Lab
           </Link>
-          <span
-            className="absolute left-[296px] top-1/2 -translate-x-1/2 -translate-y-1/2 text-[10.5px] font-semibold"
+          {/* A real link since 29 August 2026, when Totals got its
+              page. Same menu-tap unlock he gave for Lab; nothing
+              about the menu's look changes. */}
+          <Link
+            href="/preview/performance-totals"
+            className="absolute left-[296px] top-1/2 -translate-x-1/2 -translate-y-1/2 px-[18px] py-[10px] text-[10.5px] font-semibold"
             style={{ color: "#6B6E7A" }}
           >
             Totals
-          </span>
+          </Link>
         </div>
 
         {/* Net profit and the This month selector. */}

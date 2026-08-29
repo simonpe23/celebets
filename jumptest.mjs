@@ -62,6 +62,29 @@ await page.click('a:has-text("Home")');
 await page.waitForURL("**/preview/performance-home**");
 console.log("PASS Lab menu returns to Home");
 
+// TOTALS joined the menu on 29 August 2026, so all three tabs must
+// reach each other. A menu that looks right and does nothing is
+// exactly what a screenshot cannot catch.
+for (const [from, label, to] of [
+  ["performance-home", "Totals", "performance-totals"],
+  ["performance-lab", "Totals", "performance-totals"],
+  ["performance-totals", "Home", "performance-home"],
+  ["performance-totals", "Lab", "performance-lab"],
+]) {
+  await page.goto(`http://localhost:${port}/preview/${from}`, {
+    waitUntil: "networkidle",
+  });
+  await page.click(`a:has-text("${label}")`);
+  let ok = true;
+  try {
+    await page.waitForURL(`**/preview/${to}**`, { timeout: 8000 });
+  } catch {
+    ok = false;
+  }
+  console.log(`${ok ? "PASS" : "FAIL"} ${from} menu reaches ${label}`);
+  if (!ok) fails++;
+}
+
 // COMPARE, its own page since 29 August 2026. The door appears at
 // exactly two selections, carries both to Compare, and the back
 // arrow returns to Lab with both still selected. Three things a
