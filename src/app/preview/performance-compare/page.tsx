@@ -15,7 +15,7 @@ import {
   TrackTabIcon,
 } from "../performance-home/icons";
 import CompareApp from "./CompareApp";
-import { INDIGO, INK, PAGE_BG } from "../performance-lab/ui";
+import { INDIGO, INK, PAGE_BG, TAB_IDLE } from "../performance-lab/ui";
 
 const fig = Figtree({
   subsets: ["latin"],
@@ -51,7 +51,7 @@ export default function PerformanceComparePreview() {
         >
           <span className="flex flex-1 flex-col items-center justify-center gap-[4px] py-1.5">
             <TrackTabIcon size={24} />
-            <span className="text-[10.5px] font-semibold" style={{ color: "#3E4553" }}>
+            <span className="text-[10.5px] font-semibold" style={{ color: TAB_IDLE }}>
               Track
             </span>
           </span>
@@ -63,13 +63,13 @@ export default function PerformanceComparePreview() {
           </span>
           <span className="flex flex-1 flex-col items-center justify-center gap-[4px] py-1.5">
             <ResearchTabIcon size={24} />
-            <span className="text-[10.5px] font-semibold" style={{ color: "#3E4553" }}>
+            <span className="text-[10.5px] font-semibold" style={{ color: TAB_IDLE }}>
               Research
             </span>
           </span>
           <span className="flex flex-1 flex-col items-center justify-center gap-[4px] py-1.5">
             <ProfileTabIcon size={24} />
-            <span className="text-[10.5px] font-semibold" style={{ color: "#3E4553" }}>
+            <span className="text-[10.5px] font-semibold" style={{ color: TAB_IDLE }}>
               Profile
             </span>
           </span>

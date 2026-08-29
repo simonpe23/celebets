@@ -12,12 +12,17 @@
 // Profit, ROI and Hit rate are the same series read three ways.
 
 import { useEffect, useRef, useState } from "react";
-import { GREY_TEXT, INDIGO, RED } from "../performance-lab/ui";
+import {
+  GREY_TEXT,
+  GRID_LINE,
+  INDIGO,
+  LIGHT_INDIGO,
+  LIGHT_RED,
+  RED,
+  ZERO_LINE,
+} from "../performance-lab/ui";
 
 export type Series = { t: number; v: number }[];
-
-const LIGHT_INDIGO = "#8B79F3";
-const LIGHT_RED = "#FB8A8B";
 
 // Four intervals, on a round number. A coarser target once produced
 // a $4k to -$2k ladder for a record that never left $2k, which wastes
@@ -128,7 +133,7 @@ export function CompareChart({
             <path
               key={v}
               d={`M0 ${y(v).toFixed(1)} H${W}`}
-              stroke={Math.abs(v) < 1e-6 ? "#C6C2D2" : "#F1F1F4"}
+              stroke={Math.abs(v) < 1e-6 ? ZERO_LINE : GRID_LINE}
               strokeWidth="1"
               strokeDasharray={Math.abs(v) < 1e-6 ? "3 4" : undefined}
             />

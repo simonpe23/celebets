@@ -26,25 +26,31 @@ import {
 } from "../pf/engine";
 import { labBets } from "../performance-lab/lab-data";
 import { chipIcon } from "../performance-lab/LabApp";
-import { Chev, GoldSparkle, InfoDot } from "../performance-home/icons";
+import { Chev, InfoDot } from "../performance-home/icons";
 import { leagueSports } from "../performance-lab/lab-model";
 import {
+  CARD,
+  CARD_WINNER,
+  CHEV,
+  GREEN,
   GREY_TEXT,
+  HAIRLINE,
   INDIGO,
   INDIGO_FILL,
   INK,
+  LIGHT_INDIGO,
+  LIGHT_RED,
+  MENU_IDLE,
   NET_LABEL,
-  ORANGE,
+  ON_BRAND,
+  PILL_GREY,
   PILL_LAV,
   RED,
+  SEL_EDGE,
+  TRACK,
+  TRACK_SOFT,
 } from "../performance-lab/ui";
 import { CompareChart, type Series } from "./compare-chart";
-
-const GREEN = "#1EAD2E";
-const HEAD_INK = "#3A404F";
-const TRACK = "#EDEEF0";
-const HAIRLINE = "#EFEFF1";
-const WIN_TINT = "#F5F2FE";
 
 const METRICS = ["Profit", "ROI", "Hit rate"] as const;
 type Metric = (typeof METRICS)[number];
@@ -241,32 +247,6 @@ export default function CompareApp() {
     });
   const topReasons = reasons.slice(0, 3);
 
-  // The sheet's sentence, written from what is actually true. It
-  // names the scored metrics the leader is ahead on, with their own
-  // casing, so ROI never reads as roi.
-  const NAMED: Record<string, string> = {
-    "Net profit": "profit",
-    ROI: "ROI",
-    "Hit rate": "hit rate",
-  };
-  const named = scored
-    .filter((m) =>
-      m.a === null || m.b === null
-        ? false
-        : leaderIsA
-          ? m.a > m.b
-          : m.b > m.a
-    )
-    .map((m) => NAMED[m.label] ?? m.label);
-  const noticed =
-    named.length === 0
-      ? `${win.value} and ${lose.value} are level.`
-      : `${win.value} is outperforming ${lose.value} on ${
-          named.length === 1
-            ? named[0]
-            : `${named.slice(0, -1).join(", ")} and ${named[named.length - 1]}`
-        }.`;
-
   const fmt =
     metric === "Profit" ? axisMoney : (v: number) => `${Math.round(v)}%`;
 
@@ -284,8 +264,8 @@ export default function CompareApp() {
         <Link
           href={`/preview/performance-lab?sel=${encodeURIComponent(backSel)}`}
           aria-label="Back to Lab"
-          className="flex h-[36px] w-[36px] items-center justify-center rounded-full bg-white"
-          style={{ boxShadow: "0 1px 4px rgba(24,20,50,0.08)" }}
+          className="flex h-[36px] w-[36px] items-center justify-center rounded-full"
+          style={{ background: CARD, boxShadow: "0 1px 4px rgba(24,20,50,0.08)" }}
         >
           <span className="rotate-180">
             <Chev size={12} color={INK} />
@@ -304,19 +284,19 @@ export default function CompareApp() {
         ].map(({ chip, s, winner }, i) => (
           <div
             key={chipKey(chip)}
-            className="relative min-w-0 rounded-[16px] bg-white px-[12px] pb-[13px] pt-[12px]"
+            className="relative min-w-0 rounded-[18px] px-[14px] pb-[17px] pt-[15px]"
             style={{
               flex: winner ? "1.04 1 0%" : "1 1 0%",
               marginRight: i === 0 ? "15px" : undefined,
               boxShadow: winner
                 ? `inset 0 0 0 1.4px ${INDIGO}, 0 2px 10px rgba(40,20,190,0.08)`
                 : "0 1px 5px rgba(24,20,50,0.07)",
-              background: winner ? "#FCFBFE" : "#FFFFFF",
+              background: winner ? CARD_WINNER : CARD,
             }}
           >
             {winner ? (
               <span
-                className="absolute right-[10px] top-[11px] flex h-[19px] w-[30px] items-center justify-center rounded-full"
+                className="absolute right-[12px] top-[13px] flex h-[21px] w-[33px] items-center justify-center rounded-full"
                 style={{ background: INDIGO_FILL }}
               >
                 <CrownIcon />
@@ -324,22 +304,25 @@ export default function CompareApp() {
             ) : null}
             <div className="flex items-center gap-[9px]">
               <span
-                className="flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full"
+                className="flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-full"
                 style={{ background: PILL_LAV }}
               >
                 {chipIcon(
                   chip,
                   false,
                   chip.group === "where" ? leagueSportMap.get(chip.value) : undefined,
-                  17
+                  20
                 )}
               </span>
-              <p className="min-w-0 truncate pr-[24px] text-[12.5px] font-bold">
+              <p
+                className="min-w-0 truncate text-[14px] font-bold"
+                style={{ paddingRight: winner ? "26px" : undefined }}
+              >
                 {chip.value}
               </p>
             </div>
             <p
-              className="mt-[7px] flex items-center gap-[5px] whitespace-nowrap text-[8.4px] font-semibold"
+              className="mt-[11px] flex items-center gap-[5px] whitespace-nowrap text-[9px] font-semibold"
               style={{ color: GREY_TEXT }}
             >
               {s.wins}–{s.losses}
@@ -349,11 +332,11 @@ export default function CompareApp() {
               />
               {pctRound(hitRate(s))} hit rate
             </p>
-            <p className="mt-[10px] text-[9.5px] font-semibold" style={{ color: NET_LABEL }}>
+            <p className="mt-[15px] text-[10px] font-semibold" style={{ color: NET_LABEL }}>
               Net profit
             </p>
             <p
-              className="mt-[3px] text-[24px] font-bold leading-none tracking-[-0.01em]"
+              className="mt-[5px] text-[30px] font-bold leading-none tracking-[-0.01em]"
               style={{ color: s.profit < 0 ? RED : GREEN }}
             >
               {money(s.profit)}
@@ -362,33 +345,11 @@ export default function CompareApp() {
         ))}
         {/* The VS badge, centred on the seam and overlapping both. */}
         <span
-          className="pointer-events-none absolute left-1/2 top-1/2 flex h-[36px] w-[36px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white text-[9.5px] font-bold"
-          style={{ color: GREY_TEXT, boxShadow: "0 2px 8px rgba(24,20,50,0.10)" }}
+          className="pointer-events-none absolute left-1/2 top-1/2 flex h-[38px] w-[38px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-[10px] font-bold"
+          style={{ background: CARD, color: GREY_TEXT, boxShadow: "0 2px 8px rgba(24,20,50,0.10)" }}
         >
           VS
         </span>
-      </div>
-
-      {/* Actuals noticed, the page's one amber object. */}
-      <div
-        className="relative mx-[20px] mt-[12px] flex min-h-[45px] items-center rounded-[13px] py-[7px] pl-[7px] pr-[12px]"
-        style={{ background: "#FFF6E9", boxShadow: "inset 0 0 0 1px #F6E9CC" }}
-      >
-        <span
-          className="flex h-[31px] w-[31px] shrink-0 items-center justify-center rounded-full"
-          style={{ background: "#FEEFD4" }}
-        >
-          <GoldSparkle size={16} />
-        </span>
-        <div className="ml-[11px] min-w-0 flex-1 leading-[1.4]">
-          <p className="text-[7.8px] font-semibold" style={{ color: ORANGE }}>
-            Actuals noticed
-          </p>
-          <p className="mt-[2px] text-[8.7px]" style={{ color: "#2E3138" }}>
-            {noticed}
-          </p>
-        </div>
-        <Chev size={11} color={ORANGE} />
       </div>
 
       {/* The metric toggle. */}
@@ -403,8 +364,8 @@ export default function CompareApp() {
             className="flex h-[32px] flex-1 items-center justify-center rounded-full text-[11px] font-bold transition-colors"
             style={
               metric === m
-                ? { background: INDIGO_FILL, color: "#FFFFFF" }
-                : { color: "#6B6E7A" }
+                ? { background: INDIGO_FILL, color: ON_BRAND }
+                : { color: MENU_IDLE }
             }
           >
             {m}
@@ -414,8 +375,8 @@ export default function CompareApp() {
 
       {/* The chart card. */}
       <div
-        className="relative mx-[20px] mt-[11px] rounded-[16px] bg-white px-[12px] pb-[11px] pt-[12px]"
-        style={{ boxShadow: "0 1px 5px rgba(24,20,50,0.07)" }}
+        className="relative mx-[20px] mt-[11px] rounded-[16px] px-[12px] pb-[11px] pt-[12px]"
+        style={{ background: CARD, boxShadow: "0 1px 5px rgba(24,20,50,0.07)" }}
       >
         <div className="flex items-start justify-between">
           <div className="space-y-[5px]">
@@ -429,10 +390,10 @@ export default function CompareApp() {
                   style={{
                     background: down
                       ? light && statsA.profit < 0
-                        ? "#FB8A8B"
+                        ? LIGHT_RED
                         : RED
                       : light && statsA.profit >= 0
-                        ? "#8B79F3"
+                        ? LIGHT_INDIGO
                         : INDIGO,
                   }}
                 />
@@ -449,7 +410,7 @@ export default function CompareApp() {
           </div>
           <span
             className="shrink-0 rounded-full px-[10px] py-[5px] text-[9px] font-semibold"
-            style={{ background: "#F6F6F8", color: NET_LABEL }}
+            style={{ background: TRACK_SOFT, color: NET_LABEL }}
           >
             Cumulative {metric.toLowerCase()}
           </span>
@@ -467,7 +428,7 @@ export default function CompareApp() {
 
         <div
           className="mt-[10px] flex h-[30px] items-center rounded-full p-[2px]"
-          style={{ background: "#F6F6F8" }}
+          style={{ background: TRACK_SOFT }}
         >
           {PERIODS.map((p) => (
             <button
@@ -476,8 +437,8 @@ export default function CompareApp() {
               className="flex h-[26px] flex-1 items-center justify-center rounded-full text-[9.5px] font-semibold transition-colors"
               style={
                 period === p.key
-                  ? { background: INDIGO_FILL, color: "#FFFFFF" }
-                  : { color: "#6B6E7A" }
+                  ? { background: INDIGO_FILL, color: ON_BRAND }
+                  : { color: MENU_IDLE }
               }
             >
               {p.key}
@@ -491,24 +452,16 @@ export default function CompareApp() {
 
       {/* Head to head. */}
       <div
-        className="relative mx-[20px] mt-[11px] overflow-hidden rounded-[16px] bg-white pt-[12px]"
-        style={{ boxShadow: "0 1px 5px rgba(24,20,50,0.07)" }}
+        className="relative mx-[20px] mt-[11px] overflow-hidden rounded-[16px] pt-[12px]"
+        style={{ background: CARD, boxShadow: "0 1px 5px rgba(24,20,50,0.07)" }}
       >
         <div className="flex items-center justify-between px-[13px]">
           <h2 className="text-[11.5px] font-bold">Head to head</h2>
-          <span className="flex items-center gap-[5px]">
-            <span
-              className="rounded-full px-[9px] py-[4px] text-[9.5px] font-bold"
-              style={{ background: PILL_LAV, color: INDIGO }}
-            >
-              {win.value} wins
-            </span>
-            <span
-              className="rounded-full px-[8px] py-[4px] text-[9.5px] font-semibold"
-              style={{ background: "#F2F2F5", color: NET_LABEL }}
-            >
-              {winScore} / {scored.length}
-            </span>
+          <span
+            className="rounded-full px-[10px] py-[4px] text-[9.5px] font-semibold"
+            style={{ background: PILL_GREY, color: NET_LABEL }}
+          >
+            {win.value} wins {winScore} / {scored.length}
           </span>
         </div>
 
@@ -539,8 +492,7 @@ export default function CompareApp() {
             <span
               className="flex-1 py-[10px] pl-[13px] text-left"
               style={{
-                background: leaderIsA ? WIN_TINT : undefined,
-                color: r.tone ? (statsA.profit < 0 && r.label === "Net profit" ? RED : toneColor(r, true, statsA, statsB)) : INK,
+                color: r.tone ? toneColor(r, true, statsA, statsB) : INK,
               }}
             >
               {r.a}
@@ -555,7 +507,6 @@ export default function CompareApp() {
             <span
               className="flex-1 py-[10px] pr-[13px] text-right"
               style={{
-                background: !leaderIsA ? WIN_TINT : undefined,
                 color: r.tone ? toneColor(r, false, statsA, statsB) : INK,
               }}
             >
@@ -570,7 +521,7 @@ export default function CompareApp() {
       {topReasons.length > 0 ? (
         <div
           className="relative mx-[20px] mb-[6px] mt-[11px] rounded-[16px] px-[12px] py-[12px]"
-          style={{ background: "#F4F1FE" }}
+          style={{ background: PILL_LAV }}
         >
           <div className="flex items-center gap-[10px]">
             <span
@@ -591,7 +542,7 @@ export default function CompareApp() {
               <div
                 key={r.title}
                 className="flex min-w-0 flex-1 items-center gap-[7px] px-[6px]"
-                style={{ borderLeft: i === 0 ? undefined : "1px solid #E1DAF8" }}
+                style={{ borderLeft: i === 0 ? undefined : `1px solid ${SEL_EDGE}` }}
               >
                 <span
                   className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full"
@@ -638,7 +589,7 @@ function CrownIcon() {
     <svg width="13" height="13" viewBox="0 0 20 20" fill="none" aria-hidden>
       <path
         d="M3.6 14.4h12.8M4 6.2l3.1 2.6L10 4.6l2.9 4.2L16 6.2l-1 6.1H5L4 6.2Z"
-        stroke="#FFFFFF"
+        stroke={ON_BRAND}
         strokeWidth="1.6"
         strokeLinejoin="round"
         strokeLinecap="round"
@@ -652,14 +603,14 @@ function RiseIcon() {
     <svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden>
       <path
         d="M3.6 14.2l4.2-4.3 2.8 2.8 5.8-6"
-        stroke="#FFFFFF"
+        stroke={ON_BRAND}
         strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M12.6 6.5h3.9v3.9"
-        stroke="#FFFFFF"
+        stroke={ON_BRAND}
         strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -673,13 +624,13 @@ function TickRise() {
     <svg width="11" height="11" viewBox="0 0 20 20" fill="none" aria-hidden>
       <path
         d="M5 14.4L14.2 5.2"
-        stroke="#1EAD2E"
+        stroke={GREEN}
         strokeWidth="2"
         strokeLinecap="round"
       />
       <path
         d="M8.6 5.2h5.8V11"
-        stroke="#1EAD2E"
+        stroke={GREEN}
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"

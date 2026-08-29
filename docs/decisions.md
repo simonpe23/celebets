@@ -717,6 +717,44 @@ a Profit / ROI / Hit rate toggle, the two line chart card with its
 legend and period control, the Head to head table, and the Why X
 wins card.
 
+**HIS FIRST COMPARE EDIT LIST, 29 August 2026, all applied:**
+
+- **The soft lavender winner highlight is gone.** His words: "remove
+  the soft lavender highlighting which number is higher. the green
+  and red color of the numbers are enough." So the head to head
+  table has no tinted column; green and red carry the reading.
+- **The insights strip is gone from Compare.** His words: "Remove
+  insights area." The amber Actuals noticed line no longer appears
+  on this page. It still lives on Home and Lab, untouched.
+- **The two cards took the freed space.** His words: "with leftover
+  space - increase the height of the football and basketball cards.
+  i want them to have a more prominent part of this page." Bigger
+  tile, name, label and money figure, more air inside the card.
+- **The Football wins lavender pill is gone.** His words: "remove
+  football wins lavender pill." CLAUDE's call, flagged: the score it
+  carried survives in the neutral grey pill that was already there,
+  reading "Football wins 3 / 3", because "3 / 3" alone says nothing.
+
+**ONE COLOUR DIAL FOR THE WHOLE PREVIEW. Ruled 29 August 2026**, his
+words: "i hate the lavender color. we have to look at colors across
+the board at a later stage, that's possible to do later right? where
+we can decide a color change, and it'll update across the board. the
+code has to be built that way."
+
+It is now built that way. Every colour Lab and Compare draw lives in
+`src/app/preview/performance-lab/ui.ts`, one named line each, and
+nothing else in those folders contains a colour: a check for a raw
+hex outside that file returns nothing. Changing a line there changes
+that colour on both pages at once.
+
+**The accepted Home is the one page still outside the dial**, because
+that folder is protected from this chat. It keeps its own copies of
+the same values. Opening it for a one line import per colour is a
+small mechanical job, and until he asks for it a colour change means
+editing two files rather than one. **The lavender itself is not
+changed yet: he parked the colour decision, so nothing was recoloured
+on his behalf.**
+
 **Five places the build knowingly differs from the sheet. CLAUDE's
 calls, not his rulings, all reversible:**
 

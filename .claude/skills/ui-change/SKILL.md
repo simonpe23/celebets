@@ -118,6 +118,12 @@ taken against the half-broken server and sent unviewed.
   Check visible text with innerText, never textContent: Next embeds
   the literal string "This page could not be found." in a script tag
   on every healthy page.
+- **The capture must also prove the CSS applied.** A dev server can
+  serve correct HTML with no stylesheet: every text check passes and
+  the screenshot is a wall of unstyled boxes. Assert a computed
+  style, not just text (the tab bar's `nav` must compute
+  `position: sticky`). Bought 29 August 2026, when a screenshot of
+  an unstyled Lab was produced with the marker check green.
 - **LOOK at every image before he does.** Open each file that will be
   sent, after the final `npm run check`, not before. A screenshot
   taken earlier in the session does not prove the page still renders.

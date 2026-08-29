@@ -149,7 +149,13 @@ a time, a screenshot after each, his reaction before the next.
   selections, carrying both chips in the address; the back arrow
   returns to Lab with both still selected. The Soon badge is gone.
   Five deliberate differences from the sheet are listed with their
-  reasons in `docs/decisions.md`.
+  reasons in `docs/decisions.md`, along with his first edit list
+  (lavender winner tint out, insights strip out, bigger cards, the
+  wins pill folded into the grey one), all applied.
+- **Colours are one dial now**: every colour Lab and Compare draw
+  comes from `performance-lab/ui.ts` and neither folder contains a
+  raw hex. Home still holds its own copies until its folder is
+  opened. See `docs/decisions.md`.
 - **`jumptest.mjs` now covers Compare**: the door exists at two
   selections and is gone at three, it opens on the two chosen
   facts, and back keeps them. Eleven cases, all passing.
