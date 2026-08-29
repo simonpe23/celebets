@@ -178,6 +178,26 @@ a time, a screenshot after each, his reaction before the next.
   crops no figure.
   The deliberate differences from the sheet are in
   `docs/decisions.md`.
+- **EVERY CONTROL WAS CLICKED, 29 August 2026.** Not read, clicked,
+  across all five preview pages and their states. Everything below
+  is drawn and inert: it looks tappable and does nothing. None of it
+  is a bug, all of it is a door to something not built yet, and all
+  of it is what the owner will find by hand if nobody writes it down.
+  - **Home:** "This month" (the period picker) and "What changed?".
+  - **Lab:** "See these N bets" (needs the All Bets page), and the
+    six group labels: All sports, All leagues, All categories, All
+    periods, All types, All ranges (need the vocabulary sheets).
+  - **Totals:** "All time" (period picker), both "View all" links,
+    "See all bets", and the six Per Category rows.
+  - **Every page:** the Track, Research and Profile tabs in the
+    bottom bar, and the small (i) info dots.
+  Everything else works and was verified: Home's five ranked rows,
+  Explore Lab, the Heat Map pill, all three menu tabs on all three
+  pages, all 31 chip and tray buttons in Lab, its domain dropdown,
+  Add a fact (it scrolls the groups into view), the Compare door,
+  Compare's three metric and five period buttons, all four Heat Map
+  insight cards, all eight tiles, and every back arrow.
+
 - **Colours are one dial now**: every colour Lab, Compare, Totals and
   the Heat Map draw comes from `performance-lab/ui.ts` and none of
   those folders contains a raw hex. Home still holds its own copies

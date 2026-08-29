@@ -140,14 +140,20 @@ Keep it current: when a job finishes, delete its line.
     `/preview/performance-compare`, from his sheet `1. Compare.png`,
     reached from Lab at exactly two selections. He merged it without
     a verdict, so it is live but not marked accepted.
-    **Totals and the Heat Map are built and waiting on him.**
+    **Totals and the Heat Map are merged and live as previews.**
     Totals at `/preview/performance-totals` from `2. Totals.png`
-    ("totals looks good", not yet merged, he was in the car). The
-    Heat Map at `/preview/performance-heatmap` from
-    `2. heat map.png`, reached from Home's Heat Map pill. Its map
-    has NO filter, his ruling: the tiles are Home's own ranked
-    facts across every group. The differences from the sheet are in
-    `docs/decisions.md`.
+    ("totals looks good"). The Heat Map at
+    `/preview/performance-heatmap` from `2. heat map.png`, reached
+    from Home's Heat Map pill; his words on the last round, 29
+    August 2026: "you're right, good decisions. merged it now."
+    Recorded at that confidence: he approved the calls and merged.
+    He has not called the page finished. Its map has NO filter, his
+    ruling: the tiles are Home's own ranked facts across every
+    group, eight of them with three of each colour guaranteed. The
+    differences from the sheet are in `docs/decisions.md`.
+    **Every control on the five preview pages was clicked and
+    logged, 29 August 2026.** What works and what is still drawn
+    but inert is listed in `docs/performance-rebuild.md`.
     **Colours: Lab, Compare, Totals and the Heat Map read one dial**,
     `src/app/preview/performance-lab/ui.ts`. Home keeps its own
     copies because its folder is protected, and he ruled 29 August
