@@ -54,6 +54,18 @@ single most likely thing to confuse him again.
    **Confirm merge**.
 3. That is the moment it goes live.
 
+**MERGING IS NOT INSTANT. Vercel then builds, which takes a minute or
+two.** Until that build is Ready, actuals.cc still serves the old code,
+so a brand new page answers 404 and a changed one looks unchanged.
+
+This cost an evening on 29 August 2026: the demo link was merged,
+tested immediately, gave a 404, and was diagnosed as broken. It was
+never broken. It was not deployed yet.
+
+**So when he reports that something just merged does not work, ask
+first whether the deploy finished**, before touching any code. He can
+see it at vercel.com, Deployments tab: the top row must say Ready.
+
 **Everything else belongs to the chat, not to him.** Before it says a
 task is done it must have written down any rulings, cleared its line
 from the in-flight list, updated the docs it changed, run
