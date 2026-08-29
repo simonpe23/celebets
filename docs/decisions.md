@@ -671,6 +671,38 @@ deleted. The ruled trigger survives as a quiet door wearing a Soon
 badge at exactly two selections, and the word Combine appears
 nowhere. Nobody builds the comparison view until he reopens it.
 
+**LAB ROUND 2 WAS ALSO REJECTED, with a five point list. 29 August
+2026**, his words: "it's better but still absolutely hideous... feel
+the cohesiveness and balance. your version has nothing of that." His
+five orders, all applied in round 3:
+
+1. **Tray pills are transparent, never filled purple:** "Your current
+   view menu - look at the mockup. not purple, transparent pills.
+   more clean." Now white pills, thin indigo outline, small icon,
+   indigo text.
+2. **The green ROI and Record line returns under Net profit:** "Net
+   profit area - hideous. missing green ROI and Record under." The
+   earlier worry about repeating Record and ROI in the KPI row is
+   overruled: the mockup shows both, so both are shown.
+3. **The door cards wear the mockup's card look:** "See these bets +
+   compare buttons = ugly. look at mockup." White, soft shadow,
+   lavender icon tile, Compare subtitle now the mockup's own words,
+   "Compare two views".
+4. **Chips lose the drawn border:** "Cards under each category has a
+   cheap distasteful and ugly look." Now borderless white cards on a
+   whisper shadow, radius 12, like the mockup's; only the selected
+   state keeps its lavender fill and indigo edge.
+5. **The hero backdrop is beige, fading into the KPI row:** "the fade
+   is hideous, i hate the purple fade in the background. it's
+   supposed to be beige-ish and fade over into the KPI row," with
+   `0. Chat Aug 28.png` named as the reference. The wash now sits
+   exactly where Home puts it and is desaturated so it reads beige;
+   the chart order is shaped like Home's arc (early dip, then a
+   climb) so the lavender mass is the chart's own fill, not a blotch.
+
+He also re-pointed the build at both files: "please look at the
+mockup and the 0. Chat Aug 28.png - Find that look and copy it."
+
 **LAB IS BUILT ONE PIECE AT A TIME. Ruled 29 August 2026**, his words
 to the Lab chat: "Work in small steps. Build one piece, show me a
 screenshot, wait for my reaction before the next piece. Do not build

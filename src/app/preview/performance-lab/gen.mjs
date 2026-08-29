@@ -264,15 +264,44 @@ const bets = [];
 for (const l of singles) bets.push({ legs: [l], stake: 120 });
 for (const p of parlays) bets.push({ legs: p, stake: 45 });
 
-// Dates: about 13 weeks, oldest first. Losses lean slightly early,
-// wins slightly late, so the line dips into the red before it
-// climbs, the way the accepted Home's chart does. The noise keeps
-// the lean gentle: a hard sort would draw a canyon of losses first.
-const shuffled = [...bets].sort(() => rnd() - 0.5);
-shuffled.sort((a, b) => {
-  const won = (x) => (x.legs.every((l) => l.won) ? 1 : 0);
-  return won(a) - won(b) + (rnd() - 0.5) * 5.5;
-});
+// Dates: about 13 weeks, oldest first, SHAPED like the accepted
+// Home's chart: a brief early dip into the red, then a steady climb
+// with small pullbacks. The order is built by walking a target
+// curve and always settling the bet that lands closest to it, so
+// the line cannot canyon or wander however the solver set stakes.
+function orderProfit(b) {
+  return betStatus(b) === "won" ? b.stake * (betOdds(b) - 1) : -b.stake;
+}
+const pool = [...bets].sort(() => rnd() - 0.5);
+const shuffled = [];
+let cum = 0;
+let dips = 0;
+for (let i = pool.length - 1; i >= 0 && dips < 6; i--) {
+  const b = pool[i];
+  if (betStatus(b) === "lost" && b.stake < 220) {
+    shuffled.push(b);
+    pool.splice(i, 1);
+    cum += orderProfit(b);
+    dips += 1;
+  }
+}
+const start = cum;
+const n = pool.length;
+for (let k = 0; k < n; k++) {
+  const target = start + (2637 - start) * Math.pow((k + 1) / n, 1.1);
+  let best = 0;
+  let bestGap = Infinity;
+  for (let i = 0; i < pool.length; i++) {
+    const gap = Math.abs(cum + orderProfit(pool[i]) - target);
+    if (gap < bestGap) {
+      bestGap = gap;
+      best = i;
+    }
+  }
+  const [b] = pool.splice(best, 1);
+  shuffled.push(b);
+  cum += orderProfit(b);
+}
 shuffled.forEach((b, i) => {
   b.day = 90 - Math.round((i / (shuffled.length - 1)) * 88);
 });

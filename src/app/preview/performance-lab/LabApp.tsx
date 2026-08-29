@@ -52,6 +52,7 @@ import {
   FactWave,
   GoldSparkle,
   InfoDot,
+  MiniTrend,
   WashTexture,
 } from "../performance-home/icons";
 import {
@@ -89,6 +90,7 @@ import {
   ORANGE,
   PILL_LAV,
   RED,
+  SUBGREEN,
 } from "./ui";
 import { LabChart } from "./chart";
 
@@ -106,33 +108,47 @@ const GLYPH = "#6E7076";
 // when selected.
 // ---------------------------------------------------------------
 
-function chipIcon(c: Chip, on: boolean, leagueSport?: string): ReactNode {
+function chipIcon(
+  c: Chip,
+  on: boolean,
+  leagueSport?: string,
+  size?: number
+): ReactNode {
   const color = on ? INDIGO : GLYPH;
+  const glyph = size ?? 16;
+  const emoji = size ? size + 1 : 18;
   const v = c.value;
   if (c.group === "sport")
-    return <Emoji e={SPORT_EMOJI[v as Sport] ?? "\u{1F4CA}"} />;
+    return <Emoji e={SPORT_EMOJI[v as Sport] ?? "\u{1F4CA}"} size={emoji} />;
   if (c.group === "where") {
     const own = iconFor(v);
     const fromSport = leagueSport
       ? SPORT_EMOJI[leagueSport as Sport]
       : undefined;
-    return <Emoji e={own !== "\u{1F4CA}" ? own : (fromSport ?? "\u{1F3C6}")} />;
+    return (
+      <Emoji e={own !== "\u{1F4CA}" ? own : (fromSport ?? "\u{1F3C6}")} size={emoji} />
+    );
   }
   if (c.group === "what") {
-    if (v === "Moneyline") return <MoneyIcon color={color} />;
-    if (v === "Spread / Handicap") return <SpreadIcon color={color} />;
-    if (v === "Totals (Over/Under)") return <TotalsIcon color={color} />;
-    if (v === "Player Props") return <TargetIcon color={color} />;
-    if (v === "Match Props") return <WhistleIcon color={color} />;
-    if (v === "Price Direction") return <TrendLineIcon color={color} />;
-    return <MoneyIcon color={color} />;
+    if (c.kind === "market") return null;
+    if (v === "Moneyline") return <MoneyIcon color={color} size={glyph} />;
+    if (v === "Spread / Handicap") return <SpreadIcon color={color} size={glyph} />;
+    if (v === "Totals (Over/Under)") return <TotalsIcon color={color} size={glyph} />;
+    if (v === "Player Props") return <TargetIcon color={color} size={glyph} />;
+    if (v === "Match Props") return <WhistleIcon color={color} size={glyph} />;
+    if (v === "Price Direction") return <TrendLineIcon color={color} size={glyph} />;
+    return <MoneyIcon color={color} size={glyph} />;
   }
   if (c.group === "when")
-    return <ClockIcon color={color} half={v.includes("Half")} />;
+    return <ClockIcon color={color} half={v.includes("Half")} size={glyph} />;
   if (c.group === "how")
-    return v === "Singles" ? <StackIcon color={color} /> : <ChainIcon color={color} />;
+    return v === "Singles" ? (
+      <StackIcon color={color} size={glyph} />
+    ) : (
+      <ChainIcon color={color} size={glyph} />
+    );
   const level = v === "Low odds" ? 0 : v === "Medium odds" ? 1 : 2;
-  return <GaugeIcon color={color} level={level} />;
+  return <GaugeIcon color={color} level={level} size={glyph} />;
 }
 
 const sameChip = (a: Chip, b: Chip) =>
@@ -247,52 +263,62 @@ export default function LabApp() {
 
   const compareReady = sel.length === 2;
 
+  const trayIcon = (c: Chip) =>
+    chipIcon(c, true, c.group === "where" ? leagueSportMap.get(c.value) : undefined, 13);
+
   return (
     <>
       {/* The colour wash behind the answer panel, the accepted Home's
-          own asset, shifted down past the tray. */}
-      <div className="pointer-events-none absolute inset-x-0 top-[92px] h-[245px]">
+          own asset, placed exactly as Home places it: starting at the
+          Net profit row and fading out through the KPI row. */}
+      <div className="pointer-events-none absolute inset-x-0 top-[112px] h-[245px]">
+        {/* Saturation is pulled down so the asset reads beige, not
+            purple: his 29 August order ("i hate the purple fade...
+            it's supposed to be beige-ish"). Lab's line dips lower
+            than Home's, which exposed the asset's lavender cloud. */}
         <Image
           src="/preview-assets/home-wash.png"
           alt=""
           fill
           priority
           sizes="390px"
-          style={{ objectFit: "fill" }}
+          style={{ objectFit: "fill", filter: "saturate(0.6)" }}
         />
         <WashTexture />
       </div>
 
-      {/* The current view tray. */}
-      <div className="relative mt-[12px] flex items-center justify-between pl-[22px] pr-[14px]">
+      {/* The current view tray: clean white pills, the mockup's own
+          treatment, never filled purple. */}
+      <div className="relative mt-[12px] pl-[22px]">
         <p className="text-[10.5px] font-semibold" style={{ color: NET_LABEL }}>
           Your current view
         </p>
-        <span
-          className="flex h-[24px] items-center rounded-full bg-white px-[12px] text-[9.5px] font-semibold"
-          style={{ color: "#252F3E", boxShadow: "0 1px 3px rgba(30,25,60,0.07)" }}
-        >
-          All time
-        </span>
       </div>
       <div className="relative mt-[7px] flex flex-wrap items-center gap-[6px] pl-[20px] pr-[14px]">
         {sel.map((c) => (
           <button
             key={`${c.group}~${c.kind}~${c.value}`}
             onClick={() => toggle(c)}
-            className="flex h-[28px] items-center gap-[6px] rounded-full pl-[12px] pr-[9px] text-[10.5px] font-bold text-white"
-            style={{ background: INDIGO_FILL }}
+            className="flex h-[31px] items-center gap-[6px] rounded-full bg-white pl-[10px] pr-[10px] text-[10.5px] font-semibold"
+            style={{
+              color: INDIGO,
+              boxShadow: "inset 0 0 0 1px rgba(55,8,228,0.45), 0 1px 3px rgba(24,20,50,0.05)",
+            }}
           >
+            {trayIcon(c)}
             {c.value}
-            <CloseIcon size={11} color="#DDD6FA" />
+            <CloseIcon size={10} color="#7C6FE0" />
           </button>
         ))}
         <button
           onClick={() =>
             groupsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
           }
-          className="flex h-[28px] items-center gap-[5px] rounded-full bg-white pl-[10px] pr-[13px] text-[10.5px] font-semibold"
-          style={{ color: MENU_IDLE, boxShadow: `inset 0 0 0 1px ${HAIR}` }}
+          className="flex h-[31px] items-center gap-[5px] rounded-full bg-white pl-[10px] pr-[13px] text-[10.5px] font-semibold"
+          style={{
+            color: MENU_IDLE,
+            boxShadow: "inset 0 0 0 1px #E7E7EC, 0 1px 3px rgba(24,20,50,0.04)",
+          }}
         >
           <PlusIcon size={13} />
           Add a fact
@@ -304,13 +330,24 @@ export default function LabApp() {
         ) : null}
       </div>
 
-      {/* THE ANSWER: net profit for the current view, the line that
-          drew it, and the four ruled KPIs. */}
-      <div className="relative mt-[10px] flex items-center gap-[1px] pl-[22px]">
-        <p className="text-[10.5px] font-semibold" style={{ color: NET_LABEL }}>
+      {/* THE ANSWER: the accepted Home's hero block, verbatim, with
+          Lab's live numbers. Net profit row, the number, the green
+          ROI and record line, the chart riding up beside the number,
+          then the four ruled KPIs with Home's dividers. */}
+      <div className="relative mt-[12px] flex items-center justify-between pl-[22px] pr-[10px]">
+        <p
+          className="flex items-center gap-[1px] text-[10.5px] font-semibold"
+          style={{ color: NET_LABEL }}
+        >
           Net profit
+          <InfoDot size={13} />
         </p>
-        <InfoDot size={13} />
+        <span
+          className="relative top-[2px] flex h-[24px] items-center rounded-full bg-white px-[12px] text-[9.5px] font-semibold"
+          style={{ color: "#252F3E", boxShadow: "0 1px 3px rgba(30,25,60,0.07)" }}
+        >
+          All time
+        </span>
       </div>
       <p
         className="relative mt-[4px] pl-[18px] text-[45px] font-bold leading-none"
@@ -323,19 +360,40 @@ export default function LabApp() {
           No picks match this view yet.
         </p>
       ) : (
-        <div className="relative mt-[6px]">
-          <LabChart points={chartPoints} />
-        </div>
+        <>
+          <p className="relative mt-[7px] flex items-center gap-[4px] pl-[22px] text-[10.5px] font-semibold">
+            <MiniTrend size={12} />
+            <span style={{ color: whole.profit < 0 ? RED : SUBGREEN }}>
+              {whole.profit < 0 ? "" : "+"}
+              {roiOf(whole)} ROI
+            </span>
+            <span
+              className="mx-[1px] inline-block h-[3px] w-[3px] rounded-full"
+              style={{ background: "#9B9DA5" }}
+            />
+            <span style={{ color: NET_LABEL }}>{recordOf(whole)} Record</span>
+          </p>
+          <div className="relative mt-[-30px]">
+            <LabChart points={chartPoints} />
+          </div>
+        </>
       )}
 
-      <div className="relative mt-[14px] flex items-center pl-[24px]">
+      <div className="relative mt-[16px] flex items-center pl-[33px]">
+        {["96px", "188px", "284px"].map((left) => (
+          <span
+            key={left}
+            className="absolute top-1/2 h-[28px] w-px -translate-y-1/2"
+            style={{ left, background: "#E6E7EC" }}
+          />
+        ))}
         {[
           { icon: <FactNote size={19} />, value: `${picks}`, label: "Bets" },
           { icon: <FactWave size={19} />, value: recordOf(whole), label: "Record" },
           { icon: <FactTarget size={19} />, value: hitOf(whole), label: "Hit rate" },
           { icon: <FactTrend size={19} />, value: picks > 0 ? `${roiOf(whole)}` : "-", label: "ROI" },
         ].map((f, i) => (
-          <div key={f.label} className="flex items-center gap-[6px]" style={{ width: ["82px", "94px", "92px", "auto"][i] }}>
+          <div key={f.label} className="flex items-center gap-[6px]" style={{ width: ["78px", "92px", "96px", "auto"][i] }}>
             <span className="relative top-[-3px]">{f.icon}</span>
             <div>
               <p className="text-[12.5px] font-bold leading-none tracking-[-0.01em]">{f.value}</p>
@@ -374,20 +432,20 @@ export default function LabApp() {
       {sel.length > 0 ? (
         <div className="relative mx-[15px] mt-[10px] flex gap-[8px]">
           <button
-            className="flex h-[45px] min-w-0 flex-1 items-center rounded-[13px] bg-white pl-[8px] pr-[10px] text-left"
-            style={{ boxShadow: `inset 0 0 0 1px ${HAIR}` }}
+            className="flex h-[50px] min-w-0 flex-1 items-center rounded-[14px] bg-white pl-[9px] pr-[10px] text-left"
+            style={{ boxShadow: "0 1px 4px rgba(24,20,50,0.06), 0 0 0 1px rgba(24,20,50,0.02)" }}
           >
             <span
-              className="flex h-[29px] w-[29px] shrink-0 items-center justify-center rounded-[10px]"
+              className="flex h-[32px] w-[32px] shrink-0 items-center justify-center rounded-[10px]"
               style={{ background: PILL_LAV }}
             >
               <FactNote size={17} />
             </span>
-            <span className="ml-[9px] min-w-0 flex-1 leading-[1.35]">
-              <span className="block truncate text-[9.6px] font-bold">
+            <span className="ml-[10px] min-w-0 flex-1 leading-[1.4]">
+              <span className="block truncate text-[9.8px] font-bold">
                 See these {picks} bets
               </span>
-              <span className="block text-[7.8px]" style={{ color: GREY_TEXT }}>
+              <span className="block text-[8px]" style={{ color: GREY_TEXT }}>
                 View in betting history
               </span>
             </span>
@@ -395,20 +453,21 @@ export default function LabApp() {
           </button>
           {compareReady ? (
             <div
-              className="flex h-[45px] min-w-0 flex-1 items-center rounded-[13px] pl-[8px] pr-[10px]"
-              style={{ background: PILL_LAV, boxShadow: "inset 0 0 0 1px #DDD6FA" }}
+              className="flex h-[50px] min-w-0 flex-1 items-center rounded-[14px] bg-white pl-[9px] pr-[10px]"
+              style={{ boxShadow: "0 1px 4px rgba(24,20,50,0.06), 0 0 0 1px rgba(24,20,50,0.02)" }}
             >
               <span
-                className="flex h-[29px] w-[29px] shrink-0 items-center justify-center rounded-[10px] bg-white"
+                className="flex h-[32px] w-[32px] shrink-0 items-center justify-center rounded-[10px]"
+                style={{ background: PILL_LAV }}
               >
                 <CompareIcon size={17} />
               </span>
-              <span className="ml-[9px] min-w-0 flex-1 leading-[1.35]">
-                <span className="block truncate text-[9.6px] font-bold" style={{ color: INDIGO }}>
+              <span className="ml-[10px] min-w-0 flex-1 leading-[1.4]">
+                <span className="block truncate text-[9.8px] font-bold" style={{ color: INDIGO }}>
                   Compare
                 </span>
-                <span className="block truncate text-[7.8px]" style={{ color: GREY_TEXT }}>
-                  These two, side by side
+                <span className="block truncate text-[8px]" style={{ color: GREY_TEXT }}>
+                  Compare two views
                 </span>
               </span>
               <SoonPill />
@@ -502,19 +561,19 @@ export default function LabApp() {
                 <button
                   key={c.value}
                   onClick={() => toggle(c)}
-                  className="flex h-[42px] shrink-0 items-center gap-[8px] rounded-[10px] pl-[10px] pr-[13px] transition-colors"
+                  className="flex h-[44px] shrink-0 items-center gap-[9px] rounded-[12px] bg-white pl-[11px] pr-[14px] transition-colors"
                   style={{
                     background: on ? SEL_BG : "#FFFFFF",
                     boxShadow: on
-                      ? `inset 0 0 0 1.2px ${SEL_EDGE}`
-                      : `inset 0 0 0 1px #EFEFF1, 0 1px 2px rgba(20,16,50,0.04)`,
+                      ? `inset 0 0 0 1.2px ${SEL_EDGE}, 0 1px 4px rgba(24,20,50,0.05)`
+                      : "0 1px 4px rgba(24,20,50,0.06), 0 0 0 1px rgba(24,20,50,0.02)",
                     opacity: empty && !on ? 0.45 : 1,
                   }}
                 >
                   {chipIcon(c, on, c.group === "where" ? leagueSportMap.get(c.value) : undefined)}
                   <span className="text-left leading-none">
                     <span
-                      className="block whitespace-nowrap text-[10.5px] font-bold"
+                      className="block whitespace-nowrap text-[10.5px] font-semibold"
                       style={{ color: on ? INDIGO : INK }}
                     >
                       {c.value}
@@ -564,7 +623,11 @@ export default function LabApp() {
               style={
                 on
                   ? { background: INDIGO_FILL, color: "#FFFFFF" }
-                  : { background: "#FFFFFF", color: NET_LABEL, boxShadow: `inset 0 0 0 1px ${HAIR}` }
+                  : {
+                      background: "#FFFFFF",
+                      color: NET_LABEL,
+                      boxShadow: "0 1px 3px rgba(24,20,50,0.05), 0 0 0 1px rgba(24,20,50,0.03)",
+                    }
               }
             >
               {m.value}

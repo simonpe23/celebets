@@ -126,8 +126,16 @@ a time, a screenshot after each, his reaction before the next.
   (platform emoji, the mockup's own icon set), quiet slate outline
   glyphs for the abstract groups, compact bare chips, uppercase
   group headers with All links, the side by side view deleted, and a
-  Soon-badged Compare door at exactly two selections. Awaiting his
-  reaction.
+  Soon-badged Compare door at exactly two selections.
+- **Round 2 was rejected with a five point list** ("better but still
+  absolutely hideous"), all five recorded with quotes in
+  `docs/decisions.md`. **Round 3 applied every point**: transparent
+  tray pills, the green ROI and Record line restored under the
+  number, the mockup's door cards, borderless floating chips, and
+  the hero rebuilt as the accepted Home's hero block exactly (wash
+  placed as Home places it, desaturated to beige, KPI dividers,
+  chart order shaped to Home's early-dip-then-climb arc). Awaiting
+  his reaction.
 - **Round 1's mechanics, all still live and test-proven.** At
   `src/app/preview/performance-lab/`, on the accepted Home's design.
   Live and test-proven in a real browser: the current view tray with

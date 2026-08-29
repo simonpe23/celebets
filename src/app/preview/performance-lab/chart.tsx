@@ -76,7 +76,9 @@ export function LabChart({ points }: { points: ChartPoint[] }) {
   const last = points[points.length - 1];
 
   const ticks: number[] = [hi, hi / 2, 0];
-  if (loTick < 0) ticks.push(loTick);
+  // A shallow dip keeps its dashed line but not a label: a tick
+  // crowding $0 reads worse than no tick.
+  if (loTick < 0 && -loTick >= hi / 4) ticks.push(loTick);
 
   const labelT = [0, 0.25, 0.5, 0.75, 1].map((f) => t0 + f * span);
 
@@ -127,7 +129,7 @@ export function LabChart({ points }: { points: ChartPoint[] }) {
         </svg>
       </div>
       <div
-        className="absolute right-0 top-0 h-full w-[40px] text-[8px] font-semibold"
+        className="absolute right-0 top-0 h-full w-[38px] text-[8px] font-semibold"
         style={{ color: GREY_TEXT }}
       >
         {ticks.map((v) => (
@@ -141,7 +143,7 @@ export function LabChart({ points }: { points: ChartPoint[] }) {
         ))}
       </div>
       <div
-        className="mt-[10px] flex justify-between pl-[24px] pr-[52px] text-[7px] font-semibold"
+        className="mt-[12px] flex justify-between pl-[24px] pr-[52px] text-[7px] font-semibold"
         style={{ color: GREY_TEXT }}
       >
         {labelT.map((t, i) => (
