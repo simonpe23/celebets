@@ -6,7 +6,9 @@
 // dimensions (Category, When, Bet Type, Risk) wear quiet outline
 // glyphs, slate at rest and indigo when selected.
 
-const SLATE = "#6E7076";
+import { GLYPH, INDIGO, MENU_IDLE } from "./ui";
+
+const SLATE = GLYPH;
 
 type P = { size?: number; color?: string };
 
@@ -133,7 +135,7 @@ export function GaugeIcon({ size = 16, color = SLATE, level = 0 }: P & { level?:
   );
 }
 
-export function CompareIcon({ size = 20, color = "#3614F0" }: P) {
+export function CompareIcon({ size = 20, color = INDIGO }: P) {
   return (
     <svg width={size} height={size} viewBox="0 0 20 20" fill="none" aria-hidden>
       <rect x="3.4" y="8.4" width="5" height="8" rx="1.4" stroke={color} strokeWidth="1.6" />
@@ -142,7 +144,7 @@ export function CompareIcon({ size = 20, color = "#3614F0" }: P) {
   );
 }
 
-export function PlusIcon({ size = 20, color = "#6B6E7A" }: P) {
+export function PlusIcon({ size = 20, color = MENU_IDLE }: P) {
   return (
     <svg width={size} height={size} viewBox="0 0 20 20" fill="none" aria-hidden>
       <path d="M10 4.6v10.8M4.6 10h10.8" stroke={color} strokeWidth="1.7" strokeLinecap="round" />
@@ -150,7 +152,7 @@ export function PlusIcon({ size = 20, color = "#6B6E7A" }: P) {
   );
 }
 
-export function CloseIcon({ size = 12, color = "#6B6E7A" }: P) {
+export function CloseIcon({ size = 12, color = MENU_IDLE }: P) {
   return (
     <svg width={size} height={size} viewBox="0 0 20 20" fill="none" aria-hidden>
       <path d="M5.4 5.4l9.2 9.2M14.6 5.4l-9.2 9.2" stroke={color} strokeWidth="2" strokeLinecap="round" />

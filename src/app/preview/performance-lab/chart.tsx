@@ -9,8 +9,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const INDIGO = "#3614F0";
-const GREY_TEXT = "#757B87";
+import { GREY_TEXT, INDIGO, ZERO_LINE } from "./ui";
 
 export type ChartPoint = { t: number; v: number };
 
@@ -101,7 +100,7 @@ export function LabChart({ points }: { points: ChartPoint[] }) {
           </defs>
           <path
             d={`M0 ${y(0).toFixed(1)} H${W}`}
-            stroke="#C6C2D2"
+            stroke={ZERO_LINE}
             strokeWidth="1"
             strokeDasharray="2 4"
           />

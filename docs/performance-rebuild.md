@@ -134,8 +134,31 @@ a time, a screenshot after each, his reaction before the next.
   number, the mockup's door cards, borderless floating chips, and
   the hero rebuilt as the accepted Home's hero block exactly (wash
   placed as Home places it, desaturated to beige, KPI dividers,
-  chart order shaped to Home's early-dip-then-climb arc). Awaiting
-  his reaction.
+  chart order shaped to Home's early-dip-then-climb arc).
+- **ROUND 3 IS ACCEPTED and merged, 29 August 2026**, his words after
+  checking the live preview: "merged, checked the phone, works
+  well." Recorded at that confidence: it works, he did not call it
+  finished. Lab is live at `/preview/performance-lab`.
+- **The menu taps are live both ways**, and the other chat's jump
+  doors from Home's ranked rows land correctly in this Lab: all
+  seven cases of `jumptest.mjs` pass against the merged tree.
+- **COMPARE IS BUILT, awaiting his reaction.** Its own page at
+  `src/app/preview/performance-compare/`, built to his sheet
+  `1. Compare.png` with Home and Lab's colours and face, his order
+  of 29 August 2026. Reached from Lab's door at exactly two
+  selections, carrying both chips in the address; the back arrow
+  returns to Lab with both still selected. The Soon badge is gone.
+  Five deliberate differences from the sheet are listed with their
+  reasons in `docs/decisions.md`, along with his first edit list
+  (lavender winner tint out, insights strip out, bigger cards, the
+  wins pill folded into the grey one), all applied.
+- **Colours are one dial now**: every colour Lab and Compare draw
+  comes from `performance-lab/ui.ts` and neither folder contains a
+  raw hex. Home still holds its own copies until its folder is
+  opened. See `docs/decisions.md`.
+- **`jumptest.mjs` now covers Compare**: the door exists at two
+  selections and is gone at three, it opens on the two chosen
+  facts, and back keeps them. Eleven cases, all passing.
 - **Round 1's mechanics, all still live and test-proven.** At
   `src/app/preview/performance-lab/`, on the accepted Home's design.
   Live and test-proven in a real browser: the current view tray with
@@ -163,11 +186,11 @@ a time, a screenshot after each, his reaction before the next.
   engine (`../pf/engine`), which speaks `src/lib/stats.ts`.
 - **Round 1 judgment calls awaiting his reaction** are recorded in
   `docs/open-questions.md`.
-- **Not built yet:** the taps on Home (blocked on him unlocking the
-  protected folder for tap wiring), the full vocabulary sheets
-  behind each group (today the rows scroll and show only facts the
-  record contains), the All bets page behind the door, the insight
-  popup, dark theme, real user numbers, and any Soon badge work.
+- **Not built yet:** Compare (its own page, waiting on his mockup),
+  the full vocabulary sheets behind each group's All link (today the
+  rows scroll and show only facts the record contains), the All bets
+  page behind the See these N bets door, the insight popup, dark
+  theme, real user numbers, and any Soon badge work.
 
 ## Lab's rules so far
 

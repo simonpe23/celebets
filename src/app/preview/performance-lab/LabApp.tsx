@@ -14,10 +14,12 @@
 // icon tiles, and small uppercase group headers with an All link on
 // the right. Chip records stay, never amounts, by his standing rule.
 //
-// Compare is PARKED by his order the same day: "we're not working on
-// that one yet... do not even work on it yet." The ruled trigger
-// survives as a quiet door wearing a Soon badge at exactly two
-// selections; nothing opens.
+// Compare was parked, then reopened on 29 August 2026 and built as
+// its own page. The ruled trigger is unchanged: the door appears at
+// exactly two selections and is gone at three. It now opens
+// /preview/performance-compare, carrying the same two chips in the
+// address, and Compare's back arrow returns here with both still
+// selected.
 //
 // The behaviours ruled in docs/performance-rebuild.md, all live:
 // - Tap a chip and the whole page re-scopes in place. No submit.
@@ -31,6 +33,7 @@
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import type { Domain } from "@/lib/taxonomy";
 import { SPORT_EMOJI, type Sport } from "@/lib/types";
@@ -80,27 +83,38 @@ import {
   recordOf,
 } from "./lab-model";
 import {
+  AMBER_BG,
+  AMBER_EDGE,
+  AMBER_INK,
+  AMBER_TILE,
+  CARD,
+  CHEV,
+  DIVIDER,
+  DOT_MUTED,
+  EDGE_SOFT,
+  GLYPH,
   GREY_TEXT,
   HAIR,
+  HEAD_INK,
   INDIGO,
   INDIGO_FILL,
   INK,
+  LINK_INK,
   MENU_IDLE,
   NET_LABEL,
+  ON_BRAND,
+  ON_BRAND_CLOSE,
+  ON_BRAND_SOFT,
   ORANGE,
   PILL_LAV,
   RED,
+  SELECTOR_INK,
+  SEL_BG,
+  SEL_EDGE,
   SUBGREEN,
+  TRAY_EDGE,
 } from "./ui";
 import { LabChart } from "./chart";
-
-// Sampled from "1. LAB-mock.png": the selected chip's lavender fill,
-// its border, and the header inks.
-const SEL_BG = "#F0EAFD";
-const SEL_EDGE = "#B3A4F6";
-const HEAD_INK = "#3A404F";
-const LINK_INK = "#626774";
-const GLYPH = "#6E7076";
 
 // ---------------------------------------------------------------
 // Icons per chip. Concrete facts (sports, leagues) get colour
@@ -108,7 +122,9 @@ const GLYPH = "#6E7076";
 // when selected.
 // ---------------------------------------------------------------
 
-function chipIcon(
+// Exported so Compare dresses the same fact with the same icon. One
+// fact must never wear two icons across two pages.
+export function chipIcon(
   c: Chip,
   on: boolean,
   leagueSport?: string,
@@ -181,17 +197,6 @@ function selToUrl(sel: Chip[], domain: Domain): string {
   if (domain !== "Sports") p.set("domain", domain);
   const q = p.toString();
   return q ? `?${q}` : window.location.pathname;
-}
-
-function SoonPill() {
-  return (
-    <span
-      className="shrink-0 rounded-full px-[8px] py-[3px] text-[7.5px] font-bold uppercase tracking-wide"
-      style={{ background: "#ECECEF", color: GREY_TEXT }}
-    >
-      Soon
-    </span>
-  );
 }
 
 export default function LabApp() {
@@ -299,25 +304,27 @@ export default function LabApp() {
           <button
             key={`${c.group}~${c.kind}~${c.value}`}
             onClick={() => toggle(c)}
-            className="flex h-[31px] items-center gap-[6px] rounded-full bg-white pl-[10px] pr-[10px] text-[10.5px] font-semibold"
+            className="flex h-[31px] items-center gap-[6px] rounded-full pl-[10px] pr-[10px] text-[10.5px] font-semibold"
             style={{
+              background: CARD,
               color: INDIGO,
-              boxShadow: "inset 0 0 0 1px rgba(55,8,228,0.45), 0 1px 3px rgba(24,20,50,0.05)",
+              boxShadow: `inset 0 0 0 1px ${TRAY_EDGE}, 0 1px 3px rgba(24,20,50,0.05)`,
             }}
           >
             {trayIcon(c)}
             {c.value}
-            <CloseIcon size={10} color="#7C6FE0" />
+            <CloseIcon size={10} color={ON_BRAND_CLOSE} />
           </button>
         ))}
         <button
           onClick={() =>
             groupsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
           }
-          className="flex h-[31px] items-center gap-[5px] rounded-full bg-white pl-[10px] pr-[13px] text-[10.5px] font-semibold"
+          className="flex h-[31px] items-center gap-[5px] rounded-full pl-[10px] pr-[13px] text-[10.5px] font-semibold"
           style={{
+            background: CARD,
             color: MENU_IDLE,
-            boxShadow: "inset 0 0 0 1px #E7E7EC, 0 1px 3px rgba(24,20,50,0.04)",
+            boxShadow: `inset 0 0 0 1px ${EDGE_SOFT}, 0 1px 3px rgba(24,20,50,0.04)`,
           }}
         >
           <PlusIcon size={13} />
@@ -344,7 +351,7 @@ export default function LabApp() {
         </p>
         <span
           className="relative top-[2px] flex h-[24px] items-center rounded-full bg-white px-[12px] text-[9.5px] font-semibold"
-          style={{ color: "#252F3E", boxShadow: "0 1px 3px rgba(30,25,60,0.07)" }}
+          style={{ color: SELECTOR_INK, boxShadow: "0 1px 3px rgba(30,25,60,0.07)" }}
         >
           All time
         </span>
@@ -369,7 +376,7 @@ export default function LabApp() {
             </span>
             <span
               className="mx-[1px] inline-block h-[3px] w-[3px] rounded-full"
-              style={{ background: "#9B9DA5" }}
+              style={{ background: DOT_MUTED }}
             />
             <span style={{ color: NET_LABEL }}>{recordOf(whole)} Record</span>
           </p>
@@ -384,7 +391,7 @@ export default function LabApp() {
           <span
             key={left}
             className="absolute top-1/2 h-[28px] w-px -translate-y-1/2"
-            style={{ left, background: "#E6E7EC" }}
+            style={{ left, background: DIVIDER }}
           />
         ))}
         {[
@@ -408,11 +415,11 @@ export default function LabApp() {
       {/* Actuals noticed. */}
       <div
         className="relative mx-[15px] mt-[16px] flex h-[45px] items-center rounded-[13px] pl-[7px] pr-[12px]"
-        style={{ background: "#FFF6E9", boxShadow: "inset 0 0 0 1px #F6E9CC" }}
+        style={{ background: AMBER_BG, boxShadow: `inset 0 0 0 1px ${AMBER_EDGE}` }}
       >
         <span
           className="flex h-[31px] w-[31px] shrink-0 items-center justify-center rounded-full"
-          style={{ background: "#FEEFD4" }}
+          style={{ background: AMBER_TILE }}
         >
           <GoldSparkle size={16} />
         </span>
@@ -420,7 +427,7 @@ export default function LabApp() {
           <p className="text-[7.8px] font-semibold" style={{ color: ORANGE }}>
             Actuals noticed
           </p>
-          <p className="mt-[2px] whitespace-nowrap text-[8.7px]" style={{ color: "#2E3138" }}>
+          <p className="mt-[2px] whitespace-nowrap text-[8.7px]" style={{ color: AMBER_INK }}>
             Player Props are driving most of your losses.
           </p>
         </div>
@@ -449,10 +456,13 @@ export default function LabApp() {
                 View in betting history
               </span>
             </span>
-            <Chev size={9} color="#C3C4C9" />
+            <Chev size={9} color={CHEV} />
           </button>
           {compareReady ? (
-            <div
+            <Link
+              href={`/preview/performance-compare?sel=${encodeURIComponent(
+                sel.map((c) => `${c.group}~${c.kind}~${c.value}`).join("|")
+              )}`}
               className="flex h-[50px] min-w-0 flex-1 items-center rounded-[14px] bg-white pl-[9px] pr-[10px]"
               style={{ boxShadow: "0 1px 4px rgba(24,20,50,0.06), 0 0 0 1px rgba(24,20,50,0.02)" }}
             >
@@ -470,8 +480,8 @@ export default function LabApp() {
                   Compare two views
                 </span>
               </span>
-              <SoonPill />
-            </div>
+              <Chev size={9} color={CHEV} />
+            </Link>
           ) : null}
         </div>
       ) : null}
@@ -546,7 +556,7 @@ export default function LabApp() {
               style={{ color: LINK_INK }}
             >
               {g.allLabel}
-              <Chev size={8} color="#9B9DA5" />
+              <Chev size={8} color={DOT_MUTED} />
             </span>
           </div>
           <div
@@ -563,7 +573,7 @@ export default function LabApp() {
                   onClick={() => toggle(c)}
                   className="flex h-[44px] shrink-0 items-center gap-[9px] rounded-[12px] bg-white pl-[11px] pr-[14px] transition-colors"
                   style={{
-                    background: on ? SEL_BG : "#FFFFFF",
+                    background: on ? SEL_BG : CARD,
                     boxShadow: on
                       ? `inset 0 0 0 1.2px ${SEL_EDGE}, 0 1px 4px rgba(24,20,50,0.05)`
                       : "0 1px 4px rgba(24,20,50,0.06), 0 0 0 1px rgba(24,20,50,0.02)",
@@ -622,16 +632,16 @@ export default function LabApp() {
               className="flex h-[26px] items-center gap-[6px] rounded-full pl-[11px] pr-[11px] text-[9.5px] font-semibold transition-colors"
               style={
                 on
-                  ? { background: INDIGO_FILL, color: "#FFFFFF" }
+                  ? { background: INDIGO_FILL, color: ON_BRAND }
                   : {
-                      background: "#FFFFFF",
+                      background: CARD,
                       color: NET_LABEL,
                       boxShadow: "0 1px 3px rgba(24,20,50,0.05), 0 0 0 1px rgba(24,20,50,0.03)",
                     }
               }
             >
               {m.value}
-              <span style={{ color: on ? "#DDD6FA" : GREY_TEXT }}>{recordOf(st)}</span>
+              <span style={{ color: on ? ON_BRAND_SOFT : GREY_TEXT }}>{recordOf(st)}</span>
             </button>
           );
         })}
