@@ -347,13 +347,16 @@ export default function PerformanceHomePreview() {
             </p>
           </div>
           <div className="relative top-[3px] flex shrink-0 items-center gap-[6px]">
-            <span
+            {/* The pill opens the Heat Map page, 29 August 2026. Tap
+                wiring only: nothing about the pill's look changes. */}
+            <Link
+              href="/preview/performance-heatmap"
               className="flex h-[23px] items-center gap-[4px] rounded-full px-[9px] text-[9.5px] font-semibold"
               style={{ background: PILL_LAV, color: INDIGO }}
             >
               <HeatDots size={11} />
               Heat Map
-            </span>
+            </Link>
             <span
               className="flex h-[23px] items-center gap-[4px] rounded-full px-[9px] text-[9.5px] font-semibold"
               style={{ background: PILL_LAV, color: INDIGO }}

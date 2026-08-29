@@ -140,14 +140,19 @@ Keep it current: when a job finishes, delete its line.
     `/preview/performance-compare`, from his sheet `1. Compare.png`,
     reached from Lab at exactly two selections. He merged it without
     a verdict, so it is live but not marked accepted.
-    **Colours: Lab and Compare read one dial**,
+    **Totals and the Heat Map are built and waiting on him.**
+    Totals at `/preview/performance-totals` from `2. Totals.png`
+    ("totals looks good", not yet merged, he was in the car). The
+    Heat Map at `/preview/performance-heatmap` from
+    `2. heat map.png`, reached from Home's Heat Map pill. Its map
+    splits by ONE group at a time so the tiles add up to the record;
+    the six differences from the sheet are in `docs/decisions.md`.
+    **Colours: Lab, Compare, Totals and the Heat Map read one dial**,
     `src/app/preview/performance-lab/ui.ts`. Home keeps its own
     copies because its folder is protected, and he ruled 29 August
     2026 that this stays: colour work happens later, "even after the
     pages are live".
-    **Totals is built** at `/preview/performance-totals`, from his
-    sheet `2. Totals.png`, and the three tabs now reach each other.
-    Next after his verdict: the Heat Map, from `2. heat map.png`.
+    The three menu tabs reach each other.
     Still unstarted: the go-live work (real numbers, dark theme,
     empty states, the `/stats` swap). Nothing else starts before he
     says so.

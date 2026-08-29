@@ -15,7 +15,7 @@ import {
   TrackTabIcon,
 } from "../performance-home/icons";
 import CompareApp from "./CompareApp";
-import { INDIGO, INK, PAGE_BG, TAB_IDLE } from "../performance-lab/ui";
+import { INDIGO, INK, PAGE_BG, TAB_EDGE, TAB_GLASS, TAB_IDLE } from "../performance-lab/ui";
 
 const fig = Figtree({
   subsets: ["latin"],
@@ -43,10 +43,10 @@ export default function PerformanceComparePreview() {
         <div
           className="mx-auto flex w-full max-w-[382px] items-stretch rounded-2xl p-1"
           style={{
-            background: "rgba(252,251,253,0.92)",
+            background: TAB_GLASS,
             backdropFilter: "blur(10px)",
             WebkitBackdropFilter: "blur(10px)",
-            boxShadow: "0 6px 20px -10px rgba(16,16,26,0.35), inset 0 0 0 1px #EFEFF2",
+            boxShadow: `0 6px 20px -10px rgba(16,16,26,0.35), inset 0 0 0 1px ${TAB_EDGE}`,
           }}
         >
           <span className="flex flex-1 flex-col items-center justify-center gap-[4px] py-1.5">

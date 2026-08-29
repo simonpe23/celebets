@@ -159,10 +159,22 @@ a time, a screenshot after each, his reaction before the next.
   reasons in `docs/decisions.md`, along with his first edit list
   (lavender winner tint out, insights strip out, bigger cards, the
   wins pill folded into the grey one), all applied.
-- **Colours are one dial now**: every colour Lab and Compare draw
-  comes from `performance-lab/ui.ts` and neither folder contains a
-  raw hex. Home still holds its own copies until its folder is
-  opened. See `docs/decisions.md`.
+- **THE HEAT MAP IS BUILT, awaiting his reaction.** At
+  `src/app/preview/performance-heatmap/`, from his sheet
+  `2. heat map.png`, on his order of 29 August 2026. Its own page at
+  `/preview/performance-heatmap`, reached from the Heat Map pill on
+  Home, back arrow returns there. Four insight cards (Strongest
+  Edge, Biggest Leak, New Pattern, Cooling Off), then a squarified
+  treemap where a tile's area is its share of the result and every
+  tile opens Lab on that fact. **The map splits by one group at a
+  time**, chosen from a control on the map header and opening on
+  Sport, because only inside one group do the tiles add up to the
+  record. `jumptest.mjs` asserts that sum. Six deliberate
+  differences from the sheet are in `docs/decisions.md`.
+- **Colours are one dial now**: every colour Lab, Compare, Totals and
+  the Heat Map draw comes from `performance-lab/ui.ts` and none of
+  those folders contains a raw hex. Home still holds its own copies
+  until its folder is opened. See `docs/decisions.md`.
 - **`jumptest.mjs` now covers Compare**: the door exists at two
   selections and is gone at three, it opens on the two chosen
   facts, and back keeps them. Eleven cases, all passing.

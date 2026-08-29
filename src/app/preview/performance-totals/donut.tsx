@@ -8,11 +8,17 @@
 // red weights for the ones that cost it. The net sits in the middle,
 // exactly as the sheet draws it.
 
-import { GREY_TEXT, INK } from "../performance-lab/ui";
+import {
+  DONUT_EARNER,
+  DONUT_EMPTY,
+  DONUT_LEAK,
+  GREY_TEXT,
+  INK,
+} from "../performance-lab/ui";
 
-const EARNER = ["#3708E4", "#5B37EE", "#8B79F3", "#B3A4F6"];
-const LEAK = ["#FC1B1D", "#FB5B5C", "#FB8A8B", "#FDB9B9"];
-const NOTHING = "#E6E7EC";
+const EARNER = DONUT_EARNER;
+const LEAK = DONUT_LEAK;
+const NOTHING = DONUT_EMPTY;
 
 export type Slice = { key: string; value: number; profit: number };
 

@@ -1,9 +1,11 @@
-// The Performance Totals shell, built to his sheet "2. Totals.png",
-// 29 August 2026. Same menu geometry, colours and tab bar as Home and
-// Lab, with Totals active and the other two as real links. The living
-// page is TotalsApp.tsx.
+// The Heat Map preview shell: the page column, the Figtree face and
+// the floating sticky tab bar, all the accepted Home's. The living
+// page is HeatmapApp.tsx.
+//
+// Its own screen, reached from the Heat Map pill on Home, with a back
+// arrow that returns there. The heat map lives on Home and nowhere
+// else for now, his ruling of 26 August 2026.
 
-import Link from "next/link";
 import { Figtree } from "next/font/google";
 import {
   PerformanceTabIcon,
@@ -11,25 +13,15 @@ import {
   ResearchTabIcon,
   TrackTabIcon,
 } from "../performance-home/icons";
-import TotalsApp from "./TotalsApp";
-import {
-  INDIGO,
-  INDIGO_FILL,
-  INK,
-  MENU_IDLE,
-  MENU_TRACK,
-  PAGE_BG,
-  TAB_EDGE,
-  TAB_GLASS,
-  TAB_IDLE,
-} from "../performance-lab/ui";
+import HeatmapApp from "./HeatmapApp";
+import { INDIGO, INK, PAGE_BG, TAB_EDGE, TAB_GLASS, TAB_IDLE } from "../performance-lab/ui";
 
 const fig = Figtree({
   subsets: ["latin"],
   variable: "--font-fig",
 });
 
-export default function PerformanceTotalsPreview() {
+export default function PerformanceHeatmapPreview() {
   return (
     <div
       className={`${fig.variable} flex min-h-svh flex-col`}
@@ -40,40 +32,10 @@ export default function PerformanceTotalsPreview() {
       }}
     >
       <div className="relative mx-auto flex w-full max-w-[390px] flex-1 flex-col">
-        {/* The Home / Lab / Totals menu, Home's exact geometry with the
-            pill on Totals. Label centers on Home: 59, 181, 296. */}
-        <div
-          className="relative mx-[14px] mt-[7px] h-[36px] rounded-full"
-          style={{ background: MENU_TRACK }}
-        >
-          <Link
-            href="/preview/performance-home"
-            className="absolute left-[59px] top-1/2 -translate-x-1/2 -translate-y-1/2 px-[18px] py-[10px] text-[10.5px] font-semibold"
-            style={{ color: MENU_IDLE }}
-          >
-            Home
-          </Link>
-          <Link
-            href="/preview/performance-lab"
-            className="absolute left-[181px] top-1/2 -translate-x-1/2 -translate-y-1/2 px-[18px] py-[10px] text-[10.5px] font-semibold"
-            style={{ color: MENU_IDLE }}
-          >
-            Lab
-          </Link>
-          <span
-            className="absolute left-[248px] top-[4px] flex h-[28px] w-[110px] items-center justify-center rounded-full text-[10.5px] font-bold text-white"
-            style={{ background: INDIGO_FILL }}
-          >
-            Totals
-          </span>
-        </div>
-
-        <TotalsApp />
+        <HeatmapApp />
         <div className="min-h-[6px] grow" />
       </div>
 
-      {/* The tab bar: the same floating sticky card as the accepted
-          Home, Performance active. */}
       <nav className="sticky bottom-0 z-40 mt-auto px-3 pb-[calc(0.625rem+env(safe-area-inset-bottom))] pt-3">
         <div
           className="mx-auto flex w-full max-w-[382px] items-stretch rounded-2xl p-1"
