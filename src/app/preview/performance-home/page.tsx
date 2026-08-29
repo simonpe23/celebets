@@ -82,6 +82,7 @@ const ROWS = [
     icon: <DollarIcon size={20} />,
     tile: "#F0EEFB",
     name: "Moneyline",
+    sel: "what~category~Moneyline",
     meta: "30–16",
     hit: "60% hit rate",
     spark: "s1" as const,
@@ -94,6 +95,7 @@ const ROWS = [
     icon: <BallIcon size={20} />,
     tile: "#F0EEFB",
     name: "Premier League",
+    sel: "where~plain~Premier League",
     meta: "14–8",
     hit: "64% hit rate",
     spark: "s2" as const,
@@ -106,6 +108,7 @@ const ROWS = [
     icon: <TrendTileIcon size={20} />,
     tile: "#F0EEFB",
     name: "Low odds",
+    sel: "risk~plain~Low odds",
     meta: "18–11",
     hit: "62% hit rate",
     spark: "s3" as const,
@@ -118,6 +121,7 @@ const ROWS = [
     icon: <LayersIcon size={20} />,
     tile: "#F0EEFB",
     name: "Singles",
+    sel: "how~plain~Singles",
     meta: "24–18",
     hit: "57% hit rate",
     spark: "s4" as const,
@@ -130,6 +134,7 @@ const ROWS = [
     icon: <RedTarget size={20} />,
     tile: "#FEF0F0",
     name: "Player Props",
+    sel: "what~category~Player Props",
     meta: "7–11",
     hit: "39% hit rate",
     spark: "s5" as const,
@@ -358,8 +363,9 @@ export default function PerformanceHomePreview() {
         {/* The top list. */}
         <div className="relative mt-[8px]">
           {ROWS.map((row, i) => (
-            <div
+            <Link
               key={row.name}
+              href={`/preview/performance-lab?sel=${encodeURIComponent(row.sel)}`}
               className={
                 row.rank === 1
                   ? "mx-[12px] mb-[4px] flex h-[49px] items-center rounded-[12px] bg-white pl-[8px] pr-[12px]"
@@ -417,12 +423,15 @@ export default function PerformanceHomePreview() {
               <span className="ml-[6px] shrink-0">
                 <Chev size={10} color="#C3C4C9" />
               </span>
-            </div>
+            </Link>
           ))}
         </div>
 
-        {/* The door to Lab. */}
-        <div
+        {/* The door to Lab. It lands on an EMPTY Lab, the ruling:
+            "i want a view inside the lab that is clean from
+            selections." */}
+        <Link
+          href="/preview/performance-lab"
           className="relative mx-[14px] mt-[8px] flex h-[69px] items-center rounded-[14px] pl-[15px] pr-[15px]"
           style={{ background: "#F8F6FC" }}
         >
@@ -458,7 +467,7 @@ export default function PerformanceHomePreview() {
             Explore Lab
             <Chev size={7} color="#FFFFFF" />
           </span>
-        </div>
+        </Link>
 
         <div className="min-h-[8px] grow-[3]" />
       </div>

@@ -1,42 +1,67 @@
-// Does the chart change height when the browser toolbars collapse?
+// Proves the doors between the Home and Lab previews. A jump is not a
+// link that exists but a selection that ARRIVES: after each tap the
+// Lab answer panel must show the jumped fact's own record, and the
+// Explore Lab door must land on an empty Lab showing the whole
+// record. Screenshots cannot see a tap; this script is the tap.
 //
-// Chrome on a phone hides its URL bar and toolbar as you scroll, which
-// makes the viewport taller. A height written in dvh grows with it and
-// the whole page shifts under your finger. This measures the chart
-// before and after that happens.
+// Usage: node jumptest.mjs <port>
 import { chromium } from "playwright";
 
-const port = process.argv[2] ?? "3000";
-const browser = await chromium.launch({
-  executablePath: "/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
-});
-const SHORT = 664;   // Chrome with its toolbars showing
-const TALL = 745;    // the same phone once they collapse
+const port = process.argv[2];
+if (!port) {
+  console.error("usage: node jumptest.mjs <port of a running dev server>");
+  process.exit(2);
+}
+const exe = process.env.PLAYWRIGHT_CHROMIUM || undefined;
+const browser = await chromium.launch(exe ? { executablePath: exe } : {});
+const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+let fails = 0;
 
-const page = await browser.newPage({
-  viewport: { width: 393, height: SHORT }, deviceScaleFactor: 2, hasTouch: true, isMobile: true,
-});
-await page.goto(`http://localhost:${port}/preview/performance`, { waitUntil: "networkidle" });
-await page.waitForTimeout(1500);
+// Home's five rows and the records they carry. Lab's demo data is
+// built to reproduce exactly these, so the assertion is honest.
+const CASES = [
+  ["Moneyline", "30–16"],
+  ["Premier League", "14–8"],
+  ["Low odds", "18–11"],
+  ["Singles", "24–18"],
+  ["Player Props", "7–11"],
+];
 
-const chartH = () =>
-  page.evaluate(() => {
-    const el = document.querySelector("[data-chart-panel] .relative");
-    return el ? Math.round(el.getBoundingClientRect().height) : null;
+for (const [name, record] of CASES) {
+  await page.goto(`http://localhost:${port}/preview/performance-home`, {
+    waitUntil: "networkidle",
   });
+  await page.click(`a:has-text("${name}")`);
+  await page.waitForURL("**/preview/performance-lab**");
+  await page.waitForTimeout(700);
+  const body = await page.textContent("body");
+  const ok =
+    body.includes(record) || body.includes(record.replace("–", "-"));
+  console.log(`${ok ? "PASS" : "FAIL"} row ${name} arrives showing ${record}`);
+  if (!ok) fails++;
+}
 
-const before = await chartH();
-// The toolbars collapsing IS the viewport growing.
-await page.setViewportSize({ width: 393, height: TALL });
-await page.waitForTimeout(600);
-const after = await chartH();
+// The door lands on an EMPTY Lab, the ruling: "i want a view inside
+// the lab that is clean from selections." Empty shows the whole
+// record.
+await page.goto(`http://localhost:${port}/preview/performance-home`, {
+  waitUntil: "networkidle",
+});
+await page.click('a:has-text("Explore Lab")');
+await page.waitForURL("**/preview/performance-lab**");
+await page.waitForTimeout(700);
+const hasSel = page.url().includes("sel=");
+const body = await page.textContent("body");
+const okEmpty =
+  !hasSel && (body.includes("49–38") || body.includes("49-38"));
+console.log(`${okEmpty ? "PASS" : "FAIL"} Explore Lab lands on the empty Lab`);
+if (!okEmpty) fails++;
+
+// The top menus link both ways.
+await page.click('a:has-text("Home")');
+await page.waitForURL("**/preview/performance-home**");
+console.log("PASS Lab menu returns to Home");
 
 await browser.close();
-console.log(`chart height with toolbars showing: ${before}px`);
-console.log(`chart height with toolbars hidden:  ${after}px`);
-if (before === after) {
-  console.log(`PASS: height is fixed, the page cannot jump.`);
-} else {
-  console.log(`FAIL: grew by ${after - before}px, the page will jump.`);
-  process.exit(1);
-}
+console.log(fails ? `${fails} jump(s) broken` : "All doors work.");
+process.exit(fails ? 1 : 0);

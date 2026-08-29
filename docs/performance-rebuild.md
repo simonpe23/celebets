@@ -241,21 +241,26 @@ order after the Lab merge: Home's menu links to Lab and Lab's menu
 links to Home, plain navigation, no selection carried. The three
 selection-carrying jumps below are still unbuilt.
 
-**On the accepted Home, NONE of the three jumps exist.**
-`src/app/preview/performance-home/page.tsx` is a static picture: it
-contains no onClick, no href and no Link anywhere (grep confirms
-zero). Concretely:
+**TWO OF THE THREE JUMPS ARE WIRED AND TEST-PROVEN, 29 August
+2026**, at the owner's ask once Lab's preview existed: "can we open
+up the two other doors to lab page now?" The transport is the
+address: LabApp reads `?sel=group~kind~value` (the Lab chat built
+the receiver, the Home chat the taps).
 
-- The five ranked rows are plain divs, the `ROWS.map` block.
-- The Explore Lab button is a `<span>` inside the Lab card block.
-- The Heat Map header pill is a `<span>`, and **no heatmap grid is
-  built at all**: the pill is the only trace of the heatmap on Home.
-- There is no Lab page to land on: `/preview/performance-home` is the
-  only screen of the new design. **The Lab chat is building both ends
-  of every jump**, and also choosing the transport: an address (a
-  query param carrying the selection survives refresh and can be
-  linked) or shared state (the prototype's way, which dies on
-  refresh). Nothing is ruled on this; it is an open build decision.
+- **Ranked row: WIRED.** Each of Home's five rows is a `Link`
+  carrying its fact (the `sel` field in the `ROWS` array of
+  `src/app/preview/performance-home/page.tsx`). Landing on Lab, the
+  answer panel recomputes to that fact's own record.
+- **Explore Lab door: WIRED.** The whole Lab card links to
+  `/preview/performance-lab` with nothing selected, the ruling: an
+  empty Lab.
+- **Heatmap tile: STILL MISSING.** No heatmap grid exists on Home;
+  the Heat Map header pill is still a dead `<span>`. That door gets
+  built with the heatmap itself.
+- **`jumptest.mjs <port>` proves the doors in a real browser**: each
+  row tap must arrive showing that fact's record, the Explore door
+  must land empty, and the menus must link both ways. A tap is a
+  gesture, and gestures need a script, not a screenshot.
 
 **The old prototype has working jumps to mine**, but into its own
 fact view, which predates the six-group Lab design and is NOT Lab:

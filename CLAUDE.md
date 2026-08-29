@@ -78,7 +78,8 @@ a promise to be careful. Making him the last line of defence is the
 failure.
 
 **Screenshots cannot see everything.** Gestures, motion and absences all
-need a script: `scrubtest.mjs`, `motiontest.mjs`, `pftest.mjs`.
+need a script: `scrubtest.mjs`, `motiontest.mjs`, `pftest.mjs`,
+`jumptest.mjs`.
 
 ## Product facts
 

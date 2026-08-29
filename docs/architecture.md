@@ -123,6 +123,7 @@ Standalone scripts:
 | `motiontest.mjs <port>` | Page and sheet motion, chart draw, counting numbers, reduced-motion. |
 | `pftest.mjs <port>` | Every sport is reachable in the Portfolio prototype's pickers. |
 | `synctest.mjs` | Kalshi money splits and competition normalisation. |
+| `jumptest.mjs <port>` | The doors between the Home and Lab previews: row taps arrive with the fact selected, Explore Lab lands empty. |
 
 ## Supabase settings not visible in the repo
 
