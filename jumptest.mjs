@@ -156,50 +156,42 @@ const showsLeak = heatText.includes("Basketball") && heatText.includes("-$926");
 console.log(`${showsLeak ? "PASS" : "FAIL"} the map shows the biggest leak by name`);
 if (!showsLeak) fails++;
 
-// The map splits by one group at a time, which is what makes the
-// tiles add up. The control that changes the group is a dropdown: a
-// screenshot cannot prove it opens, or that the map redraws.
-await page.click('button[aria-label="Change what the map splits by"]');
-await page.waitForTimeout(300);
-await page.getByRole("button", { name: "Category", exact: true }).click();
-await page.waitForTimeout(500);
-const byCat = await page.innerText("body");
-const switched = byCat.includes("Moneyline") && byCat.includes("BY CATEGORY");
-console.log(`${switched ? "PASS" : "FAIL"} the map redraws when the group changes`);
-if (!switched) fails++;
-
-// The tiles must PARTITION the record: every figure on the map,
-// added up, is the record's own net profit. Eight overlapping tiles
-// once summed to $11,637 on a $2,637 record under a caption saying
-// size means impact.
-const partition = await page.evaluate(() => {
+// The map shows the best and worst facts across EVERY group at once,
+// his ruling of 29 August 2026: "regardless of sport, league,
+// category, market". A screenshot cannot prove the mix, or that a
+// red tile is there at all.
+const mix = await page.evaluate(() => {
   const head = [...document.querySelectorAll("p")].find((p) =>
     p.textContent.startsWith("Performance map")
   );
-  const map = head.parentElement.nextElementSibling;
-  let sum = 0;
-  for (const cell of map.children) {
-    const m = cell.innerText.match(/([-+])\$([\d,]+)/);
-    if (m) sum += (m[1] === "-" ? -1 : 1) * Number(m[2].replace(/,/g, ""));
-  }
-  return sum;
+  const map = head.nextElementSibling;
+  return [...map.children].map((c) => c.getAttribute("href") ?? "");
 });
-// The figures are rounded to whole dollars on the tiles, so six or
-// seven of them can drift a dollar from the record. Anything wider
-// than that is overlap, not rounding.
-const adds = Math.abs(partition - 2637) <= 2;
-console.log(
-  `${adds ? "PASS" : "FAIL"} the map adds up to the record (${partition})`
+const groups = new Set(
+  mix.map((h) => (h.match(/sel=([a-z]+)(?:~|%7E)/) || [, ""])[1])
 );
-if (!adds) fails++;
+const mixed = groups.size >= 3;
+console.log(
+  `${mixed ? "PASS" : "FAIL"} the map mixes groups (${[...groups].join(", ")})`
+);
+if (!mixed) fails++;
 
-// Back to Sport, then prove a tile carries its fact into Lab. The
-// Biggest Leak card names Basketball too, so the tile is the last
-// match, not the first.
-await page.goto(`http://localhost:${port}/preview/performance-heatmap`, {
-  waitUntil: "networkidle",
+// A heat map with no red on it is not a heat map. Ranked purely by
+// size the record's biggest leak came ninth and every tile was green.
+const reds = await page.evaluate(() => {
+  const head = [...document.querySelectorAll("p")].find((p) =>
+    p.textContent.startsWith("Performance map")
+  );
+  return [...head.nextElementSibling.children].filter((c) =>
+    c.innerText.includes("-$")
+  ).length;
 });
-await page.waitForTimeout(400);
+console.log(`${reds >= 1 ? "PASS" : "FAIL"} the map has red on it (${reds} leaks)`);
+if (reds < 1) fails++;
+
+// Prove a tile carries its fact into Lab.
+// The Biggest Leak card names Basketball too, so the tile is the
+// last match, not the first.
 await page.locator('a[href*="sport~plain~Basketball"]').last().click();
 let tileOk = true;
 try {

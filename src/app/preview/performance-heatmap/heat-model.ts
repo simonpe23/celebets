@@ -21,18 +21,21 @@
 //    baseball, hockey or football", and those words must never
 //    disappear.
 //
-// 3. THE MAP IS A PARTITION OF ONE GROUP. Every pick has exactly one
-//    sport, one category, one league, one period, one bet type and one
-//    odds bucket, so the values inside a single group never overlap.
-//    Draw the map from one group and the tiles add up to the record's
-//    net profit exactly, every tile carries its own true figure, and
-//    the small tail is one honest Others.
+// 3. THE MAP IS HOME'S MECHANICS. His ruling, 29 August 2026: "i
+//    don't want to filter on category or sport here. i want same
+//    mechanics as the home page - regardless of sport, league,
+//    category, market - this heat maps should show best performances
+//    regardless of what filter." So the tiles come straight from the
+//    engine's own `rankedFacts([], 5)`, the exact call Home's ranked
+//    rows and the prototype's old heat map both make: every fact in
+//    every group, scored by impact, nothing filtered out.
 //
-//    Mixing groups is what breaks it. Ranked by size alone, Moneyline,
-//    Parlays, Medium odds and Football all draw the same money: eight
-//    tiles summed to $11,637 on a $2,637 record under a caption saying
-//    size means impact. Picking mixed facts that merely do not overlap
-//    is no better: it leaves a grey Others bigger than every real tile.
+//    THE CONSEQUENCE, NAMED: those facts overlap. One Moneyline bet
+//    on Arsenal is a Moneyline pick AND a Premier League pick AND a
+//    Football pick, so the tiles do NOT add up to the record's net
+//    profit and are not meant to. A tile's size is how much THAT fact
+//    moved, which is what the sheet's caption claims: "Size shows
+//    impact on your results."
 
 import { domainOf, type Domain } from "@/lib/taxonomy";
 import type { Sport } from "@/lib/types";
@@ -40,6 +43,9 @@ import { legShares } from "@/lib/stats";
 import { MUTED, type Chip, type Engine, type GroupKey, type Stats } from "../pf/engine";
 
 export const MIN_PICKS = 12;
+// The floor Home's ranked rows and the prototype's heat map both pass
+// to rankedFacts. Keeping it means the map ranks what Home ranks.
+export const RANK_MIN_PICKS = 5;
 
 export type Fact = {
   chips: Chip[];
@@ -55,18 +61,6 @@ export type Fact = {
 };
 
 const GROUPS: GroupKey[] = ["sport", "what", "where", "when", "how", "risk"];
-
-// His corrected names and order, 29 August 2026: "Sport, League (swap
-// name from Where), Category (Swap What you Bet), When, Bet Type (Swap
-// from How), Risk (Odds Range)."
-export const MAP_GROUPS: { key: GroupKey; label: string }[] = [
-  { key: "sport", label: "Sport" },
-  { key: "where", label: "League" },
-  { key: "what", label: "Category" },
-  { key: "when", label: "When" },
-  { key: "how", label: "Bet Type" },
-  { key: "risk", label: "Risk" },
-];
 
 // Values the engine invents when a bet says nothing. They are real
 // picks, so the map must still count them, but they are not choices he
@@ -96,13 +90,17 @@ const matches = (bet: AnyBet, leg: AnyLeg, chips: Chip[]) =>
 
 function build(engine: Engine, chips: Chip[], label: string): Fact | null {
   const covers = new Set<string>();
-  let domain: Domain = "Sports";
+  // A fact belongs to a domain only when every pick under it agrees.
+  // "Medium odds" spans the whole record, and reading the domain off
+  // the first matching leg once sent it to Lab in Economics mode.
+  const domains = new Set<Domain>();
   for (const bet of engine.settled)
     bet.legs.forEach((leg, i) => {
       if (!matches(bet, leg, chips)) return;
-      if (covers.size === 0) domain = domainOf(leg.sport as Sport);
+      domains.add(domainOf(leg.sport as Sport));
       covers.add(`${bet.id}#${i}`);
     });
+  const domain: Domain = domains.size === 1 ? [...domains][0] : "Sports";
   if (covers.size === 0) return null;
   const s = engine.statsFor(chips);
   const picks = s.wins + s.losses;
@@ -188,57 +186,50 @@ export function dropTwins(facts: Fact[]): Fact[] {
   return facts.filter((f) => winner.get(coverKey(f)) === f);
 }
 
-// Rule 3. One group, every value in it, biggest first. The values of
-// a group never share a pick, so the tiles below are a true partition
-// of the record: their figures sum to its net profit, and each figure
-// is what Lab shows for that same fact.
-export function groupTiles(
+// Rule 3. Home's ranked facts, biggest mover first. `rankedFacts`
+// scores every fact in every group at once and is the same call
+// Home's rows make, so the map and the ranked list cannot disagree
+// about what matters. Five picks is the floor both use.
+//
+// NO OTHERS TILE. His sheet draws a small grey "Others", and it is
+// the one thing here that cannot be computed honestly: these facts
+// overlap, so netting the ones left over counted the same money
+// nineteen times and produced a +$3,225 tile, bigger than every real
+// one on a $2,637 record. A number nobody can tap into and nobody can
+// check does not belong on this page.
+export function rankedTiles(
   engine: Engine,
-  group: GroupKey,
-  maxTiles: number
-): { tiles: Fact[]; othersProfit: number; othersPicks: number } {
-  const values = new Set<string>();
-  for (const bet of engine.settled)
-    for (const leg of bet.legs) {
-      const v = valueOf(bet, leg, group);
-      if (v !== null) values.add(v);
-    }
-
-  const facts = [...values]
-    .map((v) =>
-      build(
-        engine,
-        [
-          {
-            group,
-            kind: group === "what" ? "category" : "plain",
-            value: v,
-          } as Chip,
-        ],
-        v
-      )
-    )
+  maxEarners: number,
+  maxLeaks: number
+): Fact[] {
+  const ranked = engine
+    .rankedFacts([], RANK_MIN_PICKS)
+    .map((r) => build(engine, [r.chip], r.chip.value))
     .filter((f): f is Fact => f !== null)
-    .sort((a, b) => Math.abs(b.s.profit) - Math.abs(a.s.profit));
+    // A filler value is not a bet he placed, so it is never a tile.
+    .filter((f) => !isFiller(f) && Math.abs(f.s.profit) >= 1);
 
-  const tiles = facts.filter((f) => Math.abs(f.s.profit) >= 1).slice(0, maxTiles);
-  const used = new Set<string>();
-  for (const f of tiles) for (const c of f.covers) used.add(c);
-
-  // Everything no tile covers: the small tail, plus any pick the group
-  // cannot place (a leg with no odds has no risk bucket). This is a
-  // real remainder because the tiles above it never overlap.
-  let othersProfit = 0;
-  let othersPicks = 0;
-  for (const bet of engine.settled) {
-    const shares = legShares(bet);
-    bet.legs.forEach((leg, i) => {
-      if (used.has(`${bet.id}#${i}`)) return;
-      othersProfit += shares[i] ?? 0;
-      if (leg.result !== "pending") othersPicks += 1;
-    });
-  }
-  return { tiles, othersProfit, othersPicks };
+  // Twins are hidden HERE, because size is the map's whole message:
+  // two tiles for one set of bets (Baseball and MLB) paint the same
+  // money twice and make it look like double the impact.
+  //
+  // The order is rankedFacts' own, which is Home's order: impact, not
+  // raw profit. Re-sorting by profit put three views of the same
+  // winning bets at the top (Moneyline, Parlays, Medium odds) and cut
+  // Premier League and Player Props, which are the facts Home's rows
+  // and his sheet both name.
+  const facts = dropTwins(ranked);
+  // Earners and leaks get their own slots, which is how his sheet is
+  // drawn: five green tiles, two red, and Others. Ranked purely by
+  // size the record's biggest leak came ninth and the map had no red
+  // on it at all. That is the failure already written down for
+  // Totals: "cutting the list at six hid Basketball, the record's
+  // single biggest leak."
+  const taken = [
+    ...facts.filter((f) => f.s.profit > 0).slice(0, maxEarners),
+    ...facts.filter((f) => f.s.profit < 0).slice(0, maxLeaks),
+  ];
+  return taken.sort((a, b) => Math.abs(b.s.profit) - Math.abs(a.s.profit));
 }
 
 // A fact's most recent picks, through the engine's own reading of a

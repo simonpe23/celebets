@@ -901,34 +901,47 @@ lives at `/preview/performance-heatmap`, reached from the Heat Map
 pill on Home, with a back arrow that returns there. Every tile opens
 Lab on that fact, his ruling of 26 August 2026.
 
-**The sizing is real and the tiles add up.** The brief's hard
-requirement was "the sizing has to be real". Tiles are laid out by a
-squarified treemap, so a tile's AREA is its share, and the tiles
-PARTITION the record: no two contain the same pick, and their figures
-sum to the record's own net profit. `jumptest.mjs` asserts that sum.
-The first build ranked facts by size across every group at once, so
-Moneyline, Parlays, Medium odds and Football all drew the same money:
-eight tiles summed to $11,637 on a $2,637 record, under a caption
-saying size meant impact.
+**NO FILTER ON THE MAP. Ruled 29 August 2026**, his words: "i don't
+want to filter on category or sport here. i want same mechanics as the
+home page - regardless of sport, league, category, market - this heat
+maps should show best performances regardless of what filter." The
+group control that a first build put on the map header is gone. The
+tiles now come from the engine's own `rankedFacts([], 5)`, the exact
+call Home's ranked rows and the prototype's old heat map both make:
+every fact in every group, scored by impact, nothing filtered.
+
+**The consequence, told to him in one line rather than hidden:** those
+facts overlap. One Moneyline bet on Arsenal is a Moneyline pick AND a
+Premier League pick AND a Football pick, so the tiles do not add up to
+his net profit and are not meant to. A tile's size is how much THAT
+fact moved, which is exactly what his sheet's caption claims: "Size
+shows impact on your results." The sizing is still real: a squarified
+treemap, so area is proportional to the money moved.
+
+**No Others tile, and this is the one place the sheet is not
+followed.** His sheet draws a small grey "Others". With overlapping
+facts it cannot be computed honestly: netting the leftovers counted
+the same money nineteen times and produced a +$3,225 tile, bigger than
+every real one on a $2,637 record. A number nobody can tap into and
+nobody can check does not belong here.
+
+**Five earners and two leaks, the shape of his sheet.** Earners and
+leaks get their own slots. Ranked purely by size the record's biggest
+leak came ninth and the map had no red on it at all, which is the
+failure already on the record for Totals: "cutting the list at six hid
+Basketball, the record's single biggest leak." `jumptest.mjs` now
+asserts both that the map mixes at least three groups and that it has
+red on it.
 
 **Seven places the Heat Map knowingly differs from the sheet. CLAUDE's
 calls, not his rulings, all reversible:**
 
-1. **The map splits by ONE group at a time**, with a quiet "BY SPORT"
-   control on the map header. The sheet mixes groups in one map
-   (Moneyline, Premier League, Tennis, Parlays, BTTS, 1st Half,
-   Player Props), and mixed groups cannot add up: the same pick is a
-   Moneyline pick AND a Premier League pick AND a Parlay. Inside one
-   group the values never overlap, so the map is honest and every
-   figure matches what Lab shows. It opens on Sport because that is
-   the question the whole rebuild came from: "where am I leaking,
-   baseball, hockey or football". The six groups are his names and
-   his order: Sport, League, Category, When, Bet Type, Risk.
-2. **Others is computed, not drawn.** The sheet shows a small grey
-   Others. Here it is whatever the named tiles do not cover, and a
-   tile too small to carry its own name and figure folds into it
-   until every tile left can be read. A treemap will hand you a 44px
-   sliver reading "Bas... +$1...".
+1. **There is no Others tile**, for the reason above.
+2. **A tile too small to carry its own name and figure is dropped**,
+   smallest earner first, never a leak. A treemap will hand you a
+   36px sliver reading "Play... -$4...". On his fixture that leaves
+   six tiles: Moneyline, Parlays, Medium odds, Football, Basketball
+   and Player Props, across four different groups.
 3. **The streak cards say "in last 10 picks" where the sheet says
    "bets".** The count is picks (legs), not bet slips, and a parlay
    is several picks. Saying bets would be a small lie on every
@@ -956,13 +969,14 @@ calls, not his rulings, all reversible:**
    they all look the same." Totals uses the same emoji. A monochrome
    map would be the only screen in Performance that did.
 
-**A Crypto tile sits beside the Football tile, and that is on
-purpose.** "DOMAINS NEVER COMBINE" is about selecting two chips from
-two trees, which is still impossible: the map never combines, each
-tile is one fact on its own, and tapping the Crypto tile opens Lab in
-Economics mode with the right groups. Totals already lists Crypto in
-Profit by Sport beside Football, and he accepted that page. The map
-is a picture of his whole record, so it shows the whole record.
+**Domains on the map.** "DOMAINS NEVER COMBINE" is about selecting
+two chips from two trees, which is still impossible: the map never
+combines, each tile is one fact on its own. A tile carries a domain
+into Lab only when every pick under it agrees on one; reading the
+domain off the first matching leg once sent "Medium odds", a fact that
+spans the whole record, into Lab in Economics mode. Totals already
+lists Crypto in Profit by Sport beside Football, and he accepted that
+page.
 
 **Home's Heat Map pill is a link now. CLAUDE's call, flagged.** The
 ruling above says Home's ranked rows, the Explore Lab button and the

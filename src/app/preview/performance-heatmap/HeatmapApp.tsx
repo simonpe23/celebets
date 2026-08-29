@@ -18,32 +18,33 @@
 // 1. The tiles are laid out by a squarified treemap, so every tile's
 //    AREA is its share of the total. A uniform grid wearing this
 //    caption would be worse than no heat map at all.
-// 2. The tiles PARTITION the record. The map splits ONE group at a
-//    time, chosen from the control on its header and opening on
-//    Sport, because only inside a single group do the values never
-//    share a pick. So no two tiles contain the same money, the tail
-//    is one grey Others, and the figures add up to the record's net
-//    profit exactly. The first build mixed groups and ranked by size:
-//    Moneyline, Parlays, Medium odds and Football all drew the same
-//    money, eight tiles summed to $11,637 on a $2,637 record, and the
-//    caption above them said size meant impact. See heat-model.ts.
+// 2. THE TILES ARE HOME'S RANKED FACTS. His ruling, 29 August 2026:
+//    "i don't want to filter on category or sport here. i want same
+//    mechanics as the home page - regardless of sport, league,
+//    category, market - this heat maps should show best performances
+//    regardless of what filter." The map calls the engine's own
+//    `rankedFacts([], 5)`, the same call Home's ranked rows make, so
+//    the two screens cannot disagree about what matters. Twins are
+//    dropped, because two tiles for one set of bets would paint the
+//    same money twice.
+//
+//    Those facts overlap by design, so the tiles do not add up to the
+//    record's net profit and are not meant to. A tile's size is how
+//    much THAT fact moved, which is exactly what the caption claims.
 //
 // Tapping a tile opens Lab with that fact selected, his ruling of
 // 26 August 2026, and the figure on the tile is the figure Lab shows.
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import Link from "next/link";
-import { money, makeEngine, type Chip, type GroupKey } from "../pf/engine";
+import { money, makeEngine, type Chip } from "../pf/engine";
 import { labBets } from "../performance-lab/lab-data";
 import { chipIcon } from "../performance-lab/LabApp";
-import { Chev, ChevDown, GoldSparkle, InfoDot } from "../performance-home/icons";
+import { Chev, GoldSparkle, InfoDot } from "../performance-home/icons";
 import {
   AMBER_TILE,
   CARD,
   GLYPH,
-  HAIRLINE,
-  HEAD_INK,
-  INDIGO,
   GREEN,
   GREY_TEXT,
   INK,
@@ -66,10 +67,9 @@ import {
 import { squarify } from "./treemap";
 import {
   dropTwins,
-  groupTiles,
+  rankedTiles,
   hitOf,
   isFiller,
-  MAP_GROUPS,
   MIN_PICKS,
   pairFacts,
   recentForm,
@@ -77,12 +77,14 @@ import {
   type Fact,
 } from "./heat-model";
 
-// Seven named tiles plus Others is what his sheet draws. The floor
-// below is what a tile needs to carry a name and a figure at all.
-const MAX_TILES = 7;
+// Five earners and two leaks, the shape of his sheet. There is no
+// Others tile: see heat-model.ts, rule 3. The floor below is what a
+// tile needs to carry a name and a figure at all.
+const EARNER_TILES = 5;
+const LEAK_TILES = 2;
 const MIN_NAMED_TILES = 3;
-const MIN_TILE_W = 64;
-const MIN_TILE_H = 42;
+const MIN_TILE_W = 56;
+const MIN_TILE_H = 40;
 // The layout frame. Vertical size is exact in px; horizontal size is a
 // percentage of this width, so the map fills a 320px phone and a 390px
 // phone alike instead of overflowing the narrow one.
@@ -301,61 +303,42 @@ export default function HeatmapApp() {
     return { edge, leak, hot, cool };
   }, [engine, proven]);
 
-  // The map: one group, drawn whole. Every value of a group is
-  // exclusive, so these tiles partition the record and their figures
-  // add up to its net profit.
-  const [group, setGroup] = useState<GroupKey>("sport");
-  const [groupOpen, setGroupOpen] = useState(false);
-
+  // The map: the biggest movers in the whole record, whichever group
+  // they come from, with the rest of the ranked list gathered into
+  // one grey Others exactly as his sheet draws it.
   const tiles = useMemo(() => {
-    const { tiles: taken, othersProfit, othersPicks } = groupTiles(
-      engine,
-      group,
-      MAX_TILES
-    );
+    const taken = rankedTiles(engine, EARNER_TILES, LEAK_TILES);
     if (taken.length === 0) return [];
 
-    type Cell = {
-      key: string;
-      label: string;
-      profit: number;
-      fact: Fact | null;
-    };
-    const named: Cell[] = taken.map((f) => ({
+    type Cell = { key: string; label: string; profit: number; fact: Fact };
+    const cells: Cell[] = taken.map((f) => ({
       key: f.key,
       label: f.label,
       profit: f.s.profit,
       fact: f,
     }));
-    let rest = othersPicks > 0 ? othersProfit : 0;
-
-    // A treemap will happily hand you a 40px sliver, and a sliver
-    // cannot carry a name or a figure. So the smallest tile keeps
-    // folding into Others until every tile left can be read. Nothing
-    // is lost: Others is a real tile with a real number.
-    const withRest = (cells: Cell[], profit: number): Cell[] =>
-      Math.abs(profit) >= 1
-        ? [...cells, { key: "others", label: "Others", profit, fact: null }]
-        : cells;
-    const lay = (cells: Cell[]) =>
+    const lay = (list: Cell[]) =>
       squarify(
-        cells.map((c) => ({ key: c.key, value: Math.abs(c.profit) })),
+        list.map((c) => ({ key: c.key, value: Math.abs(c.profit) })),
         MAP_W,
         MAP_H
       );
 
-    let cells = withRest(named, rest);
+    // A treemap will happily hand you a 40px sliver, and a sliver
+    // cannot carry a name or a figure. The smallest EARNER drops
+    // until every tile left can be read; the leaks stay, because a
+    // heat map with no red on it is not a heat map.
     let laid = lay(cells);
     while (
-      named.length > MIN_NAMED_TILES &&
+      cells.length > MIN_NAMED_TILES &&
       laid.some((t) => t.w - GAP < MIN_TILE_W || t.h - GAP < MIN_TILE_H)
     ) {
-      const smallest = named.reduce((a, b) =>
+      const droppable = cells.filter((c) => c.profit > 0);
+      if (droppable.length === 0) break;
+      const smallest = droppable.reduce((a, b) =>
         Math.abs(a.profit) <= Math.abs(b.profit) ? a : b
       );
-      named.splice(named.indexOf(smallest), 1);
-      rest += smallest.profit;
-      cells = withRest(named, rest);
+      cells.splice(cells.indexOf(smallest), 1);
       laid = lay(cells);
     }
 
@@ -365,7 +348,7 @@ export default function HeatmapApp() {
       const cell = cells.find((c) => c.key === t.key)!;
       return { ...t, ...cell, ...tintOf(cell.profit, maxGood, maxBad) };
     });
-  }, [engine, group]);
+  }, [engine]);
 
   const { edge, leak, hot, cool } = cards;
 
@@ -453,61 +436,13 @@ export default function HeatmapApp() {
         className="relative mx-[15px] mt-[12px] rounded-[16px] px-[9px] pb-[11px] pt-[11px]"
         style={{ background: CARD, boxShadow: "0 1px 5px rgba(24,20,50,0.07)" }}
       >
-        <div className="flex items-center justify-between pl-[3px] pr-[2px]">
-          <p
-            className="flex items-center gap-[3px] text-[10.5px] font-semibold"
-            style={{ color: NET_LABEL }}
-          >
-            Performance map
-            <InfoDot size={12} />
-          </p>
-          {/* One group at a time is what makes the tiles add up, so the
-              group is a control rather than a fixed choice. It opens on
-              Sport: "where am I leaking, baseball, hockey or
-              football" is the question this page was born from. */}
-          <div className="relative">
-            <button
-              onClick={() => setGroupOpen((o) => !o)}
-              aria-label="Change what the map splits by"
-              className="flex items-center gap-[4px] text-[9px] font-semibold uppercase tracking-[0.08em]"
-              style={{ color: HEAD_INK }}
-            >
-              By {MAP_GROUPS.find((g) => g.key === group)!.label}
-              <ChevDown size={11} />
-            </button>
-            {groupOpen ? (
-              <>
-                <button
-                  aria-label="Close map groups"
-                  onClick={() => setGroupOpen(false)}
-                  className="fixed inset-0 z-10"
-                />
-                <div
-                  className="absolute right-0 top-[20px] z-20 w-[140px] rounded-[12px] py-[5px]"
-                  style={{
-                    background: CARD,
-                    boxShadow: `0 10px 24px rgba(28,24,58,0.14), inset 0 0 0 1px ${HAIRLINE}`,
-                  }}
-                >
-                  {MAP_GROUPS.map((g) => (
-                    <button
-                      key={g.key}
-                      onClick={() => {
-                        setGroupOpen(false);
-                        setGroup(g.key);
-                      }}
-                      className="flex w-full items-center justify-between px-[13px] py-[7px] text-left text-[10.5px] font-semibold"
-                      style={{ color: g.key === group ? INDIGO : NET_LABEL }}
-                    >
-                      {g.label}
-                      {g.key === group ? <Chev size={9} color={INDIGO} /> : null}
-                    </button>
-                  ))}
-                </div>
-              </>
-            ) : null}
-          </div>
-        </div>
+        <p
+          className="flex items-center gap-[3px] pl-[3px] text-[10.5px] font-semibold"
+          style={{ color: NET_LABEL }}
+        >
+          Performance map
+          <InfoDot size={12} />
+        </p>
         {tiles.length === 0 ? (
           <p
             className="flex h-[120px] items-center justify-center px-[20px] text-center text-[10.5px] font-semibold"

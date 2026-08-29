@@ -145,8 +145,9 @@ Keep it current: when a job finishes, delete its line.
     ("totals looks good", not yet merged, he was in the car). The
     Heat Map at `/preview/performance-heatmap` from
     `2. heat map.png`, reached from Home's Heat Map pill. Its map
-    splits by ONE group at a time so the tiles add up to the record;
-    the six differences from the sheet are in `docs/decisions.md`.
+    has NO filter, his ruling: the tiles are Home's own ranked
+    facts across every group. The differences from the sheet are in
+    `docs/decisions.md`.
     **Colours: Lab, Compare, Totals and the Heat Map read one dial**,
     `src/app/preview/performance-lab/ui.ts`. Home keeps its own
     copies because its folder is protected, and he ruled 29 August

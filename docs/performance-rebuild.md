@@ -165,12 +165,15 @@ a time, a screenshot after each, his reaction before the next.
   `/preview/performance-heatmap`, reached from the Heat Map pill on
   Home, back arrow returns there. Four insight cards (Strongest
   Edge, Biggest Leak, New Pattern, Cooling Off), then a squarified
-  treemap where a tile's area is its share of the result and every
-  tile opens Lab on that fact. **The map splits by one group at a
-  time**, chosen from a control on the map header and opening on
-  Sport, because only inside one group do the tiles add up to the
-  record. `jumptest.mjs` asserts that sum. Six deliberate
-  differences from the sheet are in `docs/decisions.md`.
+  treemap where a tile's area is the money that fact moved and every
+  tile opens Lab on that fact. **No filter on the map**, his ruling
+  of 29 August 2026: the tiles are `rankedFacts([], 5)`, the same
+  call Home's ranked rows make, so the map shows the best and worst
+  facts across every group at once. Those facts overlap, so the
+  tiles do not add up to the record and there is no Others tile.
+  `jumptest.mjs` asserts the map mixes groups and has red on it.
+  The deliberate differences from the sheet are in
+  `docs/decisions.md`.
 - **Colours are one dial now**: every colour Lab, Compare, Totals and
   the Heat Map draw comes from `performance-lab/ui.ts` and none of
   those folders contains a raw hex. Home still holds its own copies
