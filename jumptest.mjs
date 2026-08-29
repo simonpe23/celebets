@@ -176,18 +176,46 @@ console.log(
 );
 if (!mixed) fails++;
 
-// A heat map with no red on it is not a heat map. Ranked purely by
-// size the record's biggest leak came ninth and every tile was green.
-const reds = await page.evaluate(() => {
+// EIGHT TILES, AT LEAST THREE OF EACH COLOUR. His ruling, 29 August
+// 2026: "i would like to have at least eight performance map cards,
+// and i want at least three red and at least three green... even if
+// all of them are red or all of them are green." Ranked purely by
+// size the record's biggest leak once came ninth and every tile was
+// green, which a screenshot of a winning record hides rather well.
+const shape = await page.evaluate(() => {
   const head = [...document.querySelectorAll("p")].find((p) =>
     p.textContent.startsWith("Performance map")
   );
-  return [...head.nextElementSibling.children].filter((c) =>
-    c.innerText.includes("-$")
-  ).length;
+  const tiles = [...head.nextElementSibling.children];
+  return {
+    total: tiles.length,
+    red: tiles.filter((c) => c.innerText.includes("-$")).length,
+    green: tiles.filter((c) => c.innerText.includes("+$")).length,
+  };
 });
-console.log(`${reds >= 1 ? "PASS" : "FAIL"} the map has red on it (${reds} leaks)`);
-if (reds < 1) fails++;
+const shaped = shape.total >= 8 && shape.red >= 3 && shape.green >= 3;
+console.log(
+  `${shaped ? "PASS" : "FAIL"} the map shows 8 tiles, 3+ of each colour ` +
+    `(${shape.total} tiles, ${shape.green} green, ${shape.red} red)`
+);
+if (!shaped) fails++;
+
+// Every figure must be whole. A treemap will hand you a 41px tile, so
+// the money shrinks to fit; this proves it never gets cropped instead.
+const cropped = await page.evaluate(() => {
+  const head = [...document.querySelectorAll("p")].find((p) =>
+    p.textContent.startsWith("Performance map")
+  );
+  return [...head.nextElementSibling.children].filter((c) => {
+    const spans = [...c.querySelectorAll("span")];
+    const money = spans[spans.length - 1];
+    return money.scrollWidth > money.clientWidth + 1;
+  }).length;
+});
+console.log(
+  `${cropped === 0 ? "PASS" : "FAIL"} no tile crops its figure (${cropped} cropped)`
+);
+if (cropped !== 0) fails++;
 
 // Prove a tile carries its fact into Lab.
 // The Biggest Leak card names Basketball too, so the tile is the

@@ -77,19 +77,24 @@ import {
   type Fact,
 } from "./heat-model";
 
-// Five earners and two leaks, the shape of his sheet. There is no
-// Others tile: see heat-model.ts, rule 3. The floor below is what a
-// tile needs to carry a name and a figure at all.
-const EARNER_TILES = 5;
-const LEAK_TILES = 2;
-const MIN_NAMED_TILES = 3;
-const MIN_TILE_W = 56;
-const MIN_TILE_H = 40;
+// Eight tiles, with the top three earners and the top three leaks
+// guaranteed a seat. His ruling, 29 August 2026: "i would like to
+// have at least eight performance map cards, and i want at least
+// three red and at least three green." There is no Others tile: see
+// heat-model.ts, rule 3.
+const MAP_TILES = 8;
+const MIN_GOOD_TILES = 3;
+const MIN_BAD_TILES = 3;
 // The layout frame. Vertical size is exact in px; horizontal size is a
 // percentage of this width, so the map fills a 320px phone and a 390px
 // phone alike instead of overflowing the narrow one.
+//
+// The map is TALL because he ruled it the point of the page: "I want
+// the heat map cards to take off more space... The performance map is
+// the most important thing of this." The four insight cards above it
+// gave up more than half their height to pay for this.
 const MAP_W = 342;
-const MAP_H = 352;
+const MAP_H = 486;
 const GAP = 5;
 // A tile below this height loses its icon and shrinks its figure,
 // because the number is the one thing here that must stay readable.
@@ -154,6 +159,12 @@ function Dots({ size }: { size: number }) {
   );
 }
 
+// A COMPACT card, his ruling of 29 August 2026: "i want the strongest
+// edge, biggest leak, new pattern, and cooling off cards to be much
+// smaller. They don't need to take up almost half the page." Still two
+// rows of two, as he asked, but the disc moved beside the text instead
+// of sitting above it, and the headline and the record share one line.
+// That is 119px of card down to 55px, and the map took the difference.
 function InsightCard({
   kind,
   title,
@@ -175,39 +186,63 @@ function InsightCard({
   return (
     <Link
       href={href}
-      className="min-w-0 flex-1 rounded-[15px] px-[11px] pb-[12px] pt-[11px]"
+      className="flex min-w-0 flex-1 items-center gap-[8px] rounded-[13px] py-[9px] pl-[9px] pr-[10px]"
       style={{ background: CARD, boxShadow: "0 1px 5px rgba(24,20,50,0.07)" }}
     >
       <span
-        className="flex h-[30px] w-[30px] items-center justify-center rounded-full"
+        className="flex h-[24px] w-[24px] shrink-0 items-center justify-center rounded-full"
         style={{ background: disc }}
       >
         {kind === "edge" ? (
-          <GoldSparkle size={15} />
+          <GoldSparkle size={12} />
         ) : (
-          <Arrow kind={kind} colour={accent} />
+          <Arrow kind={kind} colour={accent} size={12} />
         )}
       </span>
-      <p className="mt-[8px] text-[9.5px] font-semibold" style={{ color: accent }}>
-        {title}
-      </p>
-      <p className="mt-[3px] truncate text-[11.5px] font-bold" style={{ color: INK }}>
-        {name}
-      </p>
-      <p className="mt-[4px] text-[10px] font-bold" style={{ color: good ? GREEN : RED }}>
-        {headline}
-      </p>
-      <p className="mt-[3px] text-[8.5px] font-semibold" style={{ color: GREY_TEXT }}>
-        {meta}
-      </p>
+      <span className="block min-w-0 flex-1">
+        <span
+          className="block truncate text-[8.5px] font-semibold"
+          style={{ color: accent }}
+        >
+          {title}
+        </span>
+        <span
+          className="mt-[1px] block truncate text-[11px] font-bold"
+          style={{ color: INK }}
+        >
+          {name}
+        </span>
+        <span className="mt-[2px] flex items-baseline gap-[4px]">
+          <span
+            className="shrink-0 text-[9px] font-bold"
+            style={{ color: good ? GREEN : RED }}
+          >
+            {headline}
+          </span>
+          <span
+            className="min-w-0 truncate text-[8.5px] font-semibold"
+            style={{ color: GREY_TEXT }}
+          >
+            {meta}
+          </span>
+        </span>
+      </span>
     </Link>
   );
 }
 
-function Arrow({ kind, colour }: { kind: "leak" | "hot" | "cool"; colour: string }) {
+function Arrow({
+  kind,
+  colour,
+  size = 15,
+}: {
+  kind: "leak" | "hot" | "cool";
+  colour: string;
+  size?: number;
+}) {
   if (kind === "leak")
     return (
-      <svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden>
+      <svg width={size} height={size} viewBox="0 0 20 20" fill="none" aria-hidden>
         <circle cx="10" cy="10" r="7" stroke={colour} strokeWidth="1.6" />
         <circle cx="10" cy="10" r="3" stroke={colour} strokeWidth="1.6" />
         <circle cx="10" cy="10" r="0.9" fill={colour} />
@@ -215,7 +250,7 @@ function Arrow({ kind, colour }: { kind: "leak" | "hot" | "cool"; colour: string
     );
   const up = kind === "hot";
   return (
-    <svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden>
+    <svg width={size} height={size} viewBox="0 0 20 20" fill="none" aria-hidden>
       <path
         d={up ? "M3.6 13.8l4.2-4.2 2.8 2.8 5.8-6" : "M3.6 6.2l4.2 4.2 2.8-2.8 5.8 6"}
         stroke={colour}
@@ -307,41 +342,20 @@ export default function HeatmapApp() {
   // they come from, with the rest of the ranked list gathered into
   // one grey Others exactly as his sheet draws it.
   const tiles = useMemo(() => {
-    const taken = rankedTiles(engine, EARNER_TILES, LEAK_TILES);
+    const taken = rankedTiles(engine, MAP_TILES, MIN_GOOD_TILES, MIN_BAD_TILES);
     if (taken.length === 0) return [];
 
-    type Cell = { key: string; label: string; profit: number; fact: Fact };
-    const cells: Cell[] = taken.map((f) => ({
+    const cells = taken.map((f) => ({
       key: f.key,
       label: f.label,
       profit: f.s.profit,
       fact: f,
     }));
-    const lay = (list: Cell[]) =>
-      squarify(
-        list.map((c) => ({ key: c.key, value: Math.abs(c.profit) })),
-        MAP_W,
-        MAP_H
-      );
-
-    // A treemap will happily hand you a 40px sliver, and a sliver
-    // cannot carry a name or a figure. The smallest EARNER drops
-    // until every tile left can be read; the leaks stay, because a
-    // heat map with no red on it is not a heat map.
-    let laid = lay(cells);
-    while (
-      cells.length > MIN_NAMED_TILES &&
-      laid.some((t) => t.w - GAP < MIN_TILE_W || t.h - GAP < MIN_TILE_H)
-    ) {
-      const droppable = cells.filter((c) => c.profit > 0);
-      if (droppable.length === 0) break;
-      const smallest = droppable.reduce((a, b) =>
-        Math.abs(a.profit) <= Math.abs(b.profit) ? a : b
-      );
-      cells.splice(cells.indexOf(smallest), 1);
-      laid = lay(cells);
-    }
-
+    const laid = squarify(
+      cells.map((c) => ({ key: c.key, value: Math.abs(c.profit) })),
+      MAP_W,
+      MAP_H
+    );
     const maxGood = Math.max(...cells.map((c) => (c.profit > 0 ? c.profit : 0)), 1);
     const maxBad = Math.max(...cells.map((c) => (c.profit < 0 ? -c.profit : 0)), 1);
     return laid.map((t) => {
@@ -383,7 +397,7 @@ export default function HeatmapApp() {
 
       {/* Four findings, each a door into Lab. A card is left out when
           the record cannot support it, rather than inventing one. */}
-      <div className="relative mt-[13px] flex gap-[9px] px-[15px]">
+      <div className="relative mt-[11px] flex gap-[8px] px-[15px]">
         {edge ? (
           <InsightCard
             kind="edge"
@@ -406,7 +420,7 @@ export default function HeatmapApp() {
         ) : null}
       </div>
       {hot || cool ? (
-        <div className="relative mt-[9px] flex gap-[9px] px-[15px]">
+        <div className="relative mt-[7px] flex gap-[8px] px-[15px]">
           {hot ? (
             <InsightCard
               kind="hot"
@@ -433,7 +447,7 @@ export default function HeatmapApp() {
       {/* The map. Area is the share of the result, colour is which way
           it went, and every tile opens Lab on that fact. */}
       <div
-        className="relative mx-[15px] mt-[12px] rounded-[16px] px-[9px] pb-[11px] pt-[11px]"
+        className="relative mx-[15px] mt-[10px] rounded-[16px] px-[9px] pb-[11px] pt-[11px]"
         style={{ background: CARD, boxShadow: "0 1px 5px rgba(24,20,50,0.07)" }}
       >
         <p

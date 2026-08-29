@@ -199,8 +199,9 @@ export function dropTwins(facts: Fact[]): Fact[] {
 // check does not belong on this page.
 export function rankedTiles(
   engine: Engine,
-  maxEarners: number,
-  maxLeaks: number
+  total: number,
+  minGood: number,
+  minBad: number
 ): Fact[] {
   const ranked = engine
     .rankedFacts([], RANK_MIN_PICKS)
@@ -219,17 +220,28 @@ export function rankedTiles(
   // Premier League and Player Props, which are the facts Home's rows
   // and his sheet both name.
   const facts = dropTwins(ranked);
-  // Earners and leaks get their own slots, which is how his sheet is
-  // drawn: five green tiles, two red, and Others. Ranked purely by
-  // size the record's biggest leak came ninth and the map had no red
-  // on it at all. That is the failure already written down for
-  // Totals: "cutting the list at six hid Basketball, the record's
-  // single biggest leak."
-  const taken = [
-    ...facts.filter((f) => f.s.profit > 0).slice(0, maxEarners),
-    ...facts.filter((f) => f.s.profit < 0).slice(0, maxLeaks),
-  ];
-  return taken.sort((a, b) => Math.abs(b.s.profit) - Math.abs(a.s.profit));
+  // BOTH COLOURS ARE GUARANTEED. His ruling, 29 August 2026: "i want
+  // at least three red and at least three green. So even if all of
+  // them are red or all of them are green, at the top eight, I need
+  // to have top three from each color." So the top three earners and
+  // the top three leaks take their seats first, and the remaining
+  // seats go to whatever moved the most money next, either colour.
+  // Ranked purely by size the record's biggest leak once came ninth
+  // and the map had no red on it at all, which is the failure already
+  // written down for Totals: "cutting the list at six hid Basketball,
+  // the record's single biggest leak."
+  //
+  // A record with fewer than three losing facts shows every one it
+  // has. Nothing is invented to fill a seat.
+  const bySize = (a: Fact, b: Fact) =>
+    Math.abs(b.s.profit) - Math.abs(a.s.profit);
+  const good = facts.filter((f) => f.s.profit > 0).sort(bySize);
+  const bad = facts.filter((f) => f.s.profit < 0).sort(bySize);
+
+  const taken = [...good.slice(0, minGood), ...bad.slice(0, minBad)];
+  const rest = [...good.slice(minGood), ...bad.slice(minBad)].sort(bySize);
+  while (taken.length < total && rest.length > 0) taken.push(rest.shift()!);
+  return taken.sort(bySize);
 }
 
 // A fact's most recent picks, through the engine's own reading of a

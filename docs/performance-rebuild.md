@@ -163,15 +163,19 @@ a time, a screenshot after each, his reaction before the next.
   `src/app/preview/performance-heatmap/`, from his sheet
   `2. heat map.png`, on his order of 29 August 2026. Its own page at
   `/preview/performance-heatmap`, reached from the Heat Map pill on
-  Home, back arrow returns there. Four insight cards (Strongest
-  Edge, Biggest Leak, New Pattern, Cooling Off), then a squarified
+  Home, back arrow returns there. Four compact insight cards
+  (Strongest Edge, Biggest Leak, New Pattern, Cooling Off) in two
+  rows of two, 64px each, then a tall squarified
   treemap where a tile's area is the money that fact moved and every
   tile opens Lab on that fact. **No filter on the map**, his ruling
   of 29 August 2026: the tiles are `rankedFacts([], 5)`, the same
   call Home's ranked rows make, so the map shows the best and worst
   facts across every group at once. Those facts overlap, so the
   tiles do not add up to the record and there is no Others tile.
-  `jumptest.mjs` asserts the map mixes groups and has red on it.
+  **Eight tiles, with the top three earners and the top three leaks
+  guaranteed a seat**, his ruling. `jumptest.mjs` asserts the map
+  mixes groups, shows eight tiles with three of each colour, and
+  crops no figure.
   The deliberate differences from the sheet are in
   `docs/decisions.md`.
 - **Colours are one dial now**: every colour Lab, Compare, Totals and

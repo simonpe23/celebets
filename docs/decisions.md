@@ -925,23 +925,45 @@ the same money nineteen times and produced a +$3,225 tile, bigger than
 every real one on a $2,637 record. A number nobody can tap into and
 nobody can check does not belong here.
 
-**Five earners and two leaks, the shape of his sheet.** Earners and
-leaks get their own slots. Ranked purely by size the record's biggest
-leak came ninth and the map had no red on it at all, which is the
-failure already on the record for Totals: "cutting the list at six hid
-Basketball, the record's single biggest leak." `jumptest.mjs` now
-asserts both that the map mixes at least three groups and that it has
-red on it.
+**EIGHT TILES, AT LEAST THREE OF EACH COLOUR. Ruled 29 August 2026**,
+his words: "i would like to have at least eight performance map cards,
+and i want at least three red and at least three green. So even if all
+of them are red or all of them are green, at the top eight, I need to
+have top three from each color." So the top three earners and the top
+three leaks take their seats first, and the last two seats go to
+whatever moved the most money next, either colour. Ranked purely by
+size the record's biggest leak came ninth and the map had no red on it
+at all, which is the failure already on the record for Totals:
+"cutting the list at six hid Basketball, the record's single biggest
+leak."
+
+**Two assumptions stated rather than asked, both overrulable.** "At
+least eight" is built as eight, so the tiles stay big enough to read on
+a phone. A record with fewer than three losing facts shows every one it
+has rather than inventing a ninth; same for winners.
+
+**THE CARDS SHRANK AND THE MAP TOOK THE SPACE. Ruled 29 August 2026**,
+his words: "I want the heat map cards to take off more space, and I
+want the strongest edge, biggest leak, new pattern, and cooling off
+cards to be much smaller. They don't need to take up almost half the
+page. The performance map is the most important thing of this. We can
+still have two rows." Still two rows of two, as he asked. Each card's
+disc moved beside its text instead of above it, and the headline and
+the record now share one line: 119px of card down to 64px. The map
+went from 352px to 486px.
+
+`jumptest.mjs` now asserts the map mixes at least three groups, shows
+eight tiles with three of each colour, and crops no figure.
 
 **Seven places the Heat Map knowingly differs from the sheet. CLAUDE's
 calls, not his rulings, all reversible:**
 
 1. **There is no Others tile**, for the reason above.
-2. **A tile too small to carry its own name and figure is dropped**,
-   smallest earner first, never a leak. A treemap will hand you a
-   36px sliver reading "Play... -$4...". On his fixture that leaves
-   six tiles: Moneyline, Parlays, Medium odds, Football, Basketball
-   and Player Props, across four different groups.
+2. **The figure on a tile shrinks to fit rather than being cropped.**
+   A treemap hands you a 41px tile at the small end, and the money is
+   the one thing on this page that must always be whole. The name
+   truncates; the number never does. `jumptest.mjs` fails the build
+   if one is ever cropped.
 3. **The streak cards say "in last 10 picks" where the sheet says
    "bets".** The count is picks (legs), not bet slips, and a parlay
    is several picks. Saying bets would be a small lie on every
