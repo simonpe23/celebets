@@ -44,6 +44,8 @@ const GATED = ["/app", "/stats", "/settings", "/recommendations", "/insights", "
 const PREVIEW = [
   "/preview",
   "/preview/performance",
+  "/preview/performance-home",
+  "/preview/performance-lab",
   "/preview/settings",
   "/preview/research",
   "/preview/insights",

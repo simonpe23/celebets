@@ -217,3 +217,90 @@ when it was fine.
 
 **What replaced it:** `data-chart-panel`, a test hook that is not a
 style. Never let a test find its target by copy.
+
+---
+
+## Pouring the new sheets into the old build's density
+
+**What happened:** 28 August 2026 the owner shared four area sheets for
+the new Home and asked for an identical copy. The areas were rebuilt
+inside the existing preview's scale: its 12px margins, its 25px
+switcher, its 10px metas, its cramped rhythm. The new parts were all
+there, wearing the old page's density.
+
+**Why it failed:** his words: "the ugliest preview I've seen in my
+entire life... It looks just like the old one, but it's an uglier
+version... nothing like the screenshots that I have provided."
+
+**The lesson, two halves:**
+
+1. **A new sheet brings its own scale and its own air.** Measure the
+   new sheet. Never inherit the previous build's density, even on the
+   same page in the same week. The sheets were generous and airy; the
+   build squeezed them into the old compactness, which is the same
+   disease as the reskin failure above, one level up.
+2. **The parts no sheet covers cannot be silently carried over.** The
+   title and the switcher came from the old design because no new
+   sheet showed them, and they made the whole page read as "the old
+   one". When an area has no sheet, ask what it should be. Do not fill
+   the gap with the past.
+
+---
+
+## Measuring a mockup by eye, and trusting merged ink boxes
+
+**What happened:** 28 August 2026, round 2 of the Home rebuild was
+built from sizes read off the mockup by looking at crops and from
+bounding boxes of whole regions. The owner: "still looks hideous and
+not close to a pixel by pixel copy... font sizes are off. colors are
+off." Round 3 found why: nearly every size read that way was wrong,
+some by 40 percent. A region's ink box merges neighbours (a value
+merges with its label, a chart line with the number above it, a
+sparkline tail with the money next to it), and the eye misjudges scale
+across two images even side by side.
+
+**What replaced it, the loop that worked:**
+
+1. **Per glyph bands, not region boxes.** Measure one text's row
+   profile in a window that contains only it, at high zoom, with a
+   grid. A merged box lies without looking wrong.
+2. **The same probes on both sides.** A script measures ink boxes on
+   the mockup, the same script measures a screenshot of the render at
+   the mockup's scale, and the diff is a table of pixels. Adjust,
+   re-shoot, repeat until every row is within about 2px. Threshold and
+   antialias bias cancel because both sides are measured identically.
+3. **Choose the substitute font by measurement.** Candidate faces were
+   scored by rendering the mockup's own strings and comparing ink
+   width at matched ink height. Figtree won; the previous choice had
+   been picked by reputation and was off by 8 to 15 percent on width.
+4. **Trace curves from pixels.** The hero chart and the sparklines are
+   per column scans of the mockup, embedded as point arrays, not
+   redrawn approximations.
+
+**The lesson:** "Sample the mockup, do not eyeball it" extends to
+geometry. Every number in a pixel copy must come from a measurement
+that isolates the thing it claims to measure, and the render must be
+measured back with the same instrument.
+
+---
+
+## Showing him a stretched tall screenshot without a label
+
+**What happened:** 29 August 2026, after the round 4 merge, he was
+sent a 950px-tall screenshot demonstrating how the page distributes
+leftover height. He read the distributed spacing as a defect before
+checking his phone: "why are there big gaps above and under the
+insight card? i hope it does not looks like that when i check... i
+wish i did not merge it because this looks terrible." On the phone the
+same build was fine, and he closed the round with "this version will
+do, good job."
+
+**Why it failed:** a taller-than-phone viewport spreads the page's
+flexible gaps, so the screenshot exaggerated exactly the thing he is
+most sensitive to. He judges what he is shown, and he was shown the
+most misleading view first, unlabeled.
+
+**The lesson:** the phone-size screenshot leads, always. Any other
+viewport comes after it and carries a plain label saying what it is
+and why it looks different. Never make him deduce that a screenshot is
+not what his phone will show.

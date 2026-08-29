@@ -396,11 +396,8 @@ against 1st Half. **The only limit is the domain**, which is the
 structural one that cannot move: nothing from Sports is ever compared
 with anything from Economics.
 
-**OPEN, and it needs him. This ruling creates a question nobody has
-answered:** if any two chips can now be compared, how does the user say
-"combine these" rather than "compare these"? Under the old rule the
-groups decided it for them. See `docs/open-questions.md`. Do not guess
-at a mechanism in a mockup brief without flagging it as a proposal.
+**RESOLVED 28 August 2026: the question of how the user says "combine"
+rather than "compare" is answered.** See "COMBINE VS COMPARE" below.
 
 **Dimming still teaches the domain rule.** The groups are separated by
 their headers already, and dimming the chips you cannot pair with
@@ -412,8 +409,79 @@ domains never mix.
 was removed: a number nobody can explain does not belong in a product.
 The cycling control that hid its own options was rejected as annoying.
 
-**Compare lives inside Lab.** Ruled 26 August 2026. How it is presented
-is still open; the mockup designer is asked to propose.
+**Compare lives inside Lab.** Ruled 26 August 2026.
+
+**COMBINE VS COMPARE: RULED 28 August 2026.** He confirmed that his own
+written summary is the ruling. Selecting chips combines. His words, from
+the summary:
+
+- "select Football and Baseball in Lab, see the combined total, and a
+  Compare button appears that flips the same two selections from 'added
+  together' to 'side by side'."
+- "Compare appears whenever exactly two things are selected, whatever
+  they are, and disappears at three."
+
+So two is the maximum: no three-way comparison. This closes the open
+question in `docs/open-questions.md`. The exact look of the comparison
+view is still the designer's to propose.
+
+**WHAT CHANGED IS A BUTTON THAT SWAPS THE LIST. Ruled 28 August 2026**,
+choosing his summary's version over the brief's "quiet strip". His
+words, from the summary:
+
+"What changed page: survives, an exciting button, living in Home. Once
+clicked, the page stays the same, but the top list changes, from your
+all time top list to a new top list of what has changed. Can still
+filter on 1 day, 1 week, 1 month etc."
+
+This narrows the brief's old rule that Home never grows filters: the
+What Changed view keeps its time filter. Questions still go to Lab.
+
+**THE SPARKLE LIVES IN PERFORMANCE AND ON TRACK ONLY. Ruled 28 August
+2026**, confirming his Q&A answer in the summary: "Everywhere in
+Performance + from Track." Not on Research, not on Profile. The older
+"reachable from everywhere in the app" line is corrected by this.
+
+**A Track door into All bets is parked.** 28 August 2026, "decide
+later". Recorded as idea 32 in `IDEAS.md`; ask him when Track is next
+touched.
+
+**THE BUILD SHIPS TAB BY TAB. Ruled 28 August 2026**, his words: "We
+start with Home. We go live with home. We build the infrastructure to
+add more tabs and pages. Then when Home is approved, we move on to Labs
+and start building that one."
+
+**Day one of Home live: Totals holds today's page, Lab says Soon.**
+Ruled 28 August 2026, he picked this from a question. The Totals tab
+shows today's live `/stats` content unredesigned until its own mockup
+is built, so nothing a user can do today disappears. Lab wears a Soon
+badge, the app's existing pattern for a door that is not open yet.
+
+**Three tabs even where a mockup shows two.** His words, 28 August
+2026: "inside performance we have 3 tabs (some mockups might show 2
+tabs, but we have expanded to 3): Home, Lab, Totals." So a mockup
+drawn with a two tab switcher is still built with three.
+
+**THE NEW HOME LAYOUT IS THE SIX SHEETS, WITH THE APP'S PURPLE.**
+Ruled 28 August 2026. The spec is six files in the repo root:
+`hero chart.png`, `kpi row + insights row_2.png`, `mini buttons.png`,
+`top list.png`, `Performance Menu .png`, `Performance Menu _2.png`.
+His instruction: "Look at these images, copy them, make the new
+Performance Home Page look identical. And I mean identical. Pixel by
+pixel." The sheets' indigo is the one exception: asked directly, he
+chose "Swap to the app's purple", and for the menu: "copy the design
+of them, but keep apps purple."
+
+**The top of Home is the menu, nothing above it.** From the menu
+sheets: no page title, the Home / Lab / Totals switcher sits under the
+status bar, no icons in the switcher.
+
+**THE PREVIEWS ARE PUBLIC, NO LOGIN.** Ruled 28 August 2026: "open the
+preview without login, nothing needs to be locked. im gonna move fast
+so we're only talking about a day or two before we go live anyway."
+This lifts the production login gate that had protected `/preview/*`
+since the previews were first deployed. They show made up demo numbers
+only; real user data must never appear on one.
 
 **The heatmap lives on HOME, not in Lab.** Confirmed 26 August 2026: "I
 lives on home page. might add to lab later but that page is already
@@ -439,8 +507,10 @@ Totals, on every screen, active tab marked.
 insights page is bleak today." It is currently a heading over a flat
 list of sentence rows.
 
-**Insights are reachable from everywhere in the app**, triggered by the
-sparkle.
+**Insights are reachable from everywhere in Performance and from
+Track**, triggered by the sparkle. Narrowed 28 August 2026 from
+"everywhere in the app": his answer is "Everywhere in Performance +
+from Track", so Research and Profile carry no sparkle.
 
 **The tab switcher may be a pill; everything below it is squared.**
 Ruled 26 August 2026: "pills goes at the top when switching from home to
@@ -459,6 +529,211 @@ percents, the taxonomy) are law. Phone width only.
 
 **Cut:** the prototype insight card modal, and All Facts as a standalone
 page.
+
+**THE MASTER HOME MOCKUP IS `0. Chat Aug 28.png`.** Ruled 28 August
+2026, evening. His designer combined the two full sheets
+(`1. mockup_Aug 28.png` and `2. big chart Aug 28.png`) into one file
+and that file is now the single spec for Home. Two things the designer
+left out stay in by his order: "he forgot the head map button next to
+What changed and the nice color fade behind the chart." So the Heat Map
+pill sits beside What changed?, and the colour wash stays behind the
+chart.
+
+**THE MOCKUP'S INDIGO WINS. Ruled 28 August 2026, evening**, replacing
+"keep apps purple" from the same morning. His words: "reg color: pick
+the purple color from the mockup." Sampled from the sheet: `#3614F0`
+for text, lines and icons, `#3708E4` for fills. The app's own purple
+stays untouched everywhere outside this preview.
+
+**A SIMILAR FONT IS FINE, THE SIZES ARE NOT NEGOTIABLE.** His words,
+28 August 2026: "reg font: pick a similar one, does not have to be the
+same. BUT SAME FONT SIZE IS IMPORTANT... i want the font size and
+proportions to be exact." The build uses Figtree, the closest free
+match by measured letter proportions, at sizes measured glyph by glyph
+from the mockup's own pixels. This does not touch the app's fonts,
+which keep their own rules.
+
+**Home must fit one phone screen.** His words, 28 August 2026: "all
+five rows and build your performance view must fit the screen. chart is
+too big." The whole page, menu through the Lab card, fits a 390x844
+viewport with the tab bar below it.
+
+**The bottom menu floats like the rest of the app.** From his
+screenshots, 28 August 2026: a bar glued to the viewport bottom
+"etiher covers the page or leaves a gap if i zoom out. on the rest of
+the pages, the menu is floating on top of it." The preview uses the
+app's own sticky floating card pattern from `TabBar.tsx`, taller and
+with more prominent icons than the mockup, which is his standing round
+2 instruction 6.
+
+**THE COPY PHASE IS OVER. Ruled 29 August 2026**, after he approved
+the round 3 build ("much better!"). His words: "Let's focus on these
+few edits now regardless of what the mockups says. we're now passed
+copying it. WE're now improving what we have." And on mockup 0: "this
+mockup is not the truth, it just helped you go from helpless to
+solid." So `0. Chat Aug 28.png` is a baseline, not a spec, and his
+edit lists are what rule from here.
+
+**His 29 August improvement edits, all applied the same day:**
+
+- **The insight card keeps its spot but stands alone.** Asked
+  directly, he chose "Same spot, but standalone": the order stays
+  chart, KPI numbers, card, but the card gets clear space and a clean
+  background, outside the wash.
+- **The page must fit without Explore Lab hiding behind the bottom
+  menu**, and the bar must not leave "an ugly gap when having just a
+  slightly bigger screen... you have to solve this with code." Solved
+  with flexible spacers: the page's leftover height distributes across
+  the section gaps, so a taller screen breathes evenly instead of
+  ending in one void, and a shorter one scrolls with the bar in flow.
+- **The hero background is the big chart sheet's fade**, his words:
+  "Go back to the faded background on the chart that i showed you...
+  look at the chart on image 2. big chart Aug 28.png... make the hero
+  section look more alive." Re-extracted from that sheet, soft, fading
+  in at the top and out above the insight card.
+- **The net profit number is bold, not extrabold** ("Make Net profit
+  font less bold").
+- **The top menu is taller** (36px track, 28px pill).
+- **The KPI values sit closer together** (edit 7).
+- **The chart is shorter** (98px of line height, edit 8) **and the
+  saved pixels go to the list**: it moved up and its rows grew (edit
+  9, "make the list more prominent, move it up").
+
+**ROUND 4 IS ACCEPTED. 29 August 2026, his words: "this version will
+do, good job. i knew you could do it."** The exact sequence matters
+and is recorded so nobody rereads it as more or less than it was:
+
+1. He merged, then reacted to the screenshots in chat before checking
+   his phone: "why are there big gaps above and under the insight
+   card? i hope it does not looks like that when i check. it needs to
+   be tighter, yet stand alone." And: "why big gap under Build your
+   performance view?" And: "do i have to say for the fifth time that
+   you have to solve the bottom menu problem because i do not want a
+   gap like that. i hope it does not look like that when i check, or
+   else i wish i did not merge it because this looks terrible. last
+   version much better."
+2. Then he checked the live site and replaced that verdict himself:
+   "this version will do, good job."
+
+The gaps that alarmed him were in a stretched 950px-tall screenshot,
+where the page's flexible spacing spreads out; on the phone it reads
+tight. **"Will do" is the recorded confidence: accepted, not called
+perfect.** His "it needs to be tighter, yet stand alone" is kept in
+`docs/open-questions.md` in case he reopens it.
+
+**THE SIX LAB GROUPS ARE RENAMED AND REORDERED. Ruled 29 August
+2026**, written by him for the Lab chat's prompt: "Correct order and
+words: Sport, League (swap name from Where), Category (Swap What you
+Bet), When, Bet Type (Swap from How), Risk (Odds Range)." The rules
+attached to the old names carry over. Three consequences he settled
+the same day:
+
+- **League replaces the old inner league row.** Asked directly whether
+  the 26 August "league row sits under SPORT" ruling survives, he
+  chose: "League group replaces it." Leagues appear once on the page.
+- **Lab's KPIs under the chart are Bets, Record, Hit Rate, ROI**, his
+  words: "Remove wagered and returned." Home's own KPI row is not
+  touched by this.
+- **No horizontal row of group names.** His words: "Remove the pill
+  shaped row with the headlines horizontally Sports, What you bet
+  etc.. it does not need to be there, its already shown below as a
+  category headline."
+
+He also extended the chip ruling against his own mockup's money
+chips: "Chips read as a record (12-4), never an amount." And he
+re-affirmed for the Lab chat that the heat map stays on Home "only
+for now" and that Compare appears at exactly two selections. On the
+domain switch his confidence is a lean, not a ruling: "Envisioning a
+drop down menu when clicking sport, do see other domains, such as
+Economy or Culture."
+
+**LAB FOLLOWS HOME'S DESIGN AND STYLE. Ruled 29 August 2026**, his
+words: "the lab page has to follow Home's design and style." There is
+no new Lab mockup and none is coming: "i do not have a mockup for
+lab, because the old one i have only show the structure but has the
+old design." So the old Lab mockup is a STRUCTURE reference only; its
+skin is dead. The accepted Home at
+`src/app/preview/performance-home/` is the living design reference
+for Lab, and `docs/design-system.md` still describes the old app, not
+this. The build notes for the Lab chat are in
+`docs/performance-rebuild.md`.
+
+**LAB ROUND 1 IS REJECTED. 29 August 2026**, his words: "this is the
+ugliest page ive never seen... it has no cohesiveness or premium app
+feel at all... this looks like its from 2006." The bar, his words:
+"our values are premium, exclusive, intuitive, modern."
+
+**THE CHIP AREA FOLLOWS THE MOCKUP'S LOOK, not a Home-derived icon
+set.** His words: "i particularly hate your icons. they all look the
+same... i prefer how it looks in the mockup instead." So round 2
+wears the mockup's anatomy: colour identity icons for sports and
+leagues (the platform's emoji, which his designer's mockup itself
+uses), quiet outline glyphs for Category, When, Bet Type and Risk,
+compact bare chips, small uppercase group headers with an All link.
+Chips still read records, never amounts: that ruling stands and was
+not reopened.
+
+**COMPARE IS PARKED. Ruled 29 August 2026**, his words: "compare page
+is ugly. we're not working on that one yet. it even says combine,
+which is wrong. verdict is = utter trash. do not even work on it
+yet." The built side by side view and its verdict sentence are
+deleted. The ruled trigger survives as a quiet door wearing a Soon
+badge at exactly two selections, and the word Combine appears
+nowhere. Nobody builds the comparison view until he reopens it.
+
+**THE HOME FOLDER OPENED FOR ONE EDIT: THE MENU TAPS. Ruled 29
+August 2026**, after he merged Lab's preview: "can you make it so i
+can click lab and home in the top menu. now that we have 2 tabs in
+preview." So the accepted Home's top menu now carries a real link on
+Lab, and Lab's menu already linked back to Home. That is the whole
+unlock: the folder's protection stands, and Home's ranked rows, the
+Explore Lab button and the Heat Map pill stay static until he asks.
+Totals stays inert in both menus, no page exists yet.
+
+**LAB ROUND 2 WAS ALSO REJECTED, with a five point list. 29 August
+2026**, his words: "it's better but still absolutely hideous... feel
+the cohesiveness and balance. your version has nothing of that." His
+five orders, all applied in round 3:
+
+1. **Tray pills are transparent, never filled purple:** "Your current
+   view menu - look at the mockup. not purple, transparent pills.
+   more clean." Now white pills, thin indigo outline, small icon,
+   indigo text.
+2. **The green ROI and Record line returns under Net profit:** "Net
+   profit area - hideous. missing green ROI and Record under." The
+   earlier worry about repeating Record and ROI in the KPI row is
+   overruled: the mockup shows both, so both are shown.
+3. **The door cards wear the mockup's card look:** "See these bets +
+   compare buttons = ugly. look at mockup." White, soft shadow,
+   lavender icon tile, Compare subtitle now the mockup's own words,
+   "Compare two views".
+4. **Chips lose the drawn border:** "Cards under each category has a
+   cheap distasteful and ugly look." Now borderless white cards on a
+   whisper shadow, radius 12, like the mockup's; only the selected
+   state keeps its lavender fill and indigo edge.
+5. **The hero backdrop is beige, fading into the KPI row:** "the fade
+   is hideous, i hate the purple fade in the background. it's
+   supposed to be beige-ish and fade over into the KPI row," with
+   `0. Chat Aug 28.png` named as the reference. The wash now sits
+   exactly where Home puts it and is desaturated so it reads beige;
+   the chart order is shaped like Home's arc (early dip, then a
+   climb) so the lavender mass is the chart's own fill, not a blotch.
+
+He also re-pointed the build at both files: "please look at the
+mockup and the 0. Chat Aug 28.png - Find that look and copy it."
+
+**LAB IS BUILT ONE PIECE AT A TIME. Ruled 29 August 2026**, his words
+to the Lab chat: "Work in small steps. Build one piece, show me a
+screenshot, wait for my reaction before the next piece. Do not build
+the whole page and reveal it." Nothing goes live until he says so:
+Lab is a preview page, built the way Home was.
+
+**The Lab chat builds both sides of the Home to Lab seam.** His words,
+29 August 2026: "you build both sides: a Lab that can open empty or
+with a selection handed to it, and the taps on Home. The top menu
+handles plain switching between Home, Lab and Totals." How the tap
+wiring squares with the protected Home folder is not settled; he has
+not been asked yet.
 
 ## Process
 

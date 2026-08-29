@@ -103,3 +103,29 @@ running dev server. Standard recovery:
 ```
 pkill -f "next-server"; rm -rf .next; npm run dev
 ```
+
+## The capture itself must be verified, twice
+
+Bought 29 August 2026, when a screenshot of a 404 page and one of the
+Next dev overlay reached the owner. `npm run check` runs `next build`,
+which clobbers `.next` under a running dev server; the captures were
+taken against the half-broken server and sent unviewed.
+
+- **The capture script must refuse an error page.** Before saving:
+  HTTP status is 200 AND the page's visible text contains a marker
+  only the real page renders (the tab bar's "Track" works for every
+  preview). Retry while a dev server warms; exit loudly otherwise.
+  Check visible text with innerText, never textContent: Next embeds
+  the literal string "This page could not be found." in a script tag
+  on every healthy page.
+- **LOOK at every image before he does.** Open each file that will be
+  sent, after the final `npm run check`, not before. A screenshot
+  taken earlier in the session does not prove the page still renders.
+
+## Screenshots he will judge
+
+The phone-size screenshot goes first, always. A taller or wider
+viewport spreads the layout and reads as broken to him: on 29 August
+2026 an unlabeled 950px-tall shot nearly made him regret a merge that
+his phone then proved fine. Any non-phone view comes after the phone
+one and says plainly what it is and why it looks different.

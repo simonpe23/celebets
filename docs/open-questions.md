@@ -49,32 +49,79 @@ old words, and every provider mapper points at them.
 
 ## Not blocking, still open
 
+**Lab round 2: CLAUDE's judgment calls, 29 August 2026.** Round 1 was
+rejected the same day ("the ugliest page ive never seen", full quote
+in `docs/decisions.md`); the icon and header calls below were revised
+to the mockup's look under his correction. The rest were gaps,
+decided to keep building and clearly his to overturn. None is a
+ruling of his.
+
+0. **Sport and league chips wear the platform's emoji** as their
+   colour identity icons, because the mockup's own icons are the
+   emoji set. On his iPhone they render as Apple's glossy set. If he
+   wants custom-drawn colour icons instead, that is real design work
+   to schedule.
+
+1. **Risk bands wear the code's boundaries**, Low to 1.80, Medium to
+   3.00, High above, from `ODDS_BUCKETS` in `src/lib/stats.ts`. His
+   mockup drew 1.00-1.70 / 1.71-2.50 / 2.51+. Money rules live in
+   stats.ts, so the code won.
+2. **The answer panel says All time**, a quiet label, not a time
+   control. His mockup copied Home's This month selector. Chips read
+   all time records, so the panel says what the numbers are.
+3. **A chip is priced as its own fact inside the rest of the
+   selection.** With Football and Moneyline on, Basketball reads
+   Basketball-Moneyline (3-3), not the widened union a tap would
+   create. Siblings stay comparable; tapping still combines.
+4. **Tapping a market swaps out its parent category** instead of
+   counting as a second selection, so a drill stays one thing and
+   Compare does not fire on parent vs child.
+5. **The door count matches the KPI**: See these N bets uses picks,
+   the same number the Bets KPI shows. Whether the future All bets
+   page counts bet slips or picks is undecided.
+6. **Risk chips wear a gauge icon** with the needle low, centre or
+   high, slate outline like the mockup's. Home's list gives Low odds
+   a trend arrow tile. One fact, two icons across pages, flagged.
+7. **No top right logo** on Lab. His mockup shows one; the accepted
+   Home ruled "the top of Home is the menu, nothing above it" and
+   Lab wears Home's design.
+8. **The chip type sits at Home's scale, not the sheet's.** The quick
+   Lab sheet measures smaller than the accepted Home even in its
+   hero number, so its absolute sizes were treated as unreliable and
+   its proportions kept instead.
+9. **The empty state shows the whole record** across all domains,
+   because net profit has one definition. Domain modes scope which
+   chips are OFFERED; Bet Type and Risk chips price all domain facts,
+   since singles and odds bands mean the same thing everywhere.
+
+**Whether the Home insight card should sit tighter.** 29 August 2026,
+reacting to a tall-screen screenshot before checking his phone: "it
+needs to be tighter, yet stand alone." After checking the live site he
+closed the round with "this version will do, good job." So the shipped
+spacing stands and nothing is to be built, but the tighter wish is his
+own words and he may reopen it. Full sequence in `docs/decisions.md`.
+
 **New fonts.** He reopened the fonts on 26 August 2026: "i do not like
 our font." The mockup designer will propose; nothing is chosen and the
-build keeps Geist and Inter Tight until he approves.
+app keeps Geist and Inter Tight until he approves. The Home preview
+wears Figtree since 28 August 2026 under his "pick a similar one"
+ruling; that is a preview choice, not an app-wide font decision.
 
-**HOW THE USER SAYS "COMBINE" RATHER THAN "COMPARE".** This one is new
-and it matters, because his 26 August ruling opened it.
+**RESOLVED 28 August 2026: how the user says "combine" rather than
+"compare".** He was asked and confirmed his written summary as the
+ruling: selecting chips combines, and "a Compare button appears that
+flips the same two selections from 'added together' to 'side by side'".
+"Compare appears whenever exactly two things are selected, whatever
+they are, and disappears at three." Two is the maximum. See
+`docs/decisions.md`. The exact look of the comparison view is still the
+designer's to propose.
 
-Compare now works across groups: Football against NBA, Moneyline against
-1st Half, anything against anything inside one domain. Under the old
-rule the groups decided for the user (same group compared, different
-groups combined), and that is gone.
-
-So Football plus Moneyline is now ambiguous. It could mean "my Football
-Moneyline record" (combine, one answer) or "Football against Moneyline"
-(compare, two answers side by side). **Both are things a user would
-want, and nothing currently distinguishes them.**
-
-The obvious guess is that selecting chips combines, and a Compare
-control switches the same selection into a comparison. **That is an
-inference, not his ruling.** He has not been asked.
-
-**Where Compare lives is settled**: inside Lab. How it presents itself
-is not. He floated a Compare button, then doubted it ("this is not clear
-for me yet"), and his own mockup shows a whole family compared at once.
-The mockup designer is asked to propose; whatever comes back is a
-proposal, not a decision.
+**What the purple chart line does below zero.** His ruling on the chart
+was recorded as "Purple line for profit and red for losses." Today's
+live chart flips from green to red where the line crosses zero. Whether
+the purple line turns red below zero, or red stays only on money
+figures, has not been asked. Needed at the latest when Home's chart is
+built.
 
 **The topic picker's door label.** He asked for a new name and did not
 give one. "Something else" is a placeholder. "Category" is the obvious

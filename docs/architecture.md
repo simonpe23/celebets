@@ -32,7 +32,7 @@ Private (login gate in `src/middleware.ts`):
 | `/settings` | Settings, reached from the gear on Track. |
 | `/transactions` | Balance history. |
 | `/connect` | Kalshi connection. |
-| `/preview/**` | Design previews. Deployed, but behind the login gate. |
+| `/preview/**` | Design previews. Deployed and public, demo data only. |
 
 **Two names never match their address.** Performance lives at `/stats`
 and Research at `/recommendations`, because renaming would break old
@@ -60,10 +60,10 @@ these exceptions:
 - `/api/demo-login` is exempt: its whole job is being called logged out.
 - `/demo/` pages are exempt for the same reason: the link's whole
   audience is logged out.
-- `/preview/*` is treated as public **only in development**. In
-  production the previews are deployed but gated, so a stranger who
-  guesses the URL is bounced to login while the owner and testers can
-  open them on a real phone.
+- `/preview/*` is public everywhere, like the footer pages. Ruled by
+  the owner 28 August 2026: "open the preview without login, nothing
+  needs to be locked." Previews carry made up demo numbers, never user
+  data.
 
 `/api/connect/*` is deliberately NOT exempt: those routes act on the
 logged-in user's own connection.

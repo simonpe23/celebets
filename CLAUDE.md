@@ -8,6 +8,10 @@ The owner has no coding experience. These rules are permanent.
   skim only the bold bullet openings and miss nothing that needs him?
 - **Anything that needs his eyes goes FIRST**, as its own bullet, never
   buried mid-paragraph and never after a comma.
+- **Any click he must make comes with a full pasted link.** His words,
+  28 August 2026: "u have to paste a full link if you want me to click
+  on anything." Never say "merge the branch" or name a button without
+  the URL that leads to it.
 - **Be brief.** A handful of bullets, not a report. Cut reasoning unless
   it changes a decision. Do not list every test that passed; say it
   works. Do not restate the question.
@@ -110,15 +114,41 @@ Keep it current: when a job finishes, delete its line.
 - **The Performance page rebuild.** Three tabs inside `/stats`: Home,
   Lab, Totals. **Do not redesign `/stats`, `StatsView.tsx` or anything
   under `src/app/preview/pf/` in another chat.**
+  **`src/app/preview/performance-home/` is the ACCEPTED Home and the
+  design reference for Lab: read it, never edit it from another
+  chat.** The Lab chat builds at `src/app/preview/performance-lab/`,
+  on branch `claude/actuals-lab-redesign-onv3s8`, started 29 August
+  2026. It also edits `sitecheck.mjs` (the PREVIEW list), which the
+  demo-link chat touches too: whichever merges second merges `main`
+  in first.
   - The thinking is settled and written: read
     **`docs/performance-brief.md`** first. It is the argument.
   - `docs/mockup-briefs.md` holds draft designer prompts. **Reference
     only, not rules.** He writes his own prompts now.
   - What is still undecided is in `docs/open-questions.md`.
-  - Current stage: **mockups**, with the owner's external designer.
-    Nothing is being built in the app yet.
+  - Current stage: **Home design ACCEPTED, 29 August 2026**, his
+    words: "this version will do, good job." Live at
+    `/preview/performance-home`. The copy phase is over ("we're now
+    passed copying it. WE're now improving what we have"), so his edit
+    lists rule, not the mockup files. The Lab build started 29 August
+    2026 in the Lab chat, one piece at a time, each screenshot waiting
+    on his reaction. Status lives in `docs/performance-rebuild.md`.
+    Still unstarted: Totals, and the go-live work (real numbers, dark
+    theme, empty states, the `/stats` swap). Nothing else starts
+    before he says so.
+    Build order, his words: "Home, Lab, Totals are the main pages.
+    Other pages inside Performance are: Compare, All Bets, Insights."
+    Home ships first and goes live alone: on day one Totals holds
+    today's `/stats` content unredesigned and Lab wears a Soon badge.
+    A mockup showing a two tab switcher is still built with three.
 - **App Store submission**, in a separate chat with the owner. Settings
   and store config, not code.
+- **A one-click demo link at `/demo/<code>`**, another chat, on branch
+  `demo-link`. Noticed 28 August 2026 from its push; that chat should
+  own this line. Caution: it edits `src/middleware.ts` and
+  `sitecheck.mjs`, which the Performance rebuild branch also edited on
+  28 August. Whichever merges second must merge `main` in first and
+  re-run `npm run check`.
 
 ## How work reaches the live site
 

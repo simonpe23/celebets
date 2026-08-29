@@ -45,9 +45,13 @@ single most likely thing to confuse him again.
 
 **The owner's whole job is one word: Merge.**
 
-1. Open the repo on GitHub. A banner offers a Pull Request from that
-   chat's branch.
-2. Click it, then **Merge**.
+1. The chat opens the Pull Request for its branch and pastes the full
+   link in the chat. (Changed 28 August 2026: the old instruction
+   relied on a GitHub banner offering the Pull Request, the banner did
+   not show for him, and he had nothing to click. The chat now always
+   creates it and hands over the link.)
+2. He opens the link and clicks **Merge pull request**, then
+   **Confirm merge**.
 3. That is the moment it goes live.
 
 **Everything else belongs to the chat, not to him.** Before it says a
@@ -82,7 +86,10 @@ not to actuals.cc. Only `main` reaches actuals.cc.
 ## For any chat reading this
 
 - **Do not push to `main`.** Push to the branch this session was given.
-- **Do not open a pull request unless the owner asks for one.**
+- **Open the pull request for your own branch when the work is ready
+  for him**, and paste its full link. Never click merge yourself:
+  merging is his, always. (Until 28 August 2026 the rule was not to
+  open one at all; that left him with no button to click.)
 - **Never tell the owner a different version of these rules.** If
   something here looks wrong, say so and ask, do not improvise a new
   model.

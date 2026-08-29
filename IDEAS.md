@@ -185,6 +185,21 @@ How this file works:
 
 ## SOON (after the NOW items)
 
+32. DOES TRACK GET A DOOR INTO ALL BETS? Parked by the owner on
+    28 August 2026 with "decide later".
+
+    What it is: his own summary of the Performance redesign gives
+    betting history three doors: "One inside Track and one inside
+    Performance / Lab and one inside Performance / Totals", and
+    "From Track and it opens unfiltered." The briefs list only two
+    ways in, Lab and Totals, and never mention Track.
+
+    Why it is parked: it only matters when Track is touched, and the
+    Performance rebuild does not touch Track.
+
+    THE TRIGGER TO DECIDE IT: the next time work opens the Track
+    page. Ask him then, before drawing or building anything.
+
 27. WHAT TO STEAL FROM PIKKIT. Asked for by the owner, 19 August
     2026: "I have other ideas that we can steal from Pikkit later.
     Remind me of that." He has the app installed and has been using
