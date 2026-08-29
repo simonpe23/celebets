@@ -47,7 +47,7 @@ export default function PerformanceLabPreview() {
         >
           <Link
             href="/preview/performance-home"
-            className="absolute left-[59px] top-1/2 -translate-x-1/2 -translate-y-1/2 text-[10.5px] font-semibold"
+            className="absolute left-[59px] top-1/2 -translate-x-1/2 -translate-y-1/2 px-[18px] py-[10px] text-[10.5px] font-semibold"
             style={{ color: MENU_IDLE }}
           >
             Home

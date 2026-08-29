@@ -671,6 +671,15 @@ deleted. The ruled trigger survives as a quiet door wearing a Soon
 badge at exactly two selections, and the word Combine appears
 nowhere. Nobody builds the comparison view until he reopens it.
 
+**THE HOME FOLDER OPENED FOR ONE EDIT: THE MENU TAPS. Ruled 29
+August 2026**, after he merged Lab's preview: "can you make it so i
+can click lab and home in the top menu. now that we have 2 tabs in
+preview." So the accepted Home's top menu now carries a real link on
+Lab, and Lab's menu already linked back to Home. That is the whole
+unlock: the folder's protection stands, and Home's ranked rows, the
+Explore Lab button and the Heat Map pill stay static until he asks.
+Totals stays inert in both menus, no page exists yet.
+
 **LAB ROUND 2 WAS ALSO REJECTED, with a five point list. 29 August
 2026**, his words: "it's better but still absolutely hideous... feel
 the cohesiveness and balance. your version has nothing of that." His

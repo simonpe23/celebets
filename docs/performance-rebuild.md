@@ -236,6 +236,11 @@ ruled: a ranked row opens Lab with that fact selected, a heatmap tile
 does the same, and the Build your Performance View button lands on an
 empty Lab (all in `docs/decisions.md`).
 
+**Menu switching is LIVE both ways since 29 August 2026**, by his
+order after the Lab merge: Home's menu links to Lab and Lab's menu
+links to Home, plain navigation, no selection carried. The three
+selection-carrying jumps below are still unbuilt.
+
 **On the accepted Home, NONE of the three jumps exist.**
 `src/app/preview/performance-home/page.tsx` is a static picture: it
 contains no onClick, no href and no Link anywhere (grep confirms
