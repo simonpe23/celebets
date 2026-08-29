@@ -93,3 +93,25 @@ for one sheet and then silently reused for the next.
 - **When an area has no sheet, ask.** Filling the gap with the old
   design made the whole page read as the old page. The owner: "It looks
   just like the old one, but it's an uglier version."
+
+## A third trap: measuring by eye, or by merged boxes
+
+Bought 28 August 2026, round 2 rejected as "a fake cheap copy" because
+nearly every font size had been read off crops by eye or from region
+bounding boxes that silently merged neighbours.
+
+- **Isolate before measuring.** A text's size comes from a row profile
+  band in a window that contains only that text, checked at high zoom
+  with a grid overlay. A value merges with its label, a chart with the
+  number beside it; the merged box always lies.
+- **Close the loop.** Probe ink boxes on the mockup with a script, then
+  probe a screenshot of the render at the mockup's scale with the same
+  script, and diff. Adjust until every row agrees to about 2px.
+  Measurement bias cancels because both sides use one instrument. The
+  round 3 scripts live in the session scratchpad pattern: probe the
+  sheet, shoot at deviceScaleFactor sheet-width/390, compare.
+- **Pick substitute fonts by measurement**, rendering the sheet's own
+  strings and scoring ink width at matched ink height, never by
+  reputation.
+- **Trace curves per column** from the sheet's pixels into point
+  arrays. Redrawn approximations read as fake.

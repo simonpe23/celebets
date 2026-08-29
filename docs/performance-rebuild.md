@@ -12,17 +12,21 @@ serves the old Analytics page.
   mockups = discard them. erase from your memory. do not make new
   version based on the template. what im giving you now is not
   refinements, its a new layout."
-- **Round 2, 28 August 2026: the Home is rebuilt to the two full
-  mockups** `1. mockup_Aug 28.png` (the spec from the KPI row down) and
-  `2. big chart Aug 28.png` (the top: menu row with Heat Map, result,
-  full width chart, no card). His round 2 orders applied: menu higher,
-  one cohesive KPI row blended into the chart, subtler texture behind
-  the chart, page runs to the bottom, and a taller bottom tab bar with
-  more prominent icons regardless of the mockup (his instruction 6).
-  The wash behind chart and KPI row is the sheet's own background,
-  extracted to `public/preview-assets/home-wash.png` with his approval
-  of a background image. Indigo wears the app's purple, his ruling.
-  Under his review at `/preview/performance-home`.
+- **Round 2 was rejected too**: "it looks like a fake cheap copy."
+  The causes and their lessons live in `failed-approaches.md`.
+- **Round 3, 28 August 2026, built to `0. Chat Aug 28.png`**, the
+  combined master mockup, under his final orders: the mockup's own
+  indigo (sampled `#3614F0` text, `#3708E4` fills), a similar font at
+  the mockup's exact sizes (Figtree, chosen by measured proportions),
+  the Heat Map pill and the colour wash restored (his designer forgot
+  both), the menu high, everything on one phone screen, and the tab
+  bar floating and sticky like the app's other pages. Built with a
+  measurement loop, not by eye: a probe script measures ink boxes on
+  the mockup and the same probes measure a screenshot of the render,
+  and the build was adjusted until every box agreed to about 2px. The
+  chart line and the five sparklines are traced point by point from
+  the mockup's own pixels. Under his review at
+  `/preview/performance-home`.
 - The process stands: he shares a mockup, it is built identically on
   this chat's branch, he merges, then reviews on his phone at the
   preview address. Ship order: Home first, then Lab, then Totals.
