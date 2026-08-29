@@ -30,8 +30,10 @@ export async function POST(request: Request) {
     );
   }
 
+  // Trimmed on both sides. A trailing space pasted into a Vercel value
+  // is invisible in the dashboard and would reject every correct code.
   const { code } = await request.json().catch(() => ({}));
-  if (typeof code !== "string" || code !== expected) {
+  if (typeof code !== "string" || code.trim() !== expected.trim()) {
     // The same words a wrong real code gets, so the demo door is
     // indistinguishable from the normal flow.
     return NextResponse.json(
