@@ -94,10 +94,14 @@ i have only show the structure but has the old design."
    by soft tint or hairline (`#EDEDEF`), rounded pills for switches,
    the floating sticky tab bar, and the flexible page height. The
    code is the source of truth; do not restate its values, read them.
-2. **Structure: the old Lab mockup he will share, and the rules in
-   the next section.** The old mockup shows the six groups' layout
-   and nothing else worth keeping: **its colours, fonts and general
-   skin are the old design and must not be copied.**
+2. **Structure: his quick Lab mockup, and the rules in the next
+   section.** His framing, 29 August 2026: "a very quickly made Lab
+   mockup... For STRUCTURE and idea, DESIGN must COME FROM the code
+   and style as HOME." It shows the six-group layout; its group order
+   and some names are wrong and his corrected list below wins. Where
+   the mockup disagrees with a recorded ruling, the ruling wins: he
+   confirmed heat map on Home only for now, Compare appearing at
+   exactly two selections, and chips as records, never an amount.
 
 **`docs/design-system.md` describes the OLD app and does not govern
 this page.** The previews' colour-rule exemption in `design-check`
@@ -105,19 +109,39 @@ covers Lab's preview the same way it covered Home's.
 
 ## Lab's rules so far
 
-- **Six groups**, from the mockup: SPORT, WHAT YOU BET, WHERE, WHEN,
-  HOW, RISK. All six definitions are now settled.
-- **SPORT carries the domain arrow.** Sports is default and keeps its
-  single tap. Picking another domain rescopes the whole page. HOW and
-  RISK do not rescope; they mean the same in every domain.
-- **A league row sits under SPORT**, three or four for the current
-  sport, one row only, then "More leagues".
-- **WHAT YOU BET lists categories**, and tapping one opens its markets
+- **Six groups, renamed and reordered by the owner, 29 August 2026,**
+  in his words: "Correct order and words: Sport, League (swap name
+  from Where), Category (Swap What you Bet), When, Bet Type (Swap
+  from How), Risk (Odds Range)." Older notes use the old names
+  (SPORT, WHAT YOU BET, WHERE, WHEN, HOW, RISK); the rules attached
+  to them carry over to the new names.
+- **The group name headlines live once, above each section.** His
+  order, 29 August 2026: "Remove the pill shaped row with the
+  headlines horizontally Sports, What you bet etc.. it does not need
+  to be there, its already shown below as a category headline."
+- **Lab's KPIs under the chart are Bets, Record, Hit Rate, ROI.** His
+  order, 29 August 2026: "Remove wagered and returned." This is Lab's
+  answer panel; Home's own KPI row is unchanged.
+- **Sport carries the domain arrow.** Sports is default and keeps its
+  single tap. Picking another domain rescopes the whole page. Bet
+  Type and Risk do not rescope; they mean the same in every domain.
+  His sketch of the control, 29 August 2026: "Envisioning a drop down
+  menu when clicking sport, do see other domains, such as Economy or
+  Culture." Envisioning is the confidence level: the drop down is his
+  lean, not a settled control.
+- **League is its own group, directly under Sport, and it REPLACES
+  the old inner league row.** Asked directly on 29 August 2026 whether
+  the 26 August "league row sits under SPORT" ruling survives the
+  rename, he chose: the League group replaces it. Leagues appear once
+  on the page.
+- **Category lists categories**, and tapping one opens its markets
   where real markets exist.
-- **WHEN is sport-aware.** It offers only the periods that belong to the
-  current sport and actually appear in the user's data.
-- **Chips read as a record (12-4), never a percent.** Hit rate is the
-  score in Lab; profit is the score on Home.
+- **When is sport-aware.** It offers only the periods that belong to
+  the current sport and actually appear in the user's data.
+- **Chips read as a record (12-4), never a percent and never an
+  amount.** Extended 29 August 2026 against his own mockup's +$
+  chips: "Chips read as a record (12-4), never an amount." Hit rate
+  is the score in Lab; profit is the score on Home.
 - **Thin groups stay visible.** Two bets is a finding, not noise.
 - **Every chip is priced at the intersection it would create.** With
   Moneyline selected, the Football chip reads Moneyline-in-Football, not

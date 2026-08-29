@@ -611,6 +611,32 @@ tight. **"Will do" is the recorded confidence: accepted, not called
 perfect.** His "it needs to be tighter, yet stand alone" is kept in
 `docs/open-questions.md` in case he reopens it.
 
+**THE SIX LAB GROUPS ARE RENAMED AND REORDERED. Ruled 29 August
+2026**, written by him for the Lab chat's prompt: "Correct order and
+words: Sport, League (swap name from Where), Category (Swap What you
+Bet), When, Bet Type (Swap from How), Risk (Odds Range)." The rules
+attached to the old names carry over. Three consequences he settled
+the same day:
+
+- **League replaces the old inner league row.** Asked directly whether
+  the 26 August "league row sits under SPORT" ruling survives, he
+  chose: "League group replaces it." Leagues appear once on the page.
+- **Lab's KPIs under the chart are Bets, Record, Hit Rate, ROI**, his
+  words: "Remove wagered and returned." Home's own KPI row is not
+  touched by this.
+- **No horizontal row of group names.** His words: "Remove the pill
+  shaped row with the headlines horizontally Sports, What you bet
+  etc.. it does not need to be there, its already shown below as a
+  category headline."
+
+He also extended the chip ruling against his own mockup's money
+chips: "Chips read as a record (12-4), never an amount." And he
+re-affirmed for the Lab chat that the heat map stays on Home "only
+for now" and that Compare appears at exactly two selections. On the
+domain switch his confidence is a lean, not a ruling: "Envisioning a
+drop down menu when clicking sport, do see other domains, such as
+Economy or Culture."
+
 **LAB FOLLOWS HOME'S DESIGN AND STYLE. Ruled 29 August 2026**, his
 words: "the lab page has to follow Home's design and style." There is
 no new Lab mockup and none is coming: "i do not have a mockup for
