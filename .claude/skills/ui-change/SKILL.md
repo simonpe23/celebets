@@ -103,3 +103,11 @@ running dev server. Standard recovery:
 ```
 pkill -f "next-server"; rm -rf .next; npm run dev
 ```
+
+## Screenshots he will judge
+
+The phone-size screenshot goes first, always. A taller or wider
+viewport spreads the layout and reads as broken to him: on 29 August
+2026 an unlabeled 950px-tall shot nearly made him regret a merge that
+his phone then proved fine. Any non-phone view comes after the phone
+one and says plainly what it is and why it looks different.

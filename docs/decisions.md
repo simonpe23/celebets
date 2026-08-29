@@ -589,6 +589,28 @@ edit lists are what rule from here.
   saved pixels go to the list**: it moved up and its rows grew (edit
   9, "make the list more prominent, move it up").
 
+**ROUND 4 IS ACCEPTED. 29 August 2026, his words: "this version will
+do, good job. i knew you could do it."** The exact sequence matters
+and is recorded so nobody rereads it as more or less than it was:
+
+1. He merged, then reacted to the screenshots in chat before checking
+   his phone: "why are there big gaps above and under the insight
+   card? i hope it does not looks like that when i check. it needs to
+   be tighter, yet stand alone." And: "why big gap under Build your
+   performance view?" And: "do i have to say for the fifth time that
+   you have to solve the bottom menu problem because i do not want a
+   gap like that. i hope it does not look like that when i check, or
+   else i wish i did not merge it because this looks terrible. last
+   version much better."
+2. Then he checked the live site and replaced that verdict himself:
+   "this version will do, good job."
+
+The gaps that alarmed him were in a stretched 950px-tall screenshot,
+where the page's flexible spacing spreads out; on the phone it reads
+tight. **"Will do" is the recorded confidence: accepted, not called
+perfect.** His "it needs to be tighter, yet stand alone" is kept in
+`docs/open-questions.md` in case he reopens it.
+
 ## Process
 
 **Past reactions are not constraints.** Said twice in two days: "just

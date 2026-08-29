@@ -33,7 +33,14 @@ serves the old Analytics page.
   applied: standalone insight card, flexible page height (no gap, no
   hidden Lab card), the big chart sheet's fade restored, lighter
   number, taller menu, tighter KPI row, shorter chart, the list up and
-  more prominent. Under his review at `/preview/performance-home`.
+  more prominent.
+- **Round 4 merged and ACCEPTED, 29 August 2026**: "this version will
+  do, good job. i knew you could do it." The Home design is settled at
+  `/preview/performance-home`. What remains before it can replace
+  `/stats` is not design: real numbers through `src/lib/stats.ts`,
+  dark theme, empty and loading states, wired taps, and the swap
+  itself. See "Before this can ship" below and
+  `docs/open-questions.md`.
 - The process stands: he shares a mockup, it is built identically on
   this chat's branch, he merges, then reviews on his phone at the
   preview address. Ship order: Home first, then Lab, then Totals.
