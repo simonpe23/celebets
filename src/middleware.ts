@@ -89,8 +89,13 @@ export async function middleware(request: NextRequest) {
   // its whole point is being called logged out, and the gate answering
   // 307 instead of the route was found by the demo door test, not by
   // eye.
+  // /demo/<code> is the shareable demo link. Its whole audience is
+  // logged out, so the gate must let the page render and knock on
+  // /api/demo-login itself.
   const isAuthRoute =
-    pathname.startsWith("/auth/") || pathname === "/api/demo-login";
+    pathname.startsWith("/auth/") ||
+    pathname === "/api/demo-login" ||
+    pathname.startsWith("/demo/");
   // Note: /api/connect/* is NOT here on purpose. Those routes act on
   // the logged in user's own connection, so the gate protecting them
   // is exactly right.

@@ -99,6 +99,16 @@ Both of those sound like wiping.
 my bets again, from the start." His test: "if you click it, what
 happens? then the button should say so."
 
+**The demo has a one-click link.** Ruled 26 August 2026: "can we make
+it password free with a link?" The address is `/demo/` plus the same
+permanent code the six boxes accept, so nothing new is stored anywhere.
+
+- The trade was named and accepted: anyone holding the link is in, and
+  every visitor shares the one demo account.
+- Revocation is changing `DEMO_CODE` in Vercel: every shared link dies
+  on the next deploy.
+- The typed flow on the login page still works unchanged.
+
 ## Taxonomy
 
 **Competition is tapped, never typed.** Shipped as a text box and
