@@ -281,3 +281,26 @@ across two images even side by side.
 geometry. Every number in a pixel copy must come from a measurement
 that isolates the thing it claims to measure, and the render must be
 measured back with the same instrument.
+
+---
+
+## Showing him a stretched tall screenshot without a label
+
+**What happened:** 29 August 2026, after the round 4 merge, he was
+sent a 950px-tall screenshot demonstrating how the page distributes
+leftover height. He read the distributed spacing as a defect before
+checking his phone: "why are there big gaps above and under the
+insight card? i hope it does not looks like that when i check... i
+wish i did not merge it because this looks terrible." On the phone the
+same build was fine, and he closed the round with "this version will
+do, good job."
+
+**Why it failed:** a taller-than-phone viewport spreads the page's
+flexible gaps, so the screenshot exaggerated exactly the thing he is
+most sensitive to. He judges what he is shown, and he was shown the
+most misleading view first, unlabeled.
+
+**The lesson:** the phone-size screenshot leads, always. Any other
+viewport comes after it and carries a plain label saying what it is
+and why it looks different. Never make him deduce that a screenshot is
+not what his phone will show.

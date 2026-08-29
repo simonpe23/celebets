@@ -33,7 +33,14 @@ serves the old Analytics page.
   applied: standalone insight card, flexible page height (no gap, no
   hidden Lab card), the big chart sheet's fade restored, lighter
   number, taller menu, tighter KPI row, shorter chart, the list up and
-  more prominent. Under his review at `/preview/performance-home`.
+  more prominent.
+- **Round 4 merged and ACCEPTED, 29 August 2026**: "this version will
+  do, good job. i knew you could do it." The Home design is settled at
+  `/preview/performance-home`. What remains before it can replace
+  `/stats` is not design: real numbers through `src/lib/stats.ts`,
+  dark theme, empty and loading states, wired taps, and the swap
+  itself. See "Before this can ship" below and
+  `docs/open-questions.md`.
 - The process stands: he shares a mockup, it is built identically on
   this chat's branch, he merges, then reviews on his phone at the
   preview address. Ship order: Home first, then Lab, then Totals.
@@ -68,6 +75,33 @@ button to a full All Bets page (a new page to build). Compare lives
 inside Lab.
 
 **Cut:** the prototype insight card modal, and All Facts as a page.
+
+## Lab wears Home's design. This is a ruling, not taste
+
+His words, 29 August 2026: "the lab page has to follow Home's design
+and style." And: "i do not have a mockup for lab, because the old one
+i have only show the structure but has the old design."
+
+**So the Lab chat works from two sources, one per job:**
+
+1. **Design and style: the accepted Home, and only it.** The living
+   reference is `src/app/preview/performance-home/` (`page.tsx` holds
+   the colour constants and sizes, `icons.tsx` the line-art style,
+   `charts.tsx` the chart treatment). The essentials, all sampled
+   from his designer's sheet: indigo `#3614F0` for text, lines and
+   icons and `#3708E4` for fills, the Figtree face, near-white
+   `#FBFBFC` page, lavender `#F0EEFB` tiles and pills, cards defined
+   by soft tint or hairline (`#EDEDEF`), rounded pills for switches,
+   the floating sticky tab bar, and the flexible page height. The
+   code is the source of truth; do not restate its values, read them.
+2. **Structure: the old Lab mockup he will share, and the rules in
+   the next section.** The old mockup shows the six groups' layout
+   and nothing else worth keeping: **its colours, fonts and general
+   skin are the old design and must not be copied.**
+
+**`docs/design-system.md` describes the OLD app and does not govern
+this page.** The previews' colour-rule exemption in `design-check`
+covers Lab's preview the same way it covered Home's.
 
 ## Lab's rules so far
 
@@ -108,6 +142,50 @@ inside Lab.
 - Keeps a door to Lab: "Check out our Lab, Build your Performance View".
 - Sort by Profit, ROI or Hit rate, **all three visible at once.** No
   cycling control that hides its options.
+
+## How Home connects to Lab (the state of the seam)
+
+Written 29 August 2026 for whichever chat builds Lab. Three jumps are
+ruled: a ranked row opens Lab with that fact selected, a heatmap tile
+does the same, and the Build your Performance View button lands on an
+empty Lab (all in `docs/decisions.md`).
+
+**On the accepted Home, NONE of the three jumps exist.**
+`src/app/preview/performance-home/page.tsx` is a static picture: it
+contains no onClick, no href and no Link anywhere (grep confirms
+zero). Concretely:
+
+- The five ranked rows are plain divs, the `ROWS.map` block.
+- The Explore Lab button is a `<span>` inside the Lab card block.
+- The Heat Map header pill is a `<span>`, and **no heatmap grid is
+  built at all**: the pill is the only trace of the heatmap on Home.
+- There is no Lab page to land on: `/preview/performance-home` is the
+  only screen of the new design. **The Lab chat is building both ends
+  of every jump**, and also choosing the transport: an address (a
+  query param carrying the selection survives refresh and can be
+  linked) or shared state (the prototype's way, which dies on
+  refresh). Nothing is ruled on this; it is an open build decision.
+
+**The old prototype has working jumps to mine**, but into its own
+fact view, which predates the six-group Lab design and is NOT Lab:
+
+- `src/app/preview/pf/App.tsx` holds the mechanism: a `path` array of
+  chips is the whole navigation state. Empty path renders Home; a
+  non-empty path renders `Fact.tsx`. Every jump is just `setPath`.
+- Ranked row: `Home.tsx` fires `onOpen(f.chip)` (line ~118) and
+  `App.tsx` does `setPath([chip])`.
+- Heatmap tile: `MapView.tsx` fires `onOpen(chip)`, same `setPath`.
+- Insight card: `InsightCard.tsx` fires `onExplore(finding.path)`,
+  landing on a pre-filled path.
+- The prototype's Build your Performance View button does NOT jump
+  anywhere: it opens the Add a fact sheet in place
+  (`setSheetOpen(true)` in `Home.tsx`). Its comment explains why.
+
+The engine those jumps select into (`engine.ts`) is reusable; the
+`path`-of-chips idea matches how Lab's chips are meant to combine.
+The seam to build is Home side (make row, tile, pill and button real
+controls), Lab side (a page that accepts an incoming selection or an
+empty one), and the transport between them.
 
 ## Engine notes worth keeping
 

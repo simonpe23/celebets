@@ -49,9 +49,18 @@ old words, and every provider mapper points at them.
 
 ## Not blocking, still open
 
+**Whether the Home insight card should sit tighter.** 29 August 2026,
+reacting to a tall-screen screenshot before checking his phone: "it
+needs to be tighter, yet stand alone." After checking the live site he
+closed the round with "this version will do, good job." So the shipped
+spacing stands and nothing is to be built, but the tighter wish is his
+own words and he may reopen it. Full sequence in `docs/decisions.md`.
+
 **New fonts.** He reopened the fonts on 26 August 2026: "i do not like
 our font." The mockup designer will propose; nothing is chosen and the
-build keeps Geist and Inter Tight until he approves.
+app keeps Geist and Inter Tight until he approves. The Home preview
+wears Figtree since 28 August 2026 under his "pick a similar one"
+ruling; that is a preview choice, not an app-wide font decision.
 
 **RESOLVED 28 August 2026: how the user says "combine" rather than
 "compare".** He was asked and confirmed his written summary as the

@@ -119,12 +119,16 @@ Keep it current: when a job finishes, delete its line.
   - `docs/mockup-briefs.md` holds draft designer prompts. **Reference
     only, not rules.** He writes his own prompts now.
   - What is still undecided is in `docs/open-questions.md`.
-  - Current stage: **building from finished mockups**, 28 August 2026.
-    The owner shares each mockup in the rebuild chat and it is built
-    identically, screen by screen, on that chat's branch. He merges.
+  - Current stage: **Home design ACCEPTED, 29 August 2026**, his
+    words: "this version will do, good job." Live at
+    `/preview/performance-home`. The copy phase is over ("we're now
+    passed copying it. WE're now improving what we have"), so his edit
+    lists rule, not the mockup files. Next is either the Lab or Totals
+    mockup from him, or the unscoped go-live work (real numbers, dark
+    theme, empty states, the `/stats` swap). Nothing starts before he
+    says so.
     Build order, his words: "Home, Lab, Totals are the main pages.
     Other pages inside Performance are: Compare, All Bets, Insights."
-    Nothing is built before he shares the mockup and approves.
     Home ships first and goes live alone: on day one Totals holds
     today's `/stats` content unredesigned and Lab wears a Soon badge.
     A mockup showing a two tab switcher is still built with three.
