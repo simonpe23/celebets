@@ -611,6 +611,17 @@ tight. **"Will do" is the recorded confidence: accepted, not called
 perfect.** His "it needs to be tighter, yet stand alone" is kept in
 `docs/open-questions.md` in case he reopens it.
 
+**LAB FOLLOWS HOME'S DESIGN AND STYLE. Ruled 29 August 2026**, his
+words: "the lab page has to follow Home's design and style." There is
+no new Lab mockup and none is coming: "i do not have a mockup for
+lab, because the old one i have only show the structure but has the
+old design." So the old Lab mockup is a STRUCTURE reference only; its
+skin is dead. The accepted Home at
+`src/app/preview/performance-home/` is the living design reference
+for Lab, and `docs/design-system.md` still describes the old app, not
+this. The build notes for the Lab chat are in
+`docs/performance-rebuild.md`.
+
 ## Process
 
 **Past reactions are not constraints.** Said twice in two days: "just

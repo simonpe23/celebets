@@ -76,6 +76,33 @@ inside Lab.
 
 **Cut:** the prototype insight card modal, and All Facts as a page.
 
+## Lab wears Home's design. This is a ruling, not taste
+
+His words, 29 August 2026: "the lab page has to follow Home's design
+and style." And: "i do not have a mockup for lab, because the old one
+i have only show the structure but has the old design."
+
+**So the Lab chat works from two sources, one per job:**
+
+1. **Design and style: the accepted Home, and only it.** The living
+   reference is `src/app/preview/performance-home/` (`page.tsx` holds
+   the colour constants and sizes, `icons.tsx` the line-art style,
+   `charts.tsx` the chart treatment). The essentials, all sampled
+   from his designer's sheet: indigo `#3614F0` for text, lines and
+   icons and `#3708E4` for fills, the Figtree face, near-white
+   `#FBFBFC` page, lavender `#F0EEFB` tiles and pills, cards defined
+   by soft tint or hairline (`#EDEDEF`), rounded pills for switches,
+   the floating sticky tab bar, and the flexible page height. The
+   code is the source of truth; do not restate its values, read them.
+2. **Structure: the old Lab mockup he will share, and the rules in
+   the next section.** The old mockup shows the six groups' layout
+   and nothing else worth keeping: **its colours, fonts and general
+   skin are the old design and must not be copied.**
+
+**`docs/design-system.md` describes the OLD app and does not govern
+this page.** The previews' colour-rule exemption in `design-check`
+covers Lab's preview the same way it covered Home's.
+
 ## Lab's rules so far
 
 - **Six groups**, from the mockup: SPORT, WHAT YOU BET, WHERE, WHEN,
