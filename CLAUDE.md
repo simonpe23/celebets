@@ -114,6 +114,9 @@ Keep it current: when a job finishes, delete its line.
 - **The Performance page rebuild.** Three tabs inside `/stats`: Home,
   Lab, Totals. **Do not redesign `/stats`, `StatsView.tsx` or anything
   under `src/app/preview/pf/` in another chat.**
+  **`src/app/preview/performance-home/` is the ACCEPTED Home and the
+  design reference for Lab: read it, never edit it from another
+  chat.** The Lab chat builds in its own folder under `/preview`.
   - The thinking is settled and written: read
     **`docs/performance-brief.md`** first. It is the argument.
   - `docs/mockup-briefs.md` holds draft designer prompts. **Reference
