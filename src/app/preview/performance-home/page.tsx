@@ -165,34 +165,26 @@ export default function PerformanceHomePreview() {
           <WashTexture />
         </div>
 
-        {/* The menu row: switcher left, Heat Map right, high up. */}
-        <div className="relative flex items-center justify-between px-[14px]">
-          <div
-            className="flex h-[33px] w-[261px] items-center rounded-full p-[5px]"
-            style={{ background: "#F2F0F8" }}
-          >
-            <span className="flex h-[23px] w-[73px] shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-brand-top to-brand-bottom text-[13px] font-semibold text-white">
-              Home
-            </span>
-            <span
-              className="flex h-[23px] flex-1 items-center justify-center text-[13px] font-semibold"
-              style={{ color: "#6B6E76" }}
-            >
-              Lab
-            </span>
-            <span
-              className="flex h-[23px] flex-1 items-center justify-center text-[13px] font-semibold"
-              style={{ color: "#6B6E76" }}
-            >
-              Totals
-            </span>
-          </div>
+        {/* The menu, full width, from the Performance Menu sheets. The
+            owner's round 2b order: no Heat Map up here. */}
+        <div
+          className="relative mx-2 flex h-[27px] items-center rounded-full p-[2px]"
+          style={{ background: "#F2F0F8" }}
+        >
+          <span className="flex h-[23px] w-[109px] shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-brand-top to-brand-bottom text-[12.5px] font-semibold text-white">
+            Home
+          </span>
           <span
-            className="flex h-[33px] items-center gap-1.5 rounded-full px-3 text-[12px] font-semibold text-brand-mark"
-            style={{ background: PILL_LAV }}
+            className="flex h-[23px] flex-1 items-center justify-center text-[12.5px] font-semibold"
+            style={{ color: "#6B6E76" }}
           >
-            <HeatDots size={11} />
-            Heat Map
+            Lab
+          </span>
+          <span
+            className="flex h-[23px] flex-1 items-center justify-center text-[12.5px] font-semibold"
+            style={{ color: "#6B6E76" }}
+          >
+            Totals
           </span>
         </div>
 
@@ -303,20 +295,29 @@ export default function PerformanceHomePreview() {
         {/* What drives your result. */}
         <div className="relative mt-[19px] flex items-center justify-between pl-[19px] pr-[14px]">
           <div>
-            <h2 className="text-[16px] font-bold tracking-[-0.01em]">
+            <h2 className="whitespace-nowrap text-[14.5px] font-bold tracking-[-0.01em]">
               What drives your result
             </h2>
-            <p className="mt-[3px] text-[11px]" style={{ color: "#62646C" }}>
+            <p className="mt-[3px] whitespace-nowrap text-[10px]" style={{ color: "#62646C" }}>
               Ranked by contribution to net profit
             </p>
           </div>
-          <span
-            className="flex h-[25px] shrink-0 items-center gap-1.5 rounded-full px-3 text-[11.5px] font-semibold text-brand-mark"
-            style={{ background: PILL_LAV }}
-          >
-            <ChangedMark size={12} />
-            What changed?
-          </span>
+          <div className="flex shrink-0 items-center gap-1.5">
+            <span
+              className="flex h-[25px] items-center gap-1 rounded-full px-2 text-[10px] font-semibold text-brand-mark"
+              style={{ background: PILL_LAV }}
+            >
+              <HeatDots size={11} />
+              Heat Map
+            </span>
+            <span
+              className="flex h-[25px] items-center gap-1 rounded-full px-2 text-[10px] font-semibold text-brand-mark"
+              style={{ background: PILL_LAV }}
+            >
+              <ChangedMark size={12} />
+              What changed?
+            </span>
+          </div>
         </div>
 
         {/* The top list. */}
@@ -402,7 +403,7 @@ export default function PerformanceHomePreview() {
             <OrbLayers size={23} />
           </span>
           <div className="ml-[15px] min-w-0 flex-1 leading-[1.5]">
-            <p className="text-[12.5px] font-bold tracking-[-0.01em]">
+            <p className="whitespace-nowrap text-[11.5px] font-bold tracking-[-0.012em]">
               Build your performance view
             </p>
             <p className="mt-[2px] text-[9px]" style={{ color: "#5A5C64" }}>
@@ -414,7 +415,7 @@ export default function PerformanceHomePreview() {
               How, Risk and more.
             </p>
           </div>
-          <span className="ml-2 flex h-[25px] shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-b from-brand-top to-brand-bottom px-3 text-[11px] font-semibold text-white">
+          <span className="ml-2 flex h-[25px] shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-b from-brand-top to-brand-bottom px-2.5 text-[10.5px] font-semibold text-white">
             Explore Lab
             <Chev size={8} color="#FFFFFF" />
           </span>
