@@ -220,14 +220,14 @@ a time, a screenshot after each, his reaction before the next.
      same `?sel=` and `?period=` address Lab writes, so arriving from
      either page shows what that page was showing, and the back arrow
      returns you there with your selection intact.
-  6. **The (i) info dots explain their number.** One shared popover
-     and a dictionary of one line per metric, serving every page.
-     Net profit's line is already ruled: balance plus withdrawals
-     minus deposits.
-  7. **Lab's six group labels expand the row.** All sports, All
-     leagues, All categories, All periods, All types, All ranges turn
-     the sideways scroller into a wrapped grid so nothing is hidden
-     off screen. No new page.
+  6. **DONE, 29 August 2026. The (i) dots explain their number.** One
+     popover, `performance-lab/Explain.tsx`, reading one dictionary,
+     `performance-lab/explain.ts`. Nine entries, serving all nine
+     dots across Lab, Totals, Compare and the Heat Map.
+  7. **DONE, 29 August 2026. Lab's six group labels expand the row.**
+     Tapping "All sports" wraps that row instead of scrolling it, so
+     every fact in the group is on screen; the label becomes "Show
+     less". No new page, no vocabulary sheet.
   8. **Delete "What changed?" from Home.** CLAUDE's suggestion, not
      his decision. The Heat Map's New Pattern and Cooling Off cards
      already answer "what moved lately", and two answers to one

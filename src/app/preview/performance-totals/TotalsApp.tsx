@@ -38,6 +38,7 @@ import {
   TINT_GOOD,
   TINT_MID,
 } from "../performance-lab/ui";
+import Explain from "../performance-lab/Explain";
 import PeriodPill from "../performance-lab/PeriodPill";
 import { betsIn, isPeriod, withPeriod, type PeriodKey } from "../performance-lab/period";
 import { Donut } from "./donut";
@@ -191,7 +192,7 @@ export default function TotalsApp() {
             style={{ color: NET_LABEL }}
           >
             Net profit
-            <InfoDot size={12} />
+            <Explain term="Net profit" />
           </p>
           <p className="mt-[7px] flex items-center gap-[5px] text-[9.5px] font-semibold">
             <span style={{ color: all.profit < 0 ? RED : SUBGREEN }}>

@@ -41,6 +41,7 @@ import { useSearchParams } from "next/navigation";
 import { money, makeEngine, type Chip } from "../pf/engine";
 import { labBets } from "../performance-lab/lab-data";
 import { chipIcon } from "../performance-lab/LabApp";
+import Explain from "../performance-lab/Explain";
 import PeriodPill from "../performance-lab/PeriodPill";
 import {
   betsIn,
@@ -484,7 +485,7 @@ export default function HeatmapApp() {
           style={{ color: NET_LABEL }}
         >
           Performance map
-          <InfoDot size={12} />
+          <Explain term="Performance map" />
         </p>
         {tiles.length === 0 ? (
           <p
@@ -578,7 +579,7 @@ export default function HeatmapApp() {
         className="relative mt-[9px] flex items-center justify-center gap-[4px] px-[15px] text-center text-[8.5px] font-semibold"
         style={{ color: GREY_TEXT }}
       >
-        <InfoDot size={11} />
+        <Explain term="Map sizing" size={11} />
         Size shows impact on your results, color shows profit or loss.
       </p>
 

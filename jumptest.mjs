@@ -425,6 +425,97 @@ const emptyOk =
 console.log(`${emptyOk ? "PASS" : "FAIL"} All Bets survives an empty result`);
 if (!emptyOk) fails++;
 
+// JOB 6, 29 August 2026. Every (i) dot explains its number. They
+// were drawn on four screens and opened nothing.
+for (const [route, expect] of [
+  ["performance-lab", "tracking balance"],
+  ["performance-totals", "tracking balance"],
+  ["performance-heatmap", "every tile is one fact"],
+  [
+    "performance-compare?sel=" +
+      encodeURIComponent("sport~plain~Football|sport~plain~Basketball"),
+    "one definition",
+  ],
+]) {
+  await page.goto(`http://localhost:${port}/preview/${route}`, {
+    waitUntil: "networkidle",
+  });
+  await page.waitForTimeout(600);
+  const dots = await page.locator('button[aria-label^="What "]').count();
+  let opened = 0;
+  for (let i = 0; i < dots; i++) {
+    await page.locator('button[aria-label^="What "]').nth(i).click();
+    await page.waitForTimeout(220);
+    if ((await page.locator('button[aria-label="Close explanation"]').count()) > 0) {
+      opened += 1;
+      await page.locator('button[aria-label="Close explanation"]').click();
+      await page.waitForTimeout(120);
+    }
+  }
+  await page.locator('button[aria-label^="What "]').first().click();
+  await page.waitForTimeout(300);
+  const said = (await page.innerText("body")).toLowerCase().includes(expect);
+  const ok = dots > 0 && opened === dots && said;
+  console.log(
+    `${ok ? "PASS" : "FAIL"} ${route.split("?")[0]}: all ${dots} info dots explain their number`
+  );
+  if (!ok) fails++;
+}
+
+// The banned finance words must never reach a screen, and Net profit
+// is the one most likely to smuggle them in.
+await page.goto(`http://localhost:${port}/preview/performance-lab`, {
+  waitUntil: "networkidle",
+});
+await page.waitForTimeout(500);
+await page.locator('button[aria-label^="What "]').first().click();
+await page.waitForTimeout(300);
+const clean = !/wallet|deposit|withdraw|bankroll/i.test(
+  await page.innerText("body")
+);
+console.log(
+  `${clean ? "PASS" : "FAIL"} Net profit is explained without the banned words`
+);
+if (!clean) fails++;
+
+// JOB 7, 29 August 2026. A group row scrolls sideways and hides what
+// ran off the edge; its label now wraps the row instead. A screenshot
+// cannot show what is hidden, which is the whole point of the job.
+await page.goto(`http://localhost:${port}/preview/performance-lab`, {
+  waitUntil: "networkidle",
+});
+await page.waitForTimeout(700);
+const shut = await page.evaluate(() => {
+  const row = [...document.querySelectorAll("div")].find((d) =>
+    d.className.includes("overflow-x-auto")
+  );
+  return { hides: row.scrollWidth > row.clientWidth + 1, h: row.getBoundingClientRect().height };
+});
+await page.locator('button[aria-label^="Show every"]').first().click();
+await page.waitForTimeout(500);
+const wide = await page.evaluate(() => {
+  const row = [...document.querySelectorAll("div")].find(
+    (d) => d.className.includes("flex-wrap") && d.className.includes("gap-[7px]")
+  );
+  return {
+    wrapped: !!row,
+    hides: row ? row.scrollWidth > row.clientWidth + 1 : true,
+    h: row ? row.getBoundingClientRect().height : 0,
+    sideways:
+      document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  };
+});
+const expands = shut.hides && wide.wrapped && !wide.hides && wide.h > shut.h;
+console.log(
+  `${expands ? "PASS" : "FAIL"} a group label wraps its row and hides nothing`
+);
+if (!expands) fails++;
+
+const collapses =
+  (await page.locator('button[aria-label="Collapse sport"]').count()) === 1;
+console.log(`${collapses ? "PASS" : "FAIL"} and the label offers Show less`);
+if (!collapses) fails++;
+
 await browser.close();
 console.log(fails ? `${fails} jump(s) broken` : "All doors work.");
 process.exit(fails ? 1 : 0);

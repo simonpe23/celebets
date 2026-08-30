@@ -75,6 +75,7 @@ import {
   WhistleIcon,
 } from "./lab-icons";
 import { labBets } from "./lab-data";
+import Explain from "./Explain";
 import PeriodPill from "./PeriodPill";
 import { betsIn, isPeriod, type PeriodKey } from "./period";
 import {
@@ -215,6 +216,10 @@ export default function LabApp() {
     isPeriod(rawPeriod) ? rawPeriod : "all"
   );
   const [periodOpen, setPeriodOpen] = useState(false);
+  // Job 7. A row that scrolls sideways hides whatever ran off the
+  // edge, and "All sports" promised a way to see it. Tapping it wraps
+  // the row instead, so every fact in that group is on screen at once.
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
   const engine = useMemo(() => makeEngine(betsIn(labBets, period)), [period]);
   const [domain, setDomain] = useState<Domain>(() => {
     const d = params.get("domain");
@@ -379,7 +384,7 @@ export default function LabApp() {
           style={{ color: NET_LABEL }}
         >
           Net profit
-          <InfoDot size={13} />
+          <Explain term="Net profit" />
         </p>
         <span className="relative top-[2px] z-30">
           <PeriodPill
@@ -601,16 +606,33 @@ export default function LabApp() {
                 {g.title}
               </p>
             )}
-            <span
+            <button
+              onClick={() =>
+                setOpenGroups((o) => ({ ...o, [g.key]: !o[g.key] }))
+              }
+              aria-label={
+                openGroups[g.key]
+                  ? `Collapse ${g.title.toLowerCase()}`
+                  : `Show every ${g.title.toLowerCase()}`
+              }
               className="flex items-center gap-[4px] text-[9.5px] font-semibold"
-              style={{ color: LINK_INK }}
+              style={{ color: openGroups[g.key] ? INDIGO : LINK_INK }}
             >
-              {g.allLabel}
-              <Chev size={8} color={DOT_MUTED} />
-            </span>
+              {openGroups[g.key] ? "Show less" : g.allLabel}
+              <span className={openGroups[g.key] ? "rotate-90" : undefined}>
+                <Chev
+                  size={8}
+                  color={openGroups[g.key] ? INDIGO : DOT_MUTED}
+                />
+              </span>
+            </button>
           </div>
           <div
-            className="mt-[7px] flex gap-[7px] overflow-x-auto pb-[3px] pl-[15px] pr-[15px] [&::-webkit-scrollbar]:hidden"
+            className={
+              openGroups[g.key]
+                ? "mt-[7px] flex flex-wrap gap-[7px] pb-[3px] pl-[15px] pr-[15px]"
+                : "mt-[7px] flex gap-[7px] overflow-x-auto pb-[3px] pl-[15px] pr-[15px] [&::-webkit-scrollbar]:hidden"
+            }
             style={{ scrollbarWidth: "none" }}
           >
             {g.chips.map((c) => {
@@ -621,7 +643,9 @@ export default function LabApp() {
                 <button
                   key={c.value}
                   onClick={() => toggle(c)}
-                  className="flex h-[44px] shrink-0 items-center gap-[9px] rounded-[12px] bg-white pl-[11px] pr-[14px] transition-colors"
+                  className={`flex h-[44px] items-center gap-[9px] rounded-[12px] bg-white pl-[11px] pr-[14px] transition-colors ${
+                    openGroups[g.key] ? "max-w-full" : "shrink-0"
+                  }`}
                   style={{
                     background: on ? SEL_BG : CARD,
                     boxShadow: on

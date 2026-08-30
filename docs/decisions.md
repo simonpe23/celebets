@@ -1107,6 +1107,37 @@ is the Heat Map's header. That is the whole design.
 what the page that opened it was showing. Changing the period is that
 page's job.
 
+**JOBS 6 AND 7 ARE BUILT. 29 August 2026**, his words: "do 6 and 7."
+
+**THE (i) DOTS EXPLAIN THEIR NUMBER, job 6.** Nine dots across Lab,
+Totals, Compare and the Heat Map, all of them drawn and silent until
+now. One popover reading one dictionary, because a number explained
+two ways is a number nobody trusts, which is the same reason every
+money rule lives in `src/lib/stats.ts`.
+
+**Three calls, CLAUDE's:**
+
+1. **Net profit is written in the product's own words**, not the
+   formula's. "Your Tracking Balance, plus everything you have
+   removed, minus everything you have added." The formula says
+   wallet, deposits and withdrawals; all three are banned from
+   anything a person reads, and `jumptest.mjs` now fails the build if
+   one appears in the explanation.
+2. **The Heat Map's caption dot admits the overlap.** Its line says
+   the tiles do not add up to net profit and why. That disclosure was
+   only in a chat message and in the code comments until now.
+3. **The card nudges itself back on screen.** A dot near the right
+   edge pushed a fixed width card off a 320px phone by 31px. It is
+   measured on open, not aligned by a guess.
+
+**A GROUP LABEL WRAPS ITS ROW, job 7.** "All sports" promised a way to
+see what had scrolled off the edge and did nothing. It now wraps that
+row so every fact in the group is on screen at once, and reads "Show
+less" when open. **No vocabulary sheet was built:** the numbered list
+offered one, and wrapping the row answers the real need for a fraction
+of the work. If he wants a sheet showing sports he has never bet, that
+is a new job.
+
 ## Process
 
 **Past reactions are not constraints.** Said twice in two days: "just
