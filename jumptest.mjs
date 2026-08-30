@@ -428,13 +428,13 @@ if (!emptyOk) fails++;
 // JOB 6, 29 August 2026. Every (i) dot explains its number. They
 // were drawn on four screens and opened nothing.
 for (const [route, expect] of [
-  ["performance-lab", "tracking balance"],
-  ["performance-totals", "tracking balance"],
+  ["performance-lab", "minus everything you staked"],
+  ["performance-totals", "minus everything you staked"],
   ["performance-heatmap", "every tile is one fact"],
   [
     "performance-compare?sel=" +
       encodeURIComponent("sport~plain~Football|sport~plain~Basketball"),
-    "one definition",
+    "minus everything you staked",
   ],
 ]) {
   await page.goto(`http://localhost:${port}/preview/${route}`, {

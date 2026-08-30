@@ -1117,12 +1117,21 @@ money rule lives in `src/lib/stats.ts`.
 
 **Three calls, CLAUDE's:**
 
-1. **Net profit is written in the product's own words**, not the
-   formula's. "Your Tracking Balance, plus everything you have
-   removed, minus everything you have added." The formula says
-   wallet, deposits and withdrawals; all three are banned from
-   anything a person reads, and `jumptest.mjs` now fails the build if
-   one appears in the explanation.
+1. **Net profit means the VIEW's profit here, and the first version
+   of this dictionary said otherwise.** He caught it by asking "what
+   does net profit mean on the lab and totals page?" On Lab, Totals
+   and Compare the figure is the profit of the bets in that view:
+   pick Football and it is $1,903, add This month and it is $1,377.
+   The account's own net profit, `balance + withdrawals - deposits`,
+   is a different number and no preview page shows it: these pages
+   are computed from a bet fixture with no balance at all. The line
+   now reads "What the bets behind this number made or lost:
+   everything they returned, minus everything you staked on them.
+   With nothing selected and All time chosen, that is your whole
+   record." **When the real Home lands with a true account figure it
+   needs its own entry; this one must not be reused.**
+   The banned words are still out and `jumptest.mjs` still fails the
+   build if wallet, deposit, withdraw or bankroll appears there.
 2. **The Heat Map's caption dot admits the overlap.** Its line says
    the tiles do not add up to net profit and why. That disclosure was
    only in a chat message and in the code comments until now.

@@ -6,14 +6,24 @@
 // src/lib/stats.ts.
 //
 // THE VOCABULARY IS CHECKED. "wallet", "deposit" and "withdrawal" are
-// banned from anything a person reads, so Net profit is written in the
-// words the product actually uses: Tracking Balance, Add, Remove.
-// design-check rule 7 fails the build on the banned ones.
+// banned from anything a person reads. design-check rule 7 fails the
+// build on them, and jumptest.mjs checks the rendered card too.
+//
+// NET PROFIT MEANS TWO DIFFERENT THINGS AND THIS FILE ONLY EXPLAINS
+// ONE OF THEM. On Lab, Totals and Compare the figure is the profit of
+// THE BETS IN THAT VIEW: pick Football, or This month, and the number
+// is theirs, not the account's. The account's own net profit is
+// `balance + withdrawals - deposits` from docs/business-rules.md, and
+// no page here shows it: these previews are computed from a bet
+// fixture with no balance at all. The first build of this dictionary
+// gave the account definition on both pages, which was wrong the
+// moment anything was selected. When the real Home lands with a true
+// account figure, it needs its own entry; do not reuse this one.
 
 export const EXPLAIN: Record<string, { title: string; line: string }> = {
   "Net profit": {
     title: "Net profit",
-    line: "Your Tracking Balance, plus everything you have removed, minus everything you have added. One definition, the same on every screen.",
+    line: "What the bets behind this number made or lost: everything they returned, minus everything you staked on them. With nothing selected and All time chosen, that is your whole record.",
   },
   ROI: {
     title: "ROI",
