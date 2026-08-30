@@ -338,6 +338,93 @@ for (const route of [
   if (!clean) fails++;
 }
 
+// JOB 5, 29 August 2026. ALL BETS, one page closing two dead doors.
+// The trap here is a list that disagrees with the record printed
+// above it, so that agreement is what these check.
+await page.goto(`http://localhost:${port}/preview/performance-totals`, {
+  waitUntil: "networkidle",
+});
+await page.waitForTimeout(500);
+await page.click('a:has-text("See all bets")');
+await page.waitForURL("**/performance-bets**");
+await page.waitForTimeout(700);
+let bets = await page.innerText("body");
+const wholeCount = Number((bets.match(/(\d+) bets/) || [])[1]);
+const listed = await page.evaluate(
+  () => document.querySelectorAll('div[class*="rounded-[16px]"] > div').length
+);
+const whole = bets.includes("Your whole record") && wholeCount === listed;
+console.log(
+  `${whole ? "PASS" : "FAIL"} Totals opens All Bets and lists every one (${listed} rows, header says ${wholeCount})`
+);
+if (!whole) fails++;
+
+await page.click('a[aria-label="Back"]');
+await page.waitForURL("**/performance-totals**");
+console.log("PASS back from All Bets returns to Totals");
+
+// Lab's door must agree with the page it opens, to the bet.
+await page.goto(
+  `http://localhost:${port}/preview/performance-lab?sel=${encodeURIComponent(
+    "sport~plain~Football"
+  )}`,
+  { waitUntil: "networkidle" }
+);
+await page.waitForTimeout(700);
+const doorSays = (
+  (await page.innerText("body")).match(/See these (\d+) bets/) || []
+)[1];
+await page.click('a:has-text("See these")');
+await page.waitForURL("**/performance-bets**");
+await page.waitForTimeout(700);
+bets = await page.innerText("body");
+const listSays = (bets.match(/(\d+) bets/) || [])[1];
+const agree =
+  bets.includes("Football, all time") && doorSays === listSays && bets.includes("24–16");
+console.log(
+  `${agree ? "PASS" : "FAIL"} Lab's door and All Bets agree (${doorSays} vs ${listSays})`
+);
+if (!agree) fails++;
+
+await page.click('a[aria-label="Back"]');
+await page.waitForURL("**/performance-lab**");
+const keptSel = page.url().includes("Football");
+console.log(`${keptSel ? "PASS" : "FAIL"} back from All Bets keeps the selection`);
+if (!keptSel) fails++;
+
+// A three pick parlay with one Moneyline leg is a Moneyline bet, but
+// saying so without "1 of 3 picks" overstates it.
+await page.goto(
+  `http://localhost:${port}/preview/performance-bets?sel=${encodeURIComponent(
+    "what~category~Moneyline"
+  )}`,
+  { waitUntil: "networkidle" }
+);
+await page.waitForTimeout(700);
+bets = await page.innerText("body");
+const partial = /\d+ of \d+ picks/.test(bets);
+console.log(`${partial ? "PASS" : "FAIL"} a partly matching parlay says so`);
+if (!partial) fails++;
+
+// And it carries the period, and survives having nothing to show.
+await page.goto(`http://localhost:${port}/preview/performance-bets?period=month`, {
+  waitUntil: "networkidle",
+});
+await page.waitForTimeout(600);
+const monthly = (await page.innerText("body")).includes("this month");
+console.log(`${monthly ? "PASS" : "FAIL"} All Bets carries the period`);
+if (!monthly) fails++;
+
+await page.goto(`http://localhost:${port}/preview/performance-bets?period=today`, {
+  waitUntil: "networkidle",
+});
+await page.waitForTimeout(600);
+bets = await page.innerText("body");
+const emptyOk =
+  bets.includes("No settled bets match") && !/NaN|undefined/.test(bets);
+console.log(`${emptyOk ? "PASS" : "FAIL"} All Bets survives an empty result`);
+if (!emptyOk) fails++;
+
 await browser.close();
 console.log(fails ? `${fails} jump(s) broken` : "All doors work.");
 process.exit(fails ? 1 : 0);

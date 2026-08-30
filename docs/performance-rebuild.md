@@ -213,11 +213,13 @@ a time, a screenshot after each, his reaction before the next.
      periods and `periodStart` from `src/lib/stats.ts`, the same
      function Track's balance band uses. The period travels between
      the three pages in the address and survives picking a chip.
-  5. **The All Bets page.** One page closes three doors: Lab's "See
-     these N bets", Totals' "See all bets", and Compare's own. It
-     takes the same `?sel=` chips Lab uses and renders
-     `src/components/BetHistory.tsx`, which already exists and
-     already takes a `limit`. Also a REGRESSION FIX.
+  5. **DONE, 29 August 2026. The All Bets page** at
+     `/preview/performance-bets`, closing both of Lab's and Totals'
+     bet doors. (It does not close a third: Compare has no such door
+     drawn, which the numbered list wrongly claimed.) It reads the
+     same `?sel=` and `?period=` address Lab writes, so arriving from
+     either page shows what that page was showing, and the back arrow
+     returns you there with your selection intact.
   6. **The (i) info dots explain their number.** One shared popover
      and a dictionary of one line per metric, serving every page.
      Net profit's line is already ruled: balance plus withdrawals

@@ -472,7 +472,12 @@ export default function LabApp() {
           Compare door at exactly two selections, wearing Soon. */}
       {sel.length > 0 ? (
         <div className="relative mx-[15px] mt-[10px] flex gap-[8px]">
-          <button
+          {/* Job 5. It was a button that did nothing; it opens All
+              Bets now, carrying the selection and the period. */}
+          <Link
+            href={`/preview/performance-bets?sel=${encodeURIComponent(
+              sel.map((c) => `${c.group}~${c.kind}~${c.value}`).join("|")
+            )}${period === "all" ? "" : `&period=${period}`}`}
             className="flex h-[50px] min-w-0 flex-1 items-center rounded-[14px] bg-white pl-[9px] pr-[10px] text-left"
             style={{ boxShadow: "0 1px 4px rgba(24,20,50,0.06), 0 0 0 1px rgba(24,20,50,0.02)" }}
           >
@@ -484,14 +489,14 @@ export default function LabApp() {
             </span>
             <span className="ml-[10px] min-w-0 flex-1 leading-[1.4]">
               <span className="block truncate text-[9.8px] font-bold">
-                See these {picks} bets
+                See these {whole.bets} {whole.bets === 1 ? "bet" : "bets"}
               </span>
               <span className="block text-[8px]" style={{ color: GREY_TEXT }}>
                 View in betting history
               </span>
             </span>
             <Chev size={9} color={CHEV} />
-          </button>
+          </Link>
           {compareReady ? (
             <Link
               href={`/preview/performance-compare?sel=${encodeURIComponent(

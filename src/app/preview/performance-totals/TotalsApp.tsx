@@ -423,10 +423,15 @@ export default function TotalsApp() {
       <Card className="mb-[6px] mt-[11px] pb-[8px]">
         <div className="flex items-center justify-between px-[13px] pt-[13px]">
           <h2 className="text-[12px] font-bold">Recent Bets</h2>
-          <span className="flex items-center gap-[3px] text-[9.5px] font-semibold" style={{ color: INDIGO }}>
+          {/* Job 5. */}
+          <Link
+            href={withPeriod("/preview/performance-bets?from=totals", period)}
+            className="flex items-center gap-[3px] text-[9.5px] font-semibold"
+            style={{ color: INDIGO }}
+          >
             See all bets
             <Chev size={8} color={INDIGO} />
-          </span>
+          </Link>
         </div>
         <div className="mt-[6px]">
           {recent.map((b, i) => (

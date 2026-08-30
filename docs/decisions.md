@@ -1074,6 +1074,39 @@ something reaches him that a machine could have caught, the fix is a
 new check, not a promise to be careful. The overflow itself is job 14
 and needs the Home chat.
 
+**JOB 5 IS BUILT: THE ALL BETS PAGE. 29 August 2026**, his words: "do
+5." At `/preview/performance-bets`, reached from Lab's "See these N
+bets" and Totals' "See all bets", both of which were drawn and dead.
+
+**NO MOCKUP EXISTS FOR THIS PAGE, so nothing was invented.** The row
+is the one he already approved on Totals, from his own sheet
+"2. Totals.png", at full length instead of the last three. The header
+is the Heat Map's header. That is the whole design.
+
+**Five calls, CLAUDE's, all reversible:**
+
+1. **The matching lives in the engine**, as `betsFor`, not in the
+   page. A list that disagreed with the record printed above it would
+   be worse than no list, and one matcher cannot disagree with
+   itself.
+2. **A row shows the whole slip's money, not a share of it.** A row
+   here is a real bet. Where a selection only covers part of a parlay
+   the row says "2 of 3 picks", because a three pick parlay with one
+   Moneyline leg IS a Moneyline bet, and saying so without the count
+   overstates it.
+3. **The header separates bets from record:** "30 bets, 30-16
+   record". A parlay is one bet and three picks, so without the words
+   the two numbers read like a contradiction.
+4. **Lab's door was lying and now is not.** It said "See these N
+   bets" where N was the pick count. It says bets now, and
+   `jumptest.mjs` fails the build if the door and the page ever
+   disagree.
+5. **Settled bets only.** Pending bets are not in the engine at all.
+
+**The page has no period control of its own**, on purpose: it shows
+what the page that opened it was showing. Changing the period is that
+page's job.
+
 ## Process
 
 **Past reactions are not constraints.** Said twice in two days: "just
