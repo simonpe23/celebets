@@ -28,7 +28,7 @@ import {
   TAB_EDGE,
   TAB_GLASS,
   TAB_IDLE,
-} from "./ui";
+} from "../performance-ui";
 
 const fig = Figtree({
   subsets: ["latin"],

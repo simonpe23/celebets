@@ -4,7 +4,7 @@
 // ruling of 28 August 2026, "pick the purple color from the mockup",
 // which replaces the earlier "keep apps purple".
 //
-// Colours come from the shared dial, `../performance-lab/ui`, since 30
+// Colours come from the shared dial, `../performance-ui`, since 30
 // August 2026. The values did not change; they simply stopped being
 // private to this folder. Never write a hex here again: add a token to
 // that file and import it.
@@ -22,7 +22,7 @@ import {
   TARGET_RED,
   WASH_DOT,
   WASH_LINE,
-} from "../performance-lab/ui";
+} from "../performance-ui";
 
 const MARK = INDIGO;
 const SLATE = FACT_GLYPH;

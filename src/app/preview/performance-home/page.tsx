@@ -30,7 +30,7 @@
 //   prominent icons than the sheet: his round 2 instruction 6 stands.
 //
 // 30 August 2026 Home joined the shared colour dial,
-// `../performance-lab/ui`. Every colour on this page now comes from
+// `../performance-ui`. Every colour on this page now comes from
 // there, the same file Lab, Totals, Compare, the Heat Map and All Bets
 // read. No value changed: the page looks exactly as he accepted it.
 // Never write a hex in this folder again. Add a token to the dial and
@@ -98,7 +98,7 @@ import {
   TAB_EDGE,
   TAB_GLASS,
   TAB_IDLE,
-} from "../performance-lab/ui";
+} from "../performance-ui";
 
 const fig = Figtree({
   subsets: ["latin"],

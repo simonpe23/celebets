@@ -52,7 +52,7 @@ import {
   SEL_EDGE,
   TRACK,
   TRACK_SOFT,
-} from "../performance-lab/ui";
+} from "../performance-ui";
 import { CompareChart, type Series } from "./compare-chart";
 
 const METRICS = ["Profit", "ROI", "Hit rate"] as const;

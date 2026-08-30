@@ -20,7 +20,7 @@ import {
   LIGHT_RED,
   RED,
   ZERO_LINE,
-} from "../performance-lab/ui";
+} from "../performance-ui";
 
 export type Series = { t: number; v: number }[];
 

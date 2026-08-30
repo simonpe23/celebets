@@ -768,7 +768,7 @@ now.
 
 **The accepted cost, named so nobody is surprised later:** Lab and
 Compare change colour from one line in
-`src/app/preview/performance-lab/ui.ts`. Home is not on that dial,
+`src/app/preview/performance-ui.ts`. Home is not on that dial,
 so a colour change touches two files until he opens the folder. He
 has accepted that, and he has accepted doing it after the pages are
 live.
@@ -798,7 +798,7 @@ we can decide a color change, and it'll update across the board. the
 code has to be built that way."
 
 It is now built that way. Every colour Lab, Compare, Totals and the
-Heat Map draw lives in `src/app/preview/performance-lab/ui.ts`, one
+Heat Map draw lives in `src/app/preview/performance-ui.ts`, one
 named line each, and nothing else in those four folders contains a
 colour: a check for a raw hex outside that file returns nothing but a
 comment. Changing a line there changes that colour on all four pages
@@ -1006,7 +1006,7 @@ page nobody can reach. Nothing about the pill's look changed: one
 `span` became a `Link`. Say the word and it goes back.
 
 **The tile colours were sampled from the sheet pixel by pixel**, into
-the one dial at `performance-lab/ui.ts`: fills, and the deeper shade
+the one dial at `performance-ui.ts`: fills, and the deeper shade
 the sheet uses for both a tile's icon disc and its hairline edge. The
 tint strengthens with the size of the result WITHIN ITS OWN SIGN. On
 one shared scale every red on a winning record sits at the palest
@@ -1177,7 +1177,7 @@ Home separate it is 70 by hand."
 
 **What changed.** Home's `page.tsx`, `charts.tsx` and `icons.tsx` no
 longer hold a single colour. All three import from
-`src/app/preview/performance-lab/ui.ts`, the same file Lab, Totals,
+`src/app/preview/performance-ui.ts`, the same file Lab, Totals,
 Compare, the Heat Map and All Bets read. Fourteen of Home's colours
 did not exist in that file yet, so they were ADDED to it under new
 names. Nothing already there was renamed or moved, because 18 files
@@ -1208,6 +1208,18 @@ its own copies because its folder is protected". That line is now
 out of date. He told this chat not to edit `CLAUDE.md`, so it was
 left alone.
 
-**Raised, not acted on:** `ui.ts` now serves six pages while living
-inside the `performance-lab` folder, which reads as if it belongs to
-Lab. Moving it needs his say so, so it was not moved.
+**THE FILE MOVED, same day, on his order.** Raised as a
+recommendation and he took it: "Yes, move the shared file to
+src/app/preview/performance-ui.ts and update all the imports. Do it
+now, while the other two chats are still paused. That is the whole
+reason they are paused."
+
+It now lives at **`src/app/preview/performance-ui.ts`**, beside the
+six folders that read it instead of inside one of them. All 19
+importing files were rewritten, the docs and `CLAUDE.md` were pointed
+at the new path, and Home was screenshotted again afterwards: still
+byte identical, both widths, both themes.
+
+**He also opened `CLAUDE.md` for this**, which is normally not edited
+from a job chat. His words: "You have my permission to edit it for
+this." The permission was for these lines only.

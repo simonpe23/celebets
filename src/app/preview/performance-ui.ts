@@ -1,6 +1,11 @@
 // THE PERFORMANCE PREVIEW'S COLOUR DIAL. One file, one line per
-// colour. Lab, Compare and every part they draw read from here, so
-// changing a colour here changes it everywhere those pages use it.
+// colour. Home, Lab, Totals, Compare, the Heat Map and All Bets all
+// read from here and none of them holds a colour of its own, so
+// changing a line here changes that colour on every one of them.
+//
+// It sat inside the `performance-lab` folder until 30 August 2026,
+// which read as if Lab owned it. It sits beside the six folders now
+// because it belongs to all of them. Nothing else moved.
 //
 // His instruction, 29 August 2026: "we have to look at colors across
 // the board at a later stage... where we can decide a color change,

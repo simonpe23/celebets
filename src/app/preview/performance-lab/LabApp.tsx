@@ -117,7 +117,7 @@ import {
   TAB_EDGE,
   SUBGREEN,
   TRAY_EDGE,
-} from "./ui";
+} from "../performance-ui";
 import { LabChart } from "./chart";
 
 // ---------------------------------------------------------------

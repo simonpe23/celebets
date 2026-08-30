@@ -15,7 +15,7 @@ import {
   TrackTabIcon,
 } from "../performance-home/icons";
 import CompareApp from "./CompareApp";
-import { INDIGO, INK, PAGE_BG, TAB_EDGE, TAB_GLASS, TAB_IDLE } from "../performance-lab/ui";
+import { INDIGO, INK, PAGE_BG, TAB_EDGE, TAB_GLASS, TAB_IDLE } from "../performance-ui";
 
 const fig = Figtree({
   subsets: ["latin"],

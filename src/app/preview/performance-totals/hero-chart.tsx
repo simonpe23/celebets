@@ -6,7 +6,7 @@
 // dashed zero line, an end dot, and the money ladder on the right.
 
 import { useEffect, useRef, useState } from "react";
-import { GREY_TEXT, INDIGO, ZERO_LINE } from "../performance-lab/ui";
+import { GREY_TEXT, INDIGO, ZERO_LINE } from "../performance-ui";
 
 export type Point = { t: number; v: number };
 

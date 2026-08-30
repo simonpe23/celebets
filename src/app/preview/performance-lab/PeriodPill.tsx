@@ -14,7 +14,7 @@ import {
   INDIGO,
   NET_LABEL,
   SELECTOR_INK,
-} from "./ui";
+} from "../performance-ui";
 import { PERIODS, labelOf, type PeriodKey } from "./period";
 
 export default function PeriodPill({

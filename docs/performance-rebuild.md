@@ -270,7 +270,7 @@ a time, a screenshot after each, his reaction before the next.
 
 - **Colours are one dial now, Home included**: every colour Home,
   Lab, Compare, Totals, the Heat Map and All Bets draw comes from
-  `performance-lab/ui.ts` and none of those folders contains a raw
+  `performance-ui.ts` and none of those folders contains a raw
   hex. Home joined on 30 August 2026, with the owner's permission to
   open the protected folder for that one job. Nothing moved and no
   shade changed: the before and after screenshots of Home, phone and
@@ -296,7 +296,7 @@ a time, a screenshot after each, his reaction before the next.
   from Home's list: Moneyline 30–16 (+$2,658), Premier League 14–8
   (+$743), Low odds 18–11 (+$612), Singles 24–18 (+$440), Player
   Props 7–11 (-$440), whole record 49–38, +$2,637, 24.1% ROI.
-- **Where every Performance colour lives:** `performance-lab/ui.ts`.
+- **Where every Performance colour lives:** `performance-ui.ts`.
   It started as a copy of Home's own constants; since 30 August 2026
   Home imports it too, so there is one source and no copy. Home's icons are imported
   from `../performance-home/icons` (importing reads the reference,
@@ -471,6 +471,6 @@ Not design work, and nobody has scoped it:
    can edit colors and details across pages once this creation
    process is done." He unparked it on 30 August 2026 and gave a one
    job permission to open the protected Home folder. Every
-   Performance page now reads `src/app/preview/performance-lab/ui.ts`
+   Performance page now reads `src/app/preview/performance-ui.ts`
    and holds no colour of its own. Zero visual change, proven by
    identical before and after screenshots at both widths.

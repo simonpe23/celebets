@@ -38,7 +38,7 @@ import {
   NET_LABEL,
   RED,
   SUBGREEN,
-} from "../performance-lab/ui";
+} from "../performance-ui";
 
 const cash = (v: number) =>
   `${v < 0 ? "-" : "+"}$${Math.abs(v).toLocaleString("en-US", {
