@@ -26,6 +26,7 @@ import {
 } from "../pf/engine";
 import { labBets } from "../performance-lab/lab-data";
 import { chipIcon } from "../performance-lab/LabApp";
+import Explain from "../performance-lab/Explain";
 import { Chev, InfoDot } from "../performance-home/icons";
 import { leagueSports } from "../performance-lab/lab-model";
 import {
@@ -504,7 +505,7 @@ export default function CompareApp() {
               style={{ color: NET_LABEL }}
             >
               {r.label}
-              {r.info ? <InfoDot size={11} /> : null}
+              {r.info ? <Explain term={r.label} size={11} /> : null}
             </span>
             <span
               className="flex-1 py-[10px] pr-[13px] text-right"

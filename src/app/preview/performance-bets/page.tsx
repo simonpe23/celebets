@@ -1,10 +1,9 @@
-// The Heat Map preview shell: the page column, the Figtree face and
-// the floating sticky tab bar, all the accepted Home's. The living
-// page is HeatmapApp.tsx.
+// The All Bets preview shell, job 5: the page column, the Figtree
+// face and the floating sticky tab bar, all the accepted Home's. The
+// living page is BetsApp.tsx.
 //
-// Its own screen, reached from the Heat Map pill on Home, with a back
-// arrow that returns there. The heat map lives on Home and nowhere
-// else for now, his ruling of 26 August 2026.
+// Reached from Lab's "See these N bets" and Totals' "See all bets",
+// and the back arrow returns to whichever one sent you.
 
 import { Suspense } from "react";
 import { Figtree } from "next/font/google";
@@ -14,7 +13,7 @@ import {
   ResearchTabIcon,
   TrackTabIcon,
 } from "../performance-home/icons";
-import HeatmapApp from "./HeatmapApp";
+import BetsApp from "./BetsApp";
 import { INDIGO, INK, PAGE_BG, TAB_EDGE, TAB_GLASS, TAB_IDLE } from "../performance-lab/ui";
 
 const fig = Figtree({
@@ -34,7 +33,7 @@ export default function PerformanceHeatmapPreview() {
     >
       <div className="relative mx-auto flex w-full max-w-[390px] flex-1 flex-col">
         <Suspense fallback={null}>
-          <HeatmapApp />
+          <BetsApp />
         </Suspense>
         <div className="min-h-[6px] grow" />
       </div>

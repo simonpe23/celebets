@@ -35,11 +35,20 @@
 // Tapping a tile opens Lab with that fact selected, his ruling of
 // 26 August 2026, and the figure on the tile is the figure Lab shows.
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { money, makeEngine, type Chip } from "../pf/engine";
 import { labBets } from "../performance-lab/lab-data";
 import { chipIcon } from "../performance-lab/LabApp";
+import Explain from "../performance-lab/Explain";
+import PeriodPill from "../performance-lab/PeriodPill";
+import {
+  betsIn,
+  isPeriod,
+  withPeriod,
+  type PeriodKey,
+} from "../performance-lab/period";
 import { Chev, GoldSparkle, InfoDot } from "../performance-home/icons";
 import {
   AMBER_TILE,
@@ -108,9 +117,12 @@ const selOf = (chips: Chip[]) =>
   chips.map((c) => `${c.group}~${c.kind}~${c.value}`).join("|");
 // Lab opens in the fact's own domain. Without this a Crypto fact
 // landed on a Sports-mode Lab and showed nothing.
-const labUrl = (f: Fact) =>
-  `/preview/performance-lab?sel=${encodeURIComponent(selOf(f.chips))}` +
-  (f.domain === "Sports" ? "" : `&domain=${encodeURIComponent(f.domain)}`);
+const labUrl = (f: Fact, period: PeriodKey) =>
+  withPeriod(
+    `/preview/performance-lab?sel=${encodeURIComponent(selOf(f.chips))}` +
+      (f.domain === "Sports" ? "" : `&domain=${encodeURIComponent(f.domain)}`),
+    period
+  );
 
 // Type scales with the phone so a 320px screen shrinks the figures
 // instead of clipping them, and never grows past the drawn size.
@@ -276,7 +288,16 @@ type Streak = {
 };
 
 export default function HeatmapApp() {
-  const engine = useMemo(() => makeEngine(labBets), []);
+  // Job 4. The whole page follows the period: the four cards, the map
+  // and the streak windows, because the engine itself is built from
+  // the filtered record.
+  const params = useSearchParams();
+  const rawPeriod = params.get("period");
+  const [period, setPeriod] = useState<PeriodKey>(
+    isPeriod(rawPeriod) ? rawPeriod : "all"
+  );
+  const [periodOpen, setPeriodOpen] = useState(false);
+  const engine = useMemo(() => makeEngine(betsIn(labBets, period)), [period]);
 
   const singles = useMemo(() => singleFacts(engine), [engine]);
   const pairs = useMemo(() => pairFacts(engine, singles), [engine, singles]);
@@ -394,6 +415,15 @@ export default function HeatmapApp() {
       >
         See where your money works and where it leaks.
       </p>
+      <div className="relative z-30 mt-[8px] flex justify-center">
+        <PeriodPill
+          period={period}
+          onPick={setPeriod}
+          open={periodOpen}
+          setOpen={setPeriodOpen}
+          align="left"
+        />
+      </div>
 
       {/* Four findings, each a door into Lab. A card is left out when
           the record cannot support it, rather than inventing one. */}
@@ -405,7 +435,7 @@ export default function HeatmapApp() {
             name={edge.label}
             headline={`+${pct(edge.roi)} ROI`}
             meta={`${edge.s.wins}–${edge.s.losses} record`}
-            href={labUrl(edge)}
+            href={labUrl(edge, period)}
           />
         ) : null}
         {leak ? (
@@ -415,7 +445,7 @@ export default function HeatmapApp() {
             name={leak.label}
             headline={`${pct(leak.roi)} ROI`}
             meta={`${leak.s.wins}–${leak.s.losses} record`}
-            href={labUrl(leak)}
+            href={labUrl(leak, period)}
           />
         ) : null}
       </div>
@@ -428,7 +458,7 @@ export default function HeatmapApp() {
               name={hot.f.label}
               headline="Hot streak"
               meta={`${hot.form.wins}–${hot.form.losses} in last ${hot.form.picks} picks`}
-              href={labUrl(hot.f)}
+              href={labUrl(hot.f, period)}
             />
           ) : null}
           {cool ? (
@@ -438,7 +468,7 @@ export default function HeatmapApp() {
               name={cool.f.label}
               headline="Cooling off"
               meta={`${cool.form.wins}–${cool.form.losses} in last ${cool.form.picks} picks`}
-              href={labUrl(cool.f)}
+              href={labUrl(cool.f, period)}
             />
           ) : null}
         </div>
@@ -455,7 +485,7 @@ export default function HeatmapApp() {
           style={{ color: NET_LABEL }}
         >
           Performance map
-          <InfoDot size={12} />
+          <Explain term="Performance map" />
         </p>
         {tiles.length === 0 ? (
           <p
@@ -534,7 +564,7 @@ export default function HeatmapApp() {
               ) : (
                 <Link
                   key={t.key}
-                  href={labUrl(t.fact!)}
+                  href={labUrl(t.fact!, period)}
                   className={className}
                   style={style}
                 >
@@ -549,7 +579,7 @@ export default function HeatmapApp() {
         className="relative mt-[9px] flex items-center justify-center gap-[4px] px-[15px] text-center text-[8.5px] font-semibold"
         style={{ color: GREY_TEXT }}
       >
-        <InfoDot size={11} />
+        <Explain term="Map sizing" size={11} />
         Size shows impact on your results, color shows profit or loss.
       </p>
 

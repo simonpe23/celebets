@@ -49,6 +49,7 @@ const PREVIEW = [
   "/preview/performance-totals",
   "/preview/performance-compare",
   "/preview/performance-heatmap",
+  "/preview/performance-bets",
   "/preview/settings",
   "/preview/research",
   "/preview/insights",
@@ -203,6 +204,20 @@ for (const theme of ["light", "dark"]) {
           else if (r.status() >= 400) note(where, `internal link is broken (${r.status()}): ${href}`);
         }
       }
+
+      // SIDEWAYS SCROLL. A page wider than the phone it is on drags
+      // left and right under the thumb, and a screenshot of it looks
+      // perfectly fine because the shot is taken at the page's own
+      // width, not the phone's. Only a script sees this. Added 29
+      // August 2026 after the Performance menu was found overflowing
+      // a 320px phone by 52px, having passed every screenshot round.
+      const sideways = await page.evaluate(
+        () =>
+          document.documentElement.scrollWidth -
+          document.documentElement.clientWidth
+      );
+      if (sideways > 1)
+        note(where, `page scrolls sideways by ${sideways}px`);
 
       // Images that were requested but never arrived, and images with
       // no alt text, which is both an accessibility and a copy problem.

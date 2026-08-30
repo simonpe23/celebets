@@ -75,6 +75,9 @@ import {
   WhistleIcon,
 } from "./lab-icons";
 import { labBets } from "./lab-data";
+import Explain from "./Explain";
+import PeriodPill from "./PeriodPill";
+import { betsIn, isPeriod, type PeriodKey } from "./period";
 import {
   buildGroups,
   DOMAINS,
@@ -191,18 +194,33 @@ function parseSel(raw: string | null): Chip[] {
   return out;
 }
 
-function selToUrl(sel: Chip[], domain: Domain): string {
+function selToUrl(sel: Chip[], domain: Domain, period: PeriodKey): string {
   const p = new URLSearchParams();
   if (sel.length > 0)
     p.set("sel", sel.map((c) => `${c.group}~${c.kind}~${c.value}`).join("|"));
   if (domain !== "Sports") p.set("domain", domain);
+  // Job 4. Without this, picking a chip silently threw the period
+  // away and the numbers jumped back to the whole record.
+  if (period !== "all") p.set("period", period);
   const q = p.toString();
   return q ? `?${q}` : window.location.pathname;
 }
 
 export default function LabApp() {
-  const engine = useMemo(() => makeEngine(labBets), []);
   const params = useSearchParams();
+  // Job 4. The period is applied by building the engine from a
+  // filtered record, so every chip price, the chart and the KPI row
+  // all follow with no call site knowing about dates.
+  const rawPeriod = params.get("period");
+  const [period, setPeriod] = useState<PeriodKey>(
+    isPeriod(rawPeriod) ? rawPeriod : "all"
+  );
+  const [periodOpen, setPeriodOpen] = useState(false);
+  // Job 7. A row that scrolls sideways hides whatever ran off the
+  // edge, and "All sports" promised a way to see it. Tapping it wraps
+  // the row instead, so every fact in that group is on screen at once.
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
+  const engine = useMemo(() => makeEngine(betsIn(labBets, period)), [period]);
   const [domain, setDomain] = useState<Domain>(() => {
     const d = params.get("domain");
     return (DOMAINS as string[]).includes(d ?? "") ? (d as Domain) : "Sports";
@@ -212,8 +230,26 @@ export default function LabApp() {
   const groupsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    window.history.replaceState(null, "", selToUrl(sel, domain));
-  }, [sel, domain]);
+    window.history.replaceState(null, "", selToUrl(sel, domain, period));
+  }, [sel, domain, period]);
+
+  // Job 3. Totals' "View all" links name a group; Lab is the full
+  // list, so it just scrolls there.
+  const groupRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const jumpTo = params.get("group");
+  // The six groups all fit on one screen at the bottom of the page, so
+  // scrolling alone cannot say which one you were sent to. The arrival
+  // is marked instead, and fades.
+  const [landed, setLanded] = useState<string | null>(null);
+  useEffect(() => {
+    if (!jumpTo) return;
+    const el = groupRefs.current[jumpTo];
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    setLanded(jumpTo);
+    const t = setTimeout(() => setLanded(null), 2200);
+    return () => clearTimeout(t);
+  }, [jumpTo, domain]);
 
   const groups = useMemo(
     () => buildGroups(engine, domain, sel),
@@ -348,13 +384,15 @@ export default function LabApp() {
           style={{ color: NET_LABEL }}
         >
           Net profit
-          <InfoDot size={13} />
+          <Explain term="Net profit" />
         </p>
-        <span
-          className="relative top-[2px] flex h-[24px] items-center rounded-full bg-white px-[12px] text-[9.5px] font-semibold"
-          style={{ color: SELECTOR_INK, boxShadow: "0 1px 3px rgba(30,25,60,0.07)" }}
-        >
-          All time
+        <span className="relative top-[2px] z-30">
+          <PeriodPill
+            period={period}
+            onPick={setPeriod}
+            open={periodOpen}
+            setOpen={setPeriodOpen}
+          />
         </span>
       </div>
       <p
@@ -439,7 +477,12 @@ export default function LabApp() {
           Compare door at exactly two selections, wearing Soon. */}
       {sel.length > 0 ? (
         <div className="relative mx-[15px] mt-[10px] flex gap-[8px]">
-          <button
+          {/* Job 5. It was a button that did nothing; it opens All
+              Bets now, carrying the selection and the period. */}
+          <Link
+            href={`/preview/performance-bets?sel=${encodeURIComponent(
+              sel.map((c) => `${c.group}~${c.kind}~${c.value}`).join("|")
+            )}${period === "all" ? "" : `&period=${period}`}`}
             className="flex h-[50px] min-w-0 flex-1 items-center rounded-[14px] bg-white pl-[9px] pr-[10px] text-left"
             style={{ boxShadow: "0 1px 4px rgba(24,20,50,0.06), 0 0 0 1px rgba(24,20,50,0.02)" }}
           >
@@ -451,14 +494,14 @@ export default function LabApp() {
             </span>
             <span className="ml-[10px] min-w-0 flex-1 leading-[1.4]">
               <span className="block truncate text-[9.8px] font-bold">
-                See these {picks} bets
+                See these {whole.bets} {whole.bets === 1 ? "bet" : "bets"}
               </span>
               <span className="block text-[8px]" style={{ color: GREY_TEXT }}>
                 View in betting history
               </span>
             </span>
             <Chev size={9} color={CHEV} />
-          </button>
+          </Link>
           {compareReady ? (
             <Link
               href={`/preview/performance-compare?sel=${encodeURIComponent(
@@ -500,7 +543,18 @@ export default function LabApp() {
       </div>
 
       {groups.map((g) => (
-        <div key={g.key} className="relative mt-[15px]">
+        <div
+          key={g.key}
+          ref={(el) => {
+            groupRefs.current[g.key] = el;
+          }}
+          className="relative mt-[15px] scroll-mt-[10px] transition-colors duration-500"
+          style={
+            landed === g.key
+              ? { background: SEL_BG, borderRadius: 14 }
+              : { background: "transparent", borderRadius: 14 }
+          }
+        >
           <div className="flex items-center justify-between pl-[20px] pr-[19px]">
             {g.key === "sport" ? (
               <div className="relative">
@@ -552,16 +606,33 @@ export default function LabApp() {
                 {g.title}
               </p>
             )}
-            <span
+            <button
+              onClick={() =>
+                setOpenGroups((o) => ({ ...o, [g.key]: !o[g.key] }))
+              }
+              aria-label={
+                openGroups[g.key]
+                  ? `Collapse ${g.title.toLowerCase()}`
+                  : `Show every ${g.title.toLowerCase()}`
+              }
               className="flex items-center gap-[4px] text-[9.5px] font-semibold"
-              style={{ color: LINK_INK }}
+              style={{ color: openGroups[g.key] ? INDIGO : LINK_INK }}
             >
-              {g.allLabel}
-              <Chev size={8} color={DOT_MUTED} />
-            </span>
+              {openGroups[g.key] ? "Show less" : g.allLabel}
+              <span className={openGroups[g.key] ? "rotate-90" : undefined}>
+                <Chev
+                  size={8}
+                  color={openGroups[g.key] ? INDIGO : DOT_MUTED}
+                />
+              </span>
+            </button>
           </div>
           <div
-            className="mt-[7px] flex gap-[7px] overflow-x-auto pb-[3px] pl-[15px] pr-[15px] [&::-webkit-scrollbar]:hidden"
+            className={
+              openGroups[g.key]
+                ? "mt-[7px] flex flex-wrap gap-[7px] pb-[3px] pl-[15px] pr-[15px]"
+                : "mt-[7px] flex gap-[7px] overflow-x-auto pb-[3px] pl-[15px] pr-[15px] [&::-webkit-scrollbar]:hidden"
+            }
             style={{ scrollbarWidth: "none" }}
           >
             {g.chips.map((c) => {
@@ -572,7 +643,9 @@ export default function LabApp() {
                 <button
                   key={c.value}
                   onClick={() => toggle(c)}
-                  className="flex h-[44px] shrink-0 items-center gap-[9px] rounded-[12px] bg-white pl-[11px] pr-[14px] transition-colors"
+                  className={`flex h-[44px] items-center gap-[9px] rounded-[12px] bg-white pl-[11px] pr-[14px] transition-colors ${
+                    openGroups[g.key] ? "max-w-full" : "shrink-0"
+                  }`}
                   style={{
                     background: on ? SEL_BG : CARD,
                     boxShadow: on

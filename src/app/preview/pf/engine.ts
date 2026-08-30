@@ -208,7 +208,21 @@ export interface Engine {
   }[];
   rankedFacts: (context: Chip[], minPicks: number, before?: number) => Fact[];
   sortFacts: (facts: Fact[], mode: SortMode) => Fact[];
+  // The bets behind a selection, newest first, for the All Bets page.
+  // It lives here rather than in that page so there is ONE matcher:
+  // a list that disagreed with the record above it would be worse
+  // than no list.
+  betsFor: (filters: Chip[]) => MatchedBet[];
 }
+
+export type MatchedBet = {
+  bet: BetWithLegs;
+  // How many of the slip's picks the selection actually covers. A
+  // three pick parlay with one Football leg is a Football bet, but
+  // saying so without saying "1 of 3" overstates it.
+  matched: number;
+  legs: number;
+};
 
 export function makeEngine(bets: BetWithLegs[]): Engine {
   const settled = bets.filter(
@@ -246,6 +260,28 @@ export function makeEngine(bets: BetWithLegs[]): Engine {
       if (any) s.bets += 1;
     }
     return s;
+  }
+
+  function betsFor(filters: Chip[]): MatchedBet[] {
+    const byGroup = new Map<GroupKey, Chip[]>();
+    for (const c of filters)
+      byGroup.set(c.group, [...(byGroup.get(c.group) ?? []), c]);
+    const out: MatchedBet[] = [];
+    for (const bet of settled) {
+      let matched = 0;
+      bet.legs.forEach((leg) => {
+        for (const [, chips] of byGroup) {
+          if (!chips.some((c) => chipMatches(bet, leg, c))) return;
+        }
+        matched += 1;
+      });
+      if (matched > 0) out.push({ bet, matched, legs: bet.legs.length });
+    }
+    return out.sort(
+      (a, b) =>
+        new Date(b.bet.settled_at ?? 0).getTime() -
+        new Date(a.bet.settled_at ?? 0).getTime()
+    );
   }
 
   function seriesFor(filters: Chip[]): { t: number; v: number }[] {
@@ -417,6 +453,7 @@ export function makeEngine(bets: BetWithLegs[]): Engine {
     sparkFor,
     seriesFor,
     runningFor,
+    betsFor,
     rankedFacts,
     sortFacts,
   };

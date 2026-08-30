@@ -14,7 +14,9 @@
 // the product rule in CLAUDE.md is decimal to two places. The rule
 // wins over the drawing.
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { makeEngine, money, type Chip } from "../pf/engine";
 import { labBets } from "../performance-lab/lab-data";
 import { chipIcon } from "../performance-lab/LabApp";
@@ -36,6 +38,9 @@ import {
   TINT_GOOD,
   TINT_MID,
 } from "../performance-lab/ui";
+import Explain from "../performance-lab/Explain";
+import PeriodPill from "../performance-lab/PeriodPill";
+import { betsIn, isPeriod, withPeriod, type PeriodKey } from "../performance-lab/period";
 import { Donut } from "./donut";
 import { HeroLine } from "./hero-chart";
 import {
@@ -92,21 +97,50 @@ function Card({
   );
 }
 
-function SectionHead({ title, link }: { title: string; link?: string }) {
+// Job 3: "View all" opens Lab at that group. Lab IS the full list, so
+// there is no new page to build; the address just names the group and
+// Lab scrolls to it.
+function SectionHead({
+  title,
+  link,
+  href,
+}: {
+  title: string;
+  link?: string;
+  href?: string;
+}) {
   return (
     <div className="flex items-center justify-between px-[13px] pt-[13px]">
       <h2 className="text-[12px] font-bold">{title}</h2>
-      {link ? (
-        <span className="text-[9.5px] font-semibold" style={{ color: INDIGO }}>
+      {link && href ? (
+        <Link
+          href={href}
+          className="flex items-center gap-[3px] text-[9.5px] font-semibold"
+          style={{ color: INDIGO }}
+        >
           {link}
-        </span>
+          <Chev size={8} color={INDIGO} />
+        </Link>
       ) : null}
     </div>
   );
 }
 
 export default function TotalsApp() {
-  const engine = useMemo(() => makeEngine(labBets), []);
+  // Job 4. The period is applied by building the engine from a
+  // filtered record, so every number on the page follows without a
+  // single call site knowing about dates.
+  const params = useSearchParams();
+  const router = useRouter();
+  const raw = params.get("period");
+  const period: PeriodKey = isPeriod(raw) ? raw : "all";
+  const [periodOpen, setPeriodOpen] = useState(false);
+  const setPeriod = (key: PeriodKey) =>
+    router.replace(withPeriod("/preview/performance-totals", key), {
+      scroll: false,
+    });
+
+  const engine = useMemo(() => makeEngine(betsIn(labBets, period)), [period]);
   const all = useMemo(() => overall(engine), [engine]);
   const series = useMemo(
     () => engine.runningFor([]).map((r) => ({ t: r.t, v: r.profit })),
@@ -134,9 +168,15 @@ export default function TotalsApp() {
   return (
     <>
       {/* The period selector, then the result beside its line. */}
-      <div className="relative mt-[10px] flex items-center gap-[4px] pl-[15px]">
-        <span className="text-[11px] font-bold">All time</span>
-        <Chev size={9} color={INK} />
+      <div className="relative z-30 mt-[10px] flex items-center pl-[15px]">
+        <PeriodPill
+          period={period}
+          onPick={setPeriod}
+          open={periodOpen}
+          setOpen={setPeriodOpen}
+          align="left"
+          size="plain"
+        />
       </div>
 
       <div className="relative mt-[6px] flex items-start justify-between pl-[15px] pr-[8px]">
@@ -152,12 +192,17 @@ export default function TotalsApp() {
             style={{ color: NET_LABEL }}
           >
             Net profit
-            <InfoDot size={12} />
+            <Explain term="Net profit" />
           </p>
           <p className="mt-[7px] flex items-center gap-[5px] text-[9.5px] font-semibold">
             <span style={{ color: all.profit < 0 ? RED : SUBGREEN }}>
-              {all.profit < 0 ? "" : "+"}
-              {all.staked > 0 ? `${((all.profit / all.staked) * 100).toFixed(1)}%` : "-"} ROI
+              {/* A period with nothing settled in it has no ROI, and
+                  "+-" is not a number. Reachable since job 4 gave the
+                  page a period control. */}
+              {all.staked > 0
+                ? `${all.profit < 0 ? "" : "+"}${((all.profit / all.staked) * 100).toFixed(1)}%`
+                : "-"}{" "}
+              ROI
             </span>
             <span
               className="inline-block h-[2.5px] w-[2.5px] rounded-full"
@@ -196,7 +241,11 @@ export default function TotalsApp() {
 
       {/* Profit by Sport: the ring, then the ranked list. */}
       <Card className="mt-[11px] pb-[12px]">
-        <SectionHead title="Profit by Sport" link="View all" />
+        <SectionHead
+          title="Profit by Sport"
+          link="View all"
+          href={withPeriod("/preview/performance-lab?group=sport", period)}
+        />
         <div className="mt-[8px] flex items-center gap-[8px] pl-[9px] pr-[11px]">
           <Donut
             size={104}
@@ -245,7 +294,11 @@ export default function TotalsApp() {
 
       {/* Per Category, two columns. */}
       <Card className="mt-[11px] pb-[10px]">
-        <SectionHead title="Per Category" link="View all" />
+        <SectionHead
+          title="Per Category"
+          link="View all"
+          href={withPeriod("/preview/performance-lab?group=what", period)}
+        />
         <div className="mt-[6px] flex px-[11px]">
           {[catLeft, catRight].map((col, ci) => (
             <div
@@ -371,10 +424,15 @@ export default function TotalsApp() {
       <Card className="mb-[6px] mt-[11px] pb-[8px]">
         <div className="flex items-center justify-between px-[13px] pt-[13px]">
           <h2 className="text-[12px] font-bold">Recent Bets</h2>
-          <span className="flex items-center gap-[3px] text-[9.5px] font-semibold" style={{ color: INDIGO }}>
+          {/* Job 5. */}
+          <Link
+            href={withPeriod("/preview/performance-bets?from=totals", period)}
+            className="flex items-center gap-[3px] text-[9.5px] font-semibold"
+            style={{ color: INDIGO }}
+          >
             See all bets
             <Chev size={8} color={INDIGO} />
-          </span>
+          </Link>
         </div>
         <div className="mt-[6px]">
           {recent.map((b, i) => (

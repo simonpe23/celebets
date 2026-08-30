@@ -1016,6 +1016,137 @@ one shared scale every red on a winning record sits at the palest
 step, and the leak the page exists to show is the quietest thing on
 it.
 
+**COMPARE IS APPROVED. 29 August 2026**, his words: "compare is
+approved for now." Recorded at that confidence: approved, with "for
+now" left in. The page stands as built at
+`/preview/performance-compare`.
+
+**JOBS 3 AND 4 ARE BUILT. 29 August 2026**, his words: "go ahead with
+3 and 4."
+
+**THE HOME FOLDER STAYS LOCKED, and that is his call, not a
+limitation.** His words: "Home folder will not be unlocked. I will
+organize that in the home chat." He gave the reason as safety;
+CLAUDE's correction, which he accepted by silence rather than
+agreement, is that it is recorded as protecting accepted work and
+stopping two chats colliding. **The visible cost, named so nobody is
+surprised: Home's "This month" pill is dead while Totals, Lab and the
+Heat Map filter by period. The four pages disagree until his Home chat
+wires it.**
+
+**LAB AND THE HEAT MAP GET A PERIOD CONTROL. Ruled 29 August 2026**,
+his words: "lab and heat map needs a period control." Neither page had
+one drawn in any mockup, so the control is CLAUDE's design: the
+accepted Home's own white period pill, and Lab's own domain dropdown
+for the menu under it, so nothing new was invented. On Lab it sits
+beside Net profit exactly where Home puts it. On the Heat Map it is
+centred under the subtitle, because that page's header row is already
+back arrow, title and sparkle.
+
+**Four calls on the period, CLAUDE's, all reversible:**
+
+1. **The vocabulary is the live app's**, the list in `StatsView.tsx`:
+   All time, This year, This month, This week, Today. Home's pill
+   already says "This month" and Totals' says "All time", both from
+   that list, and the date maths is `periodStart` in
+   `src/lib/stats.ts`, the same function Track uses. One meaning of
+   "This month" everywhere.
+2. **Custom is left out.** It needs a date picker, and these are demo
+   pages on a generated record.
+3. **The period is applied by rebuilding the engine from a filtered
+   record**, not by threading a date through every call. Every page's
+   existing code then follows with no call site knowing about dates,
+   which is the same reason every money rule lives in one file.
+4. **Compare keeps its own 1M / 3M / 6M / 1Y / All buttons.** That is
+   a chart range on one page, not the page's scope, and he approved
+   Compare as built.
+
+**A ROI of "+-" was reachable and is fixed.** A period with nothing
+settled in it has no ROI, and the page printed a plus in front of the
+placeholder. Only job 4 made it reachable.
+
+**SIDEWAYS SCROLL IS NOW A BUILD CHECK.** `sitecheck.mjs` fails if a
+page is wider than the phone it is on. It was added after the
+Performance menu was found overflowing a 320px phone by 52px, having
+passed every screenshot round: the shot is taken at the page's own
+width, so it looks perfect. This is the standing rule that when
+something reaches him that a machine could have caught, the fix is a
+new check, not a promise to be careful. The overflow itself is job 14
+and needs the Home chat.
+
+**JOB 5 IS BUILT: THE ALL BETS PAGE. 29 August 2026**, his words: "do
+5." At `/preview/performance-bets`, reached from Lab's "See these N
+bets" and Totals' "See all bets", both of which were drawn and dead.
+
+**NO MOCKUP EXISTS FOR THIS PAGE, so nothing was invented.** The row
+is the one he already approved on Totals, from his own sheet
+"2. Totals.png", at full length instead of the last three. The header
+is the Heat Map's header. That is the whole design.
+
+**Five calls, CLAUDE's, all reversible:**
+
+1. **The matching lives in the engine**, as `betsFor`, not in the
+   page. A list that disagreed with the record printed above it would
+   be worse than no list, and one matcher cannot disagree with
+   itself.
+2. **A row shows the whole slip's money, not a share of it.** A row
+   here is a real bet. Where a selection only covers part of a parlay
+   the row says "2 of 3 picks", because a three pick parlay with one
+   Moneyline leg IS a Moneyline bet, and saying so without the count
+   overstates it.
+3. **The header separates bets from record:** "30 bets, 30-16
+   record". A parlay is one bet and three picks, so without the words
+   the two numbers read like a contradiction.
+4. **Lab's door was lying and now is not.** It said "See these N
+   bets" where N was the pick count. It says bets now, and
+   `jumptest.mjs` fails the build if the door and the page ever
+   disagree.
+5. **Settled bets only.** Pending bets are not in the engine at all.
+
+**The page has no period control of its own**, on purpose: it shows
+what the page that opened it was showing. Changing the period is that
+page's job.
+
+**JOBS 6 AND 7 ARE BUILT. 29 August 2026**, his words: "do 6 and 7."
+
+**THE (i) DOTS EXPLAIN THEIR NUMBER, job 6.** Nine dots across Lab,
+Totals, Compare and the Heat Map, all of them drawn and silent until
+now. One popover reading one dictionary, because a number explained
+two ways is a number nobody trusts, which is the same reason every
+money rule lives in `src/lib/stats.ts`.
+
+**Three calls, CLAUDE's:**
+
+1. **Net profit means the VIEW's profit here, and the first version
+   of this dictionary said otherwise.** He caught it by asking "what
+   does net profit mean on the lab and totals page?" On Lab, Totals
+   and Compare the figure is the profit of the bets in that view:
+   pick Football and it is $1,903, add This month and it is $1,377.
+   The account's own net profit, `balance + withdrawals - deposits`,
+   is a different number and no preview page shows it: these pages
+   are computed from a bet fixture with no balance at all. The line
+   now reads "What the bets behind this number made or lost:
+   everything they returned, minus everything you staked on them.
+   With nothing selected and All time chosen, that is your whole
+   record." **When the real Home lands with a true account figure it
+   needs its own entry; this one must not be reused.**
+   The banned words are still out and `jumptest.mjs` still fails the
+   build if wallet, deposit, withdraw or bankroll appears there.
+2. **The Heat Map's caption dot admits the overlap.** Its line says
+   the tiles do not add up to net profit and why. That disclosure was
+   only in a chat message and in the code comments until now.
+3. **The card nudges itself back on screen.** A dot near the right
+   edge pushed a fixed width card off a 320px phone by 31px. It is
+   measured on open, not aligned by a guess.
+
+**A GROUP LABEL WRAPS ITS ROW, job 7.** "All sports" promised a way to
+see what had scrolled off the edge and did nothing. It now wraps that
+row so every fact in the group is on screen at once, and reads "Show
+less" when open. **No vocabulary sheet was built:** the numbered list
+offered one, and wrapping the row answers the real need for a fraction
+of the work. If he wants a sheet showing sports he has never bet, that
+is a new job.
+
 ## Process
 
 **Past reactions are not constraints.** Said twice in two days: "just

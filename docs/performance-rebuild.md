@@ -178,6 +178,96 @@ a time, a screenshot after each, his reaction before the next.
   crops no figure.
   The deliberate differences from the sheet are in
   `docs/decisions.md`.
+- **THE NUMBERED JOB LIST. Written 29 August 2026 at his request** so
+  he can start one by saying its number. **These numbers are stable.
+  Never renumber them.** When a job is done, mark it DONE here and
+  leave the number in place. New jobs take the next free number.
+  Order is most value per hour first, and things today's `/stats`
+  already does before things it never did.
+
+  1. **The bottom tab bar works on every preview page.** Track to
+     `/app`, Performance to `/stats`, Research to `/recommendations`,
+     the three the real `src/components/TabBar.tsx` already uses.
+     Profile is the fourth tab he ruled on 26 August 2026 and has no
+     page: point it at `/settings`, which IS Profile today, until job
+     13. Touches all five preview pages plus the protected Home
+     folder, so it needs the Home unlock.
+  2. **Totals' six Per Category rows open Lab** with that category
+     selected. Identical mechanic to Home's ranked rows, which is
+     built and proved by `jumptest.mjs`.
+  3. **DONE, 29 August 2026. Totals' two "View all" links open Lab**
+     at that group. Profit by Sport goes to the Sport group, Per
+     Category to the Category group. No new page: Lab is the full
+     list. The six groups all fit on one screen at the bottom of Lab,
+     so scrolling alone could not say which one you were sent to; the
+     arrival is marked with the selected-chip lavender and fades after
+     two seconds. `jumptest.mjs` checks the mark, not the scroll.
+  4. **DONE for three of four pages, 29 August 2026. The period
+     control works** on Totals, Lab and the Heat Map. Home's "This
+     month" pill is still dead because that folder is locked to this
+     chat, his ruling: "Home folder will not be unlocked. I will
+     organize that in the home chat." **So Home and the other three
+     disagree until his Home chat wires it.** The control is
+     `performance-lab/PeriodPill.tsx` reading
+     `performance-lab/period.ts`, which uses the live app's own
+     periods and `periodStart` from `src/lib/stats.ts`, the same
+     function Track's balance band uses. The period travels between
+     the three pages in the address and survives picking a chip.
+  5. **DONE, 29 August 2026. The All Bets page** at
+     `/preview/performance-bets`, closing both of Lab's and Totals'
+     bet doors. (It does not close a third: Compare has no such door
+     drawn, which the numbered list wrongly claimed.) It reads the
+     same `?sel=` and `?period=` address Lab writes, so arriving from
+     either page shows what that page was showing, and the back arrow
+     returns you there with your selection intact.
+  6. **DONE, 29 August 2026. The (i) dots explain their number.** One
+     popover, `performance-lab/Explain.tsx`, reading one dictionary,
+     `performance-lab/explain.ts`. Nine entries, serving all nine
+     dots across Lab, Totals, Compare and the Heat Map.
+  7. **DONE, 29 August 2026. Lab's six group labels expand the row.**
+     Tapping "All sports" wraps that row instead of scrolling it, so
+     every fact in the group is on screen; the label becomes "Show
+     less". No new page, no vocabulary sheet.
+  8. **Delete "What changed?" from Home.** CLAUDE's suggestion, not
+     his decision. The Heat Map's New Pattern and Cooling Off cards
+     already answer "what moved lately", and two answers to one
+     question is how a page gets confusing. Needs the Home unlock.
+  9. **Real numbers.** The four pages read `lab-data.ts`, a demo
+     fixture. Point them at his actual record through the same
+     engine. The biggest unknown in the whole rebuild: a thin record
+     may leave the Heat Map nearly empty.
+  10. **Dark theme** on all four pages. They are light only today.
+  11. **Empty states.** What a new user with no settled bets sees on
+      Home, Lab, Totals and the Heat Map.
+  12. **Swap `/stats` over.** The new Performance replaces today's
+      page at its own address. Nothing reaches a real user before
+      this. Build order is his: "Home, Lab, Totals are the main
+      pages", Home ships first, Totals holds today's `/stats`
+      content unredesigned on day one, Lab wears a Soon badge.
+  13. **The Profile tab rework.** Profile IS today's Settings page
+      promoted to a tab, his ruling of 26 August 2026, and it is due
+      a rework. A separate product job, not a wiring one.
+
+- **EVERY CONTROL WAS CLICKED, 29 August 2026.** Not read, clicked,
+  across all five preview pages and their states. Everything below
+  is drawn and inert: it looks tappable and does nothing. None of it
+  is a bug, all of it is a door to something not built yet, and all
+  of it is what the owner will find by hand if nobody writes it down.
+  - **Home:** "This month" (the period picker) and "What changed?".
+  - **Lab:** "See these N bets" (needs the All Bets page), and the
+    six group labels: All sports, All leagues, All categories, All
+    periods, All types, All ranges (need the vocabulary sheets).
+  - **Totals:** "All time" (period picker), both "View all" links,
+    "See all bets", and the six Per Category rows.
+  - **Every page:** the Track, Research and Profile tabs in the
+    bottom bar, and the small (i) info dots.
+  Everything else works and was verified: Home's five ranked rows,
+  Explore Lab, the Heat Map pill, all three menu tabs on all three
+  pages, all 31 chip and tray buttons in Lab, its domain dropdown,
+  Add a fact (it scrolls the groups into view), the Compare door,
+  Compare's three metric and five period buttons, all four Heat Map
+  insight cards, all eight tiles, and every back arrow.
+
 - **Colours are one dial now**: every colour Lab, Compare, Totals and
   the Heat Map draw comes from `performance-lab/ui.ts` and none of
   those folders contains a raw hex. Home still holds its own copies

@@ -3,7 +3,7 @@
 // Lab, with Totals active and the other two as real links. The living
 // page is TotalsApp.tsx.
 
-import Link from "next/link";
+import { Suspense } from "react";
 import { Figtree } from "next/font/google";
 import {
   PerformanceTabIcon,
@@ -11,13 +11,11 @@ import {
   ResearchTabIcon,
   TrackTabIcon,
 } from "../performance-home/icons";
+import PerfMenu from "../performance-lab/PerfMenu";
 import TotalsApp from "./TotalsApp";
 import {
   INDIGO,
-  INDIGO_FILL,
   INK,
-  MENU_IDLE,
-  MENU_TRACK,
   PAGE_BG,
   TAB_EDGE,
   TAB_GLASS,
@@ -40,35 +38,13 @@ export default function PerformanceTotalsPreview() {
       }}
     >
       <div className="relative mx-auto flex w-full max-w-[390px] flex-1 flex-col">
-        {/* The Home / Lab / Totals menu, Home's exact geometry with the
-            pill on Totals. Label centers on Home: 59, 181, 296. */}
-        <div
-          className="relative mx-[14px] mt-[7px] h-[36px] rounded-full"
-          style={{ background: MENU_TRACK }}
-        >
-          <Link
-            href="/preview/performance-home"
-            className="absolute left-[59px] top-1/2 -translate-x-1/2 -translate-y-1/2 px-[18px] py-[10px] text-[10.5px] font-semibold"
-            style={{ color: MENU_IDLE }}
-          >
-            Home
-          </Link>
-          <Link
-            href="/preview/performance-lab"
-            className="absolute left-[181px] top-1/2 -translate-x-1/2 -translate-y-1/2 px-[18px] py-[10px] text-[10.5px] font-semibold"
-            style={{ color: MENU_IDLE }}
-          >
-            Lab
-          </Link>
-          <span
-            className="absolute left-[248px] top-[4px] flex h-[28px] w-[110px] items-center justify-center rounded-full text-[10.5px] font-bold text-white"
-            style={{ background: INDIGO_FILL }}
-          >
-            Totals
-          </span>
-        </div>
+        <Suspense fallback={<div className="mx-[14px] mt-[7px] h-[36px]" />}>
+          <PerfMenu active="totals" />
+        </Suspense>
 
-        <TotalsApp />
+        <Suspense fallback={null}>
+          <TotalsApp />
+        </Suspense>
         <div className="min-h-[6px] grow" />
       </div>
 

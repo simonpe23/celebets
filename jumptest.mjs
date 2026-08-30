@@ -246,6 +246,276 @@ try {
 console.log(`${backOk ? "PASS" : "FAIL"} back from the map returns to Home`);
 if (!backOk) fails++;
 
+// JOB 3, 29 August 2026. Totals' "View all" opens Lab at that group.
+// The six groups all fit on one screen at the bottom of Lab, so
+// scrolling alone cannot say which one you were sent to: the arrival
+// is marked, and that mark is what this checks. Landing on the right
+// page at the wrong group is exactly what a screenshot cannot show.
+for (const [label, group, head] of [
+  ["Profit by Sport", "sport", "SPORT"],
+  ["Per Category", "what", "CATEGORY"],
+]) {
+  await page.goto(`http://localhost:${port}/preview/performance-totals`, {
+    waitUntil: "networkidle",
+  });
+  await page.waitForTimeout(400);
+  await page.click(`h2:has-text("${label}") + a`);
+  let ok = true;
+  try {
+    await page.waitForURL(`**group=${group}**`, { timeout: 8000 });
+  } catch {
+    ok = false;
+  }
+  await page.waitForTimeout(900);
+  const marked = await page.evaluate(() =>
+    [...document.querySelectorAll("div")]
+      .filter((d) => d.style.background && d.style.background.includes("240"))
+      .map((d) => (d.innerText || "").split("\n")[0])
+  );
+  const right = ok && marked.includes(head);
+  console.log(
+    `${right ? "PASS" : "FAIL"} Totals "${label}" lands on Lab's ${head} group`
+  );
+  if (!right) fails++;
+}
+
+// JOB 4, 29 August 2026. One period control on three pages. A pill
+// that changes its own label and nothing else is the failure mode.
+for (const [route, marker] of [
+  ["performance-totals", "Total bets"],
+  ["performance-lab", "Net profit"],
+  ["performance-heatmap", "Performance map"],
+]) {
+  await page.goto(`http://localhost:${port}/preview/${route}`, {
+    waitUntil: "networkidle",
+  });
+  await page.waitForTimeout(600);
+  const before = await page.innerText("body");
+  await page.click('button[aria-label="Change the period"]');
+  await page.waitForTimeout(300);
+  await page.getByRole("button", { name: "This month", exact: true }).click();
+  await page.waitForTimeout(800);
+  const after = await page.innerText("body");
+  const redrew =
+    before !== after && after.includes("This month") && after.includes(marker);
+  console.log(`${redrew ? "PASS" : "FAIL"} ${route}: the period redraws the page`);
+  if (!redrew) fails++;
+}
+
+// The period has to survive a tab switch and a chip, or it is a toy.
+await page.goto(
+  `http://localhost:${port}/preview/performance-totals?period=month`,
+  { waitUntil: "networkidle" }
+);
+await page.waitForTimeout(500);
+await page.click('a:has-text("Lab")');
+await page.waitForURL("**/performance-lab**");
+await page.waitForTimeout(800);
+const heldPeriod = page.url().includes("period=month");
+console.log(`${heldPeriod ? "PASS" : "FAIL"} the period carries from Totals to Lab`);
+if (!heldPeriod) fails++;
+
+await page.locator('button:has-text("Football")').first().click();
+await page.waitForTimeout(700);
+const kept = page.url().includes("period=month");
+console.log(`${kept ? "PASS" : "FAIL"} picking a chip in Lab keeps the period`);
+if (!kept) fails++;
+
+// A period with nothing in it must say so, not print NaN at him.
+for (const route of [
+  "performance-totals",
+  "performance-lab",
+  "performance-heatmap",
+]) {
+  await page.goto(
+    `http://localhost:${port}/preview/${route}?period=today`,
+    { waitUntil: "networkidle" }
+  );
+  await page.waitForTimeout(600);
+  const t = await page.innerText("body");
+  const clean = !/NaN|Infinity|undefined|\+-/.test(t);
+  console.log(`${clean ? "PASS" : "FAIL"} ${route} survives an empty period`);
+  if (!clean) fails++;
+}
+
+// JOB 5, 29 August 2026. ALL BETS, one page closing two dead doors.
+// The trap here is a list that disagrees with the record printed
+// above it, so that agreement is what these check.
+await page.goto(`http://localhost:${port}/preview/performance-totals`, {
+  waitUntil: "networkidle",
+});
+await page.waitForTimeout(500);
+await page.click('a:has-text("See all bets")');
+await page.waitForURL("**/performance-bets**");
+await page.waitForTimeout(700);
+let bets = await page.innerText("body");
+const wholeCount = Number((bets.match(/(\d+) bets/) || [])[1]);
+const listed = await page.evaluate(
+  () => document.querySelectorAll('div[class*="rounded-[16px]"] > div').length
+);
+const whole = bets.includes("Your whole record") && wholeCount === listed;
+console.log(
+  `${whole ? "PASS" : "FAIL"} Totals opens All Bets and lists every one (${listed} rows, header says ${wholeCount})`
+);
+if (!whole) fails++;
+
+await page.click('a[aria-label="Back"]');
+await page.waitForURL("**/performance-totals**");
+console.log("PASS back from All Bets returns to Totals");
+
+// Lab's door must agree with the page it opens, to the bet.
+await page.goto(
+  `http://localhost:${port}/preview/performance-lab?sel=${encodeURIComponent(
+    "sport~plain~Football"
+  )}`,
+  { waitUntil: "networkidle" }
+);
+await page.waitForTimeout(700);
+const doorSays = (
+  (await page.innerText("body")).match(/See these (\d+) bets/) || []
+)[1];
+await page.click('a:has-text("See these")');
+await page.waitForURL("**/performance-bets**");
+await page.waitForTimeout(700);
+bets = await page.innerText("body");
+const listSays = (bets.match(/(\d+) bets/) || [])[1];
+const agree =
+  bets.includes("Football, all time") && doorSays === listSays && bets.includes("24–16");
+console.log(
+  `${agree ? "PASS" : "FAIL"} Lab's door and All Bets agree (${doorSays} vs ${listSays})`
+);
+if (!agree) fails++;
+
+await page.click('a[aria-label="Back"]');
+await page.waitForURL("**/performance-lab**");
+const keptSel = page.url().includes("Football");
+console.log(`${keptSel ? "PASS" : "FAIL"} back from All Bets keeps the selection`);
+if (!keptSel) fails++;
+
+// A three pick parlay with one Moneyline leg is a Moneyline bet, but
+// saying so without "1 of 3 picks" overstates it.
+await page.goto(
+  `http://localhost:${port}/preview/performance-bets?sel=${encodeURIComponent(
+    "what~category~Moneyline"
+  )}`,
+  { waitUntil: "networkidle" }
+);
+await page.waitForTimeout(700);
+bets = await page.innerText("body");
+const partial = /\d+ of \d+ picks/.test(bets);
+console.log(`${partial ? "PASS" : "FAIL"} a partly matching parlay says so`);
+if (!partial) fails++;
+
+// And it carries the period, and survives having nothing to show.
+await page.goto(`http://localhost:${port}/preview/performance-bets?period=month`, {
+  waitUntil: "networkidle",
+});
+await page.waitForTimeout(600);
+const monthly = (await page.innerText("body")).includes("this month");
+console.log(`${monthly ? "PASS" : "FAIL"} All Bets carries the period`);
+if (!monthly) fails++;
+
+await page.goto(`http://localhost:${port}/preview/performance-bets?period=today`, {
+  waitUntil: "networkidle",
+});
+await page.waitForTimeout(600);
+bets = await page.innerText("body");
+const emptyOk =
+  bets.includes("No settled bets match") && !/NaN|undefined/.test(bets);
+console.log(`${emptyOk ? "PASS" : "FAIL"} All Bets survives an empty result`);
+if (!emptyOk) fails++;
+
+// JOB 6, 29 August 2026. Every (i) dot explains its number. They
+// were drawn on four screens and opened nothing.
+for (const [route, expect] of [
+  ["performance-lab", "minus everything you staked"],
+  ["performance-totals", "minus everything you staked"],
+  ["performance-heatmap", "every tile is one fact"],
+  [
+    "performance-compare?sel=" +
+      encodeURIComponent("sport~plain~Football|sport~plain~Basketball"),
+    "minus everything you staked",
+  ],
+]) {
+  await page.goto(`http://localhost:${port}/preview/${route}`, {
+    waitUntil: "networkidle",
+  });
+  await page.waitForTimeout(600);
+  const dots = await page.locator('button[aria-label^="What "]').count();
+  let opened = 0;
+  for (let i = 0; i < dots; i++) {
+    await page.locator('button[aria-label^="What "]').nth(i).click();
+    await page.waitForTimeout(220);
+    if ((await page.locator('button[aria-label="Close explanation"]').count()) > 0) {
+      opened += 1;
+      await page.locator('button[aria-label="Close explanation"]').click();
+      await page.waitForTimeout(120);
+    }
+  }
+  await page.locator('button[aria-label^="What "]').first().click();
+  await page.waitForTimeout(300);
+  const said = (await page.innerText("body")).toLowerCase().includes(expect);
+  const ok = dots > 0 && opened === dots && said;
+  console.log(
+    `${ok ? "PASS" : "FAIL"} ${route.split("?")[0]}: all ${dots} info dots explain their number`
+  );
+  if (!ok) fails++;
+}
+
+// The banned finance words must never reach a screen, and Net profit
+// is the one most likely to smuggle them in.
+await page.goto(`http://localhost:${port}/preview/performance-lab`, {
+  waitUntil: "networkidle",
+});
+await page.waitForTimeout(500);
+await page.locator('button[aria-label^="What "]').first().click();
+await page.waitForTimeout(300);
+const clean = !/wallet|deposit|withdraw|bankroll/i.test(
+  await page.innerText("body")
+);
+console.log(
+  `${clean ? "PASS" : "FAIL"} Net profit is explained without the banned words`
+);
+if (!clean) fails++;
+
+// JOB 7, 29 August 2026. A group row scrolls sideways and hides what
+// ran off the edge; its label now wraps the row instead. A screenshot
+// cannot show what is hidden, which is the whole point of the job.
+await page.goto(`http://localhost:${port}/preview/performance-lab`, {
+  waitUntil: "networkidle",
+});
+await page.waitForTimeout(700);
+const shut = await page.evaluate(() => {
+  const row = [...document.querySelectorAll("div")].find((d) =>
+    d.className.includes("overflow-x-auto")
+  );
+  return { hides: row.scrollWidth > row.clientWidth + 1, h: row.getBoundingClientRect().height };
+});
+await page.locator('button[aria-label^="Show every"]').first().click();
+await page.waitForTimeout(500);
+const wide = await page.evaluate(() => {
+  const row = [...document.querySelectorAll("div")].find(
+    (d) => d.className.includes("flex-wrap") && d.className.includes("gap-[7px]")
+  );
+  return {
+    wrapped: !!row,
+    hides: row ? row.scrollWidth > row.clientWidth + 1 : true,
+    h: row ? row.getBoundingClientRect().height : 0,
+    sideways:
+      document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  };
+});
+const expands = shut.hides && wide.wrapped && !wide.hides && wide.h > shut.h;
+console.log(
+  `${expands ? "PASS" : "FAIL"} a group label wraps its row and hides nothing`
+);
+if (!expands) fails++;
+
+const collapses =
+  (await page.locator('button[aria-label="Collapse sport"]').count()) === 1;
+console.log(`${collapses ? "PASS" : "FAIL"} and the label offers Show less`);
+if (!collapses) fails++;
+
 await browser.close();
 console.log(fails ? `${fails} jump(s) broken` : "All doors work.");
 process.exit(fails ? 1 : 0);
