@@ -76,6 +76,23 @@ become tab-bar-only just because the tab exists.
 The avatar used to be the log out button, so one stray tap ended the
 session; log out now sits at the foot of Settings.
 
+**TODAY'S `/stats` IS PRESERVED BEFORE ANY SWAP. Ruled 29 August 2026**
+in his words: "i will no go live and swap performance page until we
+have secured a separate link to the current /stats page."
+
+His suggestion for how: "remove or... move today's slash stats page or
+copy it and put it under /old-stats or something so we don't loose
+ideas from it."
+
+**Stop asking him where the new Performance page will live.** He has
+answered it: "the goal is to make the new performance page appear when
+somebody clicks performance. Whether it's under slash stats or
+somewhere else, I don't care." The address is not a product decision.
+Preserving the old page is.
+
+He was asked this three times in one day. That is the failure this
+entry exists to stop.
+
 ## Money and honesty
 
 **Net profit has one definition**, and the snapshot must never compute
