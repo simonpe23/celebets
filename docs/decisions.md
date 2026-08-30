@@ -84,14 +84,14 @@ His suggestion for how: "remove or... move today's slash stats page or
 copy it and put it under /old-stats or something so we don't loose
 ideas from it."
 
-**Stop asking him where the new Performance page will live.** He has
-answered it: "the goal is to make the new performance page appear when
-somebody clicks performance. Whether it's under slash stats or
-somewhere else, I don't care." The address is not a product decision.
-Preserving the old page is.
+**On the address, he does not have a preference:** "the goal is to make
+the new performance page appear when somebody clicks performance.
+Whether it's under slash stats or somewhere else, I don't care."
 
-He was asked this three times in one day. That is the failure this
-entry exists to stop.
+**He is not ready to plan the swap itself.** On 29 August 2026 he said
+"I'm not there yet" and noted he had been asked about it repeatedly
+that day. So the swap is a live topic to raise again when it becomes
+the relevant one, not a closed subject.
 
 ## Money and honesty
 
