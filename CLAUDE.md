@@ -160,9 +160,11 @@ Keep it current: when a job finishes, delete its line.
     2026 that this stays: colour work happens later, "even after the
     pages are live".
     The three menu tabs reach each other.
-    Still unstarted: the go-live work (real numbers, dark theme,
-    empty states, the `/stats` swap). Nothing else starts before he
-    says so.
+    **The remaining work is a NUMBERED LIST in
+    `docs/performance-rebuild.md`, jobs 1 to 13**, written 29 August
+    2026 so he can start one by saying its number. The numbers are
+    stable: mark a job DONE, never renumber. Nothing on it starts
+    before he says the number.
     Build order, his words: "Home, Lab, Totals are the main pages.
     Other pages inside Performance are: Compare, All Bets, Insights."
     Home ships first and goes live alone: on day one Totals holds
