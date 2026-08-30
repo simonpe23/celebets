@@ -6,6 +6,7 @@
 // arrow that returns there. The heat map lives on Home and nowhere
 // else for now, his ruling of 26 August 2026.
 
+import { Suspense } from "react";
 import { Figtree } from "next/font/google";
 import {
   PerformanceTabIcon,
@@ -32,7 +33,9 @@ export default function PerformanceHeatmapPreview() {
       }}
     >
       <div className="relative mx-auto flex w-full max-w-[390px] flex-1 flex-col">
-        <HeatmapApp />
+        <Suspense fallback={null}>
+          <HeatmapApp />
+        </Suspense>
         <div className="min-h-[6px] grow" />
       </div>
 

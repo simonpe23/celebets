@@ -12,7 +12,6 @@
 // which is how Home's taps will hand a fact over.
 
 import { Suspense } from "react";
-import Link from "next/link";
 import { Figtree } from "next/font/google";
 import {
   PerformanceTabIcon,
@@ -20,13 +19,11 @@ import {
   ResearchTabIcon,
   TrackTabIcon,
 } from "../performance-home/icons";
+import PerfMenu from "./PerfMenu";
 import LabApp from "./LabApp";
 import {
   INDIGO,
-  INDIGO_FILL,
   INK,
-  MENU_IDLE,
-  MENU_TRACK,
   PAGE_BG,
   TAB_EDGE,
   TAB_GLASS,
@@ -49,33 +46,9 @@ export default function PerformanceLabPreview() {
       }}
     >
       <div className="relative mx-auto flex w-full max-w-[390px] flex-1 flex-col">
-        {/* The Home / Lab / Totals menu, Home's exact geometry with the
-            pill moved to Lab. Label centers on Home: 59, 181, 296. */}
-        <div
-          className="relative mx-[14px] mt-[7px] h-[36px] rounded-full"
-          style={{ background: MENU_TRACK }}
-        >
-          <Link
-            href="/preview/performance-home"
-            className="absolute left-[59px] top-1/2 -translate-x-1/2 -translate-y-1/2 px-[18px] py-[10px] text-[10.5px] font-semibold"
-            style={{ color: MENU_IDLE }}
-          >
-            Home
-          </Link>
-          <span
-            className="absolute left-[126px] top-[4px] flex h-[28px] w-[110px] items-center justify-center rounded-full text-[10.5px] font-bold text-white"
-            style={{ background: INDIGO_FILL }}
-          >
-            Lab
-          </span>
-          <Link
-            href="/preview/performance-totals"
-            className="absolute left-[296px] top-1/2 -translate-x-1/2 -translate-y-1/2 px-[18px] py-[10px] text-[10.5px] font-semibold"
-            style={{ color: MENU_IDLE }}
-          >
-            Totals
-          </Link>
-        </div>
+        <Suspense fallback={<div className="mx-[14px] mt-[7px] h-[36px]" />}>
+          <PerfMenu active="lab" />
+        </Suspense>
 
         <Suspense fallback={null}>
           <LabApp />

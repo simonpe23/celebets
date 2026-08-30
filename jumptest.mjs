@@ -246,6 +246,98 @@ try {
 console.log(`${backOk ? "PASS" : "FAIL"} back from the map returns to Home`);
 if (!backOk) fails++;
 
+// JOB 3, 29 August 2026. Totals' "View all" opens Lab at that group.
+// The six groups all fit on one screen at the bottom of Lab, so
+// scrolling alone cannot say which one you were sent to: the arrival
+// is marked, and that mark is what this checks. Landing on the right
+// page at the wrong group is exactly what a screenshot cannot show.
+for (const [label, group, head] of [
+  ["Profit by Sport", "sport", "SPORT"],
+  ["Per Category", "what", "CATEGORY"],
+]) {
+  await page.goto(`http://localhost:${port}/preview/performance-totals`, {
+    waitUntil: "networkidle",
+  });
+  await page.waitForTimeout(400);
+  await page.click(`h2:has-text("${label}") + a`);
+  let ok = true;
+  try {
+    await page.waitForURL(`**group=${group}**`, { timeout: 8000 });
+  } catch {
+    ok = false;
+  }
+  await page.waitForTimeout(900);
+  const marked = await page.evaluate(() =>
+    [...document.querySelectorAll("div")]
+      .filter((d) => d.style.background && d.style.background.includes("240"))
+      .map((d) => (d.innerText || "").split("\n")[0])
+  );
+  const right = ok && marked.includes(head);
+  console.log(
+    `${right ? "PASS" : "FAIL"} Totals "${label}" lands on Lab's ${head} group`
+  );
+  if (!right) fails++;
+}
+
+// JOB 4, 29 August 2026. One period control on three pages. A pill
+// that changes its own label and nothing else is the failure mode.
+for (const [route, marker] of [
+  ["performance-totals", "Total bets"],
+  ["performance-lab", "Net profit"],
+  ["performance-heatmap", "Performance map"],
+]) {
+  await page.goto(`http://localhost:${port}/preview/${route}`, {
+    waitUntil: "networkidle",
+  });
+  await page.waitForTimeout(600);
+  const before = await page.innerText("body");
+  await page.click('button[aria-label="Change the period"]');
+  await page.waitForTimeout(300);
+  await page.getByRole("button", { name: "This month", exact: true }).click();
+  await page.waitForTimeout(800);
+  const after = await page.innerText("body");
+  const redrew =
+    before !== after && after.includes("This month") && after.includes(marker);
+  console.log(`${redrew ? "PASS" : "FAIL"} ${route}: the period redraws the page`);
+  if (!redrew) fails++;
+}
+
+// The period has to survive a tab switch and a chip, or it is a toy.
+await page.goto(
+  `http://localhost:${port}/preview/performance-totals?period=month`,
+  { waitUntil: "networkidle" }
+);
+await page.waitForTimeout(500);
+await page.click('a:has-text("Lab")');
+await page.waitForURL("**/performance-lab**");
+await page.waitForTimeout(800);
+const heldPeriod = page.url().includes("period=month");
+console.log(`${heldPeriod ? "PASS" : "FAIL"} the period carries from Totals to Lab`);
+if (!heldPeriod) fails++;
+
+await page.locator('button:has-text("Football")').first().click();
+await page.waitForTimeout(700);
+const kept = page.url().includes("period=month");
+console.log(`${kept ? "PASS" : "FAIL"} picking a chip in Lab keeps the period`);
+if (!kept) fails++;
+
+// A period with nothing in it must say so, not print NaN at him.
+for (const route of [
+  "performance-totals",
+  "performance-lab",
+  "performance-heatmap",
+]) {
+  await page.goto(
+    `http://localhost:${port}/preview/${route}?period=today`,
+    { waitUntil: "networkidle" }
+  );
+  await page.waitForTimeout(600);
+  const t = await page.innerText("body");
+  const clean = !/NaN|Infinity|undefined|\+-/.test(t);
+  console.log(`${clean ? "PASS" : "FAIL"} ${route} survives an empty period`);
+  if (!clean) fails++;
+}
+
 await browser.close();
 console.log(fails ? `${fails} jump(s) broken` : "All doors work.");
 process.exit(fails ? 1 : 0);

@@ -195,16 +195,24 @@ a time, a screenshot after each, his reaction before the next.
   2. **Totals' six Per Category rows open Lab** with that category
      selected. Identical mechanic to Home's ranked rows, which is
      built and proved by `jumptest.mjs`.
-  3. **Totals' two "View all" links open Lab** at that group. Profit
-     by Sport goes to the Sport group, Per Category to the Category
-     group. No new page: Lab is the full list.
-  4. **The period control works.** "This month" on Home and "All
-     time" on Totals are the same control, already written as
-     `PERIOD_LABELS` in `StatsView.tsx` (All time, Today, This week,
-     This month, This year, Custom) sharing its date maths with
-     Track's period strip through `stats.ts`. Wired once it rescopes
-     Home, Lab, Totals and the Heat Map together. This is a
-     REGRESSION FIX: today's `/stats` already does it.
+  3. **DONE, 29 August 2026. Totals' two "View all" links open Lab**
+     at that group. Profit by Sport goes to the Sport group, Per
+     Category to the Category group. No new page: Lab is the full
+     list. The six groups all fit on one screen at the bottom of Lab,
+     so scrolling alone could not say which one you were sent to; the
+     arrival is marked with the selected-chip lavender and fades after
+     two seconds. `jumptest.mjs` checks the mark, not the scroll.
+  4. **DONE for three of four pages, 29 August 2026. The period
+     control works** on Totals, Lab and the Heat Map. Home's "This
+     month" pill is still dead because that folder is locked to this
+     chat, his ruling: "Home folder will not be unlocked. I will
+     organize that in the home chat." **So Home and the other three
+     disagree until his Home chat wires it.** The control is
+     `performance-lab/PeriodPill.tsx` reading
+     `performance-lab/period.ts`, which uses the live app's own
+     periods and `periodStart` from `src/lib/stats.ts`, the same
+     function Track's balance band uses. The period travels between
+     the three pages in the address and survives picking a chip.
   5. **The All Bets page.** One page closes three doors: Lab's "See
      these N bets", Totals' "See all bets", and Compare's own. It
      takes the same `?sel=` chips Lab uses and renders

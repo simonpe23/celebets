@@ -1021,6 +1021,59 @@ approved for now." Recorded at that confidence: approved, with "for
 now" left in. The page stands as built at
 `/preview/performance-compare`.
 
+**JOBS 3 AND 4 ARE BUILT. 29 August 2026**, his words: "go ahead with
+3 and 4."
+
+**THE HOME FOLDER STAYS LOCKED, and that is his call, not a
+limitation.** His words: "Home folder will not be unlocked. I will
+organize that in the home chat." He gave the reason as safety;
+CLAUDE's correction, which he accepted by silence rather than
+agreement, is that it is recorded as protecting accepted work and
+stopping two chats colliding. **The visible cost, named so nobody is
+surprised: Home's "This month" pill is dead while Totals, Lab and the
+Heat Map filter by period. The four pages disagree until his Home chat
+wires it.**
+
+**LAB AND THE HEAT MAP GET A PERIOD CONTROL. Ruled 29 August 2026**,
+his words: "lab and heat map needs a period control." Neither page had
+one drawn in any mockup, so the control is CLAUDE's design: the
+accepted Home's own white period pill, and Lab's own domain dropdown
+for the menu under it, so nothing new was invented. On Lab it sits
+beside Net profit exactly where Home puts it. On the Heat Map it is
+centred under the subtitle, because that page's header row is already
+back arrow, title and sparkle.
+
+**Four calls on the period, CLAUDE's, all reversible:**
+
+1. **The vocabulary is the live app's**, the list in `StatsView.tsx`:
+   All time, This year, This month, This week, Today. Home's pill
+   already says "This month" and Totals' says "All time", both from
+   that list, and the date maths is `periodStart` in
+   `src/lib/stats.ts`, the same function Track uses. One meaning of
+   "This month" everywhere.
+2. **Custom is left out.** It needs a date picker, and these are demo
+   pages on a generated record.
+3. **The period is applied by rebuilding the engine from a filtered
+   record**, not by threading a date through every call. Every page's
+   existing code then follows with no call site knowing about dates,
+   which is the same reason every money rule lives in one file.
+4. **Compare keeps its own 1M / 3M / 6M / 1Y / All buttons.** That is
+   a chart range on one page, not the page's scope, and he approved
+   Compare as built.
+
+**A ROI of "+-" was reachable and is fixed.** A period with nothing
+settled in it has no ROI, and the page printed a plus in front of the
+placeholder. Only job 4 made it reachable.
+
+**SIDEWAYS SCROLL IS NOW A BUILD CHECK.** `sitecheck.mjs` fails if a
+page is wider than the phone it is on. It was added after the
+Performance menu was found overflowing a 320px phone by 52px, having
+passed every screenshot round: the shot is taken at the page's own
+width, so it looks perfect. This is the standing rule that when
+something reaches him that a machine could have caught, the fix is a
+new check, not a promise to be careful. The overflow itself is job 14
+and needs the Home chat.
+
 ## Process
 
 **Past reactions are not constraints.** Said twice in two days: "just
