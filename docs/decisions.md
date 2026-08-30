@@ -1016,6 +1016,11 @@ one shared scale every red on a winning record sits at the palest
 step, and the leak the page exists to show is the quietest thing on
 it.
 
+**COMPARE IS APPROVED. 29 August 2026**, his words: "compare is
+approved for now." Recorded at that confidence: approved, with "for
+now" left in. The page stands as built at
+`/preview/performance-compare`.
+
 ## Process
 
 **Past reactions are not constraints.** Said twice in two days: "just

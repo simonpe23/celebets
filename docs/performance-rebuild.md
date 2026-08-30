@@ -178,6 +178,51 @@ a time, a screenshot after each, his reaction before the next.
   crops no figure.
   The deliberate differences from the sheet are in
   `docs/decisions.md`.
+- **HOW EACH DEAD DOOR COULD BE SOLVED.** Written 29 August 2026 at
+  his request. Suggestions, not decisions: nothing here is approved.
+  The point of the list is that most of these doors already have a
+  working part in the live app, so they are wiring jobs, not builds.
+  - **The bottom tab bar** is a picture on every preview. The real
+    one is `src/components/TabBar.tsx` and it works: Track to
+    `/app`, Performance to `/stats`, Research to
+    `/recommendations`. Two gaps: the previews draw it as plain
+    text, and they draw FOUR tabs where the live app has THREE.
+    Profile is the tab he ruled on 26 August 2026 and it does not
+    exist; Profile IS today's Settings page, so `/settings` is the
+    honest destination until it is reworked.
+  - **"This month" on Home and "All time" on Totals** are the same
+    control, and it already exists: `PERIOD_LABELS` in
+    `StatsView.tsx` (All time, Today, This week, This month, This
+    year, Custom), sharing its date maths with Track's period strip
+    through `stats.ts`. One component wired once rescopes Home, Lab,
+    Totals and the Heat Map.
+  - **"See these N bets" (Lab) and "See all bets" (Totals)** are one
+    door: an All Bets page. `src/components/BetHistory.tsx` already
+    renders a list and already takes a `limit`. A page that filters
+    the record through the pf engine by the same `?sel=` chips Lab
+    uses would close both doors and give Compare one too.
+  - **Totals' two "View all" links** need no new page. Profit by
+    Sport opens Lab at the Sport group; Per Category opens Lab at
+    the Category group. Lab is the full list.
+  - **Totals' six Per Category rows** should open Lab with that
+    category selected, exactly as Home's ranked rows already do.
+    The mechanic is built and test-proven.
+  - **Lab's six group labels** (All sports, All leagues, ...) promise
+    a full vocabulary sheet. The cheapest honest answer is to make
+    them expand the row in place from a sideways scroller into a
+    wrapped grid, which is the real need: you cannot see everything
+    in a row that scrolls off screen.
+  - **The (i) info dots** promise a definition. One shared popover
+    and a small dictionary of one line per metric would serve every
+    page. `src/components/InsightsPopup.tsx` is a starting point.
+    Net profit's line is already written: balance plus withdrawals
+    minus deposits.
+  - **"What changed?" on Home** is the one CLAUDE would suggest
+    deleting rather than building. The prototype has `pf/Changed.tsx`
+    for it, but the Heat Map's New Pattern and Cooling Off cards
+    already answer "what moved lately", and two answers to one
+    question is how a page gets confusing.
+
 - **EVERY CONTROL WAS CLICKED, 29 August 2026.** Not read, clicked,
   across all five preview pages and their states. Everything below
   is drawn and inert: it looks tappable and does nothing. None of it
