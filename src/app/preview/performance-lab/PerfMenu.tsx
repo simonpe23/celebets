@@ -13,7 +13,7 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { INDIGO_FILL, MENU_IDLE, MENU_TRACK } from "./ui";
+import { INDIGO_FILL, MENU_IDLE, MENU_TRACK } from "../performance-ui";
 import { isPeriod, withPeriod } from "./period";
 
 const TABS = [

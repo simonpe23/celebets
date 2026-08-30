@@ -28,6 +28,13 @@
 // - The bottom tab bar floats and sticks like every other page in the
 //   app (TabBar.tsx has the sticky mechanics), taller and with more
 //   prominent icons than the sheet: his round 2 instruction 6 stands.
+//
+// 30 August 2026 Home joined the shared colour dial,
+// `../performance-ui`. Every colour on this page now comes from
+// there, the same file Lab, Totals, Compare, the Heat Map and All Bets
+// read. No value changed: the page looks exactly as he accepted it.
+// Never write a hex in this folder again. Add a token to the dial and
+// import it.
 
 import Image from "next/image";
 import Link from "next/link";
@@ -57,30 +64,52 @@ import {
   TrendTileIcon,
   WashTexture,
 } from "./icons";
+import {
+  AMBER_BG,
+  AMBER_EDGE,
+  AMBER_INK,
+  AMBER_TILE,
+  CHEV,
+  DIVIDER,
+  DOT_MUTED,
+  GREEN,
+  GREY_TEXT,
+  HAIR,
+  HAIRLINE,
+  INDIGO,
+  INDIGO_FILL,
+  INK,
+  LAB_CARD,
+  MENU_IDLE,
+  MENU_TRACK,
+  NET_LABEL,
+  ON_BRAND,
+  ORANGE,
+  ORB_DEEP,
+  ORB_HI,
+  ORB_TINT,
+  PAGE_BG,
+  PILL_LAV,
+  RANK_INK,
+  RED,
+  ROW_TILE_BAD,
+  SELECTOR_INK,
+  SUBGREEN,
+  TAB_EDGE,
+  TAB_GLASS,
+  TAB_IDLE,
+} from "../performance-ui";
 
 const fig = Figtree({
   subsets: ["latin"],
   variable: "--font-fig",
 });
 
-// Pixel sampled from "0. Chat Aug 28.png".
-const INDIGO = "#3614F0";
-const INDIGO_FILL = "#3708E4";
-const INK = "#101114";
-const GREEN = "#1EAD2E";
-const SUBGREEN = "#25B132";
-const RED = "#FC1B1D";
-const GREY_TEXT = "#757B87";
-const NET_LABEL = "#353B49";
-const ORANGE = "#EF8D08";
-const HAIR = "#EDEDEF";
-const PILL_LAV = "#F0EEFB";
-
 const ROWS = [
   {
     rank: 1,
     icon: <DollarIcon size={20} />,
-    tile: "#F0EEFB",
+    tile: PILL_LAV,
     name: "Moneyline",
     sel: "what~category~Moneyline",
     meta: "30–16",
@@ -93,7 +122,7 @@ const ROWS = [
   {
     rank: 2,
     icon: <BallIcon size={20} />,
-    tile: "#F0EEFB",
+    tile: PILL_LAV,
     name: "Premier League",
     sel: "where~plain~Premier League",
     meta: "14–8",
@@ -106,7 +135,7 @@ const ROWS = [
   {
     rank: 3,
     icon: <TrendTileIcon size={20} />,
-    tile: "#F0EEFB",
+    tile: PILL_LAV,
     name: "Low odds",
     sel: "risk~plain~Low odds",
     meta: "18–11",
@@ -119,7 +148,7 @@ const ROWS = [
   {
     rank: 4,
     icon: <LayersIcon size={20} />,
-    tile: "#F0EEFB",
+    tile: PILL_LAV,
     name: "Singles",
     sel: "how~plain~Singles",
     meta: "24–18",
@@ -132,7 +161,7 @@ const ROWS = [
   {
     rank: 5,
     icon: <RedTarget size={20} />,
-    tile: "#FEF0F0",
+    tile: ROW_TILE_BAD,
     name: "Player Props",
     sel: "what~category~Player Props",
     meta: "7–11",
@@ -156,7 +185,7 @@ export default function PerformanceHomePreview() {
     <div
       className={`${fig.variable} flex min-h-svh flex-col`}
       style={{
-        background: "#FBFBFC",
+        background: PAGE_BG,
         color: INK,
         fontFamily: "var(--font-fig)",
       }}
@@ -181,7 +210,7 @@ export default function PerformanceHomePreview() {
         {/* The Home / Lab / Totals menu, full width, high on the page. */}
         <div
           className="relative mx-[14px] mt-[7px] flex h-[36px] items-center rounded-full px-[4px]"
-          style={{ background: "#F2F3F7" }}
+          style={{ background: MENU_TRACK }}
         >
           <span
             className="flex h-[28px] w-[110px] shrink-0 items-center justify-center rounded-full text-[10.5px] font-bold text-white"
@@ -196,7 +225,7 @@ export default function PerformanceHomePreview() {
           <Link
             href="/preview/performance-lab"
             className="absolute left-[181px] top-1/2 -translate-x-1/2 -translate-y-1/2 px-[18px] py-[10px] text-[10.5px] font-semibold"
-            style={{ color: "#6B6E7A" }}
+            style={{ color: MENU_IDLE }}
           >
             Lab
           </Link>
@@ -206,7 +235,7 @@ export default function PerformanceHomePreview() {
           <Link
             href="/preview/performance-totals"
             className="absolute left-[296px] top-1/2 -translate-x-1/2 -translate-y-1/2 px-[18px] py-[10px] text-[10.5px] font-semibold"
-            style={{ color: "#6B6E7A" }}
+            style={{ color: MENU_IDLE }}
           >
             Totals
           </Link>
@@ -223,7 +252,7 @@ export default function PerformanceHomePreview() {
           </p>
           <span
             className="relative top-[2px] flex h-[24px] items-center gap-[3px] rounded-full bg-white px-[12px] text-[9.5px] font-semibold"
-            style={{ color: "#252F3E", boxShadow: "0 1px 3px rgba(30,25,60,0.07)" }}
+            style={{ color: SELECTOR_INK, boxShadow: "0 1px 3px rgba(30,25,60,0.07)" }}
           >
             This month
             <ChevDown size={11} />
@@ -244,7 +273,7 @@ export default function PerformanceHomePreview() {
           <span style={{ color: SUBGREEN }}>+24.1% ROI</span>
           <span
             className="mx-[1px] inline-block h-[3px] w-[3px] rounded-full"
-            style={{ background: "#9B9DA5" }}
+            style={{ background: DOT_MUTED }}
           />
           <span style={{ color: NET_LABEL }}>49–38 Record</span>
         </p>
@@ -285,7 +314,7 @@ export default function PerformanceHomePreview() {
             <span
               key={left}
               className="absolute top-1/2 h-[28px] w-px -translate-y-1/2"
-              style={{ left, background: "#E6E7EC" }}
+              style={{ left, background: DIVIDER }}
             />
           ))}
           {FACTS.map((f, i) => (
@@ -313,13 +342,13 @@ export default function PerformanceHomePreview() {
         <div
           className="relative mx-[15px] flex h-[45px] items-center rounded-[13px] pl-[7px] pr-[12px]"
           style={{
-            background: "#FFF6E9",
-            boxShadow: "inset 0 0 0 1px #F6E9CC",
+            background: AMBER_BG,
+            boxShadow: `inset 0 0 0 1px ${AMBER_EDGE}`,
           }}
         >
           <span
             className="flex h-[31px] w-[31px] shrink-0 items-center justify-center rounded-full"
-            style={{ background: "#FEEFD4" }}
+            style={{ background: AMBER_TILE }}
           >
             <GoldSparkle size={16} />
           </span>
@@ -327,7 +356,7 @@ export default function PerformanceHomePreview() {
             <p className="text-[7.8px] font-semibold" style={{ color: ORANGE }}>
               Actuals noticed
             </p>
-            <p className="mt-[2px] whitespace-nowrap text-[8.7px]" style={{ color: "#2E3138" }}>
+            <p className="mt-[2px] whitespace-nowrap text-[8.7px]" style={{ color: AMBER_INK }}>
               Player Props drove most of your losses this month.
             </p>
           </div>
@@ -388,8 +417,8 @@ export default function PerformanceHomePreview() {
                 className="flex h-[19.5px] w-[19.5px] shrink-0 items-center justify-center rounded-full text-[10.5px] font-bold"
                 style={
                   row.rank === 1
-                    ? { background: INDIGO_FILL, color: "#FFFFFF" }
-                    : { background: "#EFEFF1", color: "#4A4C52" }
+                    ? { background: INDIGO_FILL, color: ON_BRAND }
+                    : { background: HAIRLINE, color: RANK_INK }
                 }
               >
                 {row.rank}
@@ -428,7 +457,7 @@ export default function PerformanceHomePreview() {
                 </p>
               </div>
               <span className="ml-[6px] shrink-0">
-                <Chev size={10} color="#C3C4C9" />
+                <Chev size={10} color={CHEV} />
               </span>
             </Link>
           ))}
@@ -440,13 +469,13 @@ export default function PerformanceHomePreview() {
         <Link
           href="/preview/performance-lab"
           className="relative mx-[14px] mt-[8px] flex h-[69px] items-center rounded-[14px] pl-[15px] pr-[15px]"
-          style={{ background: "#F8F6FC" }}
+          style={{ background: LAB_CARD }}
         >
           <span
             className="flex h-[48px] w-[48px] shrink-0 items-center justify-center rounded-full"
             style={{
               background:
-                "radial-gradient(115% 115% at 32% 22%, #D8C6F3 0%, #C4A9EE 55%, #B090E8 100%)",
+                `radial-gradient(115% 115% at 32% 22%, ${ORB_HI} 0%, ${ORB_TINT} 55%, ${ORB_DEEP} 100%)`,
             }}
           >
             <OrbLayers size={25} />
@@ -472,7 +501,7 @@ export default function PerformanceHomePreview() {
             style={{ background: INDIGO_FILL }}
           >
             Explore Lab
-            <Chev size={7} color="#FFFFFF" />
+            <Chev size={7} color={ON_BRAND} />
           </span>
         </Link>
 
@@ -487,15 +516,15 @@ export default function PerformanceHomePreview() {
         <div
           className="mx-auto flex w-full max-w-[382px] items-stretch rounded-2xl p-1"
           style={{
-            background: "rgba(252,251,253,0.92)",
+            background: TAB_GLASS,
             backdropFilter: "blur(10px)",
             WebkitBackdropFilter: "blur(10px)",
-            boxShadow: "0 6px 20px -10px rgba(16,16,26,0.35), inset 0 0 0 1px #EFEFF2",
+            boxShadow: `0 6px 20px -10px rgba(16,16,26,0.35), inset 0 0 0 1px ${TAB_EDGE}`,
           }}
         >
           <span className="flex flex-1 flex-col items-center justify-center gap-[4px] py-1.5">
             <TrackTabIcon size={24} />
-            <span className="text-[10.5px] font-semibold" style={{ color: "#3E4553" }}>
+            <span className="text-[10.5px] font-semibold" style={{ color: TAB_IDLE }}>
               Track
             </span>
           </span>
@@ -507,13 +536,13 @@ export default function PerformanceHomePreview() {
           </span>
           <span className="flex flex-1 flex-col items-center justify-center gap-[4px] py-1.5">
             <ResearchTabIcon size={24} />
-            <span className="text-[10.5px] font-semibold" style={{ color: "#3E4553" }}>
+            <span className="text-[10.5px] font-semibold" style={{ color: TAB_IDLE }}>
               Research
             </span>
           </span>
           <span className="flex flex-1 flex-col items-center justify-center gap-[4px] py-1.5">
             <ProfileTabIcon size={24} />
-            <span className="text-[10.5px] font-semibold" style={{ color: "#3E4553" }}>
+            <span className="text-[10.5px] font-semibold" style={{ color: TAB_IDLE }}>
               Profile
             </span>
           </span>

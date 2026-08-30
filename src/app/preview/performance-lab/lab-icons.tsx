@@ -6,7 +6,7 @@
 // dimensions (Category, When, Bet Type, Risk) wear quiet outline
 // glyphs, slate at rest and indigo when selected.
 
-import { GLYPH, INDIGO, MENU_IDLE } from "./ui";
+import { GLYPH, INDIGO, MENU_IDLE } from "../performance-ui";
 
 const SLATE = GLYPH;
 

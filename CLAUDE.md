@@ -154,11 +154,15 @@ Keep it current: when a job finishes, delete its line.
     **Every control on the five preview pages was clicked and
     logged, 29 August 2026.** What works and what is still drawn
     but inert is listed in `docs/performance-rebuild.md`.
-    **Colours: Lab, Compare, Totals and the Heat Map read one dial**,
-    `src/app/preview/performance-lab/ui.ts`. Home keeps its own
-    copies because its folder is protected, and he ruled 29 August
-    2026 that this stays: colour work happens later, "even after the
-    pages are live".
+    **Colours: every Performance page reads one dial**,
+    `src/app/preview/performance-ui.ts`. Home, Lab, Totals, Compare,
+    the Heat Map and All Bets all import from it and none of them
+    holds a colour of its own. Home joined and the file moved out of
+    the `performance-lab` folder on 30 August 2026, both on his
+    order, with zero visual change. **Never write a hex in a
+    Performance preview file. Add a line to the dial and import it.**
+    What has NOT happened is the colour work itself: he parked the
+    palette on 29 August 2026, "even after the pages are live".
     The three menu tabs reach each other.
     **The remaining work is a NUMBERED LIST in
     `docs/performance-rebuild.md`, jobs 1 to 13**, written 29 August

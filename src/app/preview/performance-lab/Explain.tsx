@@ -9,7 +9,7 @@
 import { useEffect, useRef, useState } from "react";
 import { InfoDot } from "../performance-home/icons";
 import { EXPLAIN } from "./explain";
-import { CARD, GREY_TEXT, HAIRLINE, INK } from "./ui";
+import { CARD, GREY_TEXT, HAIRLINE, INK } from "../performance-ui";
 
 export default function Explain({
   term,

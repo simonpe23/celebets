@@ -14,7 +14,7 @@ import {
   DONUT_LEAK,
   GREY_TEXT,
   INK,
-} from "../performance-lab/ui";
+} from "../performance-ui";
 
 const EARNER = DONUT_EARNER;
 const LEAK = DONUT_LEAK;

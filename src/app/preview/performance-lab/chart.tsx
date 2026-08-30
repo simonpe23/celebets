@@ -9,7 +9,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { GREY_TEXT, INDIGO, ZERO_LINE } from "./ui";
+import { GREY_TEXT, INDIGO, ZERO_LINE } from "../performance-ui";
 
 export type ChartPoint = { t: number; v: number };
 

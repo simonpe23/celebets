@@ -72,7 +72,7 @@ import {
   TILE_NEUTRAL,
   TINT_BAD,
   TINT_GOOD,
-} from "../performance-lab/ui";
+} from "../performance-ui";
 import { squarify } from "./treemap";
 import {
   dropTwins,

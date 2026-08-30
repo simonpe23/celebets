@@ -3,7 +3,7 @@
 // TOTALS, built to his sheet "2. Totals.png", 29 August 2026. Same
 // two rules as Compare: the anatomy and the measured sizes are the
 // sheet's, every colour and the Figtree face come from the accepted
-// Home and Lab through the one dial in performance-lab/ui.ts.
+// Home and Lab through the one dial in performance-ui.ts.
 //
 // Totals is the honest scan: no opinion, no building, no cleverness.
 // Every number is computed from Lab's fixture through the same
@@ -37,7 +37,7 @@ import {
   TINT_BAD,
   TINT_GOOD,
   TINT_MID,
-} from "../performance-lab/ui";
+} from "../performance-ui";
 import Explain from "../performance-lab/Explain";
 import PeriodPill from "../performance-lab/PeriodPill";
 import { betsIn, isPeriod, withPeriod, type PeriodKey } from "../performance-lab/period";
