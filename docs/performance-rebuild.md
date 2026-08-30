@@ -268,10 +268,13 @@ a time, a screenshot after each, his reaction before the next.
   Compare's three metric and five period buttons, all four Heat Map
   insight cards, all eight tiles, and every back arrow.
 
-- **Colours are one dial now**: every colour Lab, Compare, Totals and
-  the Heat Map draw comes from `performance-lab/ui.ts` and none of
-  those folders contains a raw hex. Home still holds its own copies
-  until its folder is opened. See `docs/decisions.md`.
+- **Colours are one dial now, Home included**: every colour Home,
+  Lab, Compare, Totals, the Heat Map and All Bets draw comes from
+  `performance-lab/ui.ts` and none of those folders contains a raw
+  hex. Home joined on 30 August 2026, with the owner's permission to
+  open the protected folder for that one job. Nothing moved and no
+  shade changed: the before and after screenshots of Home, phone and
+  laptop, are identical files. See `docs/decisions.md`.
 - **`jumptest.mjs` now covers Compare**: the door exists at two
   selections and is gone at three, it opens on the two chosen
   facts, and back keeps them. Eleven cases, all passing.
@@ -293,9 +296,9 @@ a time, a screenshot after each, his reaction before the next.
   from Home's list: Moneyline 30–16 (+$2,658), Premier League 14–8
   (+$743), Low odds 18–11 (+$612), Singles 24–18 (+$440), Player
   Props 7–11 (-$440), whole record 49–38, +$2,637, 24.1% ROI.
-- **Where Lab's design values live:** `performance-lab/ui.ts`, copied
-  once from Home's `page.tsx`, because Home's constants are not
-  exported and that folder is protected. Home's icons are imported
+- **Where every Performance colour lives:** `performance-lab/ui.ts`.
+  It started as a copy of Home's own constants; since 30 August 2026
+  Home imports it too, so there is one source and no copy. Home's icons are imported
   from `../performance-home/icons` (importing reads the reference,
   it does not edit it); Lab's own chip icons are drawn in the same
   language in `lab-icons.tsx`. All numbers flow through the pf
@@ -460,14 +463,14 @@ Not design work, and nobody has scoped it:
 2. **Loading states.** The prototype computes instantly on demo data.
 3. **The swap.** Replace `/stats` in one go, or run both behind a
    switch while the numbers are checked.
-4. **One colour dial for all pages.** Parked by the owner, 29 August
-   2026: "I don't feel the need to do anything drastic right now...
-   what is important is that pages stay consistent across the board
-   yet protected and not getting edited without my control. and the
-   biggest thing for me: that we can edit colors and details across
-   pages once this creation process is done." Lab and Compare already
-   share one colour file (`src/app/preview/performance-lab/ui.ts`);
-   Home keeps a verified-equal private copy. When Lab's design is
-   accepted, the Home chat folds Home onto the shared file, zero
-   visual change, proven by pixel comparison. Doing it mid-iteration
-   would couple the two builds, which is why it waits.
+4. **One colour dial for all pages. DONE, 30 August 2026.** It was
+   parked by the owner on 29 August 2026: "I don't feel the need to
+   do anything drastic right now... what is important is that pages
+   stay consistent across the board yet protected and not getting
+   edited without my control. and the biggest thing for me: that we
+   can edit colors and details across pages once this creation
+   process is done." He unparked it on 30 August 2026 and gave a one
+   job permission to open the protected Home folder. Every
+   Performance page now reads `src/app/preview/performance-lab/ui.ts`
+   and holds no colour of its own. Zero visual change, proven by
+   identical before and after screenshots at both widths.

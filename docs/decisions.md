@@ -806,13 +806,10 @@ at once. The last three that had escaped were folded in on 29 August
 2026: the tab bar's frosted ground and hairline (on every page at
 once), Totals' donut ramps, and Compare's winner orb.
 
-**The accepted Home is the one page still outside the dial**, because
-that folder is protected from this chat. It keeps its own copies of
-the same values. Opening it for a one line import per colour is a
-small mechanical job, and until he asks for it a colour change means
-editing two files rather than one. **The lavender itself is not
-changed yet: he parked the colour decision, so nothing was recoloured
-on his behalf.**
+**Home joined the dial on 30 August 2026** and the dial is now
+complete: see the entry below. **The lavender itself is not changed
+yet: he parked the colour decision, so nothing was recoloured on his
+behalf.**
 
 **Five places the build knowingly differs from the sheet. CLAUDE's
 calls, not his rulings, all reversible:**
@@ -1163,3 +1160,54 @@ the bold bullet openings and miss nothing that needs him?
 
 **Never use em dashes**, anywhere: code, comments, UI copy, commit
 messages, documentation.
+
+---
+
+## HOME JOINS THE COLOUR DIAL, 30 August 2026
+
+**He opened the protected folder, for this one job only.** His words:
+"src/app/preview/performance-home/ is normally locked and no other
+chat may edit it. I am lifting that for this job only. You may edit
+it. You may not change how it looks." He also paused the Lab and
+Totals chats so this one had right of way.
+
+**Why he wanted it.** His words: "The next job after this one is dark
+mode across every page. With one shared file that is one edit. With
+Home separate it is 70 by hand."
+
+**What changed.** Home's `page.tsx`, `charts.tsx` and `icons.tsx` no
+longer hold a single colour. All three import from
+`src/app/preview/performance-lab/ui.ts`, the same file Lab, Totals,
+Compare, the Heat Map and All Bets read. Fourteen of Home's colours
+did not exist in that file yet, so they were ADDED to it under new
+names. Nothing already there was renamed or moved, because 18 files
+import those names.
+
+**The new names, all Home's own values, unchanged:** `ROW_TILE_BAD`,
+`RANK_INK`, `LAB_CARD`, `ORB_HI`, `ORB_TINT`, `ORB_DEEP`,
+`SPARK_RED`, `FACT_GLYPH`, `SELECTOR_CHEV`, `TARGET_RED`,
+`TAB_GLYPH`, `WASH_LINE`, `WASH_DOT`.
+
+**Three reds are kept apart on purpose.** `RED` (#FC1B1D) is the
+money figure, `SPARK_RED` (#FC1F1F) is the losing sparkline and
+`TARGET_RED` (#FB1D1F) is the losing row's target icon. They were
+sampled from different parts of his sheet and merging them would
+darken two of the three. If he ever wants one red, that is now a
+three line edit in one file.
+
+**The proof it did not change.** Home was screenshotted at 390px and
+1440px before and after, full page. Both pairs are byte identical
+files. That was the whole test he set: "This job has no visible
+result. That is the point."
+
+**Still standing after this job:** Home's folder is locked again, and
+the Lab chat owns it. The permission was for this one job.
+
+**Flagged for him, not changed:** `CLAUDE.md` still says Home "keeps
+its own copies because its folder is protected". That line is now
+out of date. He told this chat not to edit `CLAUDE.md`, so it was
+left alone.
+
+**Raised, not acted on:** `ui.ts` now serves six pages while living
+inside the `performance-lab` folder, which reads as if it belongs to
+Lab. Moving it needs his say so, so it was not moved.

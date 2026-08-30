@@ -3,17 +3,37 @@
 // mockup's own, sampled at #3614F0 (fills #3708E4): the owner's final
 // ruling of 28 August 2026, "pick the purple color from the mockup",
 // which replaces the earlier "keep apps purple".
+//
+// Colours come from the shared dial, `../performance-lab/ui`, since 30
+// August 2026. The values did not change; they simply stopped being
+// private to this folder. Never write a hex here again: add a token to
+// that file and import it.
 
-const MARK = "#3614F0";
-const SLATE = "#454F5E";
+import {
+  CHEV,
+  FACT_GLYPH,
+  GLYPH,
+  INDIGO,
+  ON_BRAND,
+  ORANGE,
+  SELECTOR_CHEV,
+  SUBGREEN,
+  TAB_GLYPH,
+  TARGET_RED,
+  WASH_DOT,
+  WASH_LINE,
+} from "../performance-lab/ui";
+
+const MARK = INDIGO;
+const SLATE = FACT_GLYPH;
 
 // The small circled i beside the Net profit label.
 export function InfoDot({ size = 13 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 20 20" fill="none" aria-hidden>
-      <circle cx="10" cy="10" r="8" stroke="#6E7076" strokeWidth="1.6" />
-      <path d="M10 9 v4.4" stroke="#6E7076" strokeWidth="1.6" strokeLinecap="round" />
-      <circle cx="10" cy="6.1" r="1.05" fill="#6E7076" />
+      <circle cx="10" cy="10" r="8" stroke={GLYPH} strokeWidth="1.6" />
+      <path d="M10 9 v4.4" stroke={GLYPH} strokeWidth="1.6" strokeLinecap="round" />
+      <circle cx="10" cy="6.1" r="1.05" fill={GLYPH} />
     </svg>
   );
 }
@@ -24,7 +44,7 @@ export function ChevDown({ size = 10 }: { size?: number }) {
     <svg width={size} height={size} viewBox="0 0 16 16" fill="none" aria-hidden>
       <path
         d="M3 5.5 L8 10.5 L13 5.5"
-        stroke="#2A2B30"
+        stroke={SELECTOR_CHEV}
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -34,7 +54,7 @@ export function ChevDown({ size = 10 }: { size?: number }) {
 }
 
 // The small green rise beside the ROI figure under the number.
-export function MiniTrend({ size = 12, color = "#25B132" }: { size?: number; color?: string }) {
+export function MiniTrend({ size = 12, color = SUBGREEN }: { size?: number; color?: string }) {
   return (
     <svg width={size} height={size} viewBox="0 0 20 20" fill="none" aria-hidden>
       <path
@@ -105,14 +125,14 @@ export function GoldSparkle({ size = 9 }: { size?: number }) {
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none" aria-hidden>
       <path
         d="M16 2 C17.2 11 20.5 14.5 29 16 C20.5 17.5 17.2 21 16 30 C14.8 21 11.5 17.5 3 16 C11.5 14.5 14.8 11 16 2 Z"
-        fill="#EF8D08"
+        fill={ORANGE}
       />
     </svg>
   );
 }
 
 // One chevron, any colour.
-export function Chev({ size = 10, color = "#C3C4C9" }: { size?: number; color?: string }) {
+export function Chev({ size = 10, color = CHEV }: { size?: number; color?: string }) {
   return (
     <svg width={size} height={size} viewBox="0 0 16 16" fill="none" aria-hidden>
       <path
@@ -212,9 +232,9 @@ export function LayersIcon({ size = 17 }: { size?: number }) {
 export function RedTarget({ size = 17 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
-      <circle cx="12" cy="12" r="8" stroke="#FB1D1F" strokeWidth="1.8" />
-      <circle cx="12" cy="12" r="3.6" stroke="#FB1D1F" strokeWidth="1.8" />
-      <path d="M12 2.5 v3 M12 18.5 v3 M2.5 12 h3 M18.5 12 h3" stroke="#FB1D1F" strokeWidth="1.8" strokeLinecap="round" />
+      <circle cx="12" cy="12" r="8" stroke={TARGET_RED} strokeWidth="1.8" />
+      <circle cx="12" cy="12" r="3.6" stroke={TARGET_RED} strokeWidth="1.8" />
+      <path d="M12 2.5 v3 M12 18.5 v3 M2.5 12 h3 M18.5 12 h3" stroke={TARGET_RED} strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }
@@ -223,9 +243,9 @@ export function RedTarget({ size = 17 }: { size?: number }) {
 export function OrbLayers({ size = 22 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path d="M12 4 L20 8.2 12 12.4 4 8.2 Z" fill="#FFFFFF" />
-      <path d="M12 12 L20 11.5 12 16.6 4 11.5 Z" fill="#FFFFFF" opacity="0.72" />
-      <path d="M12 16 L20 14.8 12 20 4 14.8 Z" fill="#FFFFFF" opacity="0.45" />
+      <path d="M12 4 L20 8.2 12 12.4 4 8.2 Z" fill={ON_BRAND} />
+      <path d="M12 12 L20 11.5 12 16.6 4 11.5 Z" fill={ON_BRAND} opacity="0.72" />
+      <path d="M12 16 L20 14.8 12 20 4 14.8 Z" fill={ON_BRAND} opacity="0.45" />
     </svg>
   );
 }
@@ -235,8 +255,8 @@ export function OrbLayers({ size = 22 }: { size?: number }) {
 export function TrackTabIcon({ size = 13 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none" aria-hidden>
-      <circle cx="16" cy="16" r="11" stroke="#26262B" strokeWidth="2.4" />
-      <circle cx="16" cy="16" r="4" stroke="#26262B" strokeWidth="2.4" />
+      <circle cx="16" cy="16" r="11" stroke={TAB_GLYPH} strokeWidth="2.4" />
+      <circle cx="16" cy="16" r="4" stroke={TAB_GLYPH} strokeWidth="2.4" />
     </svg>
   );
 }
@@ -267,8 +287,8 @@ export function PerformanceTabIcon({ size = 13 }: { size?: number }) {
 export function ResearchTabIcon({ size = 13 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none" aria-hidden>
-      <circle cx="14" cy="14" r="8.5" stroke="#26262B" strokeWidth="2.4" />
-      <path d="M20.5 20.5 L27 27" stroke="#26262B" strokeWidth="2.4" strokeLinecap="round" />
+      <circle cx="14" cy="14" r="8.5" stroke={TAB_GLYPH} strokeWidth="2.4" />
+      <path d="M20.5 20.5 L27 27" stroke={TAB_GLYPH} strokeWidth="2.4" strokeLinecap="round" />
     </svg>
   );
 }
@@ -276,10 +296,10 @@ export function ResearchTabIcon({ size = 13 }: { size?: number }) {
 export function ProfileTabIcon({ size = 13 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none" aria-hidden>
-      <circle cx="16" cy="10.5" r="5.5" stroke="#26262B" strokeWidth="2.4" />
+      <circle cx="16" cy="10.5" r="5.5" stroke={TAB_GLYPH} strokeWidth="2.4" />
       <path
         d="M5.5 27 a10.5 8.5 0 0 1 21 0"
-        stroke="#26262B"
+        stroke={TAB_GLYPH}
         strokeWidth="2.4"
         strokeLinecap="round"
       />
@@ -303,7 +323,7 @@ export function WashTexture() {
         <path
           key={o}
           d={`M-20 ${268 + o * 0.8} C 70 ${240 + o} 150 ${310 - o * 0.4} 250 ${288 + o * 0.5} S 380 ${252 + o} 410 ${272 + o}`}
-          stroke="#C9BCE8"
+          stroke={WASH_LINE}
           strokeWidth="0.7"
           opacity="0.15"
         />
@@ -315,7 +335,7 @@ export function WashTexture() {
             cx={210 + c * 17}
             cy={200 + r * 17}
             r="0.8"
-            fill="#CFC3EA"
+            fill={WASH_DOT}
             opacity="0.12"
           />
         ))

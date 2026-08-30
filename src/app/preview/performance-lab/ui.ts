@@ -12,10 +12,10 @@
 //    here and import it. A colour that lives in two places will
 //    eventually say two things.
 // 2. The values are the accepted Home's, sampled from his designer's
-//    sheets. `src/app/preview/performance-home/` still keeps its own
-//    copies inline because that folder is protected from this chat;
-//    when it is opened, it imports this file and the whole
-//    Performance area becomes one dial.
+//    sheets. Home joined the dial on 30 August 2026, with his
+//    permission to open its folder for that one job, so every
+//    Performance page now reads its colours from here and nothing
+//    holds a private copy.
 
 // The brand. INDIGO draws text, lines and icons; INDIGO_FILL fills
 // solid shapes like the active pill.
@@ -117,3 +117,37 @@ export const DONUT_EMPTY = "#E6E7EC";
 // Compare's winner orb, a lit sphere of the brand purple.
 export const ORB_LIGHT = "#7E5BF5";
 export const ORB_MID = "#5A2CF0";
+
+// Home's own colours, folded in 30 August 2026 when Home joined the
+// dial. Each was already on the accepted page; none of them changed
+// value in the move. They live here so a later palette pass, dark mode
+// first, is one edit instead of seventy.
+
+// The pale red tile behind a losing row's icon on Home's ranked list.
+export const ROW_TILE_BAD = "#FEF0F0";
+// The number inside a rank chip that is not first place.
+export const RANK_INK = "#4A4C52";
+// The Lab invitation card at the foot of Home, and the lit purple orb
+// on it: highlight, body and shade of one sphere.
+export const LAB_CARD = "#F8F6FC";
+export const ORB_HI = "#D8C6F3";
+export const ORB_TINT = "#C4A9EE";
+export const ORB_DEEP = "#B090E8";
+// The losing sparkline's red. A shade off RED on purpose: it is what
+// the sheet's thin line samples at, and matching it to RED would
+// darken every losing spark.
+export const SPARK_RED = "#FC1F1F";
+// The four grey marks on Home's KPI strip.
+export const FACT_GLYPH = "#454F5E";
+// The chevron inside the This month selector.
+export const SELECTOR_CHEV = "#2A2B30";
+// The red target on a losing row. Also a shade off RED, sampled from
+// the sheet's stroke.
+export const TARGET_RED = "#FB1D1F";
+// The three idle tab bar icons. Darker than TAB_IDLE, which is their
+// label, because a thin stroke reads lighter than text at the same
+// value.
+export const TAB_GLYPH = "#26262B";
+// The near invisible contour lines and dot grid inside Home's wash.
+export const WASH_LINE = "#C9BCE8";
+export const WASH_DOT = "#CFC3EA";
