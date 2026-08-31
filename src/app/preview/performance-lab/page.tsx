@@ -1,99 +1,33 @@
 // The new Performance Lab, built piece by piece on the accepted Home's
 // design. The owner's ruling, 29 August 2026: "the lab page has to
-// follow Home's design and style." The living reference is
-// src/app/preview/performance-home/ (read it, never edit it); the menu
-// geometry, colours and tab bar below are its, with Lab active.
+// follow Home's design and style."
 //
-// This file is the shell: the page column, the Home / Lab / Totals
-// menu with Lab active (Home is a real link, Totals has no page yet),
-// and the floating sticky tab bar. The living page, the tray, the
-// answer panel and the six chip groups, is LabApp.tsx. The Suspense
-// boundary exists because LabApp reads the selection from the URL,
-// which is how Home's taps will hand a fact over.
+// This file is only what Lab adds. The page column, the face and the
+// floating tab bar come from `../performance-shell`, and the top menu
+// from `../performance-menu-live`, both shared by every Performance
+// page. The living page, the tray, the answer panel and the six chip
+// groups, is LabApp.tsx.
+//
+// Two Suspense boundaries: the menu reads the period from the address
+// and LabApp reads the selection from it, which is how Home's taps
+// hand a fact over.
 
 import { Suspense } from "react";
-import { Figtree } from "next/font/google";
-import {
-  PerformanceTabIcon,
-  ProfileTabIcon,
-  ResearchTabIcon,
-  TrackTabIcon,
-} from "../performance-home/icons";
-import PerfMenu from "./PerfMenu";
+import PerfPage from "../performance-shell";
+import PerfMenuLive from "../performance-menu-live";
 import LabApp from "./LabApp";
-import {
-  INDIGO,
-  INK,
-  PAGE_BG,
-  TAB_EDGE,
-  TAB_GLASS,
-  TAB_IDLE,
-} from "../performance-ui";
-
-const fig = Figtree({
-  subsets: ["latin"],
-  variable: "--font-fig",
-});
+import { MENU_H, MENU_INSET, TAIL_TALL } from "../performance-ui";
 
 export default function PerformanceLabPreview() {
   return (
-    <div
-      className={`${fig.variable} flex min-h-svh flex-col`}
-      style={{
-        background: PAGE_BG,
-        color: INK,
-        fontFamily: "var(--font-fig)",
-      }}
-    >
-      <div className="relative mx-auto flex w-full max-w-[390px] flex-1 flex-col">
-        <Suspense fallback={<div className="mx-[14px] mt-[7px] h-[36px]" />}>
-          <PerfMenu active="lab" />
-        </Suspense>
+    <PerfPage tail={TAIL_TALL}>
+      <Suspense fallback={<div className={`${MENU_INSET} ${MENU_H}`} />}>
+        <PerfMenuLive active="lab" />
+      </Suspense>
 
-        <Suspense fallback={null}>
-          <LabApp />
-        </Suspense>
-        <div className="min-h-[8px] grow-[3]" />
-      </div>
-
-      {/* The tab bar: the same floating sticky card as the accepted
-          Home, Performance active. */}
-      <nav className="sticky bottom-0 z-40 mt-auto px-3 pb-[calc(0.625rem+env(safe-area-inset-bottom))] pt-3">
-        <div
-          className="mx-auto flex w-full max-w-[382px] items-stretch rounded-2xl p-1"
-          style={{
-            background: TAB_GLASS,
-            backdropFilter: "blur(10px)",
-            WebkitBackdropFilter: "blur(10px)",
-            boxShadow: `0 6px 20px -10px rgba(16,16,26,0.35), inset 0 0 0 1px ${TAB_EDGE}`,
-          }}
-        >
-          <span className="flex flex-1 flex-col items-center justify-center gap-[4px] py-1.5">
-            <TrackTabIcon size={24} />
-            <span className="text-[10.5px] font-semibold" style={{ color: TAB_IDLE }}>
-              Track
-            </span>
-          </span>
-          <span className="flex flex-1 flex-col items-center justify-center gap-[4px] py-1.5">
-            <PerformanceTabIcon size={24} />
-            <span className="text-[10.5px] font-semibold" style={{ color: INDIGO }}>
-              Performance
-            </span>
-          </span>
-          <span className="flex flex-1 flex-col items-center justify-center gap-[4px] py-1.5">
-            <ResearchTabIcon size={24} />
-            <span className="text-[10.5px] font-semibold" style={{ color: TAB_IDLE }}>
-              Research
-            </span>
-          </span>
-          <span className="flex flex-1 flex-col items-center justify-center gap-[4px] py-1.5">
-            <ProfileTabIcon size={24} />
-            <span className="text-[10.5px] font-semibold" style={{ color: TAB_IDLE }}>
-              Profile
-            </span>
-          </span>
-        </div>
-      </nav>
-    </div>
+      <Suspense fallback={null}>
+        <LabApp />
+      </Suspense>
+    </PerfPage>
   );
 }

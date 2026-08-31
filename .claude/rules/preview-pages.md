@@ -61,6 +61,23 @@ the new palette becomes the checked palette and the previews go back
 under all three colour rules. Delete `paletteExempt` in
 `design-check.mjs` then. See `docs/open-questions.md`.
 
+## Every Performance preview reads one file
+
+`src/app/preview/performance-ui.ts` holds the colours, the font, the
+type scale, the two weights, the radii and the shared heights for
+`performance-home`, `-lab`, `-totals`, `-compare`, `-bets` and
+`-heatmap`. **Never write a hex, a font family or a shared size inside
+one of those pages. Add a line to that file and import it.** Spacing
+used once, on one page, stays on the page.
+
+Three things are shared components, not copies:
+`performance-shell.tsx` (the column, the face and the tab bar),
+`performance-menu.tsx` (Home / Lab / Totals) and
+`performance-header.tsx` (the back header).
+
+ANY chat may edit those files without asking or pausing. The existing
+convention holds: whoever merges second merges `main` in first.
+
 ## Testing them
 
 - `pftest.mjs <port>` proves every topic is reachable in the prototype's

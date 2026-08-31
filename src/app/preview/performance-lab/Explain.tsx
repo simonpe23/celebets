@@ -7,9 +7,19 @@
 // shadow, same hairline. Nothing new was designed for this.
 
 import { useEffect, useRef, useState } from "react";
-import { InfoDot } from "../performance-home/icons";
+import { InfoDot } from "../performance-icons";
 import { EXPLAIN } from "./explain";
-import { CARD, GREY_TEXT, HAIRLINE, INK } from "../performance-ui";
+import {
+  CARD,
+  GREY_TEXT,
+  HAIRLINE,
+  INK,
+  R_INNER,
+  T_BODY,
+  T_SMALL,
+  W_BOLD,
+  W_SEMI,
+} from "../performance-ui";
 
 export default function Explain({
   term,
@@ -64,7 +74,7 @@ export default function Explain({
             className="fixed inset-0 z-40"
           />
           <span
-            className="absolute left-0 top-[20px] z-50 block rounded-[12px] px-[13px] py-[11px]"
+            className={`absolute left-0 top-[20px] z-50 block ${R_INNER} px-[13px] py-[11px]`}
             style={{
               width: box.width,
               marginLeft: box.shift,
@@ -72,11 +82,11 @@ export default function Explain({
               boxShadow: `0 10px 24px rgba(28,24,58,0.16), inset 0 0 0 1px ${HAIRLINE}`,
             }}
           >
-            <span className="block text-[10px] font-bold" style={{ color: INK }}>
+            <span className={`block ${T_BODY} ${W_BOLD}`} style={{ color: INK }}>
               {entry.title}
             </span>
             <span
-              className="mt-[3px] block text-[9.5px] font-semibold leading-[1.45]"
+              className={`mt-[3px] block ${T_SMALL} ${W_SEMI} leading-[1.45]`}
               style={{ color: GREY_TEXT }}
             >
               {entry.line}

@@ -20,7 +20,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { makeEngine, money, type Chip } from "../pf/engine";
 import { labBets } from "../performance-lab/lab-data";
 import { chipIcon } from "../performance-lab/LabApp";
-import { Chev, InfoDot } from "../performance-home/icons";
+import { Chev, InfoDot } from "../performance-icons";
 import {
   CARD,
   CHEV,
@@ -33,10 +33,22 @@ import {
   NET_LABEL,
   PILL_LAV,
   RED,
+  R_CARD,
+  R_SMALL,
   SUBGREEN,
   TINT_BAD,
   TINT_GOOD,
   TINT_MID,
+  T_BODY,
+  T_LEAD,
+  T_META,
+  T_MICRO,
+  T_NANO,
+  T_SMALL,
+  T_STRONG,
+  T_TINY,
+  W_BOLD,
+  W_SEMI,
 } from "../performance-ui";
 import Explain from "../performance-lab/Explain";
 import PeriodPill from "../performance-lab/PeriodPill";
@@ -89,7 +101,7 @@ function Card({
 }) {
   return (
     <div
-      className={`relative mx-[11px] rounded-[16px] ${className}`}
+      className={`relative mx-[11px] ${R_CARD} ${className}`}
       style={{ background: CARD, boxShadow: "0 1px 5px rgba(24,20,50,0.07)" }}
     >
       {children}
@@ -111,11 +123,11 @@ function SectionHead({
 }) {
   return (
     <div className="flex items-center justify-between px-[13px] pt-[13px]">
-      <h2 className="text-[12px] font-bold">{title}</h2>
+      <h2 className={`text-[12px] ${W_BOLD}`}>{title}</h2>
       {link && href ? (
         <Link
           href={href}
-          className="flex items-center gap-[3px] text-[9.5px] font-semibold"
+          className={`flex items-center gap-[3px] ${T_SMALL} ${W_SEMI}`}
           style={{ color: INDIGO }}
         >
           {link}
@@ -182,19 +194,19 @@ export default function TotalsApp() {
       <div className="relative mt-[6px] flex items-start justify-between pl-[15px] pr-[8px]">
         <div className="pt-[4px]">
           <p
-            className="text-[38px] font-bold leading-none tracking-[-0.015em]"
+            className={`text-[38px] ${W_BOLD} leading-none tracking-[-0.015em]`}
             style={{ color: all.profit < 0 ? RED : INDIGO }}
           >
             {money(all.profit)}
           </p>
           <p
-            className="mt-[9px] flex items-center gap-[2px] text-[10px] font-semibold"
+            className={`mt-[9px] flex items-center gap-[2px] ${T_BODY} ${W_SEMI}`}
             style={{ color: NET_LABEL }}
           >
             Net profit
             <Explain term="Net profit" />
           </p>
-          <p className="mt-[7px] flex items-center gap-[5px] text-[9.5px] font-semibold">
+          <p className={`mt-[7px] flex items-center gap-[5px] ${T_SMALL} ${W_SEMI}`}>
             <span style={{ color: all.profit < 0 ? RED : SUBGREEN }}>
               {/* A period with nothing settled in it has no ROI, and
                   "+-" is not a number. Reachable since job 4 gave the
@@ -225,11 +237,11 @@ export default function TotalsApp() {
               className="flex min-w-0 flex-1 flex-col items-center justify-center px-[1px]"
               style={{ borderLeft: i === 0 ? undefined : `1px solid ${DIVIDER}` }}
             >
-              <p className="truncate text-[11.5px] font-bold leading-none tracking-[-0.01em]">
+              <p className={`truncate ${T_LEAD} ${W_BOLD} leading-none tracking-[-0.01em]`}>
                 {k.value}
               </p>
               <p
-                className="mt-[4px] truncate text-[7.2px] font-semibold"
+                className={`mt-[4px] truncate text-[7.2px] ${W_SEMI}`}
                 style={{ color: GREY_TEXT }}
               >
                 {k.label}
@@ -255,7 +267,7 @@ export default function TotalsApp() {
           />
           <div className="min-w-0 flex-1">
             <div
-              className="flex items-center pb-[4px] text-[8px] font-semibold"
+              className={`flex items-center pb-[4px] ${T_TINY} ${W_SEMI}`}
               style={{ color: GREY_TEXT }}
             >
               <span className="flex-1" />
@@ -268,20 +280,20 @@ export default function TotalsApp() {
                 className="flex items-center py-[6px]"
                 style={{ borderTop: `1px solid ${HAIRLINE}` }}
               >
-                <span className="w-[11px] text-[8.5px] font-semibold" style={{ color: GREY_TEXT }}>
+                <span className={`w-[11px] ${T_MICRO} ${W_SEMI}`} style={{ color: GREY_TEXT }}>
                   {i + 1}
                 </span>
                 <span className="mr-[5px] flex h-[16px] w-[16px] shrink-0 items-center justify-center">
                   {chipIcon(sportChip(s.key), false, undefined, 14)}
                 </span>
-                <span className="min-w-0 flex-1 truncate text-[9px] font-semibold">
+                <span className={`min-w-0 flex-1 truncate ${T_META} ${W_SEMI}`}>
                   {s.label}
                 </span>
-                <span className="w-[42px] text-right text-[8.5px] font-semibold" style={{ color: NET_LABEL }}>
+                <span className={`w-[42px] text-right ${T_MICRO} ${W_SEMI}`} style={{ color: NET_LABEL }}>
                   {record(s)}
                 </span>
                 <span
-                  className="w-[62px] text-right text-[9px] font-bold"
+                  className={`w-[62px] text-right ${T_META} ${W_BOLD}`}
                   style={{ color: s.profit < 0 ? RED : s.profit > 0 ? GREEN : NET_LABEL }}
                 >
                   {s.profit === 0 ? "$0.00" : cash(s.profit)}
@@ -317,7 +329,7 @@ export default function TotalsApp() {
                   style={{ borderTop: i === 0 ? undefined : `1px solid ${HAIRLINE}` }}
                 >
                   <span
-                    className="w-[10px] text-[8.5px] font-semibold"
+                    className={`w-[10px] ${T_MICRO} ${W_SEMI}`}
                     style={{ color: ci * 3 + i === 3 ? INDIGO : GREY_TEXT }}
                   >
                     {ci * 3 + i + 1}
@@ -328,14 +340,14 @@ export default function TotalsApp() {
                   >
                     {chipIcon(catChip(r.key), false, undefined, 11)}
                   </span>
-                  <span className="min-w-0 flex-1 truncate text-[7.9px] font-semibold">
+                  <span className={`min-w-0 flex-1 truncate text-[7.9px] ${W_SEMI}`}>
                     {shortLabel(r.label)}
                   </span>
-                  <span className="ml-[3px] text-[7.4px] font-semibold" style={{ color: NET_LABEL }}>
+                  <span className={`ml-[3px] text-[7.4px] ${W_SEMI}`} style={{ color: NET_LABEL }}>
                     {record(r)}
                   </span>
                   <span
-                    className="ml-[4px] whitespace-nowrap text-[7.9px] font-bold"
+                    className={`ml-[4px] whitespace-nowrap text-[7.9px] ${W_BOLD}`}
                     style={{ color: r.profit < 0 ? RED : r.profit > 0 ? GREEN : NET_LABEL }}
                   >
                     {r.profit === 0 ? "$0.00" : cash(r.profit)}
@@ -351,29 +363,29 @@ export default function TotalsApp() {
       {/* Odds Groups beside Singles vs Parlays. */}
       <div className="relative mt-[11px] flex gap-[9px] px-[11px]">
         <div
-          className="min-w-0 flex-1 rounded-[16px] pb-[11px]"
+          className={`min-w-0 flex-1 ${R_CARD} pb-[11px]`}
           style={{ background: CARD, boxShadow: "0 1px 5px rgba(24,20,50,0.07)" }}
         >
-          <h2 className="px-[11px] pt-[12px] text-[11px] font-bold">Odds Groups</h2>
+          <h2 className={`px-[11px] pt-[12px] ${T_STRONG} ${W_BOLD}`}>Odds Groups</h2>
           <div className="mt-[7px] space-y-[6px] px-[9px]">
             {bands.map((b, i) => {
               const tint = [TINT_GOOD, TINT_MID, TINT_BAD][i];
               const meta = BANDS[i];
               return (
-                <div key={b.key} className="rounded-[10px] px-[9px] py-[7px]" style={{ background: tint }}>
+                <div key={b.key} className={`${R_SMALL} px-[9px] py-[7px]`} style={{ background: tint }}>
                   <div className="flex items-baseline justify-between">
-                    <span className="text-[9px] font-bold">
+                    <span className={`${T_META} ${W_BOLD}`}>
                       {i + 1}. {meta.label}
                     </span>
-                    <span className="text-[8.5px] font-semibold" style={{ color: NET_LABEL }}>
+                    <span className={`${T_MICRO} ${W_SEMI}`} style={{ color: NET_LABEL }}>
                       {pctRound(hitOf(b))}
                     </span>
                   </div>
                   <div className="mt-[3px] flex items-baseline justify-between">
-                    <span className="text-[7.6px] font-semibold" style={{ color: GREY_TEXT }}>
+                    <span className={`${T_NANO} ${W_SEMI}`} style={{ color: GREY_TEXT }}>
                       {meta.range}
                     </span>
-                    <span className="text-[7.6px] font-semibold" style={{ color: GREY_TEXT }}>
+                    <span className={`${T_NANO} ${W_SEMI}`} style={{ color: GREY_TEXT }}>
                       {b.wins} of {b.wins + b.losses}
                     </span>
                   </div>
@@ -384,33 +396,33 @@ export default function TotalsApp() {
         </div>
 
         <div
-          className="min-w-0 flex-1 rounded-[16px] pb-[11px]"
+          className={`min-w-0 flex-1 ${R_CARD} pb-[11px]`}
           style={{ background: CARD, boxShadow: "0 1px 5px rgba(24,20,50,0.07)" }}
         >
-          <h2 className="px-[11px] pt-[12px] text-[11px] font-bold">Singles vs Parlays</h2>
+          <h2 className={`px-[11px] pt-[12px] ${T_STRONG} ${W_BOLD}`}>Singles vs Parlays</h2>
           <div className="mt-[7px] space-y-[8px] px-[9px]">
             {types.map((t, i) => (
               <div
                 key={t.key}
-                className="rounded-[10px] px-[9px] py-[13px]"
+                className={`${R_SMALL} px-[9px] py-[13px]`}
                 style={{ boxShadow: `inset 0 0 0 1px ${HAIRLINE}` }}
               >
                 <div className="flex items-baseline justify-between">
-                  <span className="text-[9px] font-bold">
+                  <span className={`${T_META} ${W_BOLD}`}>
                     {i + 1}. {t.label}
                   </span>
                   <span
-                    className="text-[9px] font-bold"
+                    className={`${T_META} ${W_BOLD}`}
                     style={{ color: t.profit < 0 ? RED : t.profit > 0 ? GREEN : NET_LABEL }}
                   >
                     {t.profit === 0 ? "$0.00" : cash(t.profit)}
                   </span>
                 </div>
                 <div className="mt-[3px] flex items-baseline justify-between">
-                  <span className="text-[7.6px] font-semibold" style={{ color: GREY_TEXT }}>
+                  <span className={`${T_NANO} ${W_SEMI}`} style={{ color: GREY_TEXT }}>
                     {pctRound(hitOf(t))}
                   </span>
-                  <span className="text-[7.6px] font-semibold" style={{ color: GREY_TEXT }}>
+                  <span className={`${T_NANO} ${W_SEMI}`} style={{ color: GREY_TEXT }}>
                     {t.wins} of {t.wins + t.losses}
                   </span>
                 </div>
@@ -423,11 +435,11 @@ export default function TotalsApp() {
       {/* The ledger. */}
       <Card className="mb-[6px] mt-[11px] pb-[8px]">
         <div className="flex items-center justify-between px-[13px] pt-[13px]">
-          <h2 className="text-[12px] font-bold">Recent Bets</h2>
+          <h2 className={`text-[12px] ${W_BOLD}`}>Recent Bets</h2>
           {/* Job 5. */}
           <Link
             href={withPeriod("/preview/performance-bets?from=totals", period)}
-            className="flex items-center gap-[3px] text-[9.5px] font-semibold"
+            className={`flex items-center gap-[3px] ${T_SMALL} ${W_SEMI}`}
             style={{ color: INDIGO }}
           >
             See all bets
@@ -445,19 +457,19 @@ export default function TotalsApp() {
                 {chipIcon(sportChip(b.sport), false, undefined, 17)}
               </span>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-[9.5px] font-bold">{b.pick}</p>
-                <p className="mt-[2px] truncate text-[7.6px] font-semibold" style={{ color: GREY_TEXT }}>
+                <p className={`truncate ${T_SMALL} ${W_BOLD}`}>{b.pick}</p>
+                <p className={`mt-[2px] truncate ${T_NANO} ${W_SEMI}`} style={{ color: GREY_TEXT }}>
                   {new Date(b.when).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                   {"  ·  "}
                   {b.sport}
                   {b.league ? `  ·  ${b.league}` : ""}
                 </p>
               </div>
-              <span className="ml-[6px] text-[8.5px] font-semibold" style={{ color: NET_LABEL }}>
+              <span className={`ml-[6px] ${T_MICRO} ${W_SEMI}`} style={{ color: NET_LABEL }}>
                 {b.odds === null ? "-" : b.odds.toFixed(2)}
               </span>
               <span
-                className="ml-[9px] whitespace-nowrap text-[9.5px] font-bold"
+                className={`ml-[9px] whitespace-nowrap ${T_SMALL} ${W_BOLD}`}
                 style={{ color: b.profit < 0 ? RED : b.profit > 0 ? GREEN : NET_LABEL }}
               >
                 {b.profit === 0 ? "$0.00" : cash(b.profit)}

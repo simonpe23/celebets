@@ -6,14 +6,20 @@
 // four screens read as one product. The menu below it is Lab's domain
 // dropdown, same geometry and same shadow, for the same reason.
 
-import { ChevDown } from "../performance-home/icons";
-import { Chev } from "../performance-home/icons";
+import { ChevDown } from "../performance-icons";
+import { Chev } from "../performance-icons";
 import {
   CARD,
   HAIRLINE,
   INDIGO,
   NET_LABEL,
+  R_INNER,
   SELECTOR_INK,
+  T_LABEL,
+  T_SMALL,
+  T_STRONG,
+  W_BOLD,
+  W_SEMI,
 } from "../performance-ui";
 import { PERIODS, labelOf, type PeriodKey } from "./period";
 
@@ -39,8 +45,8 @@ export default function PeriodPill({
         aria-label="Change the period"
         className={
           size === "pill"
-            ? "flex h-[24px] items-center gap-[3px] rounded-full px-[12px] text-[9.5px] font-semibold"
-            : "flex items-center gap-[4px] text-[11px] font-bold"
+            ? `flex h-[24px] items-center gap-[3px] rounded-full px-[12px] ${T_SMALL} ${W_SEMI}`
+            : `flex items-center gap-[4px] ${T_STRONG} ${W_BOLD}`
         }
         style={
           size === "pill"
@@ -65,7 +71,7 @@ export default function PeriodPill({
           <div
             className={`absolute ${
               align === "right" ? "right-0" : "left-0"
-            } top-[26px] z-20 w-[136px] rounded-[12px] py-[5px]`}
+            } top-[26px] z-20 w-[136px] ${R_INNER} py-[5px]`}
             style={{
               background: CARD,
               boxShadow: `0 10px 24px rgba(28,24,58,0.14), inset 0 0 0 1px ${HAIRLINE}`,
@@ -78,7 +84,7 @@ export default function PeriodPill({
                   setOpen(false);
                   onPick(p.key);
                 }}
-                className="flex w-full items-center justify-between px-[13px] py-[7px] text-left text-[10.5px] font-semibold"
+                className={`flex w-full items-center justify-between px-[13px] py-[7px] text-left ${T_LABEL} ${W_SEMI}`}
                 style={{ color: p.key === period ? INDIGO : NET_LABEL }}
               >
                 {p.label}

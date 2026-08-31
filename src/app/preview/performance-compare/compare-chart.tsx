@@ -13,12 +13,15 @@
 
 import { useEffect, useRef, useState } from "react";
 import {
+  CHART_H_COMPARE,
   GREY_TEXT,
   GRID_LINE,
   INDIGO,
   LIGHT_INDIGO,
   LIGHT_RED,
   RED,
+  T_TINY,
+  W_SEMI,
   ZERO_LINE,
 } from "../performance-ui";
 
@@ -52,7 +55,7 @@ export function CompareChart({
   bDown: boolean;
 }) {
   const W = 300;
-  const H = 132;
+  const H = CHART_H_COMPARE;
   const [drawn, setDrawn] = useState(false);
   const aRef = useRef<SVGPathElement>(null);
   const bRef = useRef<SVGPathElement>(null);
@@ -183,7 +186,7 @@ export function CompareChart({
           ))}
         </svg>
         <div
-          className="absolute left-0 top-0 h-full w-[36px] text-right text-[8px] font-semibold"
+          className={`absolute left-0 top-0 h-full w-[36px] text-right ${T_TINY} ${W_SEMI}`}
           style={{ color: GREY_TEXT }}
         >
           {ticks.map((v) => (
@@ -198,7 +201,7 @@ export function CompareChart({
         </div>
       </div>
       <div
-        className="mt-[9px] flex justify-between pl-[40px] pr-[6px] text-[7.4px] font-semibold"
+        className={`mt-[9px] flex justify-between pl-[40px] pr-[6px] text-[7.4px] ${W_SEMI}`}
         style={{ color: GREY_TEXT }}
       >
         {labelT.map((t, i) => (

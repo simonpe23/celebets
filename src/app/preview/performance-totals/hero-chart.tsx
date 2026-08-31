@@ -6,7 +6,13 @@
 // dashed zero line, an end dot, and the money ladder on the right.
 
 import { useEffect, useRef, useState } from "react";
-import { GREY_TEXT, INDIGO, ZERO_LINE } from "../performance-ui";
+import {
+  CHART_H_TOTALS,
+  GREY_TEXT,
+  INDIGO,
+  W_SEMI,
+  ZERO_LINE,
+} from "../performance-ui";
 
 export type Point = { t: number; v: number };
 
@@ -16,7 +22,15 @@ function tick(v: number): string {
   return `${v < 0 ? "-" : ""}$${t}`;
 }
 
-export function HeroLine({ points, width = 205, height = 92 }: { points: Point[]; width?: number; height?: number }) {
+export function HeroLine({
+  points,
+  width = 205,
+  height = CHART_H_TOTALS,
+}: {
+  points: Point[];
+  width?: number;
+  height?: number;
+}) {
   const ref = useRef<SVGPathElement>(null);
   const [drawn, setDrawn] = useState(false);
   const [len, setLen] = useState(0);
@@ -96,7 +110,7 @@ export function HeroLine({ points, width = 205, height = 92 }: { points: Point[]
         />
       </svg>
       <div
-        className="pointer-events-none absolute right-0 top-0 h-full w-[32px] text-[7.5px] font-semibold"
+        className={`pointer-events-none absolute right-0 top-0 h-full w-[32px] text-[7.5px] ${W_SEMI}`}
         style={{ color: GREY_TEXT }}
       >
         {ticks.map((v) => (

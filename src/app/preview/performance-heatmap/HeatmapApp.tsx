@@ -36,6 +36,7 @@
 // 26 August 2026, and the figure on the tile is the figure Lab shows.
 
 import { useMemo, useState } from "react";
+import PerfHeader from "../performance-header";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { money, makeEngine, type Chip } from "../pf/engine";
@@ -49,7 +50,10 @@ import {
   withPeriod,
   type PeriodKey,
 } from "../performance-lab/period";
-import { Chev, GoldSparkle, InfoDot } from "../performance-home/icons";
+import {
+  GoldSparkle,
+  InfoDot,
+} from "../performance-icons";
 import {
   AMBER_TILE,
   CARD,
@@ -60,6 +64,8 @@ import {
   NET_LABEL,
   ORANGE,
   RED,
+  R_CARD,
+  R_CHIP,
   TILE_BAD_SOFT,
   TILE_BAD_STRONG,
   TILE_EDGE_BAD_SOFT,
@@ -72,6 +78,13 @@ import {
   TILE_NEUTRAL,
   TINT_BAD,
   TINT_GOOD,
+  T_BODY,
+  T_LABEL,
+  T_META,
+  T_MICRO,
+  T_STRONG,
+  W_BOLD,
+  W_SEMI,
 } from "../performance-ui";
 import { squarify } from "./treemap";
 import {
@@ -198,7 +211,7 @@ function InsightCard({
   return (
     <Link
       href={href}
-      className="flex min-w-0 flex-1 items-center gap-[8px] rounded-[13px] py-[9px] pl-[9px] pr-[10px]"
+      className={`flex min-w-0 flex-1 items-center gap-[8px] ${R_CHIP} py-[9px] pl-[9px] pr-[10px]`}
       style={{ background: CARD, boxShadow: "0 1px 5px rgba(24,20,50,0.07)" }}
     >
       <span
@@ -213,26 +226,26 @@ function InsightCard({
       </span>
       <span className="block min-w-0 flex-1">
         <span
-          className="block truncate text-[8.5px] font-semibold"
+          className={`block truncate ${T_MICRO} ${W_SEMI}`}
           style={{ color: accent }}
         >
           {title}
         </span>
         <span
-          className="mt-[1px] block truncate text-[11px] font-bold"
+          className={`mt-[1px] block truncate ${T_STRONG} ${W_BOLD}`}
           style={{ color: INK }}
         >
           {name}
         </span>
         <span className="mt-[2px] flex items-baseline gap-[4px]">
           <span
-            className="shrink-0 text-[9px] font-bold"
+            className={`shrink-0 ${T_META} ${W_BOLD}`}
             style={{ color: good ? GREEN : RED }}
           >
             {headline}
           </span>
           <span
-            className="min-w-0 truncate text-[8.5px] font-semibold"
+            className={`min-w-0 truncate ${T_MICRO} ${W_SEMI}`}
             style={{ color: GREY_TEXT }}
           >
             {meta}
@@ -391,26 +404,18 @@ export default function HeatmapApp() {
     <>
       {/* The header: back to Home, the title, and the insight sparkle
           the brief puts on every Performance screen. */}
-      <div className="relative mt-[10px] flex h-[40px] items-center px-[15px]">
-        <Link
-          href="/preview/performance-home"
-          aria-label="Back to Home"
-          className="flex h-[34px] w-[34px] items-center justify-center rounded-full"
-          style={{ background: CARD, boxShadow: "0 1px 4px rgba(24,20,50,0.08)" }}
-        >
-          <span className="rotate-180">
-            <Chev size={12} color={INK} />
+      <PerfHeader
+        href="/preview/performance-home"
+        label="Back to Home"
+        title="Heat Map"
+        right={
+          <span className="ml-auto flex h-[30px] w-[30px] items-center justify-center">
+            <GoldSparkle size={19} />
           </span>
-        </Link>
-        <p className="pointer-events-none absolute inset-x-0 text-center text-[15px] font-bold">
-          Heat Map
-        </p>
-        <span className="ml-auto flex h-[30px] w-[30px] items-center justify-center">
-          <GoldSparkle size={19} />
-        </span>
-      </div>
+        }
+      />
       <p
-        className="relative mt-[6px] text-center text-[10px] font-semibold"
+        className={`relative mt-[6px] text-center ${T_BODY} ${W_SEMI}`}
         style={{ color: GREY_TEXT }}
       >
         See where your money works and where it leaks.
@@ -477,11 +482,11 @@ export default function HeatmapApp() {
       {/* The map. Area is the share of the result, colour is which way
           it went, and every tile opens Lab on that fact. */}
       <div
-        className="relative mx-[15px] mt-[10px] rounded-[16px] px-[9px] pb-[11px] pt-[11px]"
+        className={`relative mx-[15px] mt-[10px] ${R_CARD} px-[9px] pb-[11px] pt-[11px]`}
         style={{ background: CARD, boxShadow: "0 1px 5px rgba(24,20,50,0.07)" }}
       >
         <p
-          className="flex items-center gap-[3px] pl-[3px] text-[10.5px] font-semibold"
+          className={`flex items-center gap-[3px] pl-[3px] ${T_LABEL} ${W_SEMI}`}
           style={{ color: NET_LABEL }}
         >
           Performance map
@@ -489,7 +494,7 @@ export default function HeatmapApp() {
         </p>
         {tiles.length === 0 ? (
           <p
-            className="flex h-[120px] items-center justify-center px-[20px] text-center text-[10.5px] font-semibold"
+            className={`flex h-[120px] items-center justify-center px-[20px] text-center ${T_LABEL} ${W_SEMI}`}
             style={{ color: GREY_TEXT }}
           >
             Settle a few bets and the map fills in.
@@ -526,13 +531,13 @@ export default function HeatmapApp() {
                   ) : null}
                   <span className="mt-auto block min-w-0">
                     <span
-                      className="block truncate font-bold"
+                      className={`block truncate ${W_BOLD}`}
                       style={{ color: INK, fontSize: fluid(nameSize) }}
                     >
                       {t.label}
                     </span>
                     <span
-                      className="mt-[1px] block truncate font-bold leading-tight"
+                      className={`mt-[1px] block truncate ${W_BOLD} leading-tight`}
                       style={{
                         color: neutral ? NET_LABEL : t.profit > 0 ? GREEN : RED,
                         fontSize: fluid(moneySize),
@@ -576,7 +581,7 @@ export default function HeatmapApp() {
         )}
       </div>
       <p
-        className="relative mt-[9px] flex items-center justify-center gap-[4px] px-[15px] text-center text-[8.5px] font-semibold"
+        className={`relative mt-[9px] flex items-center justify-center gap-[4px] px-[15px] text-center ${T_MICRO} ${W_SEMI}`}
         style={{ color: GREY_TEXT }}
       >
         <Explain term="Map sizing" size={11} />

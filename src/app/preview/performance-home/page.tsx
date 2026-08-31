@@ -38,8 +38,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Figtree } from "next/font/google";
 import { HeroChart, Spark } from "./charts";
+import PerfPage from "../performance-shell";
+import PerfMenu from "../performance-menu";
 import {
   BallIcon,
   ChangedMark,
@@ -56,19 +57,16 @@ import {
   LayersIcon,
   MiniTrend,
   OrbLayers,
-  PerformanceTabIcon,
-  ProfileTabIcon,
   RedTarget,
-  ResearchTabIcon,
-  TrackTabIcon,
   TrendTileIcon,
   WashTexture,
-} from "./icons";
+} from "../performance-icons";
 import {
   AMBER_BG,
   AMBER_EDGE,
   AMBER_INK,
   AMBER_TILE,
+  CHART_H_HOME,
   CHEV,
   DIVIDER,
   DOT_MUTED,
@@ -78,32 +76,34 @@ import {
   HAIRLINE,
   INDIGO,
   INDIGO_FILL,
-  INK,
   LAB_CARD,
-  MENU_IDLE,
-  MENU_TRACK,
   NET_LABEL,
   ON_BRAND,
   ORANGE,
   ORB_DEEP,
   ORB_HI,
   ORB_TINT,
-  PAGE_BG,
   PILL_LAV,
   RANK_INK,
   RED,
   ROW_TILE_BAD,
+  R_CHIP,
+  R_INNER,
+  R_SMALL,
+  R_TILE,
   SELECTOR_INK,
   SUBGREEN,
-  TAB_EDGE,
-  TAB_GLASS,
-  TAB_IDLE,
+  TAIL_TALL,
+  T_BODY,
+  T_LABEL,
+  T_LEAD,
+  T_NANO,
+  T_SMALL,
+  T_STRONG,
+  T_TINY,
+  W_BOLD,
+  W_SEMI,
 } from "../performance-ui";
-
-const fig = Figtree({
-  subsets: ["latin"],
-  variable: "--font-fig",
-});
 
 const ROWS = [
   {
@@ -182,15 +182,7 @@ const FACTS = [
 
 export default function PerformanceHomePreview() {
   return (
-    <div
-      className={`${fig.variable} flex min-h-svh flex-col`}
-      style={{
-        background: PAGE_BG,
-        color: INK,
-        fontFamily: "var(--font-fig)",
-      }}
-    >
-      <div className="relative mx-auto flex w-full max-w-[390px] flex-1 flex-col">
+    <PerfPage tail={TAIL_TALL}>
         {/* The colour wash behind the chart and KPI row, re-extracted
             from "2. big chart Aug 28.png": his 29 August order to go
             back to that sheet's fade. It ends before the insight card,
@@ -207,51 +199,22 @@ export default function PerformanceHomePreview() {
           <WashTexture />
         </div>
 
-        {/* The Home / Lab / Totals menu, full width, high on the page. */}
-        <div
-          className="relative mx-[14px] mt-[7px] flex h-[36px] items-center rounded-full px-[4px]"
-          style={{ background: MENU_TRACK }}
-        >
-          <span
-            className="flex h-[28px] w-[110px] shrink-0 items-center justify-center rounded-full text-[10.5px] font-bold text-white"
-            style={{ background: INDIGO_FILL }}
-          >
-            Home
-          </span>
-          {/* A real link since 29 August 2026, the owner's order once
-              Lab's preview existed: "make it so i can click lab and
-              home in the top menu." The padding is an invisible tap
-              target; nothing about the menu's look changes. */}
-          <Link
-            href="/preview/performance-lab"
-            className="absolute left-[181px] top-1/2 -translate-x-1/2 -translate-y-1/2 px-[18px] py-[10px] text-[10.5px] font-semibold"
-            style={{ color: MENU_IDLE }}
-          >
-            Lab
-          </Link>
-          {/* A real link since 29 August 2026, when Totals got its
-              page. Same menu-tap unlock he gave for Lab; nothing
-              about the menu's look changes. */}
-          <Link
-            href="/preview/performance-totals"
-            className="absolute left-[296px] top-1/2 -translate-x-1/2 -translate-y-1/2 px-[18px] py-[10px] text-[10.5px] font-semibold"
-            style={{ color: MENU_IDLE }}
-          >
-            Totals
-          </Link>
-        </div>
+        {/* The Home / Lab / Totals menu. One shared component since
+            30 August 2026: Home used to hold its own copy of the same
+            geometry because this folder was locked to one chat. */}
+        <PerfMenu active="home" />
 
         {/* Net profit and the This month selector. */}
         <div className="relative mt-[10px] flex items-center justify-between pl-[22px] pr-[10px]">
           <p
-            className="flex items-center gap-[1px] text-[10.5px] font-semibold"
+            className={`flex items-center gap-[1px] ${T_LABEL} ${W_SEMI}`}
             style={{ color: NET_LABEL }}
           >
             Net profit
             <InfoDot size={13} />
           </p>
           <span
-            className="relative top-[2px] flex h-[24px] items-center gap-[3px] rounded-full bg-white px-[12px] text-[9.5px] font-semibold"
+            className={`relative top-[2px] flex h-[24px] items-center gap-[3px] rounded-full bg-white px-[12px] ${T_SMALL} ${W_SEMI}`}
             style={{ color: SELECTOR_INK, boxShadow: "0 1px 3px rgba(30,25,60,0.07)" }}
           >
             This month
@@ -261,14 +224,14 @@ export default function PerformanceHomePreview() {
 
         {/* The number. */}
         <p
-          className="relative mt-[4px] pl-[18px] text-[45px] font-bold leading-none"
+          className={`relative mt-[4px] pl-[18px] text-[45px] ${W_BOLD} leading-none`}
           style={{ color: INDIGO }}
         >
           +$2,637
         </p>
 
         {/* The ROI and record line. */}
-        <p className="relative mt-[7px] flex items-center gap-[4px] pl-[22px] text-[10.5px] font-semibold">
+        <p className={`relative mt-[7px] flex items-center gap-[4px] pl-[22px] ${T_LABEL} ${W_SEMI}`}>
           <MiniTrend size={12} />
           <span style={{ color: SUBGREEN }}>+24.1% ROI</span>
           <span
@@ -282,10 +245,10 @@ export default function PerformanceHomePreview() {
             right end rides up beside the number, like the sheet. */}
         <div className="relative mt-[-30px]">
           <div className="pl-[22px] pr-[54px]">
-            <HeroChart width={313.6} height={98} />
+            <HeroChart width={313.6} height={CHART_H_HOME} />
           </div>
           <div
-            className="absolute right-0 top-0 w-[38px] text-[8px] font-semibold"
+            className={`absolute right-0 top-0 w-[38px] ${T_TINY} ${W_SEMI}`}
             style={{ color: GREY_TEXT }}
           >
             <span className="absolute left-0 top-[-9px]">$3K</span>
@@ -294,7 +257,7 @@ export default function PerformanceHomePreview() {
             <span className="absolute left-0 top-[91px]">-$1.5K</span>
           </div>
           <div
-            className="mt-[12px] flex justify-between pl-[24px] pr-[52px] text-[7px] font-semibold"
+            className={`mt-[12px] flex justify-between pl-[24px] pr-[52px] text-[7px] ${W_SEMI}`}
             style={{ color: GREY_TEXT }}
           >
             <span>Mar 1</span>
@@ -325,10 +288,10 @@ export default function PerformanceHomePreview() {
             >
               <span className="relative top-[-3px]">{f.icon}</span>
               <div>
-                <p className="text-[12.5px] font-bold leading-none tracking-[-0.01em]">
+                <p className={`text-[12.5px] ${W_BOLD} leading-none tracking-[-0.01em]`}>
                   {f.value}
                 </p>
-                <p className="mt-[3px] text-[7.6px]" style={{ color: GREY_TEXT }}>
+                <p className={`mt-[3px] ${T_NANO}`} style={{ color: GREY_TEXT }}>
                   {f.label}
                 </p>
               </div>
@@ -340,7 +303,7 @@ export default function PerformanceHomePreview() {
 
         {/* Actuals noticed: its own section on the plain page. */}
         <div
-          className="relative mx-[15px] flex h-[45px] items-center rounded-[13px] pl-[7px] pr-[12px]"
+          className={`relative mx-[15px] flex h-[45px] items-center ${R_CHIP} pl-[7px] pr-[12px]`}
           style={{
             background: AMBER_BG,
             boxShadow: `inset 0 0 0 1px ${AMBER_EDGE}`,
@@ -353,7 +316,7 @@ export default function PerformanceHomePreview() {
             <GoldSparkle size={16} />
           </span>
           <div className="ml-[11px] min-w-0 flex-1 leading-[1.4]">
-            <p className="text-[7.8px] font-semibold" style={{ color: ORANGE }}>
+            <p className={`text-[7.8px] ${W_SEMI}`} style={{ color: ORANGE }}>
               Actuals noticed
             </p>
             <p className="mt-[2px] whitespace-nowrap text-[8.7px]" style={{ color: AMBER_INK }}>
@@ -368,7 +331,7 @@ export default function PerformanceHomePreview() {
         {/* What drives your result. */}
         <div className="relative flex items-start justify-between pl-[20px] pr-[19px]">
           <div>
-            <h2 className="whitespace-nowrap text-[11.2px] font-bold">
+            <h2 className={`whitespace-nowrap text-[11.2px] ${W_BOLD}`}>
               What drives your result
             </h2>
             <p className="mt-[1px] whitespace-nowrap text-[8.9px]" style={{ color: GREY_TEXT }}>
@@ -380,14 +343,14 @@ export default function PerformanceHomePreview() {
                 wiring only: nothing about the pill's look changes. */}
             <Link
               href="/preview/performance-heatmap"
-              className="flex h-[23px] items-center gap-[4px] rounded-full px-[9px] text-[9.5px] font-semibold"
+              className={`flex h-[23px] items-center gap-[4px] rounded-full px-[9px] ${T_SMALL} ${W_SEMI}`}
               style={{ background: PILL_LAV, color: INDIGO }}
             >
               <HeatDots size={11} />
               Heat Map
             </Link>
             <span
-              className="flex h-[23px] items-center gap-[4px] rounded-full px-[9px] text-[9.5px] font-semibold"
+              className={`flex h-[23px] items-center gap-[4px] rounded-full px-[9px] ${T_SMALL} ${W_SEMI}`}
               style={{ background: PILL_LAV, color: INDIGO }}
             >
               <ChangedMark size={12} />
@@ -404,7 +367,7 @@ export default function PerformanceHomePreview() {
               href={`/preview/performance-lab?sel=${encodeURIComponent(row.sel)}`}
               className={
                 row.rank === 1
-                  ? "mx-[12px] mb-[4px] flex h-[49px] items-center rounded-[12px] bg-white pl-[8px] pr-[12px]"
+                  ? `mx-[12px] mb-[4px] flex h-[49px] items-center ${R_INNER} bg-white pl-[8px] pr-[12px]`
                   : "mx-[12px] flex h-[47px] items-center pl-[8px] pr-[12px]"
               }
               style={
@@ -414,7 +377,7 @@ export default function PerformanceHomePreview() {
               }
             >
               <span
-                className="flex h-[19.5px] w-[19.5px] shrink-0 items-center justify-center rounded-full text-[10.5px] font-bold"
+                className={`flex h-[19.5px] w-[19.5px] shrink-0 items-center justify-center rounded-full ${T_LABEL} ${W_BOLD}`}
                 style={
                   row.rank === 1
                     ? { background: INDIGO_FILL, color: ON_BRAND }
@@ -424,17 +387,17 @@ export default function PerformanceHomePreview() {
                 {row.rank}
               </span>
               <span
-                className="ml-[13px] flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-[10px]"
+                className={`ml-[13px] flex h-[30px] w-[30px] shrink-0 items-center justify-center ${R_SMALL}`}
                 style={{ background: row.tile }}
               >
                 {row.icon}
               </span>
               <div className="ml-[16px] w-[100px] shrink-0">
-                <p className="whitespace-nowrap text-[11px] font-bold leading-[1.2]">
+                <p className={`whitespace-nowrap ${T_STRONG} ${W_BOLD} leading-[1.2]`}>
                   {row.name}
                 </p>
                 <p
-                  className="mt-[2px] flex items-center gap-[7px] whitespace-nowrap text-[8.2px] font-semibold"
+                  className={`mt-[2px] flex items-center gap-[7px] whitespace-nowrap text-[8.2px] ${W_SEMI}`}
                   style={{ color: GREY_TEXT }}
                 >
                   {row.meta}
@@ -449,10 +412,10 @@ export default function PerformanceHomePreview() {
                 <Spark shape={row.spark} />
               </div>
               <div className="ml-auto w-[58px] shrink-0 text-right">
-                <p className="text-[11.5px] font-bold leading-[1.2]" style={{ color: row.moneyColor }}>
+                <p className={`${T_LEAD} ${W_BOLD} leading-[1.2]`} style={{ color: row.moneyColor }}>
                   {row.money}
                 </p>
-                <p className="mt-[1px] text-[7.6px] font-semibold" style={{ color: row.moneyColor }}>
+                <p className={`mt-[1px] ${T_NANO} ${W_SEMI}`} style={{ color: row.moneyColor }}>
                   {row.roi}
                 </p>
               </div>
@@ -468,7 +431,7 @@ export default function PerformanceHomePreview() {
             selections." */}
         <Link
           href="/preview/performance-lab"
-          className="relative mx-[14px] mt-[8px] flex h-[69px] items-center rounded-[14px] pl-[15px] pr-[15px]"
+          className={`relative mx-[14px] mt-[8px] flex h-[69px] items-center ${R_TILE} pl-[15px] pr-[15px]`}
           style={{ background: LAB_CARD }}
         >
           <span
@@ -481,12 +444,12 @@ export default function PerformanceHomePreview() {
             <OrbLayers size={25} />
           </span>
           <div className="ml-[13px] min-w-0 flex-1 pt-[2px] leading-[1.55]">
-            <p className="whitespace-nowrap text-[10.2px] font-bold">
+            <p className={`whitespace-nowrap text-[10.2px] ${W_BOLD}`}>
               Build your performance view
             </p>
             <p className="mt-[4px] text-[7.8px]" style={{ color: GREY_TEXT }}>
               Create custom views in{" "}
-              <span className="font-semibold" style={{ color: INDIGO }}>
+              <span className={`${W_SEMI}`} style={{ color: INDIGO }}>
                 Lab
               </span>
               .
@@ -497,57 +460,13 @@ export default function PerformanceHomePreview() {
             </p>
           </div>
           <span
-            className="relative top-[-2px] ml-[8px] flex h-[21px] w-[105px] shrink-0 items-center justify-center gap-[5px] rounded-full text-[10px] font-semibold text-white"
+            className={`relative top-[-2px] ml-[8px] flex h-[21px] w-[105px] shrink-0 items-center justify-center gap-[5px] rounded-full ${T_BODY} ${W_SEMI} text-white`}
             style={{ background: INDIGO_FILL }}
           >
             Explore Lab
             <Chev size={7} color={ON_BRAND} />
           </span>
         </Link>
-
-        <div className="min-h-[8px] grow-[3]" />
-      </div>
-
-      {/* The tab bar: a floating card, sticky at the foot of the page
-          like every other page in the app (see TabBar.tsx for why
-          sticky, mt-auto and last child are the mechanics). Taller,
-          icons more prominent: the owner's round 2 instruction 6. */}
-      <nav className="sticky bottom-0 z-40 mt-auto px-3 pb-[calc(0.625rem+env(safe-area-inset-bottom))] pt-3">
-        <div
-          className="mx-auto flex w-full max-w-[382px] items-stretch rounded-2xl p-1"
-          style={{
-            background: TAB_GLASS,
-            backdropFilter: "blur(10px)",
-            WebkitBackdropFilter: "blur(10px)",
-            boxShadow: `0 6px 20px -10px rgba(16,16,26,0.35), inset 0 0 0 1px ${TAB_EDGE}`,
-          }}
-        >
-          <span className="flex flex-1 flex-col items-center justify-center gap-[4px] py-1.5">
-            <TrackTabIcon size={24} />
-            <span className="text-[10.5px] font-semibold" style={{ color: TAB_IDLE }}>
-              Track
-            </span>
-          </span>
-          <span className="flex flex-1 flex-col items-center justify-center gap-[4px] py-1.5">
-            <PerformanceTabIcon size={24} />
-            <span className="text-[10.5px] font-semibold" style={{ color: INDIGO }}>
-              Performance
-            </span>
-          </span>
-          <span className="flex flex-1 flex-col items-center justify-center gap-[4px] py-1.5">
-            <ResearchTabIcon size={24} />
-            <span className="text-[10.5px] font-semibold" style={{ color: TAB_IDLE }}>
-              Research
-            </span>
-          </span>
-          <span className="flex flex-1 flex-col items-center justify-center gap-[4px] py-1.5">
-            <ProfileTabIcon size={24} />
-            <span className="text-[10.5px] font-semibold" style={{ color: TAB_IDLE }}>
-              Profile
-            </span>
-          </span>
-        </div>
-      </nav>
-    </div>
+    </PerfPage>
   );
 }

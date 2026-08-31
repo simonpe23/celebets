@@ -1223,3 +1223,119 @@ byte identical, both widths, both themes.
 **He also opened `CLAUDE.md` for this**, which is normally not edited
 from a job chat. His words: "You have my permission to edit it for
 this." The permission was for these lines only.
+
+---
+
+## ONE FILE FOR EVERY DESIGN VALUE, 31 August 2026
+
+**What he asked for, his words:** "I want to change one thing in one
+file and have it update across every page. Font, font size, a colour,
+a height, a corner radius, spacing. One edit, everywhere, from any
+chat, with no coordination."
+
+**And what was wrong, his words:** "Right now that is only true for
+colours on the Performance preview pages, which read
+`src/app/preview/performance-ui.ts`. Everything else, fonts, sizes,
+weights, spacing, chart heights, menu heights, is written inside
+individual page files. And the Performance top menu is written out
+three separate times."
+
+**Two passes, his order, and why:** "DO IT IN TWO PASSES. The second
+one touches the live site, so I want to see the first one land before
+it starts." Pass one is the six Performance previews. Pass two is
+Track, Research, Settings and today's `/stats`.
+
+**The whole job is invisible.** His words: "Do not change how anything
+looks. This whole job is invisible." And: "If a screenshot before and
+after differs, you did it wrong."
+
+**Pass two does not touch the palette.** His words: "Pass two does not
+unify the old and new palettes. The live pages keep their existing
+colours through the app's existing colour mechanism. This job shares
+sizes, fonts, spacing and shapes, not the palette decision, which I
+make separately."
+
+**No dark mode on the previews.** His words: "Do not add dark mode to
+the previews. I am deliberately doing that later."
+
+### What was found before anything was built
+
+- **The page shell was copied six times**, not just the menu. Every
+  `page.tsx` repeated the Figtree face, the 390pt column and the whole
+  four icon tab bar. The tab bar was byte for byte identical in all
+  six.
+- **The top menu was in the code twice**, not three times: Home held
+  its own copy and `PerfMenu.tsx` served Lab and Totals. Three pages
+  drew it. Reported to him as found, not as he described it.
+- **The back header was written three times and had already drifted.**
+  Compare's row is 44px with a 36px button; All Bets and the Heat Map
+  are 40px with a 34px button. Exactly the failure the job exists to
+  stop.
+- **152 type sizes were typed into pages by hand.** `text-[10.5px]`
+  alone appeared 45 times.
+
+### The four calls he approved, 31 August 2026, "Yes to all your calls"
+
+1. **Compare's taller back header stays taller.** Collapsing the two
+   shapes would change how Compare looks, and nothing may look
+   different. The difference is now written in one place instead of
+   hiding in three files. Whoever redesigns Compare should collapse
+   it.
+2. **Chart heights are named, not equalised.** Home and Lab draw at
+   98, the Totals hero at 92, Compare at 132. They are in the dial so
+   a change is one edit, not so that they are the same number.
+3. **`icons.tsx` moved out of `performance-home/`** to
+   `src/app/preview/performance-icons.tsx`. Six pages import it; it
+   never belonged to Home. A pure move, no edits to the icons.
+4. **One off spacing stays on the page.** A margin used once, on one
+   page, is not a token. A dial full of single use values is a second
+   place to look, not one place to change.
+
+### What is in the dial now
+
+Colours as before, plus: the Figtree face (loaded once instead of six
+times), a ten step type scale, the two weights, six radii, the page
+column width, the tab bar width and icon size, the menu's height, pill
+and inset, the two back header shapes, and the four chart heights.
+
+They are Tailwind class strings, not numbers, so the pages keep
+writing `className` and nothing had to be rewritten as an inline
+style. **This was proved with a real build before it was chosen**: a
+made up class was put in a `.ts` file, the app was built, and the
+class was found in the output CSS. Tailwind v4 reads `.ts` files.
+
+`rounded-full` is deliberately NOT a token. It is a shape, not a
+measurement.
+
+### Three shared components replaced the copies
+
+`performance-shell.tsx` (column, face, tab bar), `performance-menu.tsx`
+(Home / Lab / Totals, with `performance-menu-live.tsx` for the two
+pages that carry a period in the address) and
+`performance-header.tsx` (the back header).
+
+### How "invisible" was proved
+
+`shotdiff.mjs`, written for this job. Two dev servers, one on a git
+worktree of the old code and one on the new, 24 screenshots each
+(six pages at phone and laptop width, plus ten states a page shot
+cannot reach: popups, open pickers, an empty result), compared pixel
+by pixel. **All 24 identical.** `jumptest.mjs` passed all 46 doors, none failed,
+which a screenshot cannot test because it cannot see a tap.
+
+**It caught two real things a screenshot review would have missed:**
+Next's dev overlay sitting on top of four pages, and a hydration
+error that only appears when a dev server is left running across
+midnight (the demo data is dated relative to today).
+
+### The lock on Home is gone, permanently
+
+His order: "src/app/preview/performance-home/ is currently locked to
+other chats in CLAUDE.md. Remove that lock permanently as part of this
+job, and say in CLAUDE.md that it is gone and why: the one shared file
+and the new check replace it."
+
+The lock existed because Home held a private copy of everything. It
+holds none now, so a chat editing Home cannot make it disagree with
+the other five. Home is still the accepted design and must not be
+REDESIGNED without his say; editing it is ordinary work.

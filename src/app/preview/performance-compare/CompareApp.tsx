@@ -16,7 +16,7 @@
 // so Compare, Lab and Home never disagree.
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
+import PerfHeader from "../performance-header";
 import { useSearchParams } from "next/navigation";
 import {
   makeEngine,
@@ -27,7 +27,9 @@ import {
 import { labBets } from "../performance-lab/lab-data";
 import { chipIcon } from "../performance-lab/LabApp";
 import Explain from "../performance-lab/Explain";
-import { Chev, InfoDot } from "../performance-home/icons";
+import {
+  InfoDot,
+} from "../performance-icons";
 import { leagueSports } from "../performance-lab/lab-model";
 import {
   CARD,
@@ -39,19 +41,28 @@ import {
   INDIGO,
   INDIGO_FILL,
   INK,
-  ORB_LIGHT,
-  ORB_MID,
   LIGHT_INDIGO,
   LIGHT_RED,
   MENU_IDLE,
   NET_LABEL,
   ON_BRAND,
+  ORB_LIGHT,
+  ORB_MID,
   PILL_GREY,
   PILL_LAV,
   RED,
+  R_CARD,
   SEL_EDGE,
   TRACK,
   TRACK_SOFT,
+  T_BODY,
+  T_LEAD,
+  T_META,
+  T_SMALL,
+  T_STRONG,
+  T_TINY,
+  W_BOLD,
+  W_SEMI,
 } from "../performance-ui";
 import { CompareChart, type Series } from "./compare-chart";
 
@@ -262,22 +273,15 @@ export default function CompareApp() {
 
   return (
     <>
-      {/* Header: the back door to Lab, both chips still selected. */}
-      <div className="relative mt-[10px] flex h-[44px] items-center px-[16px]">
-        <Link
-          href={`/preview/performance-lab?sel=${encodeURIComponent(backSel)}`}
-          aria-label="Back to Lab"
-          className="flex h-[36px] w-[36px] items-center justify-center rounded-full"
-          style={{ background: CARD, boxShadow: "0 1px 4px rgba(24,20,50,0.08)" }}
-        >
-          <span className="rotate-180">
-            <Chev size={12} color={INK} />
-          </span>
-        </Link>
-        <p className="pointer-events-none absolute inset-x-0 text-center text-[15px] font-bold">
-          Compare
-        </p>
-      </div>
+      {/* Header: the back door to Lab, both chips still selected.
+          `tall` is Compare's own 44px shape, four pixels more than the
+          other two headers. See performance-header.tsx. */}
+      <PerfHeader
+        href={`/preview/performance-lab?sel=${encodeURIComponent(backSel)}`}
+        label="Back to Lab"
+        title="Compare"
+        tall
+      />
 
       {/* The two cards, with the winner bordered and crowned. */}
       <div className="relative mt-[8px] flex items-stretch px-[20px]">
@@ -318,14 +322,14 @@ export default function CompareApp() {
                 )}
               </span>
               <p
-                className="min-w-0 truncate text-[14px] font-bold"
+                className={`min-w-0 truncate text-[14px] ${W_BOLD}`}
                 style={{ paddingRight: winner ? "26px" : undefined }}
               >
                 {chip.value}
               </p>
             </div>
             <p
-              className="mt-[11px] flex items-center gap-[5px] whitespace-nowrap text-[9px] font-semibold"
+              className={`mt-[11px] flex items-center gap-[5px] whitespace-nowrap ${T_META} ${W_SEMI}`}
               style={{ color: GREY_TEXT }}
             >
               {s.wins}–{s.losses}
@@ -335,11 +339,11 @@ export default function CompareApp() {
               />
               {pctRound(hitRate(s))} hit rate
             </p>
-            <p className="mt-[15px] text-[10px] font-semibold" style={{ color: NET_LABEL }}>
+            <p className={`mt-[15px] ${T_BODY} ${W_SEMI}`} style={{ color: NET_LABEL }}>
               Net profit
             </p>
             <p
-              className="mt-[5px] text-[30px] font-bold leading-none tracking-[-0.01em]"
+              className={`mt-[5px] text-[30px] ${W_BOLD} leading-none tracking-[-0.01em]`}
               style={{ color: s.profit < 0 ? RED : GREEN }}
             >
               {money(s.profit)}
@@ -348,7 +352,7 @@ export default function CompareApp() {
         ))}
         {/* The VS badge, centred on the seam and overlapping both. */}
         <span
-          className="pointer-events-none absolute left-1/2 top-1/2 flex h-[38px] w-[38px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-[10px] font-bold"
+          className={`pointer-events-none absolute left-1/2 top-1/2 flex h-[38px] w-[38px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full ${T_BODY} ${W_BOLD}`}
           style={{ background: CARD, color: GREY_TEXT, boxShadow: "0 2px 8px rgba(24,20,50,0.10)" }}
         >
           VS
@@ -364,7 +368,7 @@ export default function CompareApp() {
           <button
             key={m}
             onClick={() => setMetric(m)}
-            className="flex h-[32px] flex-1 items-center justify-center rounded-full text-[11px] font-bold transition-colors"
+            className={`flex h-[32px] flex-1 items-center justify-center rounded-full ${T_STRONG} ${W_BOLD} transition-colors`}
             style={
               metric === m
                 ? { background: INDIGO_FILL, color: ON_BRAND }
@@ -378,7 +382,7 @@ export default function CompareApp() {
 
       {/* The chart card. */}
       <div
-        className="relative mx-[20px] mt-[11px] rounded-[16px] px-[12px] pb-[11px] pt-[12px]"
+        className={`relative mx-[20px] mt-[11px] ${R_CARD} px-[12px] pb-[11px] pt-[12px]`}
         style={{ background: CARD, boxShadow: "0 1px 5px rgba(24,20,50,0.07)" }}
       >
         <div className="flex items-start justify-between">
@@ -387,7 +391,7 @@ export default function CompareApp() {
               { chip: pair[0], s: statsA, down: statsA.profit < 0, light: false },
               { chip: pair[1], s: statsB, down: statsB.profit < 0, light: true },
             ].map(({ chip, s, down, light }) => (
-              <p key={chipKey(chip)} className="flex items-center gap-[6px] text-[9.5px] font-semibold">
+              <p key={chipKey(chip)} className={`flex items-center gap-[6px] ${T_SMALL} ${W_SEMI}`}>
                 <span
                   className="inline-block h-[7px] w-[7px] rounded-full"
                   style={{
@@ -412,7 +416,7 @@ export default function CompareApp() {
             ))}
           </div>
           <span
-            className="shrink-0 rounded-full px-[10px] py-[5px] text-[9px] font-semibold"
+            className={`shrink-0 rounded-full px-[10px] py-[5px] ${T_META} ${W_SEMI}`}
             style={{ background: TRACK_SOFT, color: NET_LABEL }}
           >
             Cumulative {metric.toLowerCase()}
@@ -437,7 +441,7 @@ export default function CompareApp() {
             <button
               key={p.key}
               onClick={() => setPeriod(p.key)}
-              className="flex h-[26px] flex-1 items-center justify-center rounded-full text-[9.5px] font-semibold transition-colors"
+              className={`flex h-[26px] flex-1 items-center justify-center rounded-full ${T_SMALL} ${W_SEMI} transition-colors`}
               style={
                 period === p.key
                   ? { background: INDIGO_FILL, color: ON_BRAND }
@@ -448,27 +452,27 @@ export default function CompareApp() {
             </button>
           ))}
         </div>
-        <p className="mt-[8px] text-center text-[8px]" style={{ color: GREY_TEXT }}>
+        <p className={`mt-[8px] text-center ${T_TINY}`} style={{ color: GREY_TEXT }}>
           {spanLabel}
         </p>
       </div>
 
       {/* Head to head. */}
       <div
-        className="relative mx-[20px] mt-[11px] overflow-hidden rounded-[16px] pt-[12px]"
+        className={`relative mx-[20px] mt-[11px] overflow-hidden ${R_CARD} pt-[12px]`}
         style={{ background: CARD, boxShadow: "0 1px 5px rgba(24,20,50,0.07)" }}
       >
         <div className="flex items-center justify-between px-[13px]">
-          <h2 className="text-[11.5px] font-bold">Head to head</h2>
+          <h2 className={`${T_LEAD} ${W_BOLD}`}>Head to head</h2>
           <span
-            className="rounded-full px-[10px] py-[4px] text-[9.5px] font-semibold"
+            className={`rounded-full px-[10px] py-[4px] ${T_SMALL} ${W_SEMI}`}
             style={{ background: PILL_GREY, color: NET_LABEL }}
           >
             {win.value} wins {winScore} / {scored.length}
           </span>
         </div>
 
-        <div className="mt-[10px] flex px-[13px] pb-[5px] text-[9.5px] font-bold">
+        <div className={`mt-[10px] flex px-[13px] pb-[5px] ${T_SMALL} ${W_BOLD}`}>
           <span
             className="flex-1 text-left"
             style={{ color: leaderIsA ? INDIGO : statsA.profit < 0 ? RED : NET_LABEL }}
@@ -489,7 +493,7 @@ export default function CompareApp() {
         {rows.map((r, i) => (
           <div
             key={r.label}
-            className="flex items-center text-[10px] font-semibold"
+            className={`flex items-center ${T_BODY} ${W_SEMI}`}
             style={{ borderTop: `1px solid ${HAIRLINE}` }}
           >
             <span
@@ -501,7 +505,7 @@ export default function CompareApp() {
               {r.a}
             </span>
             <span
-              className="flex w-[104px] shrink-0 items-center justify-center gap-[4px] py-[10px] text-center text-[9.5px] font-semibold"
+              className={`flex w-[104px] shrink-0 items-center justify-center gap-[4px] py-[10px] text-center ${T_SMALL} ${W_SEMI}`}
               style={{ color: NET_LABEL }}
             >
               {r.label}
@@ -523,7 +527,7 @@ export default function CompareApp() {
       {/* Why the leader wins. */}
       {topReasons.length > 0 ? (
         <div
-          className="relative mx-[20px] mb-[6px] mt-[11px] rounded-[16px] px-[12px] py-[12px]"
+          className={`relative mx-[20px] mb-[6px] mt-[11px] ${R_CARD} px-[12px] py-[12px]`}
           style={{ background: PILL_LAV }}
         >
           <div className="flex items-center gap-[10px]">
@@ -536,7 +540,7 @@ export default function CompareApp() {
             >
               <RiseIcon />
             </span>
-            <p className="text-[11px] font-bold" style={{ color: INDIGO }}>
+            <p className={`${T_STRONG} ${W_BOLD}`} style={{ color: INDIGO }}>
               Why {win.value} wins
             </p>
           </div>
@@ -554,8 +558,8 @@ export default function CompareApp() {
                   <TickRise />
                 </span>
                 <span className="min-w-0 leading-[1.35]">
-                  <span className="block truncate text-[8.6px] font-bold">{r.title}</span>
-                  <span className="block truncate text-[8px]" style={{ color: GREY_TEXT }}>
+                  <span className={`block truncate text-[8.6px] ${W_BOLD}`}>{r.title}</span>
+                  <span className={`block truncate ${T_TINY}`} style={{ color: GREY_TEXT }}>
                     {r.detail}
                   </span>
                 </span>
