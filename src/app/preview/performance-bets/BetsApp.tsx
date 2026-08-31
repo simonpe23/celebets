@@ -18,11 +18,25 @@
 // without saying "1 of 3 picks" overstates it. So a partly matching
 // slip says so, and its money stays the slip's own: a row here is a
 // real bet, not a share of one.
+//
+// TAPPING A ROW UNFOLDS THE BET. His ruling, 30 August 2026: "i want
+// to be able to click the arrow and then the card unfolds that shows
+// the actual bet... clicking the arrow should list all the matches and
+// outcomes in that bet, as well as staked amount, total payout and
+// profit." Every pick is listed, won or lost, with its odds and what
+// it was classified as. Singles unfold too, his call: an arrow that
+// works on some rows and not others reads as broken.
+//
+// IT IS ALSO A DIAGNOSTIC, which is why each pick shows its category.
+// He suspects picks are going unclassified and so never reachable by a
+// filter: "this can be a big bug, because many picks are not filtered
+// it seems like." A pick with no category is called out in amber here,
+// because that is the one thing on this screen he can act on.
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import PerfHeader from "../performance-header";
 import { useSearchParams } from "next/navigation";
-import { betProfit } from "@/lib/stats";
+import { betProfit, effectiveResult } from "@/lib/stats";
 import { makeEngine, money, type Chip, type GroupKey } from "../pf/engine";
 import type { BetWithLegs } from "@/lib/types";
 import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
@@ -30,16 +44,24 @@ import { chipIcon } from "../performance-lab/LabApp";
 import { betsIn, isPeriod, labelOf, type PeriodKey } from "../performance-lab/period";
 import { Chev } from "../performance-icons";
 import {
+  AMBER_BG,
+  AMBER_EDGE,
   CARD,
   CHEV,
+  DOT_MUTED,
   GREEN,
   GREY_TEXT,
   HAIRLINE,
   HEAD_BTN_W,
+  INDIGO,
   NET_LABEL,
+  ORANGE,
+  PILL_GREY,
   RED,
   R_CARD,
   R_TILE,
+  SEL_BG,
+  SEL_EDGE,
   SUBGREEN,
   T_BODY,
   T_LABEL,
@@ -55,6 +77,22 @@ const cash = (v: number) =>
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
+
+function Mark({ won, lost }: { won: boolean; lost: boolean }) {
+  if (!won && !lost)
+    return <span className="block h-[4px] w-[4px] rounded-full" style={{ background: CARD }} />;
+  return (
+    <svg width="9" height="9" viewBox="0 0 12 12" fill="none" aria-hidden>
+      <path
+        d={won ? "M2.5 6.4l2.4 2.4L9.6 3.8" : "M3.2 3.2l5.6 5.6M8.8 3.2l-5.6 5.6"}
+        stroke={CARD}
+        strokeWidth="1.9"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 const sportChip = (value: string): Chip =>
   ({ group: "sport", kind: "plain", value }) as Chip;
@@ -81,6 +119,7 @@ export default function BetsApp({
   routes?: PerfRoutes;
 }) {
   const params = useSearchParams();
+  const [openBet, setOpenBet] = useState<string | null>(null);
   const sel = useMemo(() => parseSel(params.get("sel")), [params]);
   const rawPeriod = params.get("period");
   const period: PeriodKey = isPeriod(rawPeriod) ? rawPeriod : "all";
@@ -161,7 +200,7 @@ export default function BetsApp({
           className={`relative mx-[15px] mb-[6px] mt-[10px] ${R_CARD} pb-[8px] pt-[4px]`}
           style={{ background: CARD, boxShadow: "0 1px 5px rgba(24,20,50,0.07)" }}
         >
-          {rows.map(({ bet, matched, legs }, i) => {
+          {rows.map(({ bet, matched, legs, hits }, i) => {
             const profit = betProfit(bet);
             const odds = bet.total_odds === null ? null : Number(bet.total_odds);
             const pick =
@@ -169,44 +208,167 @@ export default function BetsApp({
             const sport = bet.legs[0]?.sport ?? "Other";
             const league = bet.legs[0]?.competition ?? null;
             const part = sel.length > 0 && matched < legs;
+            const open = openBet === bet.id;
+            const staked = Number(bet.stake);
+            const payout = Number(bet.payout ?? 0);
             return (
               <div
                 key={bet.id}
-                className="flex items-center px-[13px] py-[8px]"
                 style={{ borderTop: i === 0 ? undefined : `1px solid ${HAIRLINE}` }}
               >
-                <span className="mr-[8px] flex h-[20px] w-[20px] shrink-0 items-center justify-center">
-                  {chipIcon(sportChip(sport), false, undefined, 17)}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className={`truncate ${T_SMALL} ${W_BOLD}`}>{pick}</p>
-                  <p
-                    className={`mt-[2px] truncate ${T_NANO} ${W_SEMI}`}
-                    style={{ color: GREY_TEXT }}
+                <button
+                  onClick={() => setOpenBet(open ? null : bet.id)}
+                  aria-label={open ? `Hide this bet` : `Show this bet`}
+                  className="flex w-full items-center px-[13px] py-[8px] text-left"
+                >
+                  <span className="mr-[8px] flex h-[20px] w-[20px] shrink-0 items-center justify-center">
+                    {chipIcon(sportChip(sport), false, undefined, 17)}
+                  </span>
+                  <span className="block min-w-0 flex-1">
+                    <span className={`block truncate ${T_SMALL} ${W_BOLD}`}>{pick}</span>
+                    <span
+                      className={`mt-[2px] block truncate ${T_NANO} ${W_SEMI}`}
+                      style={{ color: GREY_TEXT }}
+                    >
+                      {new Date(bet.settled_at as string).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                      })}
+                      {"  ·  "}
+                      {sport}
+                      {league ? `  ·  ${league}` : ""}
+                      {part ? `  ·  ${matched} of ${legs} picks` : ""}
+                    </span>
+                  </span>
+                  <span
+                    className={`ml-[6px] ${T_MICRO} ${W_SEMI}`}
+                    style={{ color: NET_LABEL }}
                   >
-                    {new Date(bet.settled_at as string).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                    })}
-                    {"  ·  "}
-                    {sport}
-                    {league ? `  ·  ${league}` : ""}
-                    {part ? `  ·  ${matched} of ${legs} picks` : ""}
-                  </p>
-                </div>
-                <span
-                  className={`ml-[6px] ${T_MICRO} ${W_SEMI}`}
-                  style={{ color: NET_LABEL }}
-                >
-                  {odds === null ? "-" : odds.toFixed(2)}
-                </span>
-                <span
-                  className={`ml-[9px] whitespace-nowrap ${T_SMALL} ${W_BOLD}`}
-                  style={{ color: profit < 0 ? RED : profit > 0 ? GREEN : NET_LABEL }}
-                >
-                  {profit === 0 ? "$0.00" : cash(profit)}
-                </span>
-                <Chev size={8} color={CHEV} />
+                    {odds === null ? "-" : odds.toFixed(2)}
+                  </span>
+                  <span
+                    className={`ml-[9px] whitespace-nowrap ${T_SMALL} ${W_BOLD}`}
+                    style={{ color: profit < 0 ? RED : profit > 0 ? GREEN : NET_LABEL }}
+                  >
+                    {profit === 0 ? "$0.00" : cash(profit)}
+                  </span>
+                  <span className={open ? "-rotate-90" : undefined}>
+                    <Chev size={8} color={CHEV} />
+                  </span>
+                </button>
+
+                {open ? (
+                  <div className="px-[11px] pb-[10px]">
+                    <div
+                      className={`${R_TILE} px-[10px] pb-[9px] pt-[3px]`}
+                      style={{ background: PILL_GREY }}
+                    >
+                      {bet.legs.map((leg, j) => {
+                        const won = effectiveResult(bet, leg) === "won";
+                        const lost = effectiveResult(bet, leg) === "lost";
+                        // A pick nobody classified can never be reached
+                        // by a filter. That is the thing on this page he
+                        // can act on, so it is the loudest thing on it.
+                        const noCat = !leg.subcategory;
+                        return (
+                          <div
+                            key={leg.id}
+                            className="flex items-start gap-[7px] py-[6px]"
+                            style={{
+                              borderTop: j === 0 ? undefined : `1px solid ${HAIRLINE}`,
+                            }}
+                          >
+                            <span
+                              className="mt-[1px] flex h-[14px] w-[14px] shrink-0 items-center justify-center rounded-full"
+                              style={{
+                                background: won ? GREEN : lost ? RED : DOT_MUTED,
+                              }}
+                            >
+                              <Mark won={won} lost={lost} />
+                            </span>
+                            <span className="block min-w-0 flex-1">
+                              <span
+                                className={`block ${T_MICRO} ${W_SEMI}`}
+                                style={{ color: NET_LABEL }}
+                              >
+                                {leg.description ?? "Pick"}
+                              </span>
+                              <span
+                                className={`mt-[1px] flex flex-wrap items-center gap-x-[5px] ${T_NANO} ${W_SEMI}`}
+                                style={{ color: GREY_TEXT }}
+                              >
+                                <span>{leg.sport}</span>
+                                {leg.competition ? <span>· {leg.competition}</span> : null}
+                                <span
+                                  className={noCat ? `${R_TILE} px-[5px] py-[1px]` : undefined}
+                                  style={
+                                    noCat
+                                      ? {
+                                          background: AMBER_BG,
+                                          color: ORANGE,
+                                          boxShadow: `inset 0 0 0 1px ${AMBER_EDGE}`,
+                                        }
+                                      : undefined
+                                  }
+                                >
+                                  · {leg.subcategory ?? "No category"}
+                                </span>
+                                {sel.length > 0 && hits[j] ? (
+                                  <span
+                                    className={`${R_TILE} px-[5px] py-[1px]`}
+                                    style={{
+                                      background: SEL_BG,
+                                      color: INDIGO,
+                                      boxShadow: `inset 0 0 0 1px ${SEL_EDGE}`,
+                                    }}
+                                  >
+                                    matched
+                                  </span>
+                                ) : null}
+                              </span>
+                            </span>
+                            <span
+                              className={`ml-[4px] shrink-0 ${T_NANO} ${W_SEMI}`}
+                              style={{ color: NET_LABEL }}
+                            >
+                              {leg.odds === null ? "-" : Number(leg.odds).toFixed(2)}
+                            </span>
+                          </div>
+                        );
+                      })}
+
+                      <div
+                        className="mt-[2px] flex items-center justify-between pt-[7px]"
+                        style={{ borderTop: `1px solid ${HAIRLINE}` }}
+                      >
+                        {[
+                          ["Staked", `$${staked.toFixed(2)}`, NET_LABEL],
+                          ["Payout", `$${payout.toFixed(2)}`, NET_LABEL],
+                          [
+                            "Profit",
+                            profit === 0 ? "$0.00" : cash(profit),
+                            profit < 0 ? RED : profit > 0 ? SUBGREEN : NET_LABEL,
+                          ],
+                        ].map(([label, value, colour]) => (
+                          <span key={label} className="block">
+                            <span
+                              className={`block ${T_NANO} ${W_SEMI}`}
+                              style={{ color: GREY_TEXT }}
+                            >
+                              {label}
+                            </span>
+                            <span
+                              className={`mt-[1px] block ${T_MICRO} ${W_BOLD}`}
+                              style={{ color: colour }}
+                            >
+                              {value}
+                            </span>
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
               </div>
             );
           })}

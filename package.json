@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "check": "node design-check.mjs && node --experimental-strip-types --no-warnings synctest.mjs && tsc --noEmit && next build && node sitecheck.mjs",
+    "check": "node design-check.mjs && node --experimental-strip-types --no-warnings synctest.mjs && tsc --noEmit && next build && node sitecheck.mjs && node controlstest.mjs",
     "sitecheck": "node sitecheck.mjs",
     "synctest": "node --experimental-strip-types --no-warnings synctest.mjs"
   },

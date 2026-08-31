@@ -122,6 +122,26 @@ need a script: `scrubtest.mjs`, `motiontest.mjs`, `pftest.mjs`,
 shoots every page on the old code and the new and compares them pixel
 by pixel. "It looks the same to me" is not a check.
 
+## `src/app/preview/performance-*` IS LIVE CODE
+
+**Do not treat that folder as a sandbox. It is not one any more.**
+
+Since 30 August 2026 those files serve **actuals.cc/stats** and every
+page under it, on real user bets. `/stats/lab`, `/stats/totals`,
+`/stats/compare`, `/stats/bets` and `/stats/heatmap` are thin wrappers
+that import them and hand them the signed in user's own record. The
+public `/preview/*` addresses hand the same components demo numbers.
+One file, two callers, one of them live.
+
+**The name is wrong and is being kept only until it is safe to change
+it.** The owner asked on 30 August 2026 for a daily reminder of this,
+so a Routine now nags him about it. The proper fix, both conditions
+his:
+
+- Move it to `src/components/performance/`.
+- **In a commit that does NOTHING else**, and only when no other chat
+  is working in that tree. Over 20 files import it by path.
+
 ## Product facts
 
 - **Actuals**, a mobile-first manual sports bet tracker. Renamed from

@@ -222,6 +222,10 @@ export type MatchedBet = {
   // saying so without saying "1 of 3" overstates it.
   matched: number;
   legs: number;
+  // WHICH picks those were, leg by leg. The count alone tells you two
+  // of three matched; it cannot tell you which two, and unfolding a
+  // bet has to point at them. With no selection every pick is true.
+  hits: boolean[];
 };
 
 export function makeEngine(bets: BetWithLegs[]): Engine {
@@ -268,14 +272,15 @@ export function makeEngine(bets: BetWithLegs[]): Engine {
       byGroup.set(c.group, [...(byGroup.get(c.group) ?? []), c]);
     const out: MatchedBet[] = [];
     for (const bet of settled) {
-      let matched = 0;
-      bet.legs.forEach((leg) => {
+      const hits = bet.legs.map((leg) => {
         for (const [, chips] of byGroup) {
-          if (!chips.some((c) => chipMatches(bet, leg, c))) return;
+          if (!chips.some((c) => chipMatches(bet, leg, c))) return false;
         }
-        matched += 1;
+        return true;
       });
-      if (matched > 0) out.push({ bet, matched, legs: bet.legs.length });
+      const matched = hits.filter(Boolean).length;
+      if (matched > 0)
+        out.push({ bet, matched, legs: bet.legs.length, hits });
     }
     return out.sort(
       (a, b) =>
