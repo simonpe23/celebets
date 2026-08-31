@@ -7,7 +7,7 @@
 // works; arriving here just starts the area on this view.
 
 import { Suspense } from "react";
-import PerfArea from "../../preview/performance-area";
+import PerfArea from "@/components/performance/area";
 import { loadUserBets } from "@/lib/load-bets";
 import { LIVE_ROUTES } from "@/lib/performance-routes";
 

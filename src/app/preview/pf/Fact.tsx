@@ -26,7 +26,7 @@ import {
   type Chip,
   type Engine,
   type Stats,
-} from "./engine";
+} from "@/lib/performance-engine";
 import { PF_CSS, PfChart, PfSegments, PfTopBar } from "./theme";
 import { pageCls, useCountUp, type Dir } from "./motion";
 import AddFact from "./AddFact";

@@ -36,24 +36,24 @@
 // 26 August 2026, and the figure on the tile is the figure Lab shows.
 
 import { useMemo, useState, type MouseEvent } from "react";
-import PerfHeader from "../performance-header";
+import PerfHeader from "@/components/performance/header";
 import Link from "next/link";
-import { money, makeEngine, type Chip } from "../pf/engine";
+import { money, makeEngine, type Chip } from "@/lib/performance-engine";
 import type { BetWithLegs } from "@/lib/types";
 import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
-import { chipIcon } from "../performance-lab/LabApp";
-import Explain from "../performance-lab/Explain";
-import PeriodPill from "../performance-lab/PeriodPill";
+import { chipIcon } from "@/components/performance/lab/LabApp";
+import Explain from "@/components/performance/lab/Explain";
+import PeriodPill from "@/components/performance/lab/PeriodPill";
 import {
   betsIn,
   withPeriod,
   type CustomRange,
   type PeriodKey,
-} from "../performance-lab/period";
+} from "@/components/performance/lab/period";
 import {
   GoldSparkle,
   InfoDot,
-} from "../performance-icons";
+} from "@/components/performance/icons";
 import {
   AMBER_TILE,
   CARD,
@@ -85,7 +85,7 @@ import {
   T_STRONG,
   W_BOLD,
   W_SEMI,
-} from "../performance-ui";
+} from "@/components/performance/ui";
 import { squarify } from "./treemap";
 import {
   dropTwins,

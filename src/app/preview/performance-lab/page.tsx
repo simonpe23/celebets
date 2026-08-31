@@ -2,8 +2,8 @@
 // the Lab tab. Switching tabs from here loads nothing.
 
 import { Suspense } from "react";
-import PerfArea from "../performance-area";
-import { labBets } from "./lab-data";
+import PerfArea from "@/components/performance/area";
+import { labBets } from "@/components/performance/lab/lab-data";
 
 export default function PerformanceLabPreview() {
   return (

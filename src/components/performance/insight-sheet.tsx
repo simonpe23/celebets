@@ -20,7 +20,7 @@
 import Link from "next/link";
 import { rollInsights } from "@/components/InsightsPopup";
 import type { BetWithLegs } from "@/lib/types";
-import { GoldSparkle } from "./performance-icons";
+import { GoldSparkle } from "./icons";
 import {
   AMBER_TILE,
   CARD,
@@ -38,7 +38,7 @@ import {
   T_SMALL,
   W_BOLD,
   W_SEMI,
-} from "./performance-ui";
+} from "./ui";
 
 export { rollInsights };
 

@@ -16,7 +16,7 @@ import Compare from "./Compare";
 import MapView from "./MapView";
 import Changed from "./Changed";
 import InsightCard from "./InsightCard";
-import { makeEngine, type Chip } from "./engine";
+import { makeEngine, type Chip } from "@/lib/performance-engine";
 import type { Dir } from "./motion";
 import type { BetWithLegs } from "@/lib/types";
 

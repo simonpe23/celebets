@@ -33,8 +33,8 @@ import {
   T_LABEL,
   W_BOLD,
   W_SEMI,
-} from "./performance-ui";
-import { withPeriod, type PeriodKey } from "./performance-lab/period";
+} from "./ui";
+import { withPeriod, type PeriodKey } from "@/components/performance/lab/period";
 import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
 
 // The address of each tab comes from the route set, because the same

@@ -32,13 +32,13 @@ import {
   TAIL_SHORT,
   T_LABEL,
   W_SEMI,
-} from "./performance-ui";
+} from "./ui";
 import {
   PerformanceTabIcon,
   ProfileTabIcon,
   ResearchTabIcon,
   TrackTabIcon,
-} from "./performance-icons";
+} from "./icons";
 
 // The four bottom tabs. On the public previews they are inert: a
 // preview is a picture of a design, and a tap that left the preview

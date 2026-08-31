@@ -16,7 +16,7 @@ Full reference: `docs/design-system.md`. The rules that bite:
 - **Colours, type sizes and corner radii live in three files and
   nowhere else:** `src/app/globals.css` (the app's scale and radii),
   `src/lib/ui.ts` (the live app's repeated class strings) and
-  `src/app/preview/performance-ui.ts` (the Performance previews).
+  `src/components/performance/ui.ts` (the Performance area).
   `design-check` rule 12 fails the build on a colour or a font written
   inside a page, and on a shared size written by hand.
   **Spacing used once, on one page, is the exception and stays there.**

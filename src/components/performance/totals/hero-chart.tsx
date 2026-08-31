@@ -12,7 +12,7 @@ import {
   INDIGO,
   W_SEMI,
   ZERO_LINE,
-} from "../performance-ui";
+} from "@/components/performance/ui";
 
 export type Point = { t: number; v: number };
 

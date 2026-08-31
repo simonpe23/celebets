@@ -12,7 +12,7 @@
 
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { Chev } from "./performance-icons";
+import { Chev } from "./icons";
 import {
   CARD,
   HEAD_BTN,
@@ -22,7 +22,7 @@ import {
   INK,
   T_TITLE,
   W_BOLD,
-} from "./performance-ui";
+} from "./ui";
 
 export default function PerfHeader({
   href,

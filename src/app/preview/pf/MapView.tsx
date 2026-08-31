@@ -15,7 +15,7 @@
 
 import { useMemo } from "react";
 import TabBar from "@/components/TabBar";
-import { dedupeFacts, money, type Chip, type Engine } from "./engine";
+import { dedupeFacts, money, type Chip, type Engine } from "@/lib/performance-engine";
 import { PF_CSS, PfTopBar } from "./theme";
 import { pageCls, type Dir } from "./motion";
 

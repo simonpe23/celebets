@@ -35,7 +35,7 @@ import {
   type Engine,
   type Fact,
   type SortMode,
-} from "./engine";
+} from "@/lib/performance-engine";
 import { PF_CSS, PfChart, PfSegments, PfSpark } from "./theme";
 import { pageCls, useCountUp, type Dir } from "./motion";
 import AddFact from "./AddFact";

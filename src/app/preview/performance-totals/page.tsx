@@ -2,8 +2,8 @@
 // on the Totals tab.
 
 import { Suspense } from "react";
-import PerfArea from "../performance-area";
-import { labBets } from "../performance-lab/lab-data";
+import PerfArea from "@/components/performance/area";
+import { labBets } from "@/components/performance/lab/lab-data";
 
 export default function PerformanceTotalsPreview() {
   return (

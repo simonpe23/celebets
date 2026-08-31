@@ -45,7 +45,7 @@ import {
   roiOf,
   type Chip,
   type Stats,
-} from "../pf/engine";
+} from "@/lib/performance-engine";
 import {
   Chev,
   ChevDown,
@@ -56,7 +56,7 @@ import {
   GoldSparkle,
   InfoDot,
   WashTexture,
-} from "../performance-icons";
+} from "@/components/performance/icons";
 import {
   ChainIcon,
   ClockIcon,
@@ -77,7 +77,7 @@ import type { BetWithLegs } from "@/lib/types";
 import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
 import Explain from "./Explain";
 import PeriodPill from "./PeriodPill";
-import InsightSheet, { rollInsights } from "../performance-insight-sheet";
+import InsightSheet, { rollInsights } from "@/components/performance/insight-sheet";
 import { type CustomRange, type PeriodKey, betsIn, isPeriod } from "./period";
 import {
   buildGroups,
@@ -86,7 +86,7 @@ import {
   marketsUnder,
   recordOf,
 } from "./lab-model";
-import { leakInsight } from "../performance-home/home-model";
+import { leakInsight } from "@/components/performance/home/home-model";
 import {
   AMBER_BG,
   AMBER_EDGE,
@@ -129,7 +129,7 @@ import {
   T_TINY,
   W_BOLD,
   W_SEMI,
-} from "../performance-ui";
+} from "@/components/performance/ui";
 import { LabChart } from "./chart";
 
 // ---------------------------------------------------------------

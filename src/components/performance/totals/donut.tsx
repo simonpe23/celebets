@@ -16,7 +16,7 @@ import {
   INK,
   W_BOLD,
   W_SEMI,
-} from "../performance-ui";
+} from "@/components/performance/ui";
 
 const EARNER = DONUT_EARNER;
 const LEAK = DONUT_LEAK;

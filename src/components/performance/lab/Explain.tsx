@@ -7,7 +7,7 @@
 // shadow, same hairline. Nothing new was designed for this.
 
 import { useEffect, useRef, useState } from "react";
-import { InfoDot } from "../performance-icons";
+import { InfoDot } from "@/components/performance/icons";
 import { EXPLAIN } from "./explain";
 import {
   CARD,
@@ -19,7 +19,7 @@ import {
   T_SMALL,
   W_BOLD,
   W_SEMI,
-} from "../performance-ui";
+} from "@/components/performance/ui";
 
 export default function Explain({
   term,

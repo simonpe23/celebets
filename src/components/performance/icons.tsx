@@ -22,7 +22,7 @@ import {
   TARGET_RED,
   WASH_DOT,
   WASH_LINE,
-} from "./performance-ui";
+} from "./ui";
 
 const MARK = INDIGO;
 const SLATE = FACT_GLYPH;

@@ -17,11 +17,11 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { makeEngine, money, type Chip } from "../pf/engine";
+import { makeEngine, money, type Chip } from "@/lib/performance-engine";
 import type { BetWithLegs } from "@/lib/types";
 import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
-import { chipIcon } from "../performance-lab/LabApp";
-import { Chev, InfoDot } from "../performance-icons";
+import { chipIcon } from "@/components/performance/lab/LabApp";
+import { Chev, InfoDot } from "@/components/performance/icons";
 import {
   CARD,
   CHEV,
@@ -50,10 +50,10 @@ import {
   T_TINY,
   W_BOLD,
   W_SEMI,
-} from "../performance-ui";
-import Explain from "../performance-lab/Explain";
-import PeriodPill from "../performance-lab/PeriodPill";
-import { type CustomRange, type PeriodKey, betsIn, isPeriod, withPeriod } from "../performance-lab/period";
+} from "@/components/performance/ui";
+import Explain from "@/components/performance/lab/Explain";
+import PeriodPill from "@/components/performance/lab/PeriodPill";
+import { type CustomRange, type PeriodKey, betsIn, isPeriod, withPeriod } from "@/components/performance/lab/period";
 import { Donut } from "./donut";
 import { HeroLine } from "./hero-chart";
 import {

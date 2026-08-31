@@ -11,7 +11,7 @@
 // A blank frame in the page's own colours is quieter than a skeleton
 // of a layout that is about to be replaced.
 
-import { PAGE_BG } from "../preview/performance-ui";
+import { PAGE_BG } from "@/components/performance/ui";
 
 export default function Loading() {
   return <div className="min-h-svh" style={{ background: PAGE_BG }} />;

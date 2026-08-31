@@ -38,7 +38,7 @@ import {
   type Engine,
   type Fact,
   type GroupKey,
-} from "./engine";
+} from "@/lib/performance-engine";
 import { PF_CSS } from "./theme";
 import { useDismiss } from "./motion";
 

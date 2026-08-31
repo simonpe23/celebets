@@ -6,8 +6,8 @@
 // four screens read as one product. The menu below it is Lab's domain
 // dropdown, same geometry and same shadow, for the same reason.
 
-import { ChevDown } from "../performance-icons";
-import { Chev } from "../performance-icons";
+import { ChevDown } from "@/components/performance/icons";
+import { Chev } from "@/components/performance/icons";
 import {
   CARD,
   HAIRLINE,
@@ -20,7 +20,7 @@ import {
   T_STRONG,
   W_BOLD,
   W_SEMI,
-} from "../performance-ui";
+} from "@/components/performance/ui";
 import {
   EMPTY_RANGE,
   PERIODS,

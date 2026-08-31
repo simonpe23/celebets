@@ -43,17 +43,17 @@ import Link from "next/link";
 import { HeroChart, Spark } from "./charts";
 import type { ReactNode } from "react";
 import { buildHomeView, type HomeRow } from "./home-model";
-import { makeEngine, type GroupKey } from "../pf/engine";
-import PeriodPill from "../performance-lab/PeriodPill";
+import { makeEngine, type GroupKey } from "@/lib/performance-engine";
+import PeriodPill from "@/components/performance/lab/PeriodPill";
 import {
   betsIn,
   type CustomRange,
   type PeriodKey,
-} from "../performance-lab/period";
+} from "@/components/performance/lab/period";
 import { useState } from "react";
 import type { BetWithLegs } from "@/lib/types";
 import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
-import InsightSheet, { rollInsights } from "../performance-insight-sheet";
+import InsightSheet, { rollInsights } from "@/components/performance/insight-sheet";
 import {
   BallIcon,
   ChangedMark,
@@ -72,7 +72,7 @@ import {
   RedTarget,
   TrendTileIcon,
   WashTexture,
-} from "../performance-icons";
+} from "@/components/performance/icons";
 import {
   AMBER_BG,
   AMBER_EDGE,
@@ -112,7 +112,7 @@ import {
   T_TINY,
   W_BOLD,
   W_SEMI,
-} from "../performance-ui";
+} from "@/components/performance/ui";
 
 // A ranked row's tile icon comes from the family the fact belongs to,
 // because the rows are computed now and no longer a fixed five. A
