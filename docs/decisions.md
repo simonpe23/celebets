@@ -1154,6 +1154,39 @@ untouched, and stays until he retires it himself. Skipping `/stats` in
 the design-token work is unrelated and fine: a page does not need
 tokens to stay alive.
 
+**ONE CHAT MAY WIRE BOTH HOME AND LAB. Ruled 31 August 2026.** His
+words: "if I could merge the two chats, Lab and Home, I would do it in
+a heartbeat... you are allowed to wire stuff in the lab chat if
+needed, if it makes things easier." His reasoning, and it is right:
+"the design is one thing, but when it comes to the numbers, they are
+absolutely intertwined. Home Lab totals, everything is 100% connected
+and has to align across the board."
+
+**So the split is by KIND of work, not by page.** Design and
+interaction stay per chat, because taste can differ per page. The
+numbers are one job in one chat, because truth cannot. The folder
+ownership lines in `CLAUDE.md` do not block the numbers work.
+
+**The architecture already supports this, verified 31 August 2026 by
+reading the code, not by assuming:**
+
+- `src/lib/stats.ts` is the ONLY money engine. `legShares` splits a
+  bet's profit across its legs and the shares sum back to
+  `payout - stake`, the app's one definition.
+- `src/app/preview/pf/engine.ts` does NOT compute money. It imports
+  `effectiveResult`, `legShares` and `legStakeShares` from
+  `src/lib/stats.ts` and only groups the results by sport, league,
+  category and the rest.
+- Lab and Totals both read that engine over one shared list of bets,
+  so they cannot disagree with each other.
+- **Home is the only page with hand typed numbers.** Its `ROWS` array
+  was typed to match the mockup and nothing computes it. That is the
+  single place where the three tabs could ever drift apart, and
+  wiring it to the engine closes it.
+- The demo bets are already the app's own `BetWithLegs` type, so
+  swapping demo for real data is a drop in at the source, not a
+  rewrite of any page.
+
 ## Process
 
 **Past reactions are not constraints.** Said twice in two days: "just
