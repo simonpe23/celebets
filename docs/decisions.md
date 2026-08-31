@@ -1456,10 +1456,8 @@ attached image, chart is blocking those numbers."
   anywhere are the 8px band the text occupied.
 - **On LAB both figures survive**, in the KPI row right below: Record
   and ROI are two of its four tiles.
-- **ON HOME THEY NOW APPEAR NOWHERE.** Home's four KPIs are Bets, Hit
-  rate, Wagered and Returned. Flagged to him the same day; he has not
-  said to put either back. Recorded as a consequence of his edit, not
-  as a ruling that Home should have no ROI.
+- **On Home they briefly appeared nowhere**, and he fixed that within
+  the hour: "good find." See the next section.
 - `jumptest.mjs` used to read Home's record line to check that Explore
   Lab lands on the whole record. It compares the two hero numbers now,
   which is the better check anyway: one money rule, two pages.
@@ -1577,6 +1575,28 @@ make separately."
 
 **No dark mode on the previews.** His words: "Do not add dark mode to
 the previews. I am deliberately doing that later."
+
+### Home's KPI row mirrors Lab's, 31 August 2026
+
+Straight after the line came off the chart, with a screenshot of Lab's
+row: "then i want to change the kpi row on home and mirror labs. see
+attached. values should be: Bets, Record, Hit Rate, ROI."
+
+- **Home's four were Bets, Hit rate, Wagered and Returned.** They are
+  Bets, Record, Hit rate and ROI now, in that order, wearing Lab's
+  icons.
+- **This is what put ROI and the record back on Home** an edit after
+  they came off the chart. He spotted the hole himself: "good find."
+- **The two rows are now identical**, not merely similar. Same values,
+  same formatters (the engine's own `hitOf` and `roiOf`, the ones Lab
+  calls), same icons, same four column widths, same three divider
+  positions. Measured: every cell starts at the same pixel on both
+  pages.
+- **Wagered and Returned are not lost.** Totals shows both. Recorded
+  in `docs/open-questions.md` in case he wants them somewhere on Home.
+- **Nothing else on Home moved.** `shotdiff.mjs`: the only pixels that
+  changed anywhere are the 28px band the KPI row occupies, and every
+  other Performance page is identical.
 
 ### What was found before anything was built
 
