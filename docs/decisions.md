@@ -1498,10 +1498,23 @@ user bets, and he had asked for a daily Routine to nag him about it.
 - A new path scoped rule, `.claude/rules/performance.md`, says what
   the folder is and what it may not do.
 
-**NOT MOVED, and he has not been asked: `src/app/preview/pf/engine.ts`.**
-Every money figure on every Performance page comes from it, so it is as
-live as the folder that just moved, and it still sits in a folder
-called preview. That is the same job again, in its own commit.
+**AND THEN THE ENGINE, in the very next commit.** Told that
+`src/app/preview/pf/engine.ts` was the same problem in the most
+important file, he answered: "can you do that now?"
+
+- It is **`src/lib/performance-engine.ts`** now, beside
+  `src/lib/stats.ts`, which it imports every money rule from. It is
+  logic, not a component, so `src/lib/` is where it belongs, and
+  `src/lib/performance-routes.ts` was already next door.
+- 18 files import it: the ten Performance components and the eight
+  screens of the Portfolio prototype, which still uses it because that
+  is where the engine started life.
+- **Nothing under `src/app/preview/` is live any more.** What
+  is left there is the six `page.tsx` preview addresses and old
+  rejected concepts.
+- Same proof as the folder move: the only change inside the file is
+  its header comment, and `shotdiff.mjs` reports every Performance
+  page pixel identical.
 
 **The daily Routine about the rename can be deleted.**
 

@@ -4,7 +4,7 @@
 
 import type { BetWithLegs } from "@/lib/types";
 import { betProfit, legShares, legStakeShares } from "@/lib/stats";
-import { MUTED, type Chip, type Engine, type Stats } from "@/app/preview/pf/engine";
+import { MUTED, type Chip, type Engine, type Stats } from "@/lib/performance-engine";
 
 export type Row = {
   key: string;

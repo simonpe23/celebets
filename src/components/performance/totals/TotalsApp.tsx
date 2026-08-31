@@ -17,7 +17,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { makeEngine, money, type Chip } from "@/app/preview/pf/engine";
+import { makeEngine, money, type Chip } from "@/lib/performance-engine";
 import type { BetWithLegs } from "@/lib/types";
 import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
 import { chipIcon } from "@/components/performance/lab/LabApp";

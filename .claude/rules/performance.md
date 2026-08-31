@@ -13,9 +13,11 @@ It moved here from `src/app/preview/performance-*` on 31 August 2026,
 because that path read as a sandbox while serving real users. If you
 find a doc or a comment pointing at the old path, the doc is stale.
 
-`src/app/preview/pf/engine.ts` has NOT moved yet. Every money figure
-on every Performance page comes from it, so it is as live as this
-folder. Moving it is its own commit, and the owner has not been asked.
+The engine that computes every money figure on every Performance page
+is **`src/lib/performance-engine.ts`**. It moved out of
+`src/app/preview/pf/engine.ts` on the same day, one commit later. It
+does NOT hold money rules: it groups bets into facts and imports every
+rule from `src/lib/stats.ts`, the app's one definition.
 
 ## One component, two callers
 

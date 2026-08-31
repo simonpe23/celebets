@@ -33,11 +33,12 @@ on a preview page: public is the standing state.
 
 ## What is live here
 
-- **`src/app/preview/pf/engine.ts` IS LIVE CODE, despite the path.**
-  Every money figure on every Performance page comes from it. It has
-  not been moved out yet; that is its own commit and the owner has not
-  been asked. The rest of `src/app/preview/pf/` is the Portfolio
-  prototype, which is not live. See `docs/performance-rebuild.md`.
+- **NOTHING under `/preview` is live any more**, since 31 August 2026.
+  The Performance components went to `src/components/performance/` and
+  the engine went to `src/lib/performance-engine.ts`.
+- `src/app/preview/pf/` is the Portfolio prototype, walkable at
+  `/preview/pf`. It still imports the engine, which is where the
+  engine started life. See `docs/performance-rebuild.md`.
 - Everything else under `/preview` is an older, rejected concept. Kept
   so the history is not lost, not because it is worth reading.
 

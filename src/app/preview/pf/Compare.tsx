@@ -26,7 +26,7 @@ import {
   roiOf,
   type Chip,
   type Engine,
-} from "./engine";
+} from "@/lib/performance-engine";
 import { PF_CSS, PfSegments, PfTopBar } from "./theme";
 import { pageCls, type Dir } from "./motion";
 

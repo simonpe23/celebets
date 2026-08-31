@@ -23,7 +23,7 @@ import {
   money,
   type Chip,
   type Stats,
-} from "@/app/preview/pf/engine";
+} from "@/lib/performance-engine";
 import type { BetWithLegs } from "@/lib/types";
 import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
 import { chipIcon } from "@/components/performance/lab/LabApp";

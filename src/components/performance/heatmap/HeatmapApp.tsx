@@ -38,7 +38,7 @@
 import { useMemo, useState, type MouseEvent } from "react";
 import PerfHeader from "@/components/performance/header";
 import Link from "next/link";
-import { money, makeEngine, type Chip } from "@/app/preview/pf/engine";
+import { money, makeEngine, type Chip } from "@/lib/performance-engine";
 import type { BetWithLegs } from "@/lib/types";
 import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
 import { chipIcon } from "@/components/performance/lab/LabApp";

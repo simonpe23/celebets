@@ -43,7 +43,7 @@ import Link from "next/link";
 import { HeroChart, Spark } from "./charts";
 import type { ReactNode } from "react";
 import { buildHomeView, type HomeRow } from "./home-model";
-import { makeEngine, type GroupKey } from "@/app/preview/pf/engine";
+import { makeEngine, type GroupKey } from "@/lib/performance-engine";
 import PeriodPill from "@/components/performance/lab/PeriodPill";
 import {
   betsIn,

@@ -4,7 +4,7 @@
 // Lab and Totals about the same bets. They read one engine; Home read
 // nothing. This file closes that.
 //
-// The money itself is never computed here. `pf/engine.ts` groups the
+// The money itself is never computed here. `performance-engine.ts` groups the
 // facts and imports every money rule from `src/lib/stats.ts`, the
 // app's one definition. This file only chooses which facts Home shows
 // and formats them.
@@ -23,7 +23,7 @@ import {
   type Engine,
   type Fact,
   type Stats,
-} from "@/app/preview/pf/engine";
+} from "@/lib/performance-engine";
 
 export interface HomeRow {
   chip: Chip;

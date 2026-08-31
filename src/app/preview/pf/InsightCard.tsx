@@ -18,7 +18,7 @@ import {
   roiOf,
   type Chip,
   type Engine,
-} from "./engine";
+} from "@/lib/performance-engine";
 import { PF_CSS } from "./theme";
 import { useDismiss } from "./motion";
 

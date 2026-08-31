@@ -90,7 +90,7 @@ about the same bets. They read one engine; Home read nothing.
 
 `home-model.ts` now builds everything Home shows from bets.
 `charts.tsx` draws from values instead of the traced arrays. The
-money is still never computed here: `pf/engine.ts` groups the facts
+money is still never computed here: `src/lib/performance-engine.ts` groups the facts
 and imports every money rule from `src/lib/stats.ts`.
 
 **Verified before wiring, by running both over the same bets:** the
@@ -491,7 +491,7 @@ a time, a screenshot after each, his reaction before the next.
   from `../performance-home/icons` (importing reads the reference,
   it does not edit it); Lab's own chip icons are drawn in the same
   language in `lab-icons.tsx`. All numbers flow through the pf
-  engine (`../pf/engine`), which speaks `src/lib/stats.ts`.
+  engine (`@/lib/performance-engine`), which speaks `src/lib/stats.ts`.
 - **Round 1 judgment calls awaiting his reaction** are recorded in
   `docs/open-questions.md`.
 - **Not built yet:** Compare (its own page, waiting on his mockup),
@@ -616,7 +616,9 @@ empty one), and the transport between them.
 
 ## Engine notes worth keeping
 
-`src/app/preview/pf/engine.ts` computes every number for the prototype.
+`src/lib/performance-engine.ts` computes every number, for the prototype
+and for the live pages alike. It moved out of `src/app/preview/pf/` on
+31 August 2026.
 Two things in it were hard won:
 
 **`dedupeFacts` is not applied to the vocabulary.** It hides a fact

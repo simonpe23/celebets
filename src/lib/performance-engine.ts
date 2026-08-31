@@ -1,6 +1,18 @@
-// THE PORTFOLIO ENGINE, shared by every view of the living preview.
-// Pure computation, no UI. Extracted so Home, Fact Page, Compare,
-// Map and the rest all speak identical numbers.
+// THE PERFORMANCE ENGINE. Every money figure on every Performance
+// page comes from here: Home, Lab, Totals, Compare, All Bets and the
+// Heat Map, live on real user bets and on the public previews alike.
+// Pure computation, no UI, so no surface can compute a different
+// answer from another.
+//
+// The money rules themselves are NOT here. This file groups bets into
+// facts and imports every rule from `src/lib/stats.ts`, the app's one
+// definition.
+//
+// IT SAT AT `src/app/preview/pf/engine.ts` UNTIL 31 AUGUST 2026, one
+// commit after the Performance components left the same folder. A path
+// with "preview" in it reads as a sandbox, and this is the last file
+// anybody should experiment in. The Portfolio prototype under
+// `src/app/preview/pf/` still uses it, which is where it started life.
 //
 // Ranking = meaningfulness: money x evidence x actionability x
 // recency. See PORTFOLIO-VIEWS.md for the rulings behind it.

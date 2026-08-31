@@ -162,10 +162,17 @@ files under `src/app/preview/performance-*/` stayed behind, because
 they ARE the public preview addresses, and they hand the same
 components demo numbers. One component, two callers, one of them live.
 
-**STILL IN THE WRONG PLACE: `src/app/preview/pf/engine.ts`.** Every
-money figure on every Performance page comes from it, so it is as live
-as the rest, and it still sits in a folder called preview. Moving it is
-the same job again, in its own commit. He has not been asked yet.
+**THE ENGINE MOVED TOO, in the very next commit**, on his "can you do
+that now?". `src/app/preview/pf/engine.ts` is now
+**`src/lib/performance-engine.ts`**. Every money figure on every
+Performance page comes from it, so it was as live as the folder above
+and it was the last file anybody should experiment in. It sits beside
+`src/lib/stats.ts` now, which it imports every money rule from.
+
+**Nothing under `src/app/preview/` is live any more.** What is left
+there is the six `page.tsx` preview addresses and old rejected
+concepts, including the Portfolio prototype at `/preview/pf`, which
+still uses the engine because that is where the engine started life.
 
 ## Product facts
 
@@ -204,7 +211,8 @@ Keep it current: when a job finishes, delete its line.
 
 - **The Performance page rebuild.** Three tabs inside `/stats`: Home,
   Lab, Totals. **Do not redesign `/stats`, `StatsView.tsx` or anything
-  under `src/app/preview/pf/` in another chat.**
+  under `src/app/preview/pf/` or `src/lib/performance-engine.ts`
+  in another chat.**
   **THE LOCK ON Home IS GONE**,
   permanently, on his order of 31 August 2026. It was there because
   Home held its own private copy of every colour, size and shared

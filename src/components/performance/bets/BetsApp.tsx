@@ -37,7 +37,7 @@ import { useMemo, useState } from "react";
 import PerfHeader from "@/components/performance/header";
 import { useSearchParams } from "next/navigation";
 import { betProfit, effectiveResult } from "@/lib/stats";
-import { makeEngine, money, type Chip, type GroupKey } from "@/app/preview/pf/engine";
+import { makeEngine, money, type Chip, type GroupKey } from "@/lib/performance-engine";
 import type { BetWithLegs } from "@/lib/types";
 import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
 import { chipIcon } from "@/components/performance/lab/LabApp";
