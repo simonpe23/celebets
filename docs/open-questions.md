@@ -49,6 +49,36 @@ old words, and every provider mapper points at them.
 
 ## Not blocking, still open
 
+**LIVE AND UNFIXED, 31 August 2026. These are on his live page now.**
+
+1. **Lab's "Actuals noticed" sentence is hardcoded.** It reads "Player
+   Props are driving most of your losses" on every record, including
+   his own, whether or not it is true. Home's is computed from the
+   bets. He has been told; he has not said fix it yet. It is a lie on
+   a page whose whole argument is honesty, so it should not sit here
+   long.
+2. **The heat map feels slow on his phone.** His words: "heat map is
+   loading slowly." Measured locally: the server renders it in 0.11s
+   and the tap takes 0.2s with no page reload, so the code is not
+   slow. It is slow live because it is still a separate page that
+   asks the database for his bets again. The fix is the one already
+   built for the tabs: bring it inside the instant area.
+3. **The empty state does not exist.** A brand new account gets a page
+   with no ranked rows, a flat line and "- ROI". It does not crash,
+   and the axis no longer invents "$0, -$1, -$2, -$3", but nobody has
+   designed what it should say.
+4. **The pages have no dark mode at all**, by his ruling, until the
+   app-wide redesign.
+5. **All six pages scroll sideways on a 320px phone**, 22 to 52px,
+   from the menu's absolute pixel positions. `sitecheck.mjs` guards
+   393px and 1512px; extend it to 320 once fixed. Reported by the Lab
+   chat at handover, not yet verified here.
+6. **The "This month" label on Home is gone**, so that inconsistency
+   is closed, but the period is still not written into the address
+   when it changes on Home. A shared link does not carry the window.
+
+
+
 **Lab round 2: CLAUDE's judgment calls, 29 August 2026.** Round 1 was
 rejected the same day ("the ugliest page ive never seen", full quote
 in `docs/decisions.md`); the icon and header calls below were revised

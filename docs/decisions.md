@@ -1298,6 +1298,68 @@ should never be asked to.
 **The rule: one chat owns the whole area, design and numbers.** A
 second chat may not touch `src/app/preview/` or `src/app/stats/`.
 
+## The go-live day, 31 August 2026
+
+Every ruling he made while taking Performance live, in his own words.
+
+**THE RANKED LIST IS THE TOP FIVE BY PROFIT, NOTHING ELSE.** Asked to
+choose the shape when Home's rows stopped being typed and started
+being computed, he answered in his own words rather than picking an
+option: "the top 5 best performing, across all variations, based on
+profit."
+
+- **What he REJECTED:** the recommended option, four earners from four
+  different families plus the biggest leak as a fifth red row, which
+  is the shape the accepted design already had. Also rejected: one per
+  family with no losing row.
+- **He was warned and chose anyway.** The option he picked was
+  labelled with its cost: two rows can mean nearly the same thing
+  (Moneyline 30-16 and Match Winner 28-14 are mostly the same bets),
+  and no losing row ever appears. That is his call, recorded at the
+  confidence he gave it.
+
+**HOME'S NUMBERS WERE FICTION AND HAD TO BE COMPUTED.** Not his
+ruling, a finding: the five rows, the KPI figures, the hit rates and
+the ROIs were literals copied off the mockup. Moneyline showed 60% hit
+and ROI +31% against a real 65% and +56%. The insight card blamed
+Player Props, which was neither in the list nor his biggest leak.
+
+**TAB SWITCHING HAD TO BE INSTANT.** His words on first seeing the
+live site: "it's very slow when jumping tabs. did they all have to be
+on separate pages? it's loading this page in between, not at all a
+smooth experience. i dont want that. i want the transition to be a
+clean smooth swap. i want to see the tab bar slide over."
+
+- **Rejected: three routes.** Home, Lab and Totals were three pages,
+  so every switch cost a server round trip and a database query, and
+  showed the OLD design's skeleton in between.
+- **Rejected: `/stats/loading.tsx` as it was.** It rendered the old
+  page skeleton on every tab switch.
+- **Rejected: Totals changing the period by navigating.** It used
+  `router.replace`, a server round trip, to change a filter.
+
+**THE TIME FILTER, WITH CUSTOM.** His words: "i did fix the month
+toggle in the top corner on the lab page. they added a time filter
+there, so i should be able to see result from all time, year, month,
+week, day and then add custom as well, just as the old performance
+page." Home's pill had been a picture of a control reading "This
+month" over an all time number.
+
+**ONE WINDOW FOR THE WHOLE AREA.** CLAUDE's call, flagged as such: the
+period had lived inside Lab and inside Totals and travelled between
+them in the address, which is why Home had none. It is shared now, so
+setting it on Home sets it everywhere.
+
+**DARK MODE IS CUT.** Already recorded above, and it held all day:
+"i will skip the dark mode and go live without building them."
+
+**A RULING HE REVERSED WITHIN THE HOUR, RECORDED SO THE REVERSAL IS
+NOT LOST.** CLAUDE wrote "design is per chat, numbers are one job in
+one chat" into this file as though it followed from his words. It did
+not; it was an inference. He rejected it: "just so regret I have
+multiple chats. If I was me, my biggest wish would be that the design
+for all these seven pages... lived in one chat." See the entry above.
+
 ## Process
 
 **Past reactions are not constraints.** Said twice in two days: "just
