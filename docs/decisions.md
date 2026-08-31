@@ -1276,11 +1276,12 @@ insight page." Built on the Actuals noticed strip on both Home and Lab.
 - **Home became a client component** to hold the open sheet. Nothing
   else about it changed.
 
-**STILL BROKEN AND NOT FIXED, because he did not ask: Lab's Actuals
-noticed sentence is HARDCODED.** It reads "Player Props are driving
-most of your losses" on every record, including his live one, where it
-may simply be false. Home's version is computed from the bets
-(`view.insight`). Told to him 31 August 2026; his call whether to fix.
+**Lab's Actuals noticed sentence was HARDCODED, and it is not any
+more.** It read "Player Props are driving most of your losses" on
+every record, including his live one, where it may simply have been
+false. Told to him 31 August 2026, and he said fix it the same
+evening: "go for the heat map and the lab sentence." The fix is below,
+under "The two live bugs he cleared the same evening".
 
 **ONE CHAT OWNS PERFORMANCE FROM NOW. Ruled 31 August 2026**, his
 words: "one chat from now." And before it: "i absolutely hate that i
@@ -1359,6 +1360,109 @@ one chat" into this file as though it followed from his words. It did
 not; it was an inference. He rejected it: "just so regret I have
 multiple chats. If I was me, my biggest wish would be that the design
 for all these seven pages... lived in one chat." See the entry above.
+
+### The two live bugs he cleared the same evening
+
+His words, after merging the doc commit: "go for the heat map and the
+lab sentence."
+
+**1. LAB WAS LYING, AND NOW IT DOES NOT.** Lab's amber card read
+"Player Props are driving most of your losses" on every record. It was
+a literal, copied off the mockup. It said the same thing on his own
+account whether or not it was true, on a page whose whole argument is
+that the numbers are honest.
+
+- Home had already been fixed: its sentence names the worst losing
+  fact in the ranked list.
+- The fix is ONE function, `leakInsight` in
+  `src/app/preview/performance-home/home-model.ts`. Home and Lab both
+  call it, so they cannot disagree about what is losing money. Same
+  reason every money rule lives in `src/lib/stats.ts`.
+- On the demo record both pages now read "NBA is your biggest leak at
+  -$926."
+- **CLAUDE's call, his to overturn:** Lab's sentence names the whole
+  record's leak, not the leak inside whatever chips are selected. A
+  selection-aware sentence is a product decision nobody has taken, so
+  the honest one was shipped and the question is in
+  `docs/open-questions.md`.
+- **CLAUDE's call, his to overturn:** when nothing is losing there is
+  no sentence, and the card is left out rather than drawn with a blank
+  line under its heading. That is a brand new account, which is still
+  an undesigned screen.
+
+**2. THE HEAT MAP IS NOT A PAGE ANY MORE.** His words: "heat map is
+loading slowly."
+
+- The code was never slow. The server drew it in 0.11s.
+- It was slow because it was a separate page. Tapping the pill on Home
+  left the Performance area, asked the database for his bets a second
+  time and drew a loading screen on the way.
+- It is now a fourth VIEW inside `performance-area.tsx`, on the bets
+  already in memory. Opening it, tapping a tile into Lab and tapping
+  back all cause ZERO server page requests.
+- **It is not a fourth menu tab.** The menu is still Home, Lab and
+  Totals, and the Heat Map keeps its own back arrow to Home. Nothing
+  about how it looks changed: `shotdiff.mjs` reports the Heat Map
+  pixel identical at phone and laptop width.
+- The window now travels: pick This week on Home and the Heat Map is
+  already looking at This week. It used to start over at All time.
+- `/stats/heatmap` and `/preview/performance-heatmap` still work. They
+  are addresses that open the area on that view.
+- **A screenshot cannot see any of this**, so `instanttest.mjs` counts
+  the server page requests a tap causes and fails if there are any.
+  It was written as `heattest.mjs` and grew to cover all six views
+  when Compare and All Bets followed.
+- **Compare and All Bets followed the same evening**, on his order:
+  "Fix compare and all bets pages the same way as well. fix all of
+  them, if there's anyone i've missed." Nothing under Performance
+  loads a page any more. See the section below.
+
+### Nothing under Performance loads a page, 31 August 2026
+
+His words, after the Heat Map was fixed: "Fix compare and all bets
+pages the same way as well. fix all of them, if there's anyone i've
+missed."
+
+**All six views are one page now.** Home, Lab, Totals, the Heat Map,
+Compare and All Bets read one list of bets, fetched once.
+
+- **Every door costs zero server page requests.** The menu tabs,
+  Home's ranked rows, the Heat Map pill and its tiles, Lab's "See
+  these N bets" and Compare doors, Totals' "See all bets", and every
+  back arrow. `instanttest.mjs` counts them and fails on any.
+- **Three of the six are not menu tabs.** The menu is still Home, Lab
+  and Totals. The Heat Map, Compare and All Bets keep their own back
+  arrows: the Heat Map to Home, Compare to Lab with both chips still
+  chosen, All Bets to whichever door sent it.
+- **Every address still works.** `/stats/compare`, `/stats/bets` and
+  `/stats/heatmap` are addresses, not pages: each opens the area on
+  that view, and a shared link still carries the selection.
+- **Nothing moved on screen.** `shotdiff.mjs` reports Compare, All
+  Bets, the Heat Map and Totals pixel identical at phone and laptop
+  width.
+
+### ROI and the record come off the charts, 31 August 2026
+
+His words, with a screenshot of the chart line running through the
+text: "Remove Roi and record inside the charts on home, lab. see
+attached image, chart is blocking those numbers."
+
+- **Both are gone from Home and from Lab.** The line read
+  "+24.1% ROI . 49-38 Record" and sat directly under the big number,
+  where the chart rides up beside it.
+- **The chart did not move.** The line took 22.75px of height and the
+  chart's own margin gives exactly that back, so nothing below shifts
+  by a pixel. Proved with `shotdiff.mjs`: the only pixels that changed
+  anywhere are the 8px band the text occupied.
+- **On LAB both figures survive**, in the KPI row right below: Record
+  and ROI are two of its four tiles.
+- **ON HOME THEY NOW APPEAR NOWHERE.** Home's four KPIs are Bets, Hit
+  rate, Wagered and Returned. Flagged to him the same day; he has not
+  said to put either back. Recorded as a consequence of his edit, not
+  as a ruling that Home should have no ROI.
+- `jumptest.mjs` used to read Home's record line to check that Explore
+  Lab lands on the whole record. It compares the two hero numbers now,
+  which is the better check anyway: one money rule, two pages.
 
 ## Process
 

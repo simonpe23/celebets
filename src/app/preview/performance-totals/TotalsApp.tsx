@@ -152,6 +152,7 @@ export default function TotalsApp({
   onPeriod,
   onRange,
   onJumpGroup,
+  onBets,
 }: {
   /** Demo bets on the public preview, the signed in user's own
       bets on the live page. The component never knows which. */
@@ -166,6 +167,9 @@ export default function TotalsApp({
   onRange: (r: CustomRange) => void;
   /** Open Lab on a group without leaving the page. */
   onJumpGroup?: (group: string) => void;
+  /** Open All Bets in place. The tab area passes this so
+      "See all bets" swaps the view instead of loading a page. */
+  onBets?: () => void;
 }) {
   // Job 4. The period is applied by building the engine from a
   // filtered record, so every number on the page follows without a
@@ -473,6 +477,11 @@ export default function TotalsApp({
           {/* Job 5. */}
           <Link
             href={withPeriod(`${routes.bets}?from=totals`, period)}
+            onClick={(e) => {
+              if (!onBets) return;
+              e.preventDefault();
+              onBets();
+            }}
             className={`flex items-center gap-[3px] ${T_SMALL} ${W_SEMI}`}
             style={{ color: INDIGO }}
           >

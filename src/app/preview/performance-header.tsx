@@ -30,6 +30,7 @@ export default function PerfHeader({
   title,
   tall = false,
   right = null,
+  onBack,
 }: {
   href: string;
   // What a screen reader says on the back button. It names the place
@@ -41,6 +42,11 @@ export default function PerfHeader({
   // Anything sitting at the right end of the row, like the Heat Map's
   // sparkle.
   right?: ReactNode;
+  // Go back in place instead of navigating. The tab area passes this
+  // on the Heat Map, which is a view inside it and not a page any
+  // more. The href stays, so the address still works and a long press
+  // can still open it.
+  onBack?: () => void;
 }) {
   return (
     <div
@@ -51,6 +57,11 @@ export default function PerfHeader({
       <Link
         href={href}
         aria-label={label}
+        onClick={(e) => {
+          if (!onBack) return;
+          e.preventDefault();
+          onBack();
+        }}
         className={`flex ${tall ? HEAD_BTN_TALL : HEAD_BTN} items-center justify-center rounded-full`}
         style={{ background: CARD, boxShadow: "0 1px 4px rgba(24,20,50,0.08)" }}
       >

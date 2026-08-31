@@ -29,7 +29,7 @@ Private (login gate in `src/middleware.ts`):
 | `/stats` | **Performance Home**, the rebuilt page, live since 31 August 2026. Address kept from the old name. |
 | `/stats/lab` | **Performance Lab**, the builder. |
 | `/stats/totals` | **Performance Totals**. |
-| `/stats/compare`, `/stats/bets`, `/stats/heatmap` | The three pages inside Performance. |
+| `/stats/compare`, `/stats/bets`, `/stats/heatmap` | Compare, All Bets and the Heat Map. **Addresses, not pages**: each opens the Performance area on that view. Reaching one from inside Performance never loads anything. |
 | `/stats-old` | **Today's old Performance page**, kept alive with his real numbers by his ruling of 31 August 2026. It stays until he retires it himself. |
 | `/recommendations` | **Research**. Address kept from the old name. |
 | `/insights` | The full insight list. Lights the Performance tab. |
@@ -141,6 +141,7 @@ Standalone scripts:
 | `synctest.mjs` | Kalshi money splits and competition normalisation. |
 | `jumptest.mjs <port>` | The doors between the Home and Lab previews: row taps arrive with the fact selected, Explore Lab lands empty. |
 | `periodtest.mjs <port>` | The Performance period filter really filters: every period changes the numbers, Custom takes two dates, and the window survives a tab switch. |
+| `instanttest.mjs <port>` | NOTHING under Performance loads a page. Every door between the six views (menu tabs, ranked rows, the Heat Map pill and its tiles, See these bets, Compare, See all bets, every back arrow) causes ZERO server page requests, each view's own address still opens it, and the chosen window travels. |
 | `shotdiff.mjs shoot <port> <dir> [light\|dark] [perf\|live]` | `perf` shoots the six Performance previews at both widths plus ten states a page shot cannot reach. `live` shoots the app and the public pages, and needs running twice, once per theme. |
 | `shotdiff.mjs diff <a> <b> [marks]` | Compares two of those folders pixel by pixel, and writes the differing pixels out in magenta. |
 

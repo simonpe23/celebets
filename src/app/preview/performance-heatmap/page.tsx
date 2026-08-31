@@ -1,22 +1,19 @@
-// The Heat Map preview shell. The page column, the face and the
-// floating tab bar all come from `../performance-shell`, which every
-// Performance page shares; this file is only what the Heat Map adds.
+// The Heat Map preview. A deep link into the shared tab area, opened
+// on the Heat Map, over demo bets because a preview is public by his
+// ruling.
 //
-// Its own screen, reached from the Heat Map pill on Home, with a back
-// arrow that returns there. The heat map lives on Home and nowhere
-// else for now, his ruling of 26 August 2026.
+// The Heat Map is a view inside that area since 31 August 2026, not a
+// page of its own, so tapping Home's pill swaps the view instead of
+// loading a page. The address still works.
 
 import { Suspense } from "react";
-import PerfPage from "../performance-shell";
-import HeatmapApp from "./HeatmapApp";
+import PerfArea from "../performance-area";
 import { labBets } from "../performance-lab/lab-data";
 
 export default function PerformanceHeatmapPreview() {
   return (
-    <PerfPage>
-      <Suspense fallback={null}>
-        <HeatmapApp bets={labBets} />
-      </Suspense>
-    </PerfPage>
+    <Suspense fallback={null}>
+      <PerfArea bets={labBets} initial="heatmap" />
+    </Suspense>
   );
 }

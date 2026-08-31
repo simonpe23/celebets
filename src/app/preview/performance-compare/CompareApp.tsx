@@ -130,11 +130,19 @@ function axisMoney(v: number): string {
 export default function CompareApp({
   bets,
   routes = PREVIEW_ROUTES,
+  sel,
+  onBack,
 }: {
   /** Demo bets on the public preview, the signed in user's own
       bets on the live page. The component never knows which. */
   bets: BetWithLegs[];
   routes?: PerfRoutes;
+  /** The pair to compare, as `a|b`. A prop since 31 August 2026,
+      because Compare is a view inside the tab area now and pushState
+      does not refresh useSearchParams. */
+  sel?: string;
+  /** Back to Lab in place, with both chips still chosen. */
+  onBack?: (sel: string) => void;
 }) {
   const engine = useMemo(() => makeEngine(bets), [bets]);
   const params = useSearchParams();
@@ -145,7 +153,7 @@ export default function CompareApp({
 
   // Exactly two selections, the ruled trigger. Anything else falls
   // back to the demo pair rather than showing a broken page.
-  const parsed = parseSel(params.get("sel"));
+  const parsed = parseSel(sel !== undefined ? sel : params.get("sel"));
   const pair = parsed.length === 2 ? parsed : DEMO;
   const backSel = pair.map(chipKey).join("|");
 
@@ -287,6 +295,7 @@ export default function CompareApp({
           other two headers. See performance-header.tsx. */}
       <PerfHeader
         href={`${routes.lab}?sel=${encodeURIComponent(backSel)}`}
+        onBack={onBack ? () => onBack(backSel) : undefined}
         label="Back to Lab"
         title="Compare"
         tall

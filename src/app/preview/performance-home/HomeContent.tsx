@@ -68,7 +68,6 @@ import {
   HeatDots,
   InfoDot,
   LayersIcon,
-  MiniTrend,
   OrbLayers,
   RedTarget,
   TrendTileIcon,
@@ -82,7 +81,6 @@ import {
   CHART_H_HOME,
   CHEV,
   DIVIDER,
-  DOT_MUTED,
   GREEN,
   GREY_TEXT,
   HAIR,
@@ -105,7 +103,6 @@ import {
   R_SMALL,
   R_TILE,
   SELECTOR_INK,
-  SUBGREEN,
   T_BODY,
   T_LABEL,
   T_LEAD,
@@ -148,6 +145,7 @@ export default function HomeContent({
   bets,
   routes = PREVIEW_ROUTES,
   onJump,
+  onHeatmap,
   period,
   range,
   onPeriod,
@@ -164,6 +162,10 @@ export default function HomeContent({
   /** Switch to Lab in place instead of navigating. The tab area passes
       this so a ranked row swaps the view rather than loading a page. */
   onJump?: (sel: string) => void;
+  /** Open the Heat Map in place. Same reason as onJump: the Heat Map
+      is a view inside the tab area now, so the pill swaps the view
+      instead of loading a page and re-reading the database. */
+  onHeatmap?: () => void;
   /** The window, owned by the tab area and shared with Lab and
       Totals. The pill in the corner used to be a picture of a control
       that read "This month" over an all time number. */
@@ -226,22 +228,20 @@ export default function HomeContent({
           {view.netProfit}
         </p>
 
-        {/* The ROI and record line. */}
-        <p className={`relative mt-[7px] flex items-center gap-[4px] pl-[22px] ${T_LABEL} ${W_SEMI}`}>
-          <MiniTrend size={12} />
-          <span style={{ color: view.positive ? SUBGREEN : RED }}>
-            {view.roiLine}
-          </span>
-          <span
-            className="mx-[1px] inline-block h-[3px] w-[3px] rounded-full"
-            style={{ background: DOT_MUTED }}
-          />
-          <span style={{ color: NET_LABEL }}>{view.recordLine}</span>
-        </p>
+        {/* THE ROI AND RECORD LINE IS GONE, 31 August 2026. His words:
+            "Remove Roi and record inside the charts on home, lab. see
+            attached image, chart is blocking those numbers." The chart
+            rides up beside the number and ran straight through the
+            text, so the text lost.
+
+            The chart has NOT moved. The line took 22.75px of height
+            (7px margin plus 15.75px of text) and the chart's own
+            margin gives exactly that much back, so nothing below
+            shifts by a pixel. */}
 
         {/* The chart: full width, no card, blending into the wash. Its
             right end rides up beside the number, like the sheet. */}
-        <div className="relative mt-[-30px]">
+        <div className="relative mt-[-7.25px]">
           <div className="pl-[22px] pr-[54px]">
             <HeroChart
               values={view.series}
@@ -309,7 +309,13 @@ export default function HomeContent({
         <div className="min-h-[12px] grow-[2]" />
 
         {/* Actuals noticed: its own section on the plain page. Tapping
-            it opens the insights sheet, his ruling of 31 August 2026. */}
+            it opens the insights sheet, his ruling of 31 August 2026.
+            The sentence is computed, so a record with nothing losing
+            has no sentence. The card goes with it: an amber card with
+            a blank line under its heading is not a design, it is a
+            hole. What a brand new account should see here instead is
+            still open, in docs/open-questions.md. */}
+        {view.insight ? (
         <button
           onClick={() => setInsights(rollInsights(bets))}
           aria-label="Open your insights"
@@ -338,6 +344,7 @@ export default function HomeContent({
           </span>
           <Chev size={11} color={ORANGE} />
         </button>
+        ) : null}
         <InsightSheet
           items={insights}
           live={live}
@@ -358,10 +365,17 @@ export default function HomeContent({
             </p>
           </div>
           <div className="relative top-[3px] flex shrink-0 items-center gap-[6px]">
-            {/* The pill opens the Heat Map page, 29 August 2026. Tap
-                wiring only: nothing about the pill's look changes. */}
+            {/* The pill opens the Heat Map, 29 August 2026. It stays a
+                real link so the address works and a long press can
+                open it in a new tab; the tab area intercepts the tap
+                and swaps the view instead, 31 August 2026. */}
             <Link
               href={routes.heatmap}
+              onClick={(e) => {
+                if (!onHeatmap) return;
+                e.preventDefault();
+                onHeatmap();
+              }}
               className={`flex h-[23px] items-center gap-[4px] rounded-full px-[9px] ${T_SMALL} ${W_SEMI}`}
               style={{ background: PILL_LAV, color: INDIGO }}
             >

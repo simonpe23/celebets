@@ -55,7 +55,6 @@ import {
   FactWave,
   GoldSparkle,
   InfoDot,
-  MiniTrend,
   WashTexture,
 } from "../performance-icons";
 import {
@@ -87,6 +86,7 @@ import {
   marketsUnder,
   recordOf,
 } from "./lab-model";
+import { leakInsight } from "../performance-home/home-model";
 import {
   AMBER_BG,
   AMBER_EDGE,
@@ -120,7 +120,6 @@ import {
   SELECTOR_INK,
   SEL_BG,
   SEL_EDGE,
-  SUBGREEN,
   TAB_EDGE,
   TRAY_EDGE,
   T_LABEL,
@@ -225,10 +224,13 @@ export default function LabApp({
   live = false,
   initialSel,
   initialGroup,
+  initialDomain,
   period,
   range,
   onPeriod,
   onRange,
+  onBets,
+  onCompare,
 }: {
   /** Demo bets on the public preview, the signed in user's own
       bets on the live page. The component never knows which. */
@@ -246,12 +248,22 @@ export default function LabApp({
       prop for the same reason as initialSel: pushState does not
       refresh useSearchParams. */
   initialGroup?: string;
+  /** The domain handed over by a jump from the Heat Map, whose tiles
+      are not all Sports. A prop for the same reason as the two above:
+      pushState does not refresh useSearchParams. */
+  initialDomain?: string;
   /** The period is owned by the tab area, so Home, Lab and Totals all
       show the same window. */
   period: PeriodKey;
   range: CustomRange;
   onPeriod: (key: PeriodKey) => void;
   onRange: (r: CustomRange) => void;
+  /** Open All Bets in place, carrying this selection. The tab area
+      passes these so the two doors swap the view instead of loading a
+      page and re-reading the database. */
+  onBets?: (sel: string) => void;
+  /** Open Compare in place, on the two chosen chips. */
+  onCompare?: (sel: string) => void;
 }) {
   // The insights sheet, 31 August 2026. null means closed.
   const [insights, setInsights] = useState<string[] | null>(null);
@@ -268,8 +280,11 @@ export default function LabApp({
     () => makeEngine(betsIn(bets, period, range)),
     [bets, period, range]
   );
+  // The "Actuals noticed" sentence, computed from the same filtered
+  // record Home uses. One function, two pages. See `leakInsight`.
+  const insight = useMemo(() => leakInsight(engine), [engine]);
   const [domain, setDomain] = useState<Domain>(() => {
-    const d = params.get("domain");
+    const d = initialDomain !== undefined ? initialDomain : params.get("domain");
     return (DOMAINS as string[]).includes(d ?? "") ? (d as Domain) : "Sports";
   });
   const [sel, setSel] = useState<Chip[]>(() =>
@@ -353,6 +368,11 @@ export default function LabApp({
     marketParents.get(market) ?? new Set<string>();
 
   const compareReady = sel.length === 2;
+  // The selection as one string, the shape every door out of Lab
+  // wants. It used to be written out inline in both doors.
+  const selString = sel
+    .map((c) => `${c.group}~${c.kind}~${c.value}`)
+    .join("|");
 
   const trayIcon = (c: Chip) =>
     chipIcon(c, true, c.group === "where" ? leagueSportMap.get(c.value) : undefined, 13);
@@ -457,23 +477,15 @@ export default function LabApp({
           No picks match this view yet.
         </p>
       ) : (
-        <>
-          <p className={`relative mt-[7px] flex items-center gap-[4px] pl-[22px] ${T_LABEL} ${W_SEMI}`}>
-            <MiniTrend size={12} />
-            <span style={{ color: whole.profit < 0 ? RED : SUBGREEN }}>
-              {whole.profit < 0 ? "" : "+"}
-              {roiOf(whole)} ROI
-            </span>
-            <span
-              className="mx-[1px] inline-block h-[3px] w-[3px] rounded-full"
-              style={{ background: DOT_MUTED }}
-            />
-            <span style={{ color: NET_LABEL }}>{recordOf(whole)} Record</span>
-          </p>
-          <div className="relative mt-[-30px]">
-            <LabChart points={chartPoints} />
-          </div>
-        </>
+        // THE ROI AND RECORD LINE IS GONE, 31 August 2026, on Home
+        // and here in the same edit. His words: "Remove Roi and
+        // record inside the charts on home, lab. see attached image,
+        // chart is blocking those numbers." Both figures survive in
+        // the KPI row right below. The chart has not moved: the line
+        // took 22.75px and the margin gives exactly that back.
+        <div className="relative mt-[-7.25px]">
+          <LabChart points={chartPoints} />
+        </div>
       )}
 
       <div className="relative mt-[16px] flex items-center pl-[33px]">
@@ -503,7 +515,14 @@ export default function LabApp({
       </div>
 
       {/* Actuals noticed. Tapping it opens the insights sheet, his
-          ruling of 31 August 2026. */}
+          ruling of 31 August 2026.
+          THE SENTENCE IS COMPUTED, since 31 August 2026. It used to be
+          the literal "Player Props are driving most of your losses",
+          printed on every record including his own, true or not, on a
+          page whose whole argument is honesty. It is Home's own
+          sentence now, from `leakInsight`, so the two cannot disagree.
+          No leak means no sentence, and then no card. */}
+      {insight ? (
       <button
         onClick={() => setInsights(rollInsights(bets))}
         aria-label="Open your insights"
@@ -524,11 +543,12 @@ export default function LabApp({
             className="mt-[2px] block truncate text-[8.7px]"
             style={{ color: AMBER_INK }}
           >
-            Player Props are driving most of your losses.
+            {insight}
           </span>
         </span>
         <Chev size={11} color={ORANGE} />
       </button>
+      ) : null}
       <InsightSheet
         items={insights}
         live={live}
@@ -536,16 +556,22 @@ export default function LabApp({
         onClose={() => setInsights(null)}
       />
 
-      {/* The doors: the bets behind the answer, and the parked
-          Compare door at exactly two selections, wearing Soon. */}
+      {/* The doors: the bets behind the answer, and the Compare door
+          at exactly two selections. Both keep a real address and both
+          swap the view in place when the tab area is driving. */}
       {sel.length > 0 ? (
         <div className="relative mx-[15px] mt-[10px] flex gap-[8px]">
           {/* Job 5. It was a button that did nothing; it opens All
               Bets now, carrying the selection and the period. */}
           <Link
-            href={`${routes.bets}?sel=${encodeURIComponent(
-              sel.map((c) => `${c.group}~${c.kind}~${c.value}`).join("|")
-            )}${period === "all" ? "" : `&period=${period}`}`}
+            href={`${routes.bets}?sel=${encodeURIComponent(selString)}${
+              period === "all" ? "" : `&period=${period}`
+            }`}
+            onClick={(e) => {
+              if (!onBets) return;
+              e.preventDefault();
+              onBets(selString);
+            }}
             className={`flex h-[50px] min-w-0 flex-1 items-center ${R_TILE} bg-white pl-[9px] pr-[10px] text-left`}
             style={{ boxShadow: "0 1px 4px rgba(24,20,50,0.06), 0 0 0 1px rgba(24,20,50,0.02)" }}
           >
@@ -567,9 +593,12 @@ export default function LabApp({
           </Link>
           {compareReady ? (
             <Link
-              href={`${routes.compare}?sel=${encodeURIComponent(
-                sel.map((c) => `${c.group}~${c.kind}~${c.value}`).join("|")
-              )}`}
+              href={`${routes.compare}?sel=${encodeURIComponent(selString)}`}
+              onClick={(e) => {
+                if (!onCompare) return;
+                e.preventDefault();
+                onCompare(selString);
+              }}
               className={`flex h-[50px] min-w-0 flex-1 items-center ${R_TILE} bg-white pl-[9px] pr-[10px]`}
               style={{ boxShadow: "0 1px 4px rgba(24,20,50,0.06), 0 0 0 1px rgba(24,20,50,0.02)" }}
             >
