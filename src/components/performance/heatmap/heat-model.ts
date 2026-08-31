@@ -40,7 +40,7 @@
 import { domainOf, type Domain } from "@/lib/taxonomy";
 import type { Sport } from "@/lib/types";
 import { legShares } from "@/lib/stats";
-import { MUTED, type Chip, type Engine, type GroupKey, type Stats } from "../pf/engine";
+import { MUTED, type Chip, type Engine, type GroupKey, type Stats } from "@/app/preview/pf/engine";
 
 export const MIN_PICKS = 12;
 // The floor Home's ranked rows and the prototype's heat map both pass

@@ -33,9 +33,11 @@ on a preview page: public is the standing state.
 
 ## What is live here
 
-- `src/app/preview/pf/`, the Portfolio prototype for the Performance
-  rebuild. Engine, skin and motion are all reusable. See
-  `docs/performance-rebuild.md`.
+- **`src/app/preview/pf/engine.ts` IS LIVE CODE, despite the path.**
+  Every money figure on every Performance page comes from it. It has
+  not been moved out yet; that is its own commit and the owner has not
+  been asked. The rest of `src/app/preview/pf/` is the Portfolio
+  prototype, which is not live. See `docs/performance-rebuild.md`.
 - Everything else under `/preview` is an older, rejected concept. Kept
   so the history is not lost, not because it is worth reading.
 
@@ -61,22 +63,14 @@ the new palette becomes the checked palette and the previews go back
 under all three colour rules. Delete `paletteExempt` in
 `design-check.mjs` then. See `docs/open-questions.md`.
 
-## Every Performance preview reads one file
+## The Performance area is NOT here any more
 
-`src/app/preview/performance-ui.ts` holds the colours, the font, the
-type scale, the two weights, the radii and the shared heights for
-`performance-home`, `-lab`, `-totals`, `-compare`, `-bets` and
-`-heatmap`. **Never write a hex, a font family or a shared size inside
-one of those pages. Add a line to that file and import it.** Spacing
-used once, on one page, stays on the page.
+It moved to `src/components/performance/` on 31 August 2026. What is
+left under `src/app/preview/performance-*/` is six `page.tsx` route
+files, three lines each, which exist so the public preview addresses
+keep working.
 
-Three things are shared components, not copies:
-`performance-shell.tsx` (the column, the face and the tab bar),
-`performance-menu.tsx` (Home / Lab / Totals) and
-`performance-header.tsx` (the back header).
-
-ANY chat may edit those files without asking or pausing. The existing
-convention holds: whoever merges second merges `main` in first.
+Its rules live in `.claude/rules/performance.md`.
 
 ## Testing them
 

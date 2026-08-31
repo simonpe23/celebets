@@ -1462,6 +1462,52 @@ attached image, chart is blocking those numbers."
   Lab lands on the whole record. It compares the two hero numbers now,
   which is the better check anyway: one money rule, two pages.
 
+### The rename, 31 August 2026
+
+Asked what was next, he answered with one word: "rename."
+
+**`src/app/preview/performance-*` is now `src/components/performance/`.**
+The old path read as a sandbox while serving actuals.cc/stats on real
+user bets, and he had asked for a daily Routine to nag him about it.
+
+**Both his conditions, set 30 August 2026, were met:**
+
+- A commit that does NOTHING else. No behaviour changed, and
+  `shotdiff.mjs` proves every Performance page pixel identical.
+- One chat working in that tree.
+
+**What moved and what did not:**
+
+- The seven shared files lost their now redundant prefix:
+  `performance-ui.ts` became `ui.ts`, `performance-area.tsx` became
+  `area.tsx`, and so on for the shell, menu, header, icons and insight
+  sheet.
+- The six folders became `home/`, `lab/`, `totals/`, `compare/`,
+  `bets/`, `heatmap/`.
+- **The six `page.tsx` files stayed** under
+  `src/app/preview/performance-*/`, because they ARE the public
+  preview addresses. Every preview and every `/stats` address is
+  unchanged.
+- **Every import that crosses a folder is now absolute**
+  (`@/components/performance/...`), so the next move cannot break
+  them.
+- `design-check.mjs` followed the files: the colour exemption and rule
+  12's Performance group now match `src/components/performance/`
+  rather than `/preview/`. Without that the build would have failed
+  the moment the folder moved, on colours that were always allowed.
+- A new path scoped rule, `.claude/rules/performance.md`, says what
+  the folder is and what it may not do.
+
+**NOT MOVED, and he has not been asked: `src/app/preview/pf/engine.ts`.**
+Every money figure on every Performance page comes from it, so it is as
+live as the folder that just moved, and it still sits in a folder
+called preview. That is the same job again, in its own commit.
+
+**The daily Routine about the rename can be deleted.**
+
+Older entries in this file still name the old paths. They are a record
+of what was decided then and were left alone on purpose.
+
 ## Process
 
 **Past reactions are not constraints.** Said twice in two days: "just

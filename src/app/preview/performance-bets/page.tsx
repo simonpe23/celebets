@@ -8,8 +8,8 @@
 // neither door loads anything. The address still works.
 
 import { Suspense } from "react";
-import PerfArea from "../performance-area";
-import { labBets } from "../performance-lab/lab-data";
+import PerfArea from "@/components/performance/area";
+import { labBets } from "@/components/performance/lab/lab-data";
 
 export default function PerformanceBetsPreview() {
   return (

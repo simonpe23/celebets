@@ -16,7 +16,7 @@ import {
   T_TINY,
   W_SEMI,
   ZERO_LINE,
-} from "../performance-ui";
+} from "@/components/performance/ui";
 
 export type ChartPoint = { t: number; v: number };
 

@@ -41,15 +41,15 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import PerfPage from "./performance-shell";
-import PerfMenu, { type PerfTab } from "./performance-menu";
-import HomeContent from "./performance-home/HomeContent";
-import LabApp from "./performance-lab/LabApp";
-import TotalsApp from "./performance-totals/TotalsApp";
-import HeatmapApp from "./performance-heatmap/HeatmapApp";
-import CompareApp from "./performance-compare/CompareApp";
-import BetsApp from "./performance-bets/BetsApp";
-import { TAIL_SHORT, TAIL_TALL } from "./performance-ui";
+import PerfPage from "./shell";
+import PerfMenu, { type PerfTab } from "./menu";
+import HomeContent from "@/components/performance/home/HomeContent";
+import LabApp from "@/components/performance/lab/LabApp";
+import TotalsApp from "@/components/performance/totals/TotalsApp";
+import HeatmapApp from "@/components/performance/heatmap/HeatmapApp";
+import CompareApp from "@/components/performance/compare/CompareApp";
+import BetsApp from "@/components/performance/bets/BetsApp";
+import { TAIL_SHORT, TAIL_TALL } from "./ui";
 import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
 import type { BetWithLegs } from "@/lib/types";
 import {
@@ -57,7 +57,7 @@ import {
   isPeriod,
   type CustomRange,
   type PeriodKey,
-} from "./performance-lab/period";
+} from "@/components/performance/lab/period";
 
 // What the area can show. The menu draws three of these. The other
 // three are reached from inside and wear a back arrow instead.

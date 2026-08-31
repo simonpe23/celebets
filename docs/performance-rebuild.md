@@ -48,7 +48,12 @@ Status as of 31 August 2026. **The rebuilt Performance area is LIVE at
 
 ## The shared design file, 31 August 2026
 
-All six preview pages read `src/app/preview/performance-ui.ts` for
+**THE CODE MOVED ON 31 AUGUST 2026.** Everything below that names a
+file now means `src/components/performance/`, not
+`src/app/preview/performance-*`. Only the six `page.tsx` route files
+stayed behind. See `CLAUDE.md` for the full before-and-after table.
+
+All six preview pages read `src/components/performance/ui.ts` for
 every value more than one of them uses: the colours, the Figtree face,
 a ten step type scale, the two weights, six radii, the page column,
 the tab bar, the menu's height and pill, the two back header shapes
@@ -56,14 +61,14 @@ and the four chart heights. Spacing used once on one page stays on the
 page.
 
 Three blocks that used to be copied are now one component each:
-`performance-shell.tsx` (the column, the face and the tab bar, which
+`shell.tsx` (the column, the face and the tab bar, which
 was byte identical in all six `page.tsx` files),
-`performance-menu.tsx` (Home / Lab / Totals, which existed twice) and
-`performance-header.tsx` (the back header, which existed three times
+`menu.tsx` (Home / Lab / Totals, which existed twice) and
+`header.tsx` (the back header, which existed three times
 and had already drifted).
 
 `icons.tsx` moved from `performance-home/` to
-`src/app/preview/performance-icons.tsx`. Six pages import it.
+`src/components/performance/icons.tsx`. Six pages import it.
 
 **Nothing looks different.** Proved with `shotdiff.mjs`: 24
 screenshots of the old code and the new, compared pixel by pixel, all
@@ -168,7 +173,7 @@ page in between, not at all a smooth experience. i dont want that. i
 want the transition to be a clean smooth swap. i want to see the tab
 bar slide over."
 
-`performance-area.tsx` now holds all three. The bets load once, the
+`area.tsx` now holds all three. The bets load once, the
 frame and the menu stay mounted, and the tab is React state.
 **Measured: zero server requests per switch, and roughly a tenth of a
 second to render.**
@@ -213,7 +218,7 @@ then add custom as well, just as the old performance page."
   so the window is never hidden behind the word Custom.
 - **ONE window for the whole area.** The period used to live inside
   Lab and inside Totals and travel between them in the address. It
-  lives in `performance-area.tsx` now: change it on Home and Lab is
+  lives in `area.tsx` now: change it on Home and Lab is
   already looking at the same window.
 - **Totals no longer changes the period by navigating.** It used
   `router.replace`, which is a server round trip: inside the shared
@@ -268,7 +273,7 @@ i have only show the structure but has the old design."
 **So the Lab chat works from two sources, one per job:**
 
 1. **Design and style: the accepted Home, and only it.** The living
-   reference is `src/app/preview/performance-home/` (`page.tsx` holds
+   reference is `src/components/performance/home/` (`page.tsx` holds
    the colour constants and sizes, `icons.tsx` the line-art style,
    `charts.tsx` the chart treatment). The essentials, all sampled
    from his designer's sheet: indigo `#3614F0` for text, lines and
@@ -326,14 +331,14 @@ a time, a screenshot after each, his reaction before the next.
   doors from Home's ranked rows land correctly in this Lab: all
   seven cases of `jumptest.mjs` pass against the merged tree.
 - **TOTALS IS BUILT, awaiting his reaction.** At
-  `src/app/preview/performance-totals/`, from his sheet
+  `src/components/performance/totals/`, from his sheet
   `2. Totals.png`. All three menu tabs now reach each other and
   `jumptest.mjs` proves all four menu doors. Its four deliberate
   differences from the sheet are in `docs/decisions.md`.
 - **COMPARE IS BUILT AND MERGED, 29 August 2026.** He merged it
   without a verdict and moved on, so it is live at
   `/preview/performance-compare` and NOT recorded as accepted. Its own page at
-  `src/app/preview/performance-compare/`, built to his sheet
+  `src/components/performance/compare/`, built to his sheet
   `1. Compare.png` with Home and Lab's colours and face, his order
   of 29 August 2026. Reached from Lab's door at exactly two
   selections, carrying both chips in the address; the back arrow
@@ -343,7 +348,7 @@ a time, a screenshot after each, his reaction before the next.
   (lavender winner tint out, insights strip out, bigger cards, the
   wins pill folded into the grey one), all applied.
 - **THE HEAT MAP IS BUILT, awaiting his reaction.** At
-  `src/app/preview/performance-heatmap/`, from his sheet
+  `src/components/performance/heatmap/`, from his sheet
   `2. heat map.png`, on his order of 29 August 2026. Reached from the
   Heat Map pill on Home, back arrow returns there. It was its own page
   until 31 August 2026 and is now a fourth view inside the tab area,
@@ -454,7 +459,7 @@ a time, a screenshot after each, his reaction before the next.
 
 - **Colours are one dial now, Home included**: every colour Home,
   Lab, Compare, Totals, the Heat Map and All Bets draw comes from
-  `performance-ui.ts` and none of those folders contains a raw
+  `ui.ts` and none of those folders contains a raw
   hex. Home joined on 30 August 2026, with the owner's permission to
   open the protected folder for that one job. Nothing moved and no
   shade changed: the before and after screenshots of Home, phone and
@@ -463,7 +468,7 @@ a time, a screenshot after each, his reaction before the next.
   selections and is gone at three, it opens on the two chosen
   facts, and back keeps them. Eleven cases, all passing.
 - **Round 1's mechanics, all still live and test-proven.** At
-  `src/app/preview/performance-lab/`, on the accepted Home's design.
+  `src/components/performance/lab/`, on the accepted Home's design.
   Live and test-proven in a real browser: the current view tray with
   removal, the answer panel (net profit, the cumulative chart in
   Home's chart language, then Bets, Record, Hit Rate, ROI), chips
@@ -480,7 +485,7 @@ a time, a screenshot after each, his reaction before the next.
   from Home's list: Moneyline 30–16 (+$2,658), Premier League 14–8
   (+$743), Low odds 18–11 (+$612), Singles 24–18 (+$440), Player
   Props 7–11 (-$440), whole record 49–38, +$2,637, 24.1% ROI.
-- **Where every Performance colour lives:** `performance-ui.ts`.
+- **Where every Performance colour lives:** `ui.ts`.
   It started as a copy of Home's own constants; since 30 August 2026
   Home imports it too, so there is one source and no copy. Home's icons are imported
   from `../performance-home/icons` (importing reads the reference,
@@ -663,6 +668,6 @@ Not design work, and nobody has scoped it:
    can edit colors and details across pages once this creation
    process is done." He unparked it on 30 August 2026 and gave a one
    job permission to open the protected Home folder. Every
-   Performance page now reads `src/app/preview/performance-ui.ts`
+   Performance page now reads `src/components/performance/ui.ts`
    and holds no colour of its own. Zero visual change, proven by
    identical before and after screenshots at both widths.

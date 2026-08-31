@@ -16,22 +16,22 @@
 // so Compare, Lab and Home never disagree.
 
 import { useMemo, useState } from "react";
-import PerfHeader from "../performance-header";
+import PerfHeader from "@/components/performance/header";
 import { useSearchParams } from "next/navigation";
 import {
   makeEngine,
   money,
   type Chip,
   type Stats,
-} from "../pf/engine";
+} from "@/app/preview/pf/engine";
 import type { BetWithLegs } from "@/lib/types";
 import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
-import { chipIcon } from "../performance-lab/LabApp";
-import Explain from "../performance-lab/Explain";
+import { chipIcon } from "@/components/performance/lab/LabApp";
+import Explain from "@/components/performance/lab/Explain";
 import {
   InfoDot,
-} from "../performance-icons";
-import { leagueSports } from "../performance-lab/lab-model";
+} from "@/components/performance/icons";
+import { leagueSports } from "@/components/performance/lab/lab-model";
 import {
   CARD,
   CARD_WINNER,
@@ -64,7 +64,7 @@ import {
   T_TINY,
   W_BOLD,
   W_SEMI,
-} from "../performance-ui";
+} from "@/components/performance/ui";
 import { CompareChart, type Series } from "./compare-chart";
 
 const METRICS = ["Profit", "ROI", "Hit rate"] as const;

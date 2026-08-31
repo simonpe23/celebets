@@ -109,7 +109,14 @@ const skipped = () => false;
 // OLD palette is backwards. A prototype's whole job is to carry colours
 // the design system has not adopted yet.
 //
-// So the three COLOUR rules do not run under /preview:
+// So the three COLOUR rules do not run under /preview, nor over the
+// Performance components. Those moved out of /preview on 31 August
+// 2026 (`src/app/preview/performance-*` became
+// `src/components/performance/`), and the move must not change what is
+// checked: they still carry the mockup designer's colours, and the
+// palette is still not chosen.
+//
+// The three rules skipped:
 //   4   is this hex in the product palette
 //   4b  green is not an action colour
 //   8b  the brand purple must come from globals.css, not a raw hex
@@ -118,7 +125,7 @@ const skipped = () => false;
 // var(--brand-top) forces the OLD purple, which is the exact thing this
 // exemption exists to stop.
 //
-// EVERY OTHER RULE STILL APPLIES to every preview file: the font lock,
+// EVERY OTHER RULE STILL APPLIES to every one of those files: the font lock,
 // the banned finance vocabulary, em dashes, the old brand name, the
 // hand cursor, the money face, the shared components. Those are not
 // design taste, they are correctness, and a prototype gets them wrong
@@ -129,7 +136,8 @@ const skipped = () => false;
 // from it, and the previews go back under all three colour rules.
 // Delete this function then. The palette is not chosen yet; it sits in
 // docs/open-questions.md.
-const paletteExempt = (file) => file.includes("/preview/");
+const paletteExempt = (file) =>
+  file.includes("/preview/") || file.includes("src/components/performance/");
 
 // Files that ARE artwork. The brand mark's gradient stops are the
 // owner's logo, drawn as inline svg so it stays crisp at header size.
@@ -533,15 +541,19 @@ for (const lock of FONT_LOCK) {
   // The shared files themselves. These are where the values are
   // SUPPOSED to be written, so they are the one place exempt.
   const DIALS = [
-    "src/app/preview/performance-ui.ts",
+    "src/components/performance/ui.ts",
     "src/lib/ui.ts",
     "src/app/globals.css",
     "src/app/layout.tsx",
   ];
 
-  // The Performance previews, which read `performance-ui.ts`.
+  // The Performance area, which reads its own dial rather than the
+  // app's. It lived at `src/app/preview/performance-*` until 31 August
+  // 2026; the six `page.tsx` route files stayed behind, and they are
+  // three lines each with no design value in them, so matching only
+  // the new folder is enough.
   const isPerfPreview = (f) =>
-    /^src\/app\/preview\/performance-/.test(f) && !DIALS.includes(f);
+    f.startsWith("src/components/performance/") && !DIALS.includes(f);
 
   // The live app's own screens. The old rejected previews under
   // /preview are NOT here: they are dead code kept so the history
@@ -550,6 +562,10 @@ for (const lock of FONT_LOCK) {
   const isLivePage = (f) =>
     (f.startsWith("src/components/") || f.startsWith("src/app/")) &&
     !f.startsWith("src/app/preview/") &&
+    // The Performance area is live, but it reads its own dial and its
+    // own type scale. It is checked as `isPerfPreview` above, not
+    // against the app's tokens.
+    !f.startsWith("src/components/performance/") &&
     !DIALS.includes(f);
 
   // TODAY'S /stats IS EXEMPT, and this is a ruling, not an oversight.
@@ -561,7 +577,7 @@ for (const lock of FONT_LOCK) {
   const STATS_EXEMPT = "src/components/StatsView.tsx";
 
   // The Performance preview type scale and radii, from
-  // performance-ui.ts. Writing one of these by hand is the bug.
+  // src/components/performance/ui.ts. Writing one of these by hand is the bug.
   const PERF_TOKENS = {
     "text-[15px]": "T_TITLE",
     "text-[11.5px]": "T_LEAD",
@@ -610,24 +626,24 @@ for (const lock of FONT_LOCK) {
       // (a) A COLOUR WRITTEN INSIDE A PAGE.
       //
       // For the previews this is any hex at all: every colour they use
-      // is a line in performance-ui.ts, so a hex here means someone
+      // is a line in src/components/performance/ui.ts, so a hex here means someone
       // typed one instead of importing it. The live app is already
       // covered by rule 4, which fails on a hex outside the palette.
       if (perf && /#[0-9A-Fa-f]{3,8}\b/.test(line)) {
         const hit = line.match(/#[0-9A-Fa-f]{3,8}\b/)[0];
-        note(file, n, `colour ${hit} written inside a page. Add a token to performance-ui.ts and import it`);
+        note(file, n, `colour ${hit} written inside a page. Add a token to src/components/performance/ui.ts and import it`);
       }
       // A colour function is the same offence written differently.
       // rgba() is NOT checked, because every rgba in these pages is
       // part of a box shadow, and shadows are not tokenised yet.
       if (perf && /\b(?:rgb|hsl|hsla)\(/.test(line)) {
-        note(file, n, "colour function inside a page. Add a token to performance-ui.ts and import it");
+        note(file, n, "colour function inside a page. Add a token to src/components/performance/ui.ts and import it");
       }
 
       // (b) A FONT FAMILY WRITTEN INSIDE A PAGE.
       //
       // The face is chosen in ONE place per surface: layout.tsx for the
-      // app, performance-ui.ts for the Performance previews. Reaching
+      // app, src/components/performance/ui.ts for the Performance previews. Reaching
       // for one through a var() or an imported token is the correct
       // mechanism and passes. Naming a family here does not.
       const fam = line.match(/font-?[fF]amily:\s*("[^"]*"|'[^']*'|`[^`]*`)/);
@@ -635,11 +651,11 @@ for (const lock of FONT_LOCK) {
         const value = fam[1].slice(1, -1).trim();
         const ok = value === "inherit" || /^var\(--font-/.test(value);
         if (!ok) {
-          note(file, n, `font family "${value}" written inside a page. It belongs in layout.tsx or performance-ui.ts`);
+          note(file, n, `font family "${value}" written inside a page. It belongs in layout.tsx or src/components/performance/ui.ts`);
         }
       }
       if (/from ["']next\/font/.test(line)) {
-        note(file, n, "next/font loaded inside a page. The face is loaded once, in layout.tsx or performance-ui.ts");
+        note(file, n, "next/font loaded inside a page. The face is loaded once, in layout.tsx or src/components/performance/ui.ts");
       }
 
       // (c) A SHARED SIZE WRITTEN RAW INSTEAD OF ITS TOKEN.

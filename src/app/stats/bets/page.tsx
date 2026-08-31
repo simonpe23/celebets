@@ -2,7 +2,7 @@
 // on All Bets, on the signed in user's own bets.
 
 import { Suspense } from "react";
-import PerfArea from "../../preview/performance-area";
+import PerfArea from "@/components/performance/area";
 import { loadUserBets } from "@/lib/load-bets";
 import { LIVE_ROUTES } from "@/lib/performance-routes";
 

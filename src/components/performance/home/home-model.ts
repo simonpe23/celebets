@@ -23,7 +23,7 @@ import {
   type Engine,
   type Fact,
   type Stats,
-} from "../pf/engine";
+} from "@/app/preview/pf/engine";
 
 export interface HomeRow {
   chip: Chip;

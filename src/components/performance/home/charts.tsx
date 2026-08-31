@@ -9,7 +9,7 @@
 // spark's red is SPARK_RED, a shade off the money RED: that is what
 // this sheet's thin line samples at, and the two must not be merged.
 
-import { INDIGO, SPARK_RED, ZERO_LINE } from "../performance-ui";
+import { INDIGO, SPARK_RED, ZERO_LINE } from "@/components/performance/ui";
 
 // The hero line, 224 traced points, in a 313.6x139.0 box.
 export const HERO_H = 128.9;

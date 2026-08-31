@@ -34,21 +34,21 @@
 // because that is the one thing on this screen he can act on.
 
 import { useMemo, useState } from "react";
-import PerfHeader from "../performance-header";
+import PerfHeader from "@/components/performance/header";
 import { useSearchParams } from "next/navigation";
 import { betProfit, effectiveResult } from "@/lib/stats";
-import { makeEngine, money, type Chip, type GroupKey } from "../pf/engine";
+import { makeEngine, money, type Chip, type GroupKey } from "@/app/preview/pf/engine";
 import type { BetWithLegs } from "@/lib/types";
 import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
-import { chipIcon } from "../performance-lab/LabApp";
+import { chipIcon } from "@/components/performance/lab/LabApp";
 import {
   betsIn,
   isPeriod,
   labelOf,
   type CustomRange,
   type PeriodKey,
-} from "../performance-lab/period";
-import { Chev } from "../performance-icons";
+} from "@/components/performance/lab/period";
+import { Chev } from "@/components/performance/icons";
 import {
   AMBER_BG,
   AMBER_EDGE,
@@ -76,7 +76,7 @@ import {
   T_SMALL,
   W_BOLD,
   W_SEMI,
-} from "../performance-ui";
+} from "@/components/performance/ui";
 
 const cash = (v: number) =>
   `${v < 0 ? "-" : "+"}$${Math.abs(v).toLocaleString("en-US", {

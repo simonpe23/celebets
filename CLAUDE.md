@@ -84,7 +84,7 @@ coordination."
 |---|---|
 | `src/app/globals.css` | The whole app's colours, type scale and corner radii. |
 | `src/lib/ui.ts` | The live app's repeated class strings: the page frame, its column, the page title, a card's heading. |
-| `src/app/preview/performance-ui.ts` | Everything the six Performance previews share: colours, the face, the type scale, weights, radii, the menu, the header and the chart heights. |
+| `src/components/performance/ui.ts` | Everything the six Performance views share: colours, the face, the type scale, weights, radii, the menu, the header and the chart heights. |
 
 - **Never write a colour, a font family or a shared size inside a
   page.** Add a line to the file above and import it.
@@ -100,8 +100,9 @@ coordination."
   locked again. The existing convention is the whole answer: whoever
   merges second merges `main` in first.
 - Repeated markup is the same rule. If a block is drawn on more than
-  one page it becomes one component: `performance-shell.tsx`,
-  `performance-menu.tsx`, `performance-header.tsx`, `TabBar.tsx`.
+  one page it becomes one component:
+  `src/components/performance/shell.tsx`, `.../menu.tsx`,
+  `.../header.tsx`, `TabBar.tsx`.
 
 **Today's `/stats` is exempt**, by his ruling of 31 August 2026: the
 rebuilt Performance pages replace it, so it was skipped. It does not
@@ -129,30 +130,42 @@ six files made him referee merge conflicts he did not create and could
 not read, three times in one evening. He was right and said so first:
 "i absolutely hate that i have 3 chats editing this app."
 
-**One chat owns `src/app/preview/` and `src/app/stats/`, design and
-numbers both.** The Lab chat has stopped. Do not split this again: the
+**One chat owns `src/components/performance/`, `src/app/preview/` and
+`src/app/stats/`, design and numbers both.** The Lab chat has stopped. Do not split this again: the
 folder rules were only ever a traffic convention for concurrent chats,
 never a rule about who may do what.
 
-## `src/app/preview/performance-*` IS LIVE CODE
+## Where the Performance code lives
 
-**Do not treat that folder as a sandbox. It is not one any more.**
+**`src/components/performance/`. It moved there on 31 August 2026**, on
+his one word instruction: "rename". It used to sit at
+`src/app/preview/performance-*`, which read as a sandbox while serving
+real users. Both his conditions were met: it was a commit that did
+nothing else, and one chat owned the tree. The daily Routine that
+nagged about it is done and can be deleted.
 
-Since 30 August 2026 those files serve **actuals.cc/stats** and every
-page under it, on real user bets. `/stats/lab`, `/stats/totals`,
-`/stats/compare`, `/stats/bets` and `/stats/heatmap` are thin wrappers
-that import them and hand them the signed in user's own record. The
-public `/preview/*` addresses hand the same components demo numbers.
-One file, two callers, one of them live.
+| Now | Was |
+|---|---|
+| `src/components/performance/ui.ts` | `performance-ui.ts` |
+| `src/components/performance/area.tsx` | `performance-area.tsx` |
+| `src/components/performance/shell.tsx` | `performance-shell.tsx` |
+| `src/components/performance/menu.tsx` | `performance-menu.tsx` |
+| `src/components/performance/header.tsx` | `performance-header.tsx` |
+| `src/components/performance/icons.tsx` | `performance-icons.tsx` |
+| `src/components/performance/insight-sheet.tsx` | `performance-insight-sheet.tsx` |
+| `src/components/performance/home/` etc. | `performance-home/` etc. |
 
-**The name is wrong and is being kept only until it is safe to change
-it.** The owner asked on 30 August 2026 for a daily reminder of this,
-so a Routine now nags him about it. The proper fix, both conditions
-his:
+**This is live code serving actuals.cc/stats**, on real user bets.
+`/stats` and every page under it are thin wrappers that import these
+and hand them the signed in user's own record. The six `page.tsx`
+files under `src/app/preview/performance-*/` stayed behind, because
+they ARE the public preview addresses, and they hand the same
+components demo numbers. One component, two callers, one of them live.
 
-- Move it to `src/components/performance/`.
-- **In a commit that does NOTHING else**, and only when no other chat
-  is working in that tree. Over 20 files import it by path.
+**STILL IN THE WRONG PLACE: `src/app/preview/pf/engine.ts`.** Every
+money figure on every Performance page comes from it, so it is as live
+as the rest, and it still sits in a folder called preview. Moving it is
+the same job again, in its own commit. He has not been asked yet.
 
 ## Product facts
 
@@ -192,22 +205,22 @@ Keep it current: when a job finishes, delete its line.
 - **The Performance page rebuild.** Three tabs inside `/stats`: Home,
   Lab, Totals. **Do not redesign `/stats`, `StatsView.tsx` or anything
   under `src/app/preview/pf/` in another chat.**
-  **THE LOCK ON `src/app/preview/performance-home/` IS GONE**,
+  **THE LOCK ON Home IS GONE**,
   permanently, on his order of 31 August 2026. It was there because
   Home held its own private copy of every colour, size and shared
   block, so a second chat editing that folder could silently make
   Home disagree with the other five pages. Home holds none of that
-  any more: the values are in `performance-ui.ts`, and the shell,
+  any more: the values are in `ui.ts`, and the shell,
   the menu and the back header are shared components. A chat cannot
   make Home disagree with the other five by editing Home, because
   Home no longer holds anything of its own, and `design-check.mjs`
   rule 12 fails the build if anyone puts a value back. The file and
   the check do the job the lock was doing, without stopping a chat
   working.
-  `src/app/preview/performance-home/` is still the ACCEPTED Home and
+  `src/components/performance/home/` is still the ACCEPTED Home and
   the design reference for Lab: do not REDESIGN it without his say.
   Editing it is now ordinary work.
-  **`src/app/preview/performance-lab/` is the ACCEPTED Lab: same
+  **`src/components/performance/lab/` is the ACCEPTED Lab: same
   rule, do not redesign it from another chat.** The Lab chat owns
   that folder and Compare, on branch
   `claude/actuals-lab-redesign-onv3s8`. It also edits
@@ -245,7 +258,7 @@ Keep it current: when a job finishes, delete its line.
     logged, 29 August 2026.** What works and what is still drawn
     but inert is listed in `docs/performance-rebuild.md`.
     **Every Performance page reads one dial**,
-    `src/app/preview/performance-ui.ts`. Colours joined it on 30
+    `src/components/performance/ui.ts`. Colours joined it on 30
     August 2026; the font, the type scale, the two weights, the
     radii and the menu, header and chart heights joined it on 31
     August. Home, Lab, Totals, Compare, the Heat Map and All Bets
@@ -255,9 +268,9 @@ Keep it current: when a job finishes, delete its line.
     it.** One off spacing used once on one page is the exception and
     stays on the page.
     **Three pieces are shared components, not copies:**
-    `performance-shell.tsx` (the column, the face and the tab bar),
-    `performance-menu.tsx` (Home / Lab / Totals) and
-    `performance-header.tsx` (the back header). Change them there,
+    `shell.tsx` (the column, the face and the tab bar),
+    `menu.tsx` (Home / Lab / Totals) and
+    `header.tsx` (the back header). Change them there,
     not per page.
     What has NOT happened is the colour work itself: he parked the
     palette on 29 August 2026, "even after the pages are live".
