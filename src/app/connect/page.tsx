@@ -1,6 +1,11 @@
 import Link from "next/link";
 import ConnectAccounts from "@/components/ConnectAccounts";
 import TabBar from "@/components/TabBar";
+import {
+  COLUMN,
+  PAGE,
+  PAGE_TITLE,
+} from "@/lib/ui";
 
 // Connected accounts, reached from Settings (and later from the Track
 // tile once syncing exists). Same shell as Settings: back arrow,
@@ -8,8 +13,8 @@ import TabBar from "@/components/TabBar";
 // from.
 export default function ConnectPage() {
   return (
-    <main className="flex min-h-svh flex-col px-4 pt-6 pb-2 sm:px-6">
-      <div className="mx-auto w-full max-w-md space-y-4">
+    <main className={PAGE}>
+      <div className={COLUMN}>
         <header className="flex items-center gap-3">
           <Link
             href="/settings"
@@ -29,7 +34,7 @@ export default function ConnectPage() {
               <path d="M15 5l-7 7 7 7" />
             </svg>
           </Link>
-          <h1 className="text-[22px] font-bold tracking-tight">
+          <h1 className={PAGE_TITLE}>
             Connected accounts
           </h1>
         </header>

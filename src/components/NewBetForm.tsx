@@ -28,7 +28,11 @@ import {
   marketsFor,
   type Domain,
 } from "@/lib/taxonomy";
-import { CARD, NO_SCROLLBAR } from "@/lib/ui";
+import {
+  CARD,
+  NO_SCROLLBAR,
+  SECTION_HEAD,
+} from "@/lib/ui";
 
 interface LegDraft {
   sport: Sport | null;
@@ -483,7 +487,7 @@ export default function NewBetForm({
   return (
     <section className={`${CARD} p-4`}>
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-[17px] font-bold">Track a bet</h2>
+        <h2 className={SECTION_HEAD}>Track a bet</h2>
         {compact && (
           /* Inert until there is a walkthrough behind it. It is in the
              owner's mockup, so it is drawn; it just does not pretend to

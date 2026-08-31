@@ -71,6 +71,43 @@ did not run one: go and run it.
 
 Full procedure: the **`ui-change`** skill.
 
+## Design values live in the shared files, never inside a page
+
+His order, 31 August 2026: "I want to change one thing in one file and
+have it update across every page. Font, font size, a colour, a height,
+a corner radius, spacing. One edit, everywhere, from any chat, with no
+coordination."
+
+**Three files hold every shared value. Nothing else may.**
+
+| File | Holds |
+|---|---|
+| `src/app/globals.css` | The whole app's colours, type scale and corner radii. |
+| `src/lib/ui.ts` | The live app's repeated class strings: the page frame, its column, the page title, a card's heading. |
+| `src/app/preview/performance-ui.ts` | Everything the six Performance previews share: colours, the face, the type scale, weights, radii, the menu, the header and the chart heights. |
+
+- **Never write a colour, a font family or a shared size inside a
+  page.** Add a line to the file above and import it.
+- **THE ONE EXCEPTION: spacing used once, on one page, stays on the
+  page.** A margin, a padding or a gap that appears in one place is not
+  a shared value. A dial full of single use numbers is a second place
+  to look, not one place to change.
+- **`design-check.mjs` rule 12 fails the build** on a colour or a font
+  written inside a page, and on a shared size written by hand instead
+  of its token. Per page spacing is deliberately not checked.
+- **ANY chat may edit these three files without asking and without
+  pausing another chat.** They are not locked and they must not be
+  locked again. The existing convention is the whole answer: whoever
+  merges second merges `main` in first.
+- Repeated markup is the same rule. If a block is drawn on more than
+  one page it becomes one component: `performance-shell.tsx`,
+  `performance-menu.tsx`, `performance-header.tsx`, `TabBar.tsx`.
+
+**Today's `/stats` is exempt**, by his ruling of 31 August 2026: the
+rebuilt Performance pages replace it, so it was skipped. It does not
+die, it moves to its own address with his real numbers. Whoever moves
+it should point it at the tokens.
+
 ## When something reaches him that a machine could have caught
 
 The fix is a new rule in `design-check.mjs` or in this repo's docs, not
@@ -80,6 +117,10 @@ failure.
 **Screenshots cannot see everything.** Gestures, motion and absences all
 need a script: `scrubtest.mjs`, `motiontest.mjs`, `pftest.mjs`,
 `jumptest.mjs`.
+
+**A change that is meant to be invisible needs `shotdiff.mjs`.** It
+shoots every page on the old code and the new and compares them pixel
+by pixel. "It looks the same to me" is not a check.
 
 ## Product facts
 
@@ -123,10 +164,10 @@ Keep it current: when a job finishes, delete its line.
   any more: the values are in `performance-ui.ts`, and the shell,
   the menu and the back header are shared components. A chat cannot
   make Home disagree with the other five by editing Home, because
-  Home no longer holds anything of its own. The build check that
-  fails on a colour or a font written inside a page lands with pass
-  two of the same job; until it does, the shared file is what
-  replaces the lock.
+  Home no longer holds anything of its own, and `design-check.mjs`
+  rule 12 fails the build if anyone puts a value back. The file and
+  the check do the job the lock was doing, without stopping a chat
+  working.
   `src/app/preview/performance-home/` is still the ACCEPTED Home and
   the design reference for Lab: do not REDESIGN it without his say.
   Editing it is now ordinary work.
@@ -195,17 +236,6 @@ Keep it current: when a job finishes, delete its line.
     Home ships first and goes live alone: on day one Totals holds
     today's `/stats` content unredesigned and Lab wears a Soon badge.
     A mockup showing a two tab switcher is still built with three.
-- **The design system job, pass two.** Pass one is done: the six
-  Performance previews now read every shared value from
-  `src/app/preview/performance-ui.ts` and draw the shell, the top menu
-  and the back header from three shared components. Pass two does the
-  same for the LIVE pages (Track, Research, Settings, today's
-  `/stats`) and adds the build check. Branch
-  `claude/performance-preview-design-system-j1mihs`. **It touches
-  `src/lib/ui.ts`, `globals.css` and `design-check.mjs`, so do not
-  restructure those in another chat until it lands.** Pass two does
-  NOT change the palette: sizes, fonts, spacing and shapes only.
-
 - **App Store submission**, in a separate chat with the owner. Settings
   and store config, not code.
 

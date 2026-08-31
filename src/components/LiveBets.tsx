@@ -11,7 +11,15 @@ import {
   round2,
 } from "@/lib/format";
 import { SPORT_EMOJI, type BetWithLegs, type LegResult } from "@/lib/types";
-import { CARD, CARD_LINK, INNER, OUTCOME, OUTCOME_LOST, OUTCOME_WON } from "@/lib/ui";
+import {
+  CARD,
+  CARD_LINK,
+  INNER,
+  OUTCOME,
+  OUTCOME_LOST,
+  OUTCOME_WON,
+  SECTION_HEAD,
+} from "@/lib/ui";
 
 interface Props {
   bets: BetWithLegs[];
@@ -166,7 +174,7 @@ export default function LiveBets({ bets }: Props) {
   return (
     <section className={`${CARD} p-4`}>
       <div className="flex items-center justify-between gap-3">
-        <h2 className="flex items-center gap-2 text-[17px] font-bold">
+        <h2 className={`flex items-center gap-2 ${SECTION_HEAD}`}>
           Pending Bets
           {bets.length > 0 && (
             <span className="rounded-full bg-neutral-200/70 px-2.5 py-0.5 font-money text-xs font-semibold tabular-nums text-neutral-600 dark:bg-white/10 dark:text-neutral-300">

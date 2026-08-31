@@ -2,7 +2,15 @@
 
 import Link from "next/link";
 import TabBar from "@/components/TabBar";
-import { CARD, CARD_LINK, INNER } from "@/lib/ui";
+import {
+  CARD,
+  CARD_LINK,
+  COLUMN,
+  INNER,
+  PAGE,
+  PAGE_TITLE,
+  SECTION_HEAD,
+} from "@/lib/ui";
 
 // The Research tab, the third layer of the product.
 //
@@ -96,10 +104,10 @@ function Soon() {
 
 export default function Research({ activeHref }: { activeHref?: string }) {
   return (
-    <main className="flex min-h-svh flex-col px-4 pt-6 pb-2 sm:px-6">
-      <div className="mx-auto w-full max-w-md space-y-4">
+    <main className={PAGE}>
+      <div className={COLUMN}>
         <header>
-          <h1 className="text-[22px] font-bold tracking-tight">Research</h1>
+          <h1 className={PAGE_TITLE}>Research</h1>
           <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
             Everything you want to know before you place a bet. Track is
             where you log it, Performance is where you learn from it.
@@ -132,7 +140,7 @@ export default function Research({ activeHref }: { activeHref?: string }) {
         </div>
 
         <section className={`${CARD} p-4`}>
-          <h2 className="text-[17px] font-bold">Coming to Research</h2>
+          <h2 className={SECTION_HEAD}>Coming to Research</h2>
           <div className="mt-3 space-y-2">
             {DOORS.map((door) => (
               <div

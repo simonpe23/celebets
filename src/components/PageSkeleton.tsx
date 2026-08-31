@@ -1,4 +1,9 @@
 import TabBar from "@/components/TabBar";
+import {
+  COLUMN,
+  PAGE,
+  PAGE_TITLE,
+} from "@/lib/ui";
 
 // WHAT YOU SEE WHILE A PAGE IS ON ITS WAY.
 //
@@ -27,9 +32,9 @@ export default function PageSkeleton({
   cards?: number;
 }) {
   return (
-    <main className="flex min-h-svh flex-col px-4 pt-6 pb-2 sm:px-6">
-      <div className="mx-auto w-full max-w-md space-y-4">
-        <h1 className="text-[22px] font-bold tracking-tight">{title}</h1>
+    <main className={PAGE}>
+      <div className={COLUMN}>
+        <h1 className={PAGE_TITLE}>{title}</h1>
 
         <div className="animate-pulse space-y-4" aria-hidden="true">
           {Array.from({ length: cards }).map((_, i) => (

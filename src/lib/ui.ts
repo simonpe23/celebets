@@ -76,3 +76,42 @@ export const OUTCOME_WON =
   "border-[#22C55E]/35 bg-[#22C55E]/10 text-[#22C55E] active:bg-[#22C55E]/20";
 export const OUTCOME_LOST =
   "border-[#EF4444]/35 bg-[#EF4444]/10 text-[#EF4444] active:bg-[#EF4444]/20";
+
+// ===================================================================
+// THE PAGE'S OWN SHAPES.
+//
+// Added 31 August 2026, pass two of the design system job. His order:
+// "I want to change one thing in one file and have it update across
+// every page. Font, font size, a colour, a height, a corner radius,
+// spacing."
+//
+// The type scale and the corner radii are in `globals.css`, because
+// they are Tailwind's own theme and every page reaches them by name.
+// What is here is the handful of strings the pages were repeating
+// word for word: the page frame, its column, the title at the top and
+// the heading on a card. Each was written out seven to eleven times.
+//
+// Same rule as everywhere else: a value used once, on one page, stays
+// on that page.
+// ===================================================================
+
+// The page frame. Every full screen in the app is this: a column that
+// fills the height, with the tab bar as its last child.
+export const PAGE = "flex min-h-svh flex-col px-4 pt-6 pb-2 sm:px-6";
+
+// The readable column inside it. Phone width, centred on anything
+// wider, with a standard gap between blocks.
+export const COLUMN = "mx-auto w-full max-w-md space-y-4";
+
+// The page's own name, top left. One per screen.
+export const PAGE_TITLE = "text-[22px] font-bold tracking-tight";
+
+// The heading on a card. Track's "Track a bet", Settings' "Your
+// account", Research's "Coming to Research".
+export const SECTION_HEAD = "text-[17px] font-bold";
+
+// A money figure inside a card, in the numeral face. It is the same
+// size as SECTION_HEAD today and deliberately a separate line: a
+// heading and a number are different jobs, and moving one should not
+// move the other.
+export const CARD_FIGURE = "font-money text-[17px] font-bold tabular-nums";
