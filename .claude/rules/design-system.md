@@ -13,6 +13,15 @@ Full reference: `docs/design-system.md`. The rules that bite:
 - **Never restate a design value inline.** Import the component or reuse
   the exact class string. If a value lives in two places, that is the
   bug; fix that first.
+- **Colours, type sizes and corner radii live in three files and
+  nowhere else:** `src/app/globals.css` (the app's scale and radii),
+  `src/lib/ui.ts` (the live app's repeated class strings) and
+  `src/app/preview/performance-ui.ts` (the Performance previews).
+  `design-check` rule 12 fails the build on a colour or a font written
+  inside a page, and on a shared size written by hand.
+  **Spacing used once, on one page, is the exception and stays there.**
+  Any chat may edit those three files without asking or pausing.
+  Today's `/stats` is exempt, by his ruling.
 - **Never change a font without asking.** Family, weight AND size. Words
   are Geist, numbers are Inter Tight through `font-money` at weight 500
   on hero figures. `design-check` rule 8 fails the build if this moves.

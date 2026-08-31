@@ -104,10 +104,12 @@ values and ON for the rest.
 `npm run check` runs, in order:
 
 1. `design-check.mjs`, the design system rules (fonts, purple, money
-   face, em dashes). It reads every `.tsx` under `src/`, previews
-   included, and the em dash rule also reads the docs and the build
-   scripts. The three COLOUR rules are exempt under `/preview` until the
-   new palette is approved. See `.claude/rules/preview-pages.md`.
+   face, em dashes, and rule 12: design values live in the shared files
+   and never inside a page). It reads every `.tsx` under `src/`,
+   previews included, and the em dash rule also reads the docs and the
+   build scripts. The three COLOUR rules are exempt under `/preview`
+   until the new palette is approved. See
+   `.claude/rules/preview-pages.md`.
 2. `synctest.mjs`, the Kalshi money maths and taxonomy round-trips.
 3. `tsc --noEmit`.
 4. `next build`, **required**, because ESLint's rules-of-hooks only
@@ -132,7 +134,7 @@ Standalone scripts:
 | `pftest.mjs <port>` | Every sport is reachable in the Portfolio prototype's pickers. |
 | `synctest.mjs` | Kalshi money splits and competition normalisation. |
 | `jumptest.mjs <port>` | The doors between the Home and Lab previews: row taps arrive with the fact selected, Explore Lab lands empty. |
-| `shotdiff.mjs shoot <port> <dir> [light\|dark]` | Screenshots every Performance preview, both widths, plus ten states a page shot cannot reach. |
+| `shotdiff.mjs shoot <port> <dir> [light\|dark] [perf\|live]` | `perf` shoots the six Performance previews at both widths plus ten states a page shot cannot reach. `live` shoots the app and the public pages, and needs running twice, once per theme. |
 | `shotdiff.mjs diff <a> <b> [marks]` | Compares two of those folders pixel by pixel, and writes the differing pixels out in magenta. |
 
 ## Supabase settings not visible in the repo

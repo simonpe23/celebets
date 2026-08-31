@@ -511,6 +511,161 @@ for (const lock of FONT_LOCK) {
   }
 }
 
+// 12. DESIGN VALUES LIVE IN THE SHARED FILE, NEVER INSIDE A PAGE.
+//
+// Added 31 August 2026, on his order: "Add a check to npm run check
+// that FAILS the build on colours and font families written inside a
+// page. Shared sizes like menu height, chart height, radii and the
+// type scale become tokens. Per page spacing stays free."
+//
+// Why a machine has to do this. The whole design system job exists
+// because a value written in two places eventually says two things.
+// Moving the values into one file fixes today. Only a check stops the
+// next chat putting one back, and his standing rule is that when
+// something reaches him that a machine could have caught, the fix is a
+// rule here, not a promise to be careful.
+//
+// PER PAGE SPACING IS DELIBERATELY FREE. A margin, a padding or a gap
+// used once on one page is not a shared value, and a dial full of
+// single use numbers is a second place to look, not one place to
+// change. Nothing below looks at mt-, mb-, px-, py-, gap- or space-.
+{
+  // The shared files themselves. These are where the values are
+  // SUPPOSED to be written, so they are the one place exempt.
+  const DIALS = [
+    "src/app/preview/performance-ui.ts",
+    "src/lib/ui.ts",
+    "src/app/globals.css",
+    "src/app/layout.tsx",
+  ];
+
+  // The Performance previews, which read `performance-ui.ts`.
+  const isPerfPreview = (f) =>
+    /^src\/app\/preview\/performance-/.test(f) && !DIALS.includes(f);
+
+  // The live app's own screens. The old rejected previews under
+  // /preview are NOT here: they are dead code kept so the history
+  // survives, and holding them to today's system would only mean
+  // editing pages nobody looks at.
+  const isLivePage = (f) =>
+    (f.startsWith("src/components/") || f.startsWith("src/app/")) &&
+    !f.startsWith("src/app/preview/") &&
+    !DIALS.includes(f);
+
+  // TODAY'S /stats IS EXEMPT, and this is a ruling, not an oversight.
+  // He decided on 31 August 2026 to skip it in this job, because the
+  // rebuilt Performance pages replace it. A second ruling the same day
+  // says the page itself does not die: it moves to its own address
+  // with his real numbers. Whoever moves it should point it at the
+  // tokens and delete this line.
+  const STATS_EXEMPT = "src/components/StatsView.tsx";
+
+  // The Performance preview type scale and radii, from
+  // performance-ui.ts. Writing one of these by hand is the bug.
+  const PERF_TOKENS = {
+    "text-[15px]": "T_TITLE",
+    "text-[11.5px]": "T_LEAD",
+    "text-[11px]": "T_STRONG",
+    "text-[10.5px]": "T_LABEL",
+    "text-[10px]": "T_BODY",
+    "text-[9.5px]": "T_SMALL",
+    "text-[9px]": "T_META",
+    "text-[8.5px]": "T_MICRO",
+    "text-[8px]": "T_TINY",
+    "text-[7.6px]": "T_NANO",
+    "rounded-[16px]": "R_CARD",
+    "rounded-[14px]": "R_TILE",
+    "rounded-[13px]": "R_CHIP",
+    "rounded-[12px]": "R_INNER",
+    "rounded-[10px]": "R_SMALL",
+  };
+
+  // The live app's repeated strings, from src/lib/ui.ts.
+  const LIVE_TOKENS = {
+    "flex min-h-svh flex-col px-4 pt-6 pb-2 sm:px-6": "PAGE",
+    "mx-auto w-full max-w-md space-y-4": "COLUMN",
+    "text-[22px] font-bold tracking-tight": "PAGE_TITLE",
+    "font-money text-[17px] font-bold tabular-nums": "CARD_FIGURE",
+    "text-[17px] font-bold": "SECTION_HEAD",
+  };
+
+  const isNote = (line) => {
+    const t = line.trim();
+    return t.startsWith("//") || t.startsWith("*") || t.startsWith("/*");
+  };
+
+  for (const file of files) {
+    const perf = isPerfPreview(file);
+    const live = isLivePage(file) && file !== STATS_EXEMPT;
+    if (!perf && !live) continue;
+    const lines = readFileSync(file, "utf8").split("\n");
+
+    lines.forEach((line, i) => {
+      const n = i + 1;
+      // A comment may name a value. Explaining why a colour was
+      // dropped has to be able to say which colour, and rules 4 and 10
+      // already work this way.
+      if (isNote(line)) return;
+
+      // (a) A COLOUR WRITTEN INSIDE A PAGE.
+      //
+      // For the previews this is any hex at all: every colour they use
+      // is a line in performance-ui.ts, so a hex here means someone
+      // typed one instead of importing it. The live app is already
+      // covered by rule 4, which fails on a hex outside the palette.
+      if (perf && /#[0-9A-Fa-f]{3,8}\b/.test(line)) {
+        const hit = line.match(/#[0-9A-Fa-f]{3,8}\b/)[0];
+        note(file, n, `colour ${hit} written inside a page. Add a token to performance-ui.ts and import it`);
+      }
+      // A colour function is the same offence written differently.
+      // rgba() is NOT checked, because every rgba in these pages is
+      // part of a box shadow, and shadows are not tokenised yet.
+      if (perf && /\b(?:rgb|hsl|hsla)\(/.test(line)) {
+        note(file, n, "colour function inside a page. Add a token to performance-ui.ts and import it");
+      }
+
+      // (b) A FONT FAMILY WRITTEN INSIDE A PAGE.
+      //
+      // The face is chosen in ONE place per surface: layout.tsx for the
+      // app, performance-ui.ts for the Performance previews. Reaching
+      // for one through a var() or an imported token is the correct
+      // mechanism and passes. Naming a family here does not.
+      const fam = line.match(/font-?[fF]amily:\s*("[^"]*"|'[^']*'|`[^`]*`)/);
+      if (fam) {
+        const value = fam[1].slice(1, -1).trim();
+        const ok = value === "inherit" || /^var\(--font-/.test(value);
+        if (!ok) {
+          note(file, n, `font family "${value}" written inside a page. It belongs in layout.tsx or performance-ui.ts`);
+        }
+      }
+      if (/from ["']next\/font/.test(line)) {
+        note(file, n, "next/font loaded inside a page. The face is loaded once, in layout.tsx or performance-ui.ts");
+      }
+
+      // (c) A SHARED SIZE WRITTEN RAW INSTEAD OF ITS TOKEN.
+      const table = perf ? PERF_TOKENS : LIVE_TOKENS;
+      // Look inside the string literals, not at the raw line. A class
+      // list starts right after a quote or a brace, and a boundary
+      // test against the whole line reads that quote as part of the
+      // word and matches nothing. This rule silently caught only
+      // half of what it was meant to until that was tested.
+      const chunks = line.split(/[`"'{}]/);
+      for (const [cls, tok] of Object.entries(table)) {
+        // Whole class only, so text-[10px] never matches inside
+        // text-[10.5px], and a phrase is matched end to end rather
+        // than mid string.
+        const pat = new RegExp(
+          "(?<![\\S])" + cls.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(?![\\S])"
+        );
+        if (chunks.some((c) => pat.test(c))) {
+          note(file, n, `"${cls}" written by hand. Use ${tok}`);
+          break;
+        }
+      }
+    });
+  }
+}
+
 // 11. NO EM DASHES.
 //
 // Added 26 August 2026. The owner named this as a rule the checker

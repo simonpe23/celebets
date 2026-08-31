@@ -2,7 +2,12 @@ import Link from "next/link";
 import { round2, shortSignedMoney } from "@/lib/format";
 import { sportRows, totals } from "@/lib/stats";
 import { type BetWithLegs } from "@/lib/types";
-import { CARD, CARD_LINK } from "@/lib/ui";
+import {
+  CARD,
+  CARD_FIGURE,
+  CARD_LINK,
+  SECTION_HEAD,
+} from "@/lib/ui";
 
 // The Performance Snapshot: four all time figures, plain. v9.3
 // (August 2026) removed the mini sparklines and the sport emoji: four
@@ -58,7 +63,7 @@ export default function SnapshotCard({
   return (
     <section className={`${CARD} p-4`}>
       <div className="flex items-baseline justify-between gap-3">
-        <h2 className="text-[17px] font-bold">Performance Snapshot</h2>
+        <h2 className={SECTION_HEAD}>Performance Snapshot</h2>
         {linked ? (
           <Link
             href="/stats"
@@ -77,7 +82,7 @@ export default function SnapshotCard({
         <div className="pr-2">
           <p className={LABEL}>Net Profit</p>
           <p
-            className={`mt-1 font-money text-[17px] font-bold tabular-nums ${moneyTone(profit)}`}
+            className={`mt-1 ${CARD_FIGURE} ${moneyTone(profit)}`}
           >
             {shortSignedMoney(profit)}
           </p>
@@ -86,7 +91,7 @@ export default function SnapshotCard({
         <div className="px-2">
           <p className={LABEL}>ROI</p>
           <p
-            className={`mt-1 font-money text-[17px] font-bold tabular-nums ${moneyTone(t.roi ?? 0)}`}
+            className={`mt-1 ${CARD_FIGURE} ${moneyTone(t.roi ?? 0)}`}
           >
             {t.roi === null
               ? "-"
@@ -96,7 +101,7 @@ export default function SnapshotCard({
 
         <div className="px-2">
           <p className={LABEL}>Win Rate</p>
-          <p className="mt-1 font-money text-[17px] font-bold tabular-nums">
+          <p className={`mt-1 ${CARD_FIGURE}`}>
             {hitRate === null ? "-" : `${hitRate}%`}
           </p>
         </div>

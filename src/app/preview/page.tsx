@@ -5,6 +5,10 @@ import HomeDashboard from "@/components/HomeDashboard";
 import KalshiAutoSync from "@/components/KalshiAutoSync";
 import TabBar from "@/components/TabBar";
 import { previewBets, DEPOSITS } from "./data";
+import {
+  COLUMN,
+  PAGE,
+} from "@/lib/ui";
 
 // The Track page. Mirrors src/app/app/page.tsx: change one and change
 // the other, or the preview lies.
@@ -25,7 +29,7 @@ export default async function PreviewPage({
   const balance = Math.round((DEPOSITS + netProfit) * 100) / 100;
 
   return (
-    <main className="relative flex min-h-svh flex-col px-4 pt-6 pb-2 sm:px-6">
+    <main className={`relative ${PAGE}`}>
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-64 dark:hidden"
@@ -42,7 +46,7 @@ export default async function PreviewPage({
             "radial-gradient(360px 200px at 80% -60px, rgba(154,87,252,0.14), transparent 70%)",
         }}
       />
-      <div className="mx-auto w-full max-w-md space-y-4">
+      <div className={COLUMN}>
         <header className="flex items-center gap-2.5">
           <BrandMark size={26} />
           <div className="min-w-0 flex-1">

@@ -7,7 +7,16 @@ import { createClient } from "@/lib/supabase/client";
 import MicroLabel from "@/components/MicroLabel";
 import TabBar from "@/components/TabBar";
 import { formatMoney, parseMoney } from "@/lib/format";
-import { BTN, CARD, CARD_LINK, INNER } from "@/lib/ui";
+import {
+  BTN,
+  CARD,
+  CARD_LINK,
+  COLUMN,
+  INNER,
+  PAGE,
+  PAGE_TITLE,
+  SECTION_HEAD,
+} from "@/lib/ui";
 
 // Settings, reached by tapping the avatar. Not a tab: the owner ruled
 // three tabs and only three, and settings is not a place you live in.
@@ -357,8 +366,8 @@ export default function Settings({
   }
 
   return (
-    <main className="flex min-h-svh flex-col px-4 pt-6 pb-2 sm:px-6">
-      <div className="mx-auto w-full max-w-md space-y-4">
+    <main className={PAGE}>
+      <div className={COLUMN}>
         <header className="flex items-center gap-3">
           <Link
             href="/app"
@@ -378,7 +387,7 @@ export default function Settings({
               <path d="M15 5l-7 7 7 7" />
             </svg>
           </Link>
-          <h1 className="text-[22px] font-bold tracking-tight">Settings</h1>
+          <h1 className={PAGE_TITLE}>Settings</h1>
         </header>
 
         {error && (
@@ -388,7 +397,7 @@ export default function Settings({
         )}
 
         <section className={`${CARD} p-4`}>
-          <h2 className="text-[17px] font-bold">Your account</h2>
+          <h2 className={SECTION_HEAD}>Your account</h2>
 
           <label htmlFor="name" className="mt-3 block text-sm font-semibold">
             Name
@@ -425,7 +434,7 @@ export default function Settings({
         </section>
 
         <section className={`${CARD} p-4`}>
-          <h2 className="text-[17px] font-bold">Appearance</h2>
+          <h2 className={SECTION_HEAD}>Appearance</h2>
           <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
             System follows your phone. Light and Dark override it on this
             device.
@@ -447,7 +456,7 @@ export default function Settings({
         </section>
 
         <section className={`${CARD} p-4`}>
-          <h2 className="text-[17px] font-bold">Your data</h2>
+          <h2 className={SECTION_HEAD}>Your data</h2>
           <div className="mt-3 space-y-2">
             <Link
               href="/connect"

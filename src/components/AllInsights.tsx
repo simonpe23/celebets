@@ -4,7 +4,13 @@ import { useEffect, useState } from "react";
 import TabBar from "@/components/TabBar";
 import { buildInsightPool, buildSportInsightPool } from "@/lib/stats";
 import { SPORT_EMOJI, type BetWithLegs, type Sport } from "@/lib/types";
-import { CARD, INNER } from "@/lib/ui";
+import {
+  CARD,
+  COLUMN,
+  INNER,
+  PAGE,
+  PAGE_TITLE,
+} from "@/lib/ui";
 
 // Every statement Actuals can currently make about the user's settled
 // bets. This is the "Show all" behind the insights sheet.
@@ -43,10 +49,10 @@ export default function AllInsights({ bets, sport }: Props) {
   );
 
   return (
-    <main className="flex min-h-svh flex-col px-4 pt-6 pb-2 sm:px-6">
-      <div className="mx-auto w-full max-w-md space-y-4">
+    <main className={PAGE}>
+      <div className={COLUMN}>
         <header>
-          <h1 className="text-[22px] font-bold tracking-tight">
+          <h1 className={PAGE_TITLE}>
             {sport === null
               ? "Your insights"
               : `${SPORT_EMOJI[sport]} ${sport}`}

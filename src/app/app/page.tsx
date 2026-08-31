@@ -8,6 +8,10 @@ import KalshiAutoSync from "@/components/KalshiAutoSync";
 import TabBar from "@/components/TabBar";
 import { netProfitOf, sinceLine } from "@/lib/stats";
 import type { BetWithLegs } from "@/lib/types";
+import {
+  COLUMN,
+  PAGE,
+} from "@/lib/ui";
 
 // Settled bets stay on a pending card with Undo for this long.
 const UNDO_WINDOW_MS = 15 * 60 * 1000;
@@ -97,7 +101,7 @@ export default async function HomePage() {
   const name = fullName ? fullName.split(" ")[0] : null;
 
   return (
-    <main className="relative flex min-h-svh flex-col px-4 pt-6 pb-2 sm:px-6">
+    <main className={`relative ${PAGE}`}>
       {/* A whisper of the landing's purple at the very top of the
           page, and nothing more (v9.3). Two divs because the wash is
           a different purple per theme, like the landing's. */}
@@ -117,7 +121,7 @@ export default async function HomePage() {
             "radial-gradient(360px 200px at 80% -60px, rgba(154,87,252,0.14), transparent 70%)",
         }}
       />
-      <div className="mx-auto w-full max-w-md space-y-4">
+      <div className={COLUMN}>
         {/* The v9.3 header: the A mark, the greeting, the avatar, one
             row. No wordmark, no bell, no emoji: the owner kept this
             shape through every round of the redesign. */}

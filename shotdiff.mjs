@@ -42,6 +42,29 @@ const FREEZE = `*,*::before,*::after{animation:none!important;
   ::-webkit-scrollbar{display:none}
   nextjs-portal{display:none!important}`;
 
+// THE LIVE APP, reached through /preview because the real addresses
+// need a session. The preview renders the SAME components with made up
+// numbers, so this is how Track, Performance, Settings and Research
+// get looked at at all. The public pages are here too, because a
+// change to globals.css reaches them as well.
+//
+// Live pages have dark mode, so shoot them in BOTH themes.
+const LIVE = [
+  ["landing", "/"],
+  ["login", "/login"],
+  ["about", "/about"],
+  ["terms", "/terms"],
+  ["privacy", "/privacy"],
+  ["demo-check", "/demo/check"],
+  ["track", "/preview"],
+  ["stats-today", "/preview/performance"],
+  ["settings", "/preview/settings"],
+  ["research", "/preview/research"],
+  ["insights", "/preview/insights"],
+  ["connect", "/preview/connect"],
+  ["auth", "/preview/auth"],
+];
+
 // The six Performance previews, at both widths.
 const PAGES = [
   ["home", "/preview/performance-home"],
@@ -88,17 +111,46 @@ const STATES = [
   ["totals-month", "/preview/performance-totals?period=month", []],
 ];
 
-async function shoot(port, out, theme) {
+async function shoot(port, out, theme, set) {
   mkdirSync(out, { recursive: true });
   const browser = await chromium.launch({ executablePath: EXE });
   const base = `http://localhost:${port}`;
-  const open = async (width, height) =>
-    browser.newPage({
+  const open = async (width, height) => {
+    const page = await browser.newPage({
       viewport: { width, height },
       deviceScaleFactor: 2,
       reducedMotion: "reduce",
       colorScheme: theme,
     });
+    // THE CLOCK IS PINNED, and it has to be.
+    //
+    // The Performance chart reads `new Date()` after it mounts and
+    // plots up to that moment, so two runs a minute apart draw two
+    // slightly different charts. Without this, today's /stats reported
+    // about 1,800 changed pixels against ITSELF and no comparison
+    // meant anything.
+    await page.clock.setFixedTime(new Date("2026-08-31T12:00:00Z"));
+    return page;
+  };
+
+  if (set === "live") {
+    for (const [size, width, height] of SIZES) {
+      for (const [name, url] of LIVE) {
+        const page = await open(width, height);
+        await page.goto(base + url, { waitUntil: "networkidle" });
+        await page.addStyleTag({ content: FREEZE });
+        await page.waitForTimeout(1600);
+        await page.screenshot({
+          path: `${out}/${name}-${size}-${theme}.png`,
+          fullPage: true,
+        });
+        await page.close();
+        console.log(`shot ${name}-${size}-${theme}`);
+      }
+    }
+    await browser.close();
+    return;
+  }
 
   for (const [size, width, height] of SIZES) {
     for (const [name, url] of PAGES) {
@@ -221,12 +273,14 @@ async function diff(a, b, marks) {
 
 const [mode, ...rest] = process.argv.slice(2);
 if (mode === "shoot") {
-  const [port, out, theme] = rest;
+  const [port, out, theme, set] = rest;
   if (!port || !out) {
-    console.error("usage: node shotdiff.mjs shoot <port> <out dir> [light|dark]");
+    console.error(
+      "usage: node shotdiff.mjs shoot <port> <out dir> [light|dark] [perf|live]"
+    );
     process.exit(2);
   }
-  await shoot(port, out, theme === "dark" ? "dark" : "light");
+  await shoot(port, out, theme === "dark" ? "dark" : "light", set === "live" ? "live" : "perf");
 } else if (mode === "diff") {
   const [a, b, marks] = rest;
   if (!a || !b) {

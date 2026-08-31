@@ -5,7 +5,12 @@ import InsightsPopup, { rollInsights } from "@/components/InsightsPopup";
 import MicroLabel from "@/components/MicroLabel";
 import { keyInsights } from "@/lib/stats";
 import type { BetWithLegs } from "@/lib/types";
-import { CARD, CARD_LINK, INNER } from "@/lib/ui";
+import {
+  CARD,
+  CARD_LINK,
+  INNER,
+  SECTION_HEAD,
+} from "@/lib/ui";
 
 // Key Insights: the second section of Performance, and the reason the
 // page is a performance review rather than a statistics page.
@@ -84,7 +89,7 @@ export default function KeyInsights({ bets }: { bets: BetWithLegs[] }) {
   return (
     <section className={`${CARD} p-4`}>
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-[17px] font-bold">Key Insights</h2>
+        <h2 className={SECTION_HEAD}>Key Insights</h2>
         <button
           type="button"
           onClick={roll}

@@ -2,7 +2,12 @@
 
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import { BTN, CARD, INNER } from "@/lib/ui";
+import {
+  BTN,
+  CARD,
+  INNER,
+  SECTION_HEAD,
+} from "@/lib/ui";
 import { formatMoney } from "@/lib/format";
 import {
   IMPORTING_LIVE,
@@ -388,7 +393,7 @@ export default function ConnectAccounts({
   if (step === "list") {
     return (
       <section className={`${CARD} p-4`}>
-        <h2 className="text-[17px] font-bold">Connect accounts</h2>
+        <h2 className={SECTION_HEAD}>Connect accounts</h2>
         {/* The same honesty rule as the detail card: no promise in the
             present tense until importing works. IMPORTING_LIVE flips
             all of it at once. */}
@@ -460,7 +465,7 @@ export default function ConnectAccounts({
   if (step === "trust") {
     return (
       <section className={`${CARD} p-4`}>
-        <h2 className="text-[17px] font-bold">Before you connect Kalshi</h2>
+        <h2 className={SECTION_HEAD}>Before you connect Kalshi</h2>
         <ul className="mt-3 space-y-3">
           {[
             [
@@ -512,7 +517,7 @@ export default function ConnectAccounts({
           <span className="text-emerald-600 dark:text-emerald-400">
             <CheckIcon />
           </span>
-          <h2 className="text-[17px] font-bold">Kalshi is connected</h2>
+          <h2 className={SECTION_HEAD}>Kalshi is connected</h2>
         </div>
 
         {/* The boom moment, right after connecting. The owner's own

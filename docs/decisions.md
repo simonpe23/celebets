@@ -1349,3 +1349,116 @@ The lock existed because Home held a private copy of everything. It
 holds none now, so a chat editing Home cannot make it disagree with
 the other five. Home is still the accepted design and must not be
 REDESIGNED without his say; editing it is ordinary work.
+
+---
+
+## PASS TWO: THE LIVE PAGES JOIN THE SAME SYSTEM, 31 August 2026
+
+Pass one moved the six Performance previews onto one file. Pass two did
+the same for the live app, and added the check that keeps it that way.
+
+**`/stats` was skipped, his decision.** He asked to be told whether it
+was worth doing before it started. It was not: 683 lines that the
+rebuilt Performance pages replace, holding three hardcoded sizes. His
+words: "Skip /stats in pass two, agreed." It is exempt in
+`design-check.mjs` rule 12, with a note pointing at the ruling.
+
+**And it must not break.** His words in the same message: "today's
+/stats page survives the swap. When the new Performance takes over the
+/stats address, the old page moves to its own address with my real
+numbers, and nothing you do may delete or break it." So it was
+screenshotted before and after, both themes and both widths, like every
+other page. Identical.
+
+### Where the live app's values live now
+
+**`src/app/globals.css`** gained a `@theme` block holding the type scale
+and the corner radii the app actually uses. **The values in it are
+Tailwind's own defaults, restated**, so writing them down changed
+nothing on screen.
+
+That is the point of it. Every page writes `text-sm` and `rounded-xl`,
+and until now those numbers lived inside the Tailwind package, where
+nobody would look and nobody could change them. Changing the app's body
+size is now one line in `globals.css` instead of a sweep across sixty
+files.
+
+The line heights are listed beside their sizes on purpose. Change a
+size without its line height and the text keeps the old leading, which
+reads as a bug months later.
+
+**`src/lib/ui.ts`** gained the strings the pages were repeating word for
+word: `PAGE` (the page frame, written out nine times), `COLUMN` (nine),
+`PAGE_TITLE` (seven), `SECTION_HEAD` (eleven) and `CARD_FIGURE`.
+
+`CARD_FIGURE` and `SECTION_HEAD` are the same size today and are
+deliberately two lines. A heading and a money figure are different
+jobs, and moving one should not move the other.
+
+### What was NOT done, and why
+
+- **The palette was not touched**, his instruction: "This job shares
+  sizes, fonts, spacing and shapes, not the palette decision, which I
+  make separately."
+- **`rounded-full` is not a token.** It is a shape, not a measurement.
+- **Shadows are not tokenised.** `rgba(24,20,50,0.07)` appears eleven
+  times in the Performance previews as a box shadow. It is a real
+  shared value and a real gap, raised rather than fixed, because he
+  named colours and fonts for this job and a shadow is neither.
+- **The old rejected previews under `/preview` were left alone.** They
+  are dead code kept so the history survives.
+- **Greeting's `text-[22px]`** on Track was left alone: it carries a
+  different leading and tracking to the page title, so it is not the
+  same thing wearing the same size.
+
+### The check, `design-check.mjs` rule 12
+
+His order: "Add a check to npm run check that FAILS the build on colours
+and font families written inside a page. Shared sizes like menu height,
+chart height, radii and the type scale become tokens. Per page spacing
+stays free."
+
+**WHAT IT CATCHES.** A hex or an `rgb()`/`hsl()` written inside a
+Performance preview page. A font family named inside any page, and
+`next/font` loaded anywhere but the two files that own the faces. A type
+scale step or a radius written by hand in a preview instead of its
+token. The live app's page frame, column, page title or card heading
+written out by hand instead of `PAGE`, `COLUMN`, `PAGE_TITLE` or
+`SECTION_HEAD`.
+
+**WHAT IT CANNOT CATCH.** A colour hidden inside a box shadow, because
+every `rgba()` in these pages is a shadow and shadows are not tokenised
+yet. A menu or a chart drawn from scratch rather than from its shared
+component, because a line by line checker cannot see that a block of
+markup is a second copy of another block. A value put in the shared file
+that should never have been shared. And a wrong value: it checks that a
+number came from the right place, never that the number is right. Only
+his eye does that.
+
+**Per page spacing is deliberately free.** Nothing in the rule looks at
+`mt-`, `mb-`, `px-`, `py-`, `gap-` or `space-`.
+
+**The rule was tested by breaking the code on purpose**, ten times:
+seven violations that must fail the build, and three legitimate things
+that must not (a `var(--font-)` reference, per page spacing, and a one
+off size). All ten behaved. A check that passes on clean code proves
+nothing.
+
+### How "invisible" was proved, again
+
+`shotdiff.mjs` grew a live page set: the landing page, login, about,
+terms, privacy, the demo door, and Track, Performance, Settings,
+Research, Insights, Connect and Auth through their previews. **Both
+themes, both widths: 76 screenshots each side, all identical.**
+
+**The clock had to be pinned to make that possible.** The Performance
+chart reads `new Date()` after it mounts and plots up to that moment, so
+two runs a minute apart drew two different charts and today's `/stats`
+reported about 1,800 changed pixels against itself. Playwright's clock
+is now fixed before every shot.
+
+**One thing to know for next time:** running `next build` while a dev
+server is up on the same folder wrecks that server's stylesheet, and the
+pages then render with no CSS at all. It looked exactly like a
+catastrophic design break for about ten minutes. Stop the dev server
+before building.
