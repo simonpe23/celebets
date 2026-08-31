@@ -78,15 +78,15 @@ old words, and every provider mapper points at them.
 4. **The "This month" label on Home is gone**, so that inconsistency
    is closed, but the period is still not written into the address
    when it changes on Home. A shared link does not carry the window.
-5. **Home shows no ROI and no record anywhere.** Both came off the
-   chart on 31 August 2026 at his instruction, and Home's four KPIs
-   are Bets, Hit rate, Wagered and Returned. Lab keeps both in its
-   KPI row. Flagged to him; he has not said to put either back.
-6. **Lab's sentence ignores what you selected.** It names the whole
+5. **Lab's sentence ignores what you selected.** It names the whole
    record's biggest leak, the same sentence Home shows, because that
    is the honest fix and it needed no product decision. Whether Lab's
    sentence should speak about the current selection instead has not
    been asked. CLAUDE's call, his to overturn.
+6. **Wagered and Returned are no longer on Home.** They were two of
+   its four KPIs until 31 August 2026, when he replaced the row with
+   Lab's four. Totals still shows both. Nobody has said Home should
+   carry them anywhere else.
 
 
 

@@ -16,7 +16,9 @@
 
 import {
   dedupeFacts,
+  hitOf,
   money,
+  roiOf,
   type Chip,
   type Engine,
   type Fact,
@@ -179,16 +181,27 @@ export function buildHomeView(engine: Engine): HomeView {
 
   const scale = axis(series);
   const picks = whole.wins + whole.losses;
-  const returned = whole.profit + whole.staked;
 
   return {
     netProfit: money(whole.profit),
     positive: whole.profit >= 0,
+    // HOME'S FOUR KPIs MIRROR LAB'S, 31 August 2026. His words: "i
+    // want to change the kpi row on home and mirror labs", with a
+    // screenshot of Lab's row, and the four he wants named: Bets,
+    // Record, Hit Rate, ROI. They were Bets, Hit rate, Wagered and
+    // Returned.
+    //
+    // Wagered and Returned are not lost: Totals shows both. What Home
+    // gains is the ROI and the record that came off the chart in the
+    // edit before this one, so the two figures are back on the page.
+    //
+    // The formatters are the engine's own, the ones Lab calls, so the
+    // two rows cannot print the same record two different ways.
     kpis: [
       { value: String(picks), label: "Bets" },
-      { value: `${Math.round(hitPct(whole))}%`, label: "Hit rate" },
-      { value: compact(whole.staked), label: "Wagered" },
-      { value: compact(returned), label: "Returned" },
+      { value: recordOf(whole), label: "Record" },
+      { value: hitOf(whole), label: "Hit rate" },
+      { value: picks > 0 ? roiOf(whole) : "-", label: "ROI" },
     ],
     rows,
     insight: leakInsight(engine, facts),

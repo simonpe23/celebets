@@ -139,7 +139,7 @@ Standalone scripts:
 | `motiontest.mjs <port>` | Page and sheet motion, chart draw, counting numbers, reduced-motion. |
 | `pftest.mjs <port>` | Every sport is reachable in the Portfolio prototype's pickers. |
 | `synctest.mjs` | Kalshi money splits and competition normalisation. |
-| `jumptest.mjs <port>` | The doors between the Home and Lab previews: row taps arrive with the fact selected, Explore Lab lands empty. |
+| `jumptest.mjs <port>` | The doors between the Home and Lab previews: row taps arrive with the fact selected, Explore Lab lands empty, and Home's KPI row mirrors Lab's cell for cell. |
 | `periodtest.mjs <port>` | The Performance period filter really filters: every period changes the numbers, Custom takes two dates, and the window survives a tab switch. |
 | `instanttest.mjs <port>` | NOTHING under Performance loads a page. Every door between the six views (menu tabs, ranked rows, the Heat Map pill and its tiles, See these bets, Compare, See all bets, every back arrow) causes ZERO server page requests, each view's own address still opens it, and the chosen window travels. |
 | `shotdiff.mjs shoot <port> <dir> [light\|dark] [perf\|live]` | `perf` shoots the six Performance previews at both widths plus ten states a page shot cannot reach. `live` shoots the app and the public pages, and needs running twice, once per theme. |

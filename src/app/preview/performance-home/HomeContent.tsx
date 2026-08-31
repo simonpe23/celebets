@@ -134,11 +134,15 @@ function rowIcon(row: HomeRow): ReactNode {
 
 // The four fact icons, in the order the KPI row draws them. The
 // figures beside them are computed, not typed.
+// The four KPI icons, in Lab's order and wearing Lab's icons, since
+// 31 August 2026: "i want to change the kpi row on home and mirror
+// labs." Bets, Record, Hit rate, ROI. The values are built in
+// `home-model.ts`; this list only has to stay in step with them.
 const FACT_ICONS = [
   <FactNote key="bets" size={19} />,
+  <FactWave key="record" size={19} />,
   <FactTarget key="hit" size={19} />,
-  <FactTrend key="wagered" size={19} />,
-  <FactWave key="returned" size={19} />,
+  <FactTrend key="roi" size={19} />,
 ];
 
 export default function HomeContent({
@@ -278,9 +282,12 @@ export default function HomeContent({
         <div className="min-h-[16px] grow" />
 
         {/* One cohesive KPI row on the wash, groups packed closer by
-            his 29 August edit 7. */}
+            his 29 August edit 7. The divider positions and the four
+            column widths are LAB'S, so the two rows line up: his
+            instruction of 31 August 2026 was to mirror Lab, and the
+            labels changed length when the four figures changed. */}
         <div className="relative flex items-center pl-[33px]">
-          {["90px", "172px", "260px"].map((left) => (
+          {["96px", "188px", "284px"].map((left) => (
             <span
               key={left}
               className="absolute top-1/2 h-[28px] w-px -translate-y-1/2"
@@ -291,7 +298,7 @@ export default function HomeContent({
             <div
               key={f.label}
               className="flex items-center gap-[6px]"
-              style={{ width: ["74px", "78px", "86px", "auto"][i] }}
+              style={{ width: ["78px", "92px", "96px", "auto"][i] }}
             >
               <span className="relative top-[-3px]">{FACT_ICONS[i]}</span>
               <div>

@@ -20,6 +20,7 @@ const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 let fails = 0;
 
 const HOME = `http://localhost:${port}/preview/performance-home`;
+const P_LAB = `http://localhost:${port}/preview/performance-lab`;
 
 // What Home currently ranks: the name and record of every row, plus
 // the Lab address each one points at.
@@ -100,11 +101,51 @@ console.log(
 );
 if (!okEmpty) fails++;
 
+// HOME'S KPI ROW IS LAB'S. His instruction, 31 August 2026: "i want
+// to change the kpi row on home and mirror labs." Two rows that are
+// meant to be the same row drift the moment one is edited alone, and
+// a screenshot of one page cannot see the other, so read both and
+// compare them cell by cell.
+const kpiRow = () =>
+  page.evaluate(() => {
+    const label = [...document.querySelectorAll("p")].find(
+      (e) => (e.textContent || "").trim() === "Bets"
+    );
+    const row = label?.closest("div")?.parentElement?.parentElement;
+    if (!row) return null;
+    return [...row.querySelectorAll(":scope > div")].map((d) => {
+      const ps = d.querySelectorAll("p");
+      const b = d.getBoundingClientRect();
+      return `${ps[1]?.textContent}=${ps[0]?.textContent}@${Math.round(b.left)}`;
+    });
+  });
+
+// Lab is already open and unscoped from the check above, so both
+// pages are describing the same whole record.
+const labKpis = await kpiRow();
+await page.goto(HOME, { waitUntil: "networkidle" });
+const homeKpis = await kpiRow();
+const okKpi =
+  homeKpis !== null &&
+  labKpis !== null &&
+  homeKpis.length === 4 &&
+  homeKpis.join(" | ") === labKpis.join(" | ");
+console.log(
+  `${okKpi ? "PASS" : "FAIL"} Home's KPI row mirrors Lab's ` +
+    `(${(homeKpis || []).join(", ") || "nothing"})`
+);
+if (!okKpi) {
+  fails++;
+  console.log(`     Lab reads: ${(labKpis || []).join(", ") || "nothing"}`);
+}
+
 // The top menus link both ways.
+await page.goto(P_LAB, { waitUntil: "networkidle" });
+await page.waitForTimeout(400);
 await page.click('a:has-text("Home")');
 await page.waitForURL("**/preview/performance-home**");
 console.log("PASS Lab menu returns to Home");
 
 await browser.close();
-console.log(fails ? `${fails} jump(s) broken` : `All ${rows.length + 1} doors work.`);
+console.log(fails ? `${fails} check(s) broken` : `All ${rows.length + 1} doors work, and the two KPI rows agree.`);
 process.exit(fails ? 1 : 0);
