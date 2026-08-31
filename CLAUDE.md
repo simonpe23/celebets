@@ -122,6 +122,18 @@ need a script: `scrubtest.mjs`, `motiontest.mjs`, `pftest.mjs`,
 shoots every page on the old code and the new and compares them pixel
 by pixel. "It looks the same to me" is not a check.
 
+## ONE CHAT OWNS THE PERFORMANCE AREA
+
+Ruled 31 August 2026: "one chat from now." Two chats editing the same
+six files made him referee merge conflicts he did not create and could
+not read, three times in one evening. He was right and said so first:
+"i absolutely hate that i have 3 chats editing this app."
+
+**One chat owns `src/app/preview/` and `src/app/stats/`, design and
+numbers both.** The Lab chat has stopped. Do not split this again: the
+folder rules were only ever a traffic convention for concurrent chats,
+never a rule about who may do what.
+
 ## `src/app/preview/performance-*` IS LIVE CODE
 
 **Do not treat that folder as a sandbox. It is not one any more.**

@@ -1282,6 +1282,22 @@ most of your losses" on every record, including his live one, where it
 may simply be false. Home's version is computed from the bets
 (`view.insight`). Told to him 31 August 2026; his call whether to fix.
 
+**ONE CHAT OWNS PERFORMANCE FROM NOW. Ruled 31 August 2026**, his
+words: "one chat from now." And before it: "i absolutely hate that i
+have 3 chats editing this app. i have to redo the same thing 3 times
+and i guess it will be built in different places. this setup is not
+nice." Then, when the conflicts arrived: "its driving me insane and im
+totally out of control."
+
+**What actually went wrong, so nobody repeats it.** Two chats edited
+the same six files. One renamed `HomeApp.tsx` to `HomeContent.tsx`
+while the other was editing the old name, so GitHub refused both
+merges and handed HIM the conflict. He cannot read a conflict and
+should never be asked to.
+
+**The rule: one chat owns the whole area, design and numbers.** A
+second chat may not touch `src/app/preview/` or `src/app/stats/`.
+
 ## Process
 
 **Past reactions are not constraints.** Said twice in two days: "just

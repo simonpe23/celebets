@@ -70,6 +70,8 @@ export const RED = "#FC1B1D";
 export const PAGE_BG = "#FBFBFC";
 export const CARD = "#FFFFFF";
 export const CARD_WINNER = "#FCFBFE";
+// The quiet band behind one insight inside the sheet.
+export const INSIGHT_ROW = "#FAFAFC";
 export const PILL_LAV = "#F0EEFB";
 export const SEL_BG = "#F0EAFD";
 export const MENU_TRACK = "#F2F3F7";
