@@ -21,7 +21,13 @@ import {
   W_BOLD,
   W_SEMI,
 } from "../performance-ui";
-import { PERIODS, labelOf, type PeriodKey } from "./period";
+import {
+  EMPTY_RANGE,
+  PERIODS,
+  labelOf,
+  type CustomRange,
+  type PeriodKey,
+} from "./period";
 
 export default function PeriodPill({
   period,
@@ -30,6 +36,8 @@ export default function PeriodPill({
   setOpen,
   align = "right",
   size = "pill",
+  range = EMPTY_RANGE,
+  onRange,
 }: {
   period: PeriodKey;
   onPick: (key: PeriodKey) => void;
@@ -37,6 +45,9 @@ export default function PeriodPill({
   setOpen: (v: boolean) => void;
   align?: "left" | "right";
   size?: "pill" | "plain";
+  /** The custom window. Either end may be empty, meaning open there. */
+  range?: CustomRange;
+  onRange?: (r: CustomRange) => void;
 }) {
   return (
     <div className="relative">
@@ -58,7 +69,7 @@ export default function PeriodPill({
             : { color: SELECTOR_INK }
         }
       >
-        {labelOf(period)}
+        {labelOf(period, range)}
         <ChevDown size={size === "pill" ? 11 : 10} />
       </button>
       {open ? (
@@ -71,7 +82,9 @@ export default function PeriodPill({
           <div
             className={`absolute ${
               align === "right" ? "right-0" : "left-0"
-            } top-[26px] z-20 w-[136px] ${R_INNER} py-[5px]`}
+            } top-[26px] z-20 ${
+              period === "custom" ? "w-[188px]" : "w-[136px]"
+            } ${R_INNER} py-[5px]`}
             style={{
               background: CARD,
               boxShadow: `0 10px 24px rgba(28,24,58,0.14), inset 0 0 0 1px ${HAIRLINE}`,
@@ -81,6 +94,12 @@ export default function PeriodPill({
               <button
                 key={p.key}
                 onClick={() => {
+                  // Custom keeps the menu open: the two dates are
+                  // chosen in it, and closing first would hide them.
+                  if (p.key === "custom") {
+                    onPick("custom");
+                    return;
+                  }
                   setOpen(false);
                   onPick(p.key);
                 }}
@@ -91,6 +110,43 @@ export default function PeriodPill({
                 {p.key === period ? <Chev size={9} color={INDIGO} /> : null}
               </button>
             ))}
+            {period === "custom" && onRange ? (
+              <div
+                className="mt-[3px] px-[13px] pb-[7px] pt-[7px]"
+                style={{ borderTop: `1px solid ${HAIRLINE}` }}
+              >
+                {(["from", "to"] as const).map((end) => (
+                  <label key={end} className="mb-[5px] block">
+                    <span
+                      className={`mb-[2px] block ${T_LABEL} ${W_SEMI}`}
+                      style={{ color: NET_LABEL }}
+                    >
+                      {end === "from" ? "From" : "To"}
+                    </span>
+                    <input
+                      type="date"
+                      value={range[end]}
+                      onChange={(e) =>
+                        onRange({ ...range, [end]: e.target.value })
+                      }
+                      className={`w-full rounded-[8px] px-[7px] py-[5px] ${T_LABEL} ${W_SEMI}`}
+                      style={{
+                        color: SELECTOR_INK,
+                        background: CARD,
+                        boxShadow: `inset 0 0 0 1px ${HAIRLINE}`,
+                      }}
+                    />
+                  </label>
+                ))}
+                <button
+                  onClick={() => setOpen(false)}
+                  className={`mt-[2px] w-full rounded-[8px] py-[6px] ${T_LABEL} ${W_BOLD} text-white`}
+                  style={{ background: INDIGO }}
+                >
+                  Done
+                </button>
+              </div>
+            ) : null}
           </div>
         </>
       ) : null}
