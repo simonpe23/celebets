@@ -9,7 +9,14 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { GREY_TEXT, INDIGO, ZERO_LINE } from "../performance-ui";
+import {
+  CHART_H_LAB,
+  GREY_TEXT,
+  INDIGO,
+  T_TINY,
+  W_SEMI,
+  ZERO_LINE,
+} from "../performance-ui";
 
 export type ChartPoint = { t: number; v: number };
 
@@ -32,7 +39,7 @@ function dateTick(t: number): string {
 
 export function LabChart({ points }: { points: ChartPoint[] }) {
   const W = 313.6;
-  const H = 98;
+  const H = CHART_H_LAB;
   const pathRef = useRef<SVGPathElement>(null);
   const [drawn, setDrawn] = useState(false);
   const [len, setLen] = useState(0);
@@ -128,7 +135,7 @@ export function LabChart({ points }: { points: ChartPoint[] }) {
         </svg>
       </div>
       <div
-        className="absolute right-0 top-0 h-full w-[38px] text-[8px] font-semibold"
+        className={`absolute right-0 top-0 h-full w-[38px] ${T_TINY} ${W_SEMI}`}
         style={{ color: GREY_TEXT }}
       >
         {ticks.map((v) => (
@@ -142,7 +149,7 @@ export function LabChart({ points }: { points: ChartPoint[] }) {
         ))}
       </div>
       <div
-        className="mt-[12px] flex justify-between pl-[24px] pr-[52px] text-[7px] font-semibold"
+        className={`mt-[12px] flex justify-between pl-[24px] pr-[52px] text-[7px] ${W_SEMI}`}
         style={{ color: GREY_TEXT }}
       >
         {labelT.map((t, i) => (

@@ -22,6 +22,26 @@
 //    Performance page now reads its colours from here and nothing
 //    holds a private copy.
 
+// THE FACE.
+//
+// Figtree, on every Performance page. It used to be loaded six times,
+// once inside each page.tsx, with the same three lines copied out.
+// One call now, and the pages import the result, so the font family
+// is a single line in a single file: his rule, and the answer to
+// "never change a font without permission" being impossible to obey
+// when the font is written down six times.
+//
+// FONT_CLASS goes on the page wrapper, FONT_FAMILY into its style.
+import { Figtree } from "next/font/google";
+
+const fig = Figtree({
+  subsets: ["latin"],
+  variable: "--font-fig",
+});
+
+export const FONT_CLASS = fig.variable;
+export const FONT_FAMILY = "var(--font-fig)";
+
 // The brand. INDIGO draws text, lines and icons; INDIGO_FILL fills
 // solid shapes like the active pill.
 export const INDIGO = "#3614F0";
@@ -156,3 +176,120 @@ export const TAB_GLYPH = "#26262B";
 // The near invisible contour lines and dot grid inside Home's wash.
 export const WASH_LINE = "#C9BCE8";
 export const WASH_DOT = "#CFC3EA";
+
+// ===================================================================
+// THE SIZE AND SHAPE DIAL
+//
+// Added 30 August 2026, on his order: "I want to change one thing in
+// one file and have it update across every page. Font, font size, a
+// colour, a height, a corner radius, spacing."
+//
+// The colours above already worked that way. Nothing else did. The
+// type sizes were typed into the pages 152 times, the page shell was
+// copied into all six page.tsx files, and the top menu was written
+// out twice. So a font change meant twenty edits and a missed one
+// shipped two sizes side by side.
+//
+// THE RULE FOR EVERY VALUE BELOW: it is here because MORE THAN ONE
+// Performance page uses it. A number used once, on one page, stays on
+// that page. A dial full of single use values is a second place to
+// look, not one place to change.
+//
+// These are Tailwind class strings, not raw numbers, so a page keeps
+// writing className and nothing had to be rewritten as an inline
+// style. Tailwind v4 reads .ts files, so a size written here builds
+// its CSS exactly as it did when it sat in the page. That was proved
+// with a real build before any of this was written, not assumed.
+// ===================================================================
+
+// THE TYPE SCALE.
+//
+// Ten steps, every one of them already on three or more pages. Size
+// only: the weight is a separate token below, because the same size
+// carries both weights depending on the job.
+//
+// Change a line here and that step moves on every Performance page at
+// once. That is the whole point of the file.
+export const T_TITLE = "text-[15px]"; // a screen's own title, in a back header
+export const T_LEAD = "text-[11.5px]"; // a card's lead line
+export const T_STRONG = "text-[11px]"; // a figure or a heading inside a card
+export const T_LABEL = "text-[10.5px]"; // the workhorse: menu tabs, tab bar labels, row names
+export const T_BODY = "text-[10px]"; // ordinary text under a heading
+export const T_SMALL = "text-[9.5px]"; // a caption, a chip, a second figure
+export const T_META = "text-[9px]"; // a record, a date, a unit
+export const T_MICRO = "text-[8.5px]"; // a note beside a figure
+export const T_TINY = "text-[8px]"; // a chart's axis tick
+export const T_NANO = "text-[7.6px]"; // the smallest mark on a chart
+
+// THE TWO WEIGHTS. Performance uses these and nothing else: no
+// regular, no medium, no black. Both are here so a weight change is
+// one edit, which is the rule he set after a font weight moved on the
+// live site and went unnoticed for days.
+export const W_SEMI = "font-semibold";
+export const W_BOLD = "font-bold";
+
+// THE CORNERS.
+//
+// `rounded-full` is deliberately NOT a token. It is a shape, not a
+// measurement: a pill stops being a pill the moment it carries a
+// number, so changing it in one place would be a redesign, not a
+// tweak.
+export const R_CARD = "rounded-[16px]"; // a card on the page
+export const R_TILE = "rounded-[14px]"; // a tile inside a card
+export const R_CHIP = "rounded-[13px]"; // a chip in a picker
+export const R_INNER = "rounded-[12px]"; // a row inside a tile
+export const R_SMALL = "rounded-[10px]"; // the smallest boxed thing
+export const R_BAR = "rounded-2xl"; // the floating tab bar
+
+// THE PAGE COLUMN. Every Performance page is a 390pt phone column
+// centred on whatever screen it lands on.
+export const COL_W = "max-w-[390px]";
+
+// The bottom spacer inside that column, which decides how leftover
+// height is shared out. Home and Lab distribute it (they have their
+// own growing gaps higher up and this one has to lose); the other
+// four simply hold a floor.
+export const TAIL_TALL = "min-h-[8px] grow-[3]";
+export const TAIL_SHORT = "min-h-[6px] grow";
+export type PerfTail = typeof TAIL_TALL | typeof TAIL_SHORT;
+
+// THE FLOATING TAB BAR, which is identical on all six pages.
+export const TAB_BAR_W = "max-w-[382px]";
+export const TAB_ICON = 24;
+
+// THE HOME / LAB / TOTALS MENU.
+//
+// Label centres and pill positions are the accepted Home's, measured
+// off his sheet. They are here rather than in the component because
+// menu height is one of the things he named.
+export const MENU_H = "h-[36px]";
+export const MENU_PILL_H = "h-[28px]";
+export const MENU_PILL_W = "w-[110px]";
+export const MENU_INSET = "mx-[14px] mt-[7px]";
+export const MENU_PILL_TOP = "top-[4px]";
+
+// THE BACK HEADER on Compare, All Bets and the Heat Map.
+//
+// Compare's is four pixels taller than the other two. That is drift,
+// not a decision: the three were written out separately and one of
+// them grew. It is kept exactly as it is because this job may not
+// change how anything looks. Whoever redesigns Compare should collapse
+// the two into one.
+export const HEAD_H = "h-[40px]";
+// Split, because All Bets balances the row with an empty box of the
+// button's own width. Written twice, the two would drift.
+export const HEAD_BTN_W = "w-[34px]";
+export const HEAD_BTN = `h-[34px] ${HEAD_BTN_W}`;
+export const HEAD_H_TALL = "h-[44px]";
+export const HEAD_BTN_TALL = "h-[36px] w-[36px]";
+
+// CHART HEIGHTS.
+//
+// These are NOT one shared number today: Home and Lab draw at 98, the
+// Totals hero at 92, Compare at 132. They sit here so all four are in
+// one place and a change is one edit, not so that they are equal. He
+// approved keeping them different.
+export const CHART_H_HOME = 98;
+export const CHART_H_LAB = 98;
+export const CHART_H_TOTALS = 92;
+export const CHART_H_COMPARE = 132;

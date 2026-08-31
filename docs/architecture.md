@@ -115,6 +115,14 @@ values and ON for the rest.
 5. `sitecheck.mjs`, loads every page in both themes and reads what
    actually rendered.
 
+**Proving a change is invisible.** Some jobs are meant to change
+nothing on screen: moving a value into a shared file, pulling a
+repeated block into one component. `shotdiff.mjs` is the check for
+that. Run one dev server on a git worktree of the old code
+(`git worktree add /tmp/base HEAD`) and one on the new, shoot both,
+diff them. It reports the number of pixels that moved, so "it looks
+the same to me" is never the answer.
+
 Standalone scripts:
 
 | Script | Proves |
@@ -124,6 +132,8 @@ Standalone scripts:
 | `pftest.mjs <port>` | Every sport is reachable in the Portfolio prototype's pickers. |
 | `synctest.mjs` | Kalshi money splits and competition normalisation. |
 | `jumptest.mjs <port>` | The doors between the Home and Lab previews: row taps arrive with the fact selected, Explore Lab lands empty. |
+| `shotdiff.mjs shoot <port> <dir> [light\|dark]` | Screenshots every Performance preview, both widths, plus ten states a page shot cannot reach. |
+| `shotdiff.mjs diff <a> <b> [marks]` | Compares two of those folders pixel by pixel, and writes the differing pixels out in magenta. |
 
 ## Supabase settings not visible in the repo
 

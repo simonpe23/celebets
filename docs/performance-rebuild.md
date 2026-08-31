@@ -45,6 +45,36 @@ serves the old Analytics page.
   this chat's branch, he merges, then reviews on his phone at the
   preview address. Ship order: Home first, then Lab, then Totals.
 
+## The shared design file, 31 August 2026
+
+All six preview pages read `src/app/preview/performance-ui.ts` for
+every value more than one of them uses: the colours, the Figtree face,
+a ten step type scale, the two weights, six radii, the page column,
+the tab bar, the menu's height and pill, the two back header shapes
+and the four chart heights. Spacing used once on one page stays on the
+page.
+
+Three blocks that used to be copied are now one component each:
+`performance-shell.tsx` (the column, the face and the tab bar, which
+was byte identical in all six `page.tsx` files),
+`performance-menu.tsx` (Home / Lab / Totals, which existed twice) and
+`performance-header.tsx` (the back header, which existed three times
+and had already drifted).
+
+`icons.tsx` moved from `performance-home/` to
+`src/app/preview/performance-icons.tsx`. Six pages import it.
+
+**Nothing looks different.** Proved with `shotdiff.mjs`: 24
+screenshots of the old code and the new, compared pixel by pixel, all
+identical. `jumptest.mjs` passed 46 doors.
+
+**The lock on `performance-home/` is gone**, permanently. See
+`docs/decisions.md`.
+
+Still to come, pass two of the same job: the live pages (Track,
+Research, Settings, today's `/stats`) and a build check that fails on
+a colour or a font written inside a page.
+
 ## Where the older work lives
 
 - `src/app/preview/pf/`, the Portfolio prototype, walkable end to end.

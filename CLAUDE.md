@@ -115,11 +115,24 @@ Keep it current: when a job finishes, delete its line.
 - **The Performance page rebuild.** Three tabs inside `/stats`: Home,
   Lab, Totals. **Do not redesign `/stats`, `StatsView.tsx` or anything
   under `src/app/preview/pf/` in another chat.**
-  **`src/app/preview/performance-home/` is the ACCEPTED Home and the
-  design reference for Lab: read it, never edit it from another
-  chat.** **`src/app/preview/performance-lab/` is the ACCEPTED Lab:
-  same rule, read it, never edit it from another chat.** The Lab
-  chat owns both that folder and Compare, on branch
+  **THE LOCK ON `src/app/preview/performance-home/` IS GONE**,
+  permanently, on his order of 31 August 2026. It was there because
+  Home held its own private copy of every colour, size and shared
+  block, so a second chat editing that folder could silently make
+  Home disagree with the other five pages. Home holds none of that
+  any more: the values are in `performance-ui.ts`, and the shell,
+  the menu and the back header are shared components. A chat cannot
+  make Home disagree with the other five by editing Home, because
+  Home no longer holds anything of its own. The build check that
+  fails on a colour or a font written inside a page lands with pass
+  two of the same job; until it does, the shared file is what
+  replaces the lock.
+  `src/app/preview/performance-home/` is still the ACCEPTED Home and
+  the design reference for Lab: do not REDESIGN it without his say.
+  Editing it is now ordinary work.
+  **`src/app/preview/performance-lab/` is the ACCEPTED Lab: same
+  rule, do not redesign it from another chat.** The Lab chat owns
+  that folder and Compare, on branch
   `claude/actuals-lab-redesign-onv3s8`. It also edits
   `sitecheck.mjs` (the PREVIEW list) and `jumptest.mjs`.
   - The thinking is settled and written: read
@@ -154,13 +167,21 @@ Keep it current: when a job finishes, delete its line.
     **Every control on the five preview pages was clicked and
     logged, 29 August 2026.** What works and what is still drawn
     but inert is listed in `docs/performance-rebuild.md`.
-    **Colours: every Performance page reads one dial**,
-    `src/app/preview/performance-ui.ts`. Home, Lab, Totals, Compare,
-    the Heat Map and All Bets all import from it and none of them
-    holds a colour of its own. Home joined and the file moved out of
-    the `performance-lab` folder on 30 August 2026, both on his
-    order, with zero visual change. **Never write a hex in a
-    Performance preview file. Add a line to the dial and import it.**
+    **Every Performance page reads one dial**,
+    `src/app/preview/performance-ui.ts`. Colours joined it on 30
+    August 2026; the font, the type scale, the two weights, the
+    radii and the menu, header and chart heights joined it on 31
+    August. Home, Lab, Totals, Compare, the Heat Map and All Bets
+    all import from it and none of them holds a design value of its
+    own. **Never write a hex, a font or a shared size inside a
+    Performance preview file. Add a line to the dial and import
+    it.** One off spacing used once on one page is the exception and
+    stays on the page.
+    **Three pieces are shared components, not copies:**
+    `performance-shell.tsx` (the column, the face and the tab bar),
+    `performance-menu.tsx` (Home / Lab / Totals) and
+    `performance-header.tsx` (the back header). Change them there,
+    not per page.
     What has NOT happened is the colour work itself: he parked the
     palette on 29 August 2026, "even after the pages are live".
     The three menu tabs reach each other.
@@ -174,6 +195,17 @@ Keep it current: when a job finishes, delete its line.
     Home ships first and goes live alone: on day one Totals holds
     today's `/stats` content unredesigned and Lab wears a Soon badge.
     A mockup showing a two tab switcher is still built with three.
+- **The design system job, pass two.** Pass one is done: the six
+  Performance previews now read every shared value from
+  `src/app/preview/performance-ui.ts` and draw the shell, the top menu
+  and the back header from three shared components. Pass two does the
+  same for the LIVE pages (Track, Research, Settings, today's
+  `/stats`) and adds the build check. Branch
+  `claude/performance-preview-design-system-j1mihs`. **It touches
+  `src/lib/ui.ts`, `globals.css` and `design-check.mjs`, so do not
+  restructure those in another chat until it lands.** Pass two does
+  NOT change the palette: sizes, fonts, spacing and shapes only.
+
 - **App Store submission**, in a separate chat with the owner. Settings
   and store config, not code.
 

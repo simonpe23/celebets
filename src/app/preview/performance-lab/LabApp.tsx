@@ -57,7 +57,7 @@ import {
   InfoDot,
   MiniTrend,
   WashTexture,
-} from "../performance-home/icons";
+} from "../performance-icons";
 import {
   ChainIcon,
   ClockIcon,
@@ -111,12 +111,23 @@ import {
   ORANGE,
   PILL_LAV,
   RED,
+  R_CHIP,
+  R_INNER,
+  R_SMALL,
+  R_TILE,
   SELECTOR_INK,
   SEL_BG,
   SEL_EDGE,
-  TAB_EDGE,
   SUBGREEN,
+  TAB_EDGE,
   TRAY_EDGE,
+  T_LABEL,
+  T_META,
+  T_NANO,
+  T_SMALL,
+  T_TINY,
+  W_BOLD,
+  W_SEMI,
 } from "../performance-ui";
 import { LabChart } from "./chart";
 
@@ -332,7 +343,7 @@ export default function LabApp() {
       {/* The current view tray: clean white pills, the mockup's own
           treatment, never filled purple. */}
       <div className="relative mt-[12px] pl-[22px]">
-        <p className="text-[10.5px] font-semibold" style={{ color: NET_LABEL }}>
+        <p className={`${T_LABEL} ${W_SEMI}`} style={{ color: NET_LABEL }}>
           Your current view
         </p>
       </div>
@@ -341,7 +352,7 @@ export default function LabApp() {
           <button
             key={`${c.group}~${c.kind}~${c.value}`}
             onClick={() => toggle(c)}
-            className="flex h-[31px] items-center gap-[6px] rounded-full pl-[10px] pr-[10px] text-[10.5px] font-semibold"
+            className={`flex h-[31px] items-center gap-[6px] rounded-full pl-[10px] pr-[10px] ${T_LABEL} ${W_SEMI}`}
             style={{
               background: CARD,
               color: INDIGO,
@@ -357,7 +368,7 @@ export default function LabApp() {
           onClick={() =>
             groupsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
           }
-          className="flex h-[31px] items-center gap-[5px] rounded-full pl-[10px] pr-[13px] text-[10.5px] font-semibold"
+          className={`flex h-[31px] items-center gap-[5px] rounded-full pl-[10px] pr-[13px] ${T_LABEL} ${W_SEMI}`}
           style={{
             background: CARD,
             color: MENU_IDLE,
@@ -380,7 +391,7 @@ export default function LabApp() {
           then the four ruled KPIs with Home's dividers. */}
       <div className="relative mt-[12px] flex items-center justify-between pl-[22px] pr-[10px]">
         <p
-          className="flex items-center gap-[1px] text-[10.5px] font-semibold"
+          className={`flex items-center gap-[1px] ${T_LABEL} ${W_SEMI}`}
           style={{ color: NET_LABEL }}
         >
           Net profit
@@ -396,18 +407,18 @@ export default function LabApp() {
         </span>
       </div>
       <p
-        className="relative mt-[4px] pl-[18px] text-[45px] font-bold leading-none"
+        className={`relative mt-[4px] pl-[18px] text-[45px] ${W_BOLD} leading-none`}
         style={{ color: whole.profit < 0 ? RED : INDIGO }}
       >
         {money(whole.profit)}
       </p>
       {picks === 0 ? (
-        <p className="relative mt-[16px] pl-[22px] text-[10.5px]" style={{ color: GREY_TEXT }}>
+        <p className={`relative mt-[16px] pl-[22px] ${T_LABEL}`} style={{ color: GREY_TEXT }}>
           No picks match this view yet.
         </p>
       ) : (
         <>
-          <p className="relative mt-[7px] flex items-center gap-[4px] pl-[22px] text-[10.5px] font-semibold">
+          <p className={`relative mt-[7px] flex items-center gap-[4px] pl-[22px] ${T_LABEL} ${W_SEMI}`}>
             <MiniTrend size={12} />
             <span style={{ color: whole.profit < 0 ? RED : SUBGREEN }}>
               {whole.profit < 0 ? "" : "+"}
@@ -442,8 +453,8 @@ export default function LabApp() {
           <div key={f.label} className="flex items-center gap-[6px]" style={{ width: ["78px", "92px", "96px", "auto"][i] }}>
             <span className="relative top-[-3px]">{f.icon}</span>
             <div>
-              <p className="text-[12.5px] font-bold leading-none tracking-[-0.01em]">{f.value}</p>
-              <p className="mt-[3px] text-[7.6px]" style={{ color: GREY_TEXT }}>
+              <p className={`text-[12.5px] ${W_BOLD} leading-none tracking-[-0.01em]`}>{f.value}</p>
+              <p className={`mt-[3px] ${T_NANO}`} style={{ color: GREY_TEXT }}>
                 {f.label}
               </p>
             </div>
@@ -453,7 +464,7 @@ export default function LabApp() {
 
       {/* Actuals noticed. */}
       <div
-        className="relative mx-[15px] mt-[16px] flex h-[45px] items-center rounded-[13px] pl-[7px] pr-[12px]"
+        className={`relative mx-[15px] mt-[16px] flex h-[45px] items-center ${R_CHIP} pl-[7px] pr-[12px]`}
         style={{ background: AMBER_BG, boxShadow: `inset 0 0 0 1px ${AMBER_EDGE}` }}
       >
         <span
@@ -463,7 +474,7 @@ export default function LabApp() {
           <GoldSparkle size={16} />
         </span>
         <div className="ml-[11px] min-w-0 flex-1 leading-[1.4]">
-          <p className="text-[7.8px] font-semibold" style={{ color: ORANGE }}>
+          <p className={`text-[7.8px] ${W_SEMI}`} style={{ color: ORANGE }}>
             Actuals noticed
           </p>
           <p className="mt-[2px] whitespace-nowrap text-[8.7px]" style={{ color: AMBER_INK }}>
@@ -483,20 +494,20 @@ export default function LabApp() {
             href={`/preview/performance-bets?sel=${encodeURIComponent(
               sel.map((c) => `${c.group}~${c.kind}~${c.value}`).join("|")
             )}${period === "all" ? "" : `&period=${period}`}`}
-            className="flex h-[50px] min-w-0 flex-1 items-center rounded-[14px] bg-white pl-[9px] pr-[10px] text-left"
+            className={`flex h-[50px] min-w-0 flex-1 items-center ${R_TILE} bg-white pl-[9px] pr-[10px] text-left`}
             style={{ boxShadow: "0 1px 4px rgba(24,20,50,0.06), 0 0 0 1px rgba(24,20,50,0.02)" }}
           >
             <span
-              className="flex h-[32px] w-[32px] shrink-0 items-center justify-center rounded-[10px]"
+              className={`flex h-[32px] w-[32px] shrink-0 items-center justify-center ${R_SMALL}`}
               style={{ background: PILL_LAV }}
             >
               <FactNote size={17} />
             </span>
             <span className="ml-[10px] min-w-0 flex-1 leading-[1.4]">
-              <span className="block truncate text-[9.8px] font-bold">
+              <span className={`block truncate text-[9.8px] ${W_BOLD}`}>
                 See these {whole.bets} {whole.bets === 1 ? "bet" : "bets"}
               </span>
-              <span className="block text-[8px]" style={{ color: GREY_TEXT }}>
+              <span className={`block ${T_TINY}`} style={{ color: GREY_TEXT }}>
                 View in betting history
               </span>
             </span>
@@ -507,20 +518,20 @@ export default function LabApp() {
               href={`/preview/performance-compare?sel=${encodeURIComponent(
                 sel.map((c) => `${c.group}~${c.kind}~${c.value}`).join("|")
               )}`}
-              className="flex h-[50px] min-w-0 flex-1 items-center rounded-[14px] bg-white pl-[9px] pr-[10px]"
+              className={`flex h-[50px] min-w-0 flex-1 items-center ${R_TILE} bg-white pl-[9px] pr-[10px]`}
               style={{ boxShadow: "0 1px 4px rgba(24,20,50,0.06), 0 0 0 1px rgba(24,20,50,0.02)" }}
             >
               <span
-                className="flex h-[32px] w-[32px] shrink-0 items-center justify-center rounded-[10px]"
+                className={`flex h-[32px] w-[32px] shrink-0 items-center justify-center ${R_SMALL}`}
                 style={{ background: PILL_LAV }}
               >
                 <CompareIcon size={17} />
               </span>
               <span className="ml-[10px] min-w-0 flex-1 leading-[1.4]">
-                <span className="block truncate text-[9.8px] font-bold" style={{ color: INDIGO }}>
+                <span className={`block truncate text-[9.8px] ${W_BOLD}`} style={{ color: INDIGO }}>
                   Compare
                 </span>
-                <span className="block truncate text-[8px]" style={{ color: GREY_TEXT }}>
+                <span className={`block truncate ${T_TINY}`} style={{ color: GREY_TEXT }}>
                   Compare two views
                 </span>
               </span>
@@ -532,7 +543,7 @@ export default function LabApp() {
 
       {/* Add another fact. */}
       <div ref={groupsRef} className="relative mt-[22px] scroll-mt-[10px] pl-[20px] pr-[19px]">
-        <h2 className="text-[11.2px] font-bold">
+        <h2 className={`text-[11.2px] ${W_BOLD}`}>
           {sel.length === 0 ? "Build your view" : "Add another fact"}
         </h2>
         <p className="mt-[1px] text-[8.9px]" style={{ color: GREY_TEXT }}>
@@ -560,7 +571,7 @@ export default function LabApp() {
               <div className="relative">
                 <button
                   onClick={() => setDomainOpen((o) => !o)}
-                  className="flex items-center gap-[4px] text-[9px] font-semibold uppercase tracking-[0.08em]"
+                  className={`flex items-center gap-[4px] ${T_META} ${W_SEMI} uppercase tracking-[0.08em]`}
                   style={{ color: HEAD_INK }}
                 >
                   {g.title}
@@ -574,7 +585,7 @@ export default function LabApp() {
                       className="fixed inset-0 z-10"
                     />
                     <div
-                      className="absolute left-0 top-[20px] z-20 w-[150px] rounded-[12px] bg-white py-[5px]"
+                      className={`absolute left-0 top-[20px] z-20 w-[150px] ${R_INNER} bg-white py-[5px]`}
                       style={{ boxShadow: `0 10px 24px rgba(28,24,58,0.14), inset 0 0 0 1px ${TAB_EDGE}` }}
                     >
                       {DOMAINS.map((d) => (
@@ -587,7 +598,7 @@ export default function LabApp() {
                               setSel([]);
                             }
                           }}
-                          className="flex w-full items-center justify-between px-[13px] py-[7px] text-left text-[10.5px] font-semibold"
+                          className={`flex w-full items-center justify-between px-[13px] py-[7px] text-left ${T_LABEL} ${W_SEMI}`}
                           style={{ color: d === domain ? INDIGO : NET_LABEL }}
                         >
                           {d}
@@ -600,7 +611,7 @@ export default function LabApp() {
               </div>
             ) : (
               <p
-                className="text-[9px] font-semibold uppercase tracking-[0.08em]"
+                className={`${T_META} ${W_SEMI} uppercase tracking-[0.08em]`}
                 style={{ color: HEAD_INK }}
               >
                 {g.title}
@@ -615,7 +626,7 @@ export default function LabApp() {
                   ? `Collapse ${g.title.toLowerCase()}`
                   : `Show every ${g.title.toLowerCase()}`
               }
-              className="flex items-center gap-[4px] text-[9.5px] font-semibold"
+              className={`flex items-center gap-[4px] ${T_SMALL} ${W_SEMI}`}
               style={{ color: openGroups[g.key] ? INDIGO : LINK_INK }}
             >
               {openGroups[g.key] ? "Show less" : g.allLabel}
@@ -643,7 +654,7 @@ export default function LabApp() {
                 <button
                   key={c.value}
                   onClick={() => toggle(c)}
-                  className={`flex h-[44px] items-center gap-[9px] rounded-[12px] bg-white pl-[11px] pr-[14px] transition-colors ${
+                  className={`flex h-[44px] items-center gap-[9px] ${R_INNER} bg-white pl-[11px] pr-[14px] transition-colors ${
                     openGroups[g.key] ? "max-w-full" : "shrink-0"
                   }`}
                   style={{
@@ -657,13 +668,13 @@ export default function LabApp() {
                   {chipIcon(c, on, c.group === "where" ? leagueSportMap.get(c.value) : undefined)}
                   <span className="text-left leading-none">
                     <span
-                      className="block whitespace-nowrap text-[10.5px] font-semibold"
+                      className={`block whitespace-nowrap ${T_LABEL} ${W_SEMI}`}
                       style={{ color: on ? INDIGO : INK }}
                     >
                       {c.value}
                     </span>
                     <span
-                      className="mt-[3px] block text-[8.4px] font-semibold"
+                      className={`mt-[3px] block text-[8.4px] ${W_SEMI}`}
                       style={{ color: on ? INDIGO : GREY_TEXT }}
                     >
                       {recordOf(s)}
@@ -703,7 +714,7 @@ export default function LabApp() {
             <button
               key={m.value}
               onClick={() => toggle(m)}
-              className="flex h-[26px] items-center gap-[6px] rounded-full pl-[11px] pr-[11px] text-[9.5px] font-semibold transition-colors"
+              className={`flex h-[26px] items-center gap-[6px] rounded-full pl-[11px] pr-[11px] ${T_SMALL} ${W_SEMI} transition-colors`}
               style={
                 on
                   ? { background: INDIGO_FILL, color: ON_BRAND }
