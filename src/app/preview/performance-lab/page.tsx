@@ -17,6 +17,7 @@ import PerfPage from "../performance-shell";
 import PerfMenuLive from "../performance-menu-live";
 import LabApp from "./LabApp";
 import { MENU_H, MENU_INSET, TAIL_TALL } from "../performance-ui";
+import { labBets } from "./lab-data";
 
 export default function PerformanceLabPreview() {
   return (
@@ -26,7 +27,7 @@ export default function PerformanceLabPreview() {
       </Suspense>
 
       <Suspense fallback={null}>
-        <LabApp />
+        <LabApp bets={labBets} />
       </Suspense>
     </PerfPage>
   );

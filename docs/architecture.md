@@ -26,7 +26,11 @@ Private (login gate in `src/middleware.ts`):
 | Route | What it is |
 |---|---|
 | `/app` | **Track**, the home page after login. |
-| `/stats` | **Performance**. Address kept from the old name. |
+| `/stats` | **Performance Home**, the rebuilt page, live since 31 August 2026. Address kept from the old name. |
+| `/stats/lab` | **Performance Lab**, the builder. |
+| `/stats/totals` | **Performance Totals**. |
+| `/stats/compare`, `/stats/bets`, `/stats/heatmap` | The three pages inside Performance. |
+| `/stats-old` | **Today's old Performance page**, kept alive with his real numbers by his ruling of 31 August 2026. It stays until he retires it himself. |
 | `/recommendations` | **Research**. Address kept from the old name. |
 | `/insights` | The full insight list. Lights the Performance tab. |
 | `/settings` | Settings, reached from the gear on Track. |
@@ -74,6 +78,8 @@ logged-in user's own connection.
 |---|---|
 | `src/lib/types.ts` | `SPORTS`, `KALSHI_CATEGORIES`, `TOPICS`, `isTopic`, `NOT_SPORTS`, `SPORT_EMOJI`, and the `Leg` / `Bet` shapes. |
 | `src/lib/taxonomy.ts` | Domains, categories per domain, markets per category, periods per sport, competitions per sport, and the alias tables. |
+| `src/lib/load-bets.ts` | The signed in user's bets, one query, used by all six live Performance pages. |
+| `src/lib/performance-routes.ts` | The two address sets. A Performance page takes a route set, so the same component serves the public preview and the live page. |
 | `src/lib/stats.ts` | Every money rule. `legShares`, `legStakeShares`, `betProfit`, `sportRows`, `periodStart`, `sinceLine`. |
 | `src/lib/ui.ts` | `CARD`, `INNER`, `BTN`, the outcome pills, `ACCENT`. |
 | `src/lib/kalshiSync.ts` | Turns Kalshi fills into bets and classifies them into the taxonomy. |

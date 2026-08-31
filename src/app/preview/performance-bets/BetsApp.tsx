@@ -24,7 +24,8 @@ import PerfHeader from "../performance-header";
 import { useSearchParams } from "next/navigation";
 import { betProfit } from "@/lib/stats";
 import { makeEngine, money, type Chip, type GroupKey } from "../pf/engine";
-import { labBets } from "../performance-lab/lab-data";
+import type { BetWithLegs } from "@/lib/types";
+import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
 import { chipIcon } from "../performance-lab/LabApp";
 import { betsIn, isPeriod, labelOf, type PeriodKey } from "../performance-lab/period";
 import { Chev } from "../performance-icons";
@@ -70,7 +71,15 @@ function parseSel(raw: string | null): Chip[] {
   return out;
 }
 
-export default function BetsApp() {
+export default function BetsApp({
+  bets,
+  routes = PREVIEW_ROUTES,
+}: {
+  /** Demo bets on the public preview, the signed in user's own
+      bets on the live page. The component never knows which. */
+  bets: BetWithLegs[];
+  routes?: PerfRoutes;
+}) {
   const params = useSearchParams();
   const sel = useMemo(() => parseSel(params.get("sel")), [params]);
   const rawPeriod = params.get("period");
@@ -79,14 +88,14 @@ export default function BetsApp() {
   // your selection and period intact.
   const from = params.get("from") === "totals" ? "totals" : "lab";
 
-  const engine = useMemo(() => makeEngine(betsIn(labBets, period)), [period]);
+  const engine = useMemo(() => makeEngine(betsIn(bets, period)), [bets, period]);
   const rows = useMemo(() => engine.betsFor(sel), [engine, sel]);
   const stats = useMemo(() => engine.statsFor(sel), [engine, sel]);
 
   const backHref =
     from === "totals"
-      ? `/preview/performance-totals${period === "all" ? "" : `?period=${period}`}`
-      : `/preview/performance-lab${params.get("sel") || period !== "all" ? "?" : ""}` +
+      ? `${routes.totals}${period === "all" ? "" : `?period=${period}`}`
+      : `${routes.lab}${params.get("sel") || period !== "all" ? "?" : ""}` +
         [
           params.get("sel") ? `sel=${encodeURIComponent(params.get("sel") as string)}` : "",
           period === "all" ? "" : `period=${period}`,

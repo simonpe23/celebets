@@ -8,8 +8,21 @@
 import { useSearchParams } from "next/navigation";
 import PerfMenu, { type PerfTab } from "./performance-menu";
 import { isPeriod } from "./performance-lab/period";
+import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
 
-export default function PerfMenuLive({ active }: { active: PerfTab }) {
+export default function PerfMenuLive({
+  active,
+  routes = PREVIEW_ROUTES,
+}: {
+  active: PerfTab;
+  routes?: PerfRoutes;
+}) {
   const raw = useSearchParams().get("period");
-  return <PerfMenu active={active} period={isPeriod(raw) ? raw : "all"} />;
+  return (
+    <PerfMenu
+      active={active}
+      period={isPeriod(raw) ? raw : "all"}
+      routes={routes}
+    />
+  );
 }

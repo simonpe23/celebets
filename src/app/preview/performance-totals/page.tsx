@@ -11,6 +11,7 @@ import PerfPage from "../performance-shell";
 import PerfMenuLive from "../performance-menu-live";
 import TotalsApp from "./TotalsApp";
 import { MENU_H, MENU_INSET } from "../performance-ui";
+import { labBets } from "../performance-lab/lab-data";
 
 export default function PerformanceTotalsPreview() {
   return (
@@ -20,7 +21,7 @@ export default function PerformanceTotalsPreview() {
       </Suspense>
 
       <Suspense fallback={null}>
-        <TotalsApp />
+        <TotalsApp bets={labBets} />
       </Suspense>
     </PerfPage>
   );

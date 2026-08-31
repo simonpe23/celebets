@@ -40,7 +40,8 @@ import PerfHeader from "../performance-header";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { money, makeEngine, type Chip } from "../pf/engine";
-import { labBets } from "../performance-lab/lab-data";
+import type { BetWithLegs } from "@/lib/types";
+import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
 import { chipIcon } from "../performance-lab/LabApp";
 import Explain from "../performance-lab/Explain";
 import PeriodPill from "../performance-lab/PeriodPill";
@@ -130,9 +131,9 @@ const selOf = (chips: Chip[]) =>
   chips.map((c) => `${c.group}~${c.kind}~${c.value}`).join("|");
 // Lab opens in the fact's own domain. Without this a Crypto fact
 // landed on a Sports-mode Lab and showed nothing.
-const labUrl = (f: Fact, period: PeriodKey) =>
+const labUrl = (f: Fact, period: PeriodKey, lab: string) =>
   withPeriod(
-    `/preview/performance-lab?sel=${encodeURIComponent(selOf(f.chips))}` +
+    `${lab}?sel=${encodeURIComponent(selOf(f.chips))}` +
       (f.domain === "Sports" ? "" : `&domain=${encodeURIComponent(f.domain)}`),
     period
   );
@@ -300,7 +301,15 @@ type Streak = {
   lift: number;
 };
 
-export default function HeatmapApp() {
+export default function HeatmapApp({
+  bets,
+  routes = PREVIEW_ROUTES,
+}: {
+  /** Demo bets on the public preview, the signed in user's own
+      bets on the live page. The component never knows which. */
+  bets: BetWithLegs[];
+  routes?: PerfRoutes;
+}) {
   // Job 4. The whole page follows the period: the four cards, the map
   // and the streak windows, because the engine itself is built from
   // the filtered record.
@@ -310,7 +319,7 @@ export default function HeatmapApp() {
     isPeriod(rawPeriod) ? rawPeriod : "all"
   );
   const [periodOpen, setPeriodOpen] = useState(false);
-  const engine = useMemo(() => makeEngine(betsIn(labBets, period)), [period]);
+  const engine = useMemo(() => makeEngine(betsIn(bets, period)), [bets, period]);
 
   const singles = useMemo(() => singleFacts(engine), [engine]);
   const pairs = useMemo(() => pairFacts(engine, singles), [engine, singles]);
@@ -405,7 +414,7 @@ export default function HeatmapApp() {
       {/* The header: back to Home, the title, and the insight sparkle
           the brief puts on every Performance screen. */}
       <PerfHeader
-        href="/preview/performance-home"
+        href={routes.home}
         label="Back to Home"
         title="Heat Map"
         right={
@@ -440,7 +449,7 @@ export default function HeatmapApp() {
             name={edge.label}
             headline={`+${pct(edge.roi)} ROI`}
             meta={`${edge.s.wins}–${edge.s.losses} record`}
-            href={labUrl(edge, period)}
+            href={labUrl(edge, period, routes.lab)}
           />
         ) : null}
         {leak ? (
@@ -450,7 +459,7 @@ export default function HeatmapApp() {
             name={leak.label}
             headline={`${pct(leak.roi)} ROI`}
             meta={`${leak.s.wins}–${leak.s.losses} record`}
-            href={labUrl(leak, period)}
+            href={labUrl(leak, period, routes.lab)}
           />
         ) : null}
       </div>
@@ -463,7 +472,7 @@ export default function HeatmapApp() {
               name={hot.f.label}
               headline="Hot streak"
               meta={`${hot.form.wins}–${hot.form.losses} in last ${hot.form.picks} picks`}
-              href={labUrl(hot.f, period)}
+              href={labUrl(hot.f, period, routes.lab)}
             />
           ) : null}
           {cool ? (
@@ -473,7 +482,7 @@ export default function HeatmapApp() {
               name={cool.f.label}
               headline="Cooling off"
               meta={`${cool.form.wins}–${cool.form.losses} in last ${cool.form.picks} picks`}
-              href={labUrl(cool.f, period)}
+              href={labUrl(cool.f, period, routes.lab)}
             />
           ) : null}
         </div>
@@ -569,7 +578,7 @@ export default function HeatmapApp() {
               ) : (
                 <Link
                   key={t.key}
-                  href={labUrl(t.fact!, period)}
+                  href={labUrl(t.fact!, period, routes.lab)}
                   className={className}
                   style={style}
                 >

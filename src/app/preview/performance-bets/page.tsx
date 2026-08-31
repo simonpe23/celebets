@@ -8,12 +8,13 @@
 import { Suspense } from "react";
 import PerfPage from "../performance-shell";
 import BetsApp from "./BetsApp";
+import { labBets } from "../performance-lab/lab-data";
 
 export default function PerformanceBetsPreview() {
   return (
     <PerfPage>
       <Suspense fallback={null}>
-        <BetsApp />
+        <BetsApp bets={labBets} />
       </Suspense>
     </PerfPage>
   );

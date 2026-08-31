@@ -74,7 +74,8 @@ import {
   TrendLineIcon,
   WhistleIcon,
 } from "./lab-icons";
-import { labBets } from "./lab-data";
+import type { BetWithLegs } from "@/lib/types";
+import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
 import Explain from "./Explain";
 import PeriodPill from "./PeriodPill";
 import { betsIn, isPeriod, type PeriodKey } from "./period";
@@ -217,7 +218,15 @@ function selToUrl(sel: Chip[], domain: Domain, period: PeriodKey): string {
   return q ? `?${q}` : window.location.pathname;
 }
 
-export default function LabApp() {
+export default function LabApp({
+  bets,
+  routes = PREVIEW_ROUTES,
+}: {
+  /** Demo bets on the public preview, the signed in user's own
+      bets on the live page. The component never knows which. */
+  bets: BetWithLegs[];
+  routes?: PerfRoutes;
+}) {
   const params = useSearchParams();
   // Job 4. The period is applied by building the engine from a
   // filtered record, so every chip price, the chart and the KPI row
@@ -231,7 +240,7 @@ export default function LabApp() {
   // edge, and "All sports" promised a way to see it. Tapping it wraps
   // the row instead, so every fact in that group is on screen at once.
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
-  const engine = useMemo(() => makeEngine(betsIn(labBets, period)), [period]);
+  const engine = useMemo(() => makeEngine(betsIn(bets, period)), [bets, period]);
   const [domain, setDomain] = useState<Domain>(() => {
     const d = params.get("domain");
     return (DOMAINS as string[]).includes(d ?? "") ? (d as Domain) : "Sports";
@@ -491,7 +500,7 @@ export default function LabApp() {
           {/* Job 5. It was a button that did nothing; it opens All
               Bets now, carrying the selection and the period. */}
           <Link
-            href={`/preview/performance-bets?sel=${encodeURIComponent(
+            href={`${routes.bets}?sel=${encodeURIComponent(
               sel.map((c) => `${c.group}~${c.kind}~${c.value}`).join("|")
             )}${period === "all" ? "" : `&period=${period}`}`}
             className={`flex h-[50px] min-w-0 flex-1 items-center ${R_TILE} bg-white pl-[9px] pr-[10px] text-left`}
@@ -515,7 +524,7 @@ export default function LabApp() {
           </Link>
           {compareReady ? (
             <Link
-              href={`/preview/performance-compare?sel=${encodeURIComponent(
+              href={`${routes.compare}?sel=${encodeURIComponent(
                 sel.map((c) => `${c.group}~${c.kind}~${c.value}`).join("|")
               )}`}
               className={`flex h-[50px] min-w-0 flex-1 items-center ${R_TILE} bg-white pl-[9px] pr-[10px]`}
