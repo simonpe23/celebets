@@ -158,7 +158,10 @@ export function HeatDots({ size = 9 }: { size?: number }) {
   );
 }
 
-// The rising line beside What changed?
+// The rising line that sat beside "What changed?". NOTHING DRAWS IT
+// ANY MORE: he deleted that pill on 31 August 2026, "i don't think
+// it's that needed." Kept because this is an icon library and the
+// shape may be wanted again.
 export function ChangedMark({ size = 10 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 26 26" fill="none" aria-hidden>
