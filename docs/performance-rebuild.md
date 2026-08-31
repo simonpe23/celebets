@@ -157,6 +157,43 @@ nonsense "$0, -$1, -$2, -$3".
 account gets a page with no ranked rows, a flat line and "- ROI",
 which does not crash but was never designed.
 
+## Home, Lab and Totals are ONE page, 31 August 2026
+
+They were three routes. Switching tabs meant a server round trip, a
+fresh database query, and Next showing `/stats/loading` in between,
+which was the OLD design's skeleton: the word Performance, three grey
+cards and the three tab bottom bar. His words after the first look at
+the live site: "it's very slow when jumping tabs... it's loading this
+page in between, not at all a smooth experience. i dont want that. i
+want the transition to be a clean smooth swap. i want to see the tab
+bar slide over."
+
+`performance-area.tsx` now holds all three. The bets load once, the
+frame and the menu stay mounted, and the tab is React state.
+**Measured: zero server requests per switch, and roughly a tenth of a
+second to render.**
+
+- **The addresses still work.** Each tab keeps its own route for deep
+  links and for the jump from Home; those routes render the same area
+  with a different starting tab. Switching uses `pushState`, and the
+  back button is wired to it.
+- **The pill slides.** It is one element with a stable key, so the
+  browser animates the move instead of React replacing it.
+- **The selection travels as a PROP, not in the address.** `pushState`
+  does not refresh `useSearchParams`, so a jump that relied on the
+  address arrived at an unscoped Lab, and Lab then overwrote the
+  address with its own empty state.
+- **`/stats/loading.tsx` no longer shows the old design.** It is a
+  blank frame in the page's own colour, and it is only ever seen on a
+  cold arrival now.
+
+**A test that was lying, fixed.** `jumptest.mjs` asserted only that the
+fact's record appeared somewhere on Lab. Every chip in Lab prints its
+own record, so "30-16" was on screen whether or not the jump landed:
+five of six jumps passed while the feature was broken. It now asserts
+that Lab is SCOPED, that the empty Lab says so, and that the fact is
+named in the tray.
+
 ## Where the older work lives
 
 - `src/app/preview/pf/`, the Portfolio prototype, walkable end to end.

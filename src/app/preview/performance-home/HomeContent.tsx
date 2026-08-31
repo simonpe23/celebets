@@ -44,8 +44,6 @@ import { buildHomeView, type HomeRow } from "./home-model";
 import { makeEngine, type GroupKey } from "../pf/engine";
 import type { BetWithLegs } from "@/lib/types";
 import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
-import PerfPage from "../performance-shell";
-import PerfMenu from "../performance-menu";
 import {
   BallIcon,
   ChangedMark,
@@ -98,7 +96,6 @@ import {
   R_TILE,
   SELECTOR_INK,
   SUBGREEN,
-  TAIL_TALL,
   T_BODY,
   T_LABEL,
   T_LEAD,
@@ -137,21 +134,22 @@ const FACT_ICONS = [
   <FactWave key="returned" size={19} />,
 ];
 
-export default function HomeApp({
+export default function HomeContent({
   bets,
   routes = PREVIEW_ROUTES,
-  live = false,
+  onJump,
 }: {
   /** The preview passes demo bets; the live page passes the signed in
       user's own. The page itself never knows which. */
   bets: BetWithLegs[];
   routes?: PerfRoutes;
-  /** True on the live page, where the bottom tab bar must navigate. */
-  live?: boolean;
+  /** Switch to Lab in place instead of navigating. The tab area passes
+      this so a ranked row swaps the view rather than loading a page. */
+  onJump?: (sel: string) => void;
 }) {
   const view = buildHomeView(makeEngine(bets));
   return (
-    <PerfPage live={live} tail={TAIL_TALL}>
+    <>
         {/* The colour wash behind the chart and KPI row, re-extracted
             from "2. big chart Aug 28.png": his 29 August order to go
             back to that sheet's fade. It ends before the insight card,
@@ -167,11 +165,6 @@ export default function HomeApp({
           />
           <WashTexture />
         </div>
-
-        {/* The Home / Lab / Totals menu. One shared component since
-            30 August 2026: Home used to hold its own copy of the same
-            geometry because this folder was locked to one chat. */}
-        <PerfMenu active="home" routes={routes} />
 
         {/* Net profit and the This month selector. */}
         <div className="relative mt-[10px] flex items-center justify-between pl-[22px] pr-[10px]">
@@ -345,6 +338,11 @@ export default function HomeApp({
             <Link
               key={row.chip.group + row.name}
               href={`${routes.lab}?sel=${encodeURIComponent(row.sel)}`}
+              onClick={(e) => {
+                if (!onJump) return;
+                e.preventDefault();
+                onJump(row.sel);
+              }}
               className={
                 i === 0
                   ? `mx-[12px] mb-[4px] flex h-[49px] items-center ${R_INNER} bg-white pl-[8px] pr-[12px]`
@@ -411,6 +409,11 @@ export default function HomeApp({
             selections." */}
         <Link
           href={routes.lab}
+          onClick={(e) => {
+            if (!onJump) return;
+            e.preventDefault();
+            onJump("");
+          }}
           className={`relative mx-[14px] mt-[8px] flex h-[69px] items-center ${R_TILE} pl-[15px] pr-[15px]`}
           style={{ background: LAB_CARD }}
         >
@@ -447,6 +450,6 @@ export default function HomeApp({
             <Chev size={7} color={ON_BRAND} />
           </span>
         </Link>
-    </PerfPage>
+    </>
   );
 }

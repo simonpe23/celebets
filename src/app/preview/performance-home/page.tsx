@@ -1,10 +1,10 @@
-// The PUBLIC preview of Performance Home. It draws the same component
-// the live page draws, over demo bets, because a preview is public by
-// his ruling of 28 August 2026 and must never carry real user data.
+// The PUBLIC preview of Performance. Home, Lab and Totals are one
+// page with three tabs, the same component the live pages render, over
+// demo bets because a preview is public by his ruling.
 
-import HomeApp from "./HomeApp";
+import PerfArea from "../performance-area";
 import { labBets } from "../performance-lab/lab-data";
 
 export default function PerformanceHomePreview() {
-  return <HomeApp bets={labBets} />;
+  return <PerfArea bets={labBets} initial="home" />;
 }

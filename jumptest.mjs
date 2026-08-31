@@ -48,10 +48,17 @@ for (const row of rows) {
   await page.waitForURL("**/preview/performance-lab**");
   await page.waitForTimeout(700);
   const body = await page.textContent("body");
-  const ok = row.record !== "" && body.includes(row.record);
+  // The record alone is NOT proof: every chip in Lab prints its own
+  // record, so "30-16" is on screen whether or not the jump landed.
+  // The proof is that Lab is scoped: the empty Lab says it is showing
+  // the whole record, and a scoped one names the fact in its tray.
+  const scoped = !body.includes("Showing your whole record");
+  const named = body.includes(row.name);
+  const ok = scoped && named && row.record !== "" && body.includes(row.record);
   const label = decodeURIComponent(row.href.split("sel=")[1] || "");
   console.log(
-    `${ok ? "PASS" : "FAIL"} ${label.padEnd(34)} arrives showing ${row.record}`
+    `${ok ? "PASS" : "FAIL"} ${label.padEnd(34)} arrives scoped to ${row.name}` +
+      (ok ? "" : `  [scoped=${scoped} named=${named}]`)
   );
   if (!ok) fails++;
 }
@@ -69,7 +76,12 @@ await page.waitForURL("**/preview/performance-lab**");
 await page.waitForTimeout(700);
 const body = await page.textContent("body");
 const okEmpty =
-  !page.url().includes("sel=") && wholeRecord !== "" && body.includes(wholeRecord);
+  !page.url().includes("sel=") &&
+  wholeRecord !== "" &&
+  body.includes(wholeRecord) &&
+  // and it really is the unscoped Lab, not merely a page without a
+  // selection in its address
+  body.includes("Showing your whole record");
 console.log(
   `${okEmpty ? "PASS" : "FAIL"} Explore Lab lands on the empty Lab (${wholeRecord})`
 );
