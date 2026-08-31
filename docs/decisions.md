@@ -1162,10 +1162,23 @@ needed, if it makes things easier." His reasoning, and it is right:
 absolutely intertwined. Home Lab totals, everything is 100% connected
 and has to align across the board."
 
-**So the split is by KIND of work, not by page.** Design and
-interaction stay per chat, because taste can differ per page. The
-numbers are one job in one chat, because truth cannot. The folder
-ownership lines in `CLAUDE.md` do not block the numbers work.
+**He wants the Performance design in ONE chat, not several.** His
+words the same day: "I just so regret I have multiple chats. If I was
+me, my biggest wish would be that the design for all these seven
+pages, or however many pages is under Performance, they lived in one
+chat." Recorded at that confidence: a regret and a wish, and he added
+that it is moot for now because he will "redesign locally and then
+probably open new chats after we go live."
+
+**Nothing in this repo forces work to be split by chat.** The folder
+ownership lines in `CLAUDE.md` are a collision convention between
+chats working at the same time, never a rule about who may do what.
+One chat may take every Performance page, design and numbers both.
+
+**CLAUDE's earlier line "design is per chat, numbers are one job in
+one chat" was an inference, not his ruling, and he rejected it.** It
+is struck. Split work when two chats are genuinely working at once;
+otherwise do not split it at all.
 
 **The architecture already supports this, verified 31 August 2026 by
 reading the code, not by assuming:**
