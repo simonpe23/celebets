@@ -42,6 +42,13 @@ import { HeroChart, Spark } from "./charts";
 import type { ReactNode } from "react";
 import { buildHomeView, type HomeRow } from "./home-model";
 import { makeEngine, type GroupKey } from "../pf/engine";
+import PeriodPill from "../performance-lab/PeriodPill";
+import {
+  betsIn,
+  type CustomRange,
+  type PeriodKey,
+} from "../performance-lab/period";
+import { useState } from "react";
 import type { BetWithLegs } from "@/lib/types";
 import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
 import {
@@ -138,6 +145,10 @@ export default function HomeContent({
   bets,
   routes = PREVIEW_ROUTES,
   onJump,
+  period,
+  range,
+  onPeriod,
+  onRange,
 }: {
   /** The preview passes demo bets; the live page passes the signed in
       user's own. The page itself never knows which. */
@@ -146,8 +157,19 @@ export default function HomeContent({
   /** Switch to Lab in place instead of navigating. The tab area passes
       this so a ranked row swaps the view rather than loading a page. */
   onJump?: (sel: string) => void;
+  /** The window, owned by the tab area and shared with Lab and
+      Totals. The pill in the corner used to be a picture of a control
+      that read "This month" over an all time number. */
+  period: PeriodKey;
+  range: CustomRange;
+  onPeriod: (key: PeriodKey) => void;
+  onRange: (r: CustomRange) => void;
 }) {
-  const view = buildHomeView(makeEngine(bets));
+  const [periodOpen, setPeriodOpen] = useState(false);
+  // The period is applied by filtering the bets, so every figure on
+  // the page follows: the number, the chart, the KPI row and the
+  // ranked list, with no call site knowing about dates.
+  const view = buildHomeView(makeEngine(betsIn(bets, period, range)));
   return (
     <>
         {/* The colour wash behind the chart and KPI row, re-extracted
@@ -166,7 +188,7 @@ export default function HomeContent({
           <WashTexture />
         </div>
 
-        {/* Net profit and the This month selector. */}
+        {/* Net profit and the period selector. */}
         <div className="relative mt-[10px] flex items-center justify-between pl-[22px] pr-[10px]">
           <p
             className={`flex items-center gap-[1px] ${T_LABEL} ${W_SEMI}`}
@@ -175,12 +197,15 @@ export default function HomeContent({
             Net profit
             <InfoDot size={13} />
           </p>
-          <span
-            className={`relative top-[2px] flex h-[24px] items-center gap-[3px] rounded-full bg-white px-[12px] ${T_SMALL} ${W_SEMI}`}
-            style={{ color: SELECTOR_INK, boxShadow: "0 1px 3px rgba(30,25,60,0.07)" }}
-          >
-            This month
-            <ChevDown size={11} />
+          <span className="relative top-[2px] z-30">
+            <PeriodPill
+              period={period}
+              onPick={onPeriod}
+              open={periodOpen}
+              setOpen={setPeriodOpen}
+              range={range}
+              onRange={onRange}
+            />
           </span>
         </div>
 

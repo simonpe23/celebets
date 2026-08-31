@@ -22,6 +22,7 @@
 // behave, without asking the server for anything.
 
 import { useCallback, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import PerfPage from "./performance-shell";
 import PerfMenu, { type PerfTab } from "./performance-menu";
 import HomeContent from "./performance-home/HomeContent";
@@ -30,6 +31,12 @@ import TotalsApp from "./performance-totals/TotalsApp";
 import { TAIL_SHORT, TAIL_TALL } from "./performance-ui";
 import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
 import type { BetWithLegs } from "@/lib/types";
+import {
+  EMPTY_RANGE,
+  isPeriod,
+  type CustomRange,
+  type PeriodKey,
+} from "./performance-lab/period";
 
 export default function PerfArea({
   bets,
@@ -42,16 +49,27 @@ export default function PerfArea({
   routes?: PerfRoutes;
   live?: boolean;
 }) {
+  const params = useSearchParams();
   const [tab, setTab] = useState<PerfTab>(initial);
+  // THE PERIOD IS SHARED BY ALL THREE TABS. It used to live inside Lab
+  // and inside Totals, travelling between them in the address. They
+  // are one page now, so it lives here: change the window on Home and
+  // Lab is already looking at the same one.
+  const [period, setPeriod] = useState<PeriodKey>(() => {
+    const raw = params.get("period");
+    return isPeriod(raw) ? raw : "all";
+  });
+  const [range, setRange] = useState<CustomRange>(EMPTY_RANGE);
   // Lab is remounted whenever a jump hands it a new selection, because
   // it seeds its chips once and then owns them.
   const [labKey, setLabKey] = useState(0);
   // The selection travels as a prop, not in the address: switching
   // uses pushState, and useSearchParams does not see that.
   const [labSel, setLabSel] = useState<string | undefined>(undefined);
+  const [labGroup, setLabGroup] = useState<string | undefined>(undefined);
 
   const go = useCallback(
-    (next: PerfTab, sel?: string) => {
+    (next: PerfTab, sel?: string, group?: string) => {
       const url =
         next === "lab" && sel
           ? `${routes.lab}?sel=${encodeURIComponent(sel)}`
@@ -61,6 +79,7 @@ export default function PerfArea({
       }
       if (next === "lab") {
         setLabSel(sel ?? "");
+        setLabGroup(group);
         setLabKey((k) => k + 1);
       }
       setTab(next);
@@ -96,6 +115,10 @@ export default function PerfArea({
         <HomeContent
           bets={bets}
           routes={routes}
+          period={period}
+          range={range}
+          onPeriod={setPeriod}
+          onRange={setRange}
           onJump={(sel) => go("lab", sel)}
         />
       )}
@@ -105,9 +128,24 @@ export default function PerfArea({
           bets={bets}
           routes={routes}
           initialSel={labSel}
+          initialGroup={labGroup}
+          period={period}
+          range={range}
+          onPeriod={setPeriod}
+          onRange={setRange}
         />
       )}
-      {tab === "totals" && <TotalsApp bets={bets} routes={routes} />}
+      {tab === "totals" && (
+        <TotalsApp
+          bets={bets}
+          routes={routes}
+          period={period}
+          range={range}
+          onPeriod={setPeriod}
+          onRange={setRange}
+          onJumpGroup={(g) => go("lab", undefined, g)}
+        />
+      )}
     </PerfPage>
   );
 }

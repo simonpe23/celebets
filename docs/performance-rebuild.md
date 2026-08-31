@@ -194,6 +194,40 @@ five of six jumps passed while the feature was broken. It now asserts
 that Lab is SCOPED, that the empty Lab says so, and that the fact is
 named in the tray.
 
+## The period filter, 31 August 2026
+
+His words after the first live look: "i did fix the month toggle in
+the top corner on the lab page. they added a time filter there, so i
+should be able to see result from all time, year, month, week, day and
+then add custom as well, just as the old performance page."
+
+- **Home's corner pill was a picture of a control.** It read "This
+  month" above an all time number. It is the real control now, the
+  same `PeriodPill` Lab and Totals already used, so all four screens
+  read as one product.
+- **Custom is in.** It was deliberately left out while these were demo
+  pages with a generated record; they are the live pages now. The old
+  page's own behaviour is copied: the from date starts at midnight,
+  the to date ends at 23:59:59.999, and a half filled range is open at
+  that end. A chosen range names itself on the pill ("From 1 Aug"),
+  so the window is never hidden behind the word Custom.
+- **ONE window for the whole area.** The period used to live inside
+  Lab and inside Totals and travel between them in the address. It
+  lives in `performance-area.tsx` now: change it on Home and Lab is
+  already looking at the same window.
+- **Totals no longer changes the period by navigating.** It used
+  `router.replace`, which is a server round trip: inside the shared
+  area that meant reloading the page to change a filter. Its "View
+  all" links into Lab switch in place too, measured at zero server
+  requests.
+
+**`periodtest.mjs` proves it filters.** A control that looks right and
+filters nothing is exactly the bug this page already had, and a
+screenshot cannot tell the difference between a working control and a
+picture of one. The script checks every period changes the numbers,
+that Custom offers two dates and names itself, and that the window
+survives a tab switch.
+
 ## Where the older work lives
 
 - `src/app/preview/pf/`, the Portfolio prototype, walkable end to end.
