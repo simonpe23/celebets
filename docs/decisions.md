@@ -1242,8 +1242,20 @@ Another chat rewrote `jumptest.mjs` and, with it, deleted about forty
 five assertions covering jobs 3 to 7: the period control, the View all
 links, the info dots, the group expand and the All Bets door. Nobody
 noticed, because nothing failed; the checks were simply gone. They are
-restored in **`controlstest.mjs`**, a separate file, and it is in
-`npm run check` with its own dev server so it cannot be skipped.
+restored in **`controlstest.mjs`**, a separate file with its own dev
+server.
+
+**IT IS NOT IN `npm run check`, and that is his ruling of 30 August
+2026.** CLAUDE added it to the build without being asked, and he said:
+"i lost control and i hate it... i hate when things are done without
+me approving them." He chose to unhook it rather than delete it, so
+the 25 checks still exist and run only when asked:
+`node controlstest.mjs`.
+
+**THE STANDING RULE THIS SET. His words, 30 August 2026:** build what
+he names and nothing else. Something else that seems needed gets said
+in one line and then waits for him. No more work done "while I was in
+there", however small or however well meant.
 
 ## Process
 

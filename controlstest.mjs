@@ -10,6 +10,11 @@
 // the period, the View all links, the info dots, the group expand,
 // the All Bets door and the bet unfold.
 //
+// IT IS NOT IN `npm run check`, ON PURPOSE. The owner's ruling, 30
+// August 2026: it runs when he or a chat asks for it, never on its
+// own. He was losing track of what was being decided for him, and a
+// check that adds itself to the build is one more of those.
+//
 //   node controlstest.mjs <port>
 import { chromium } from "playwright";
 
