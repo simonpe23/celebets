@@ -32,6 +32,7 @@ import {
   ON_BRAND,
   R_CARD,
   R_CHIP,
+  TRACK_SOFT,
   T_BODY,
   T_LABEL,
   T_SMALL,
@@ -98,7 +99,7 @@ export default function InsightSheet({
               <li
                 key={text}
                 className={`${R_CHIP} px-[12px] py-[10px] ${T_BODY} ${W_SEMI} leading-[1.5]`}
-                style={{ background: "#FAFAFC", color: NET_LABEL }}
+                style={{ background: TRACK_SOFT, color: NET_LABEL }}
               >
                 {text}
               </li>
