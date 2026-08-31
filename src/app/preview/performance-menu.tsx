@@ -51,40 +51,51 @@ export default function PerfMenu({
   active,
   period = "all",
   routes = PREVIEW_ROUTES,
+  onSelect,
 }: {
   active: PerfTab;
   period?: PeriodKey;
   routes?: PerfRoutes;
+  /** Switch in place. Given by the tab area, which keeps this menu
+      mounted so the pill can slide instead of being rebuilt. */
+  onSelect?: (tab: PerfTab) => void;
 }) {
+  const current = TABS.find((t) => t.key === active) ?? TABS[0];
+  // The pill and its label are ONE element with a stable key, so React
+  // moves it rather than replacing it and the browser animates the
+  // move. His words, 31 August 2026: "i want to see the tab bar slide
+  // over."
   return (
     <div
       className={`relative ${MENU_INSET} ${MENU_H} rounded-full`}
       style={{ background: MENU_TRACK }}
     >
-      {TABS.map((t) =>
-        t.key === active ? (
-          <span
-            key={t.key}
-            className={`absolute ${MENU_PILL_TOP} flex ${MENU_PILL_H} ${MENU_PILL_W} items-center justify-center rounded-full ${T_LABEL} ${W_BOLD} text-white`}
-            style={{ background: INDIGO_FILL, left: t.pill }}
-          >
-            {t.label}
-          </span>
-        ) : (
-          <Link
-            key={t.key}
-            href={
-              t.key === "home"
-                ? routes.home
-                : withPeriod(routes[t.key], period)
-            }
-            className={`absolute top-1/2 -translate-x-1/2 -translate-y-1/2 px-[18px] py-[10px] ${T_LABEL} ${W_SEMI}`}
-            style={{ color: MENU_IDLE, left: t.left }}
-          >
-            {t.label}
-          </Link>
-        )
-      )}
+      <span
+        key="pill"
+        className={`absolute ${MENU_PILL_TOP} flex ${MENU_PILL_H} ${MENU_PILL_W} items-center justify-center rounded-full ${T_LABEL} ${W_BOLD} text-white`}
+        style={{
+          background: INDIGO_FILL,
+          left: current.pill,
+          transition: "left 260ms cubic-bezier(0.4, 0, 0.2, 1)",
+        }}
+      >
+        {current.label}
+      </span>
+      {TABS.filter((t) => t.key !== active).map((t) => (
+        <Link
+          key={t.key}
+          href={t.key === "home" ? routes.home : withPeriod(routes[t.key], period)}
+          onClick={(e) => {
+            if (!onSelect) return;
+            e.preventDefault();
+            onSelect(t.key);
+          }}
+          className={`absolute top-1/2 -translate-x-1/2 -translate-y-1/2 px-[18px] py-[10px] ${T_LABEL} ${W_SEMI}`}
+          style={{ color: MENU_IDLE, left: t.left }}
+        >
+          {t.label}
+        </Link>
+      ))}
     </div>
   );
 }

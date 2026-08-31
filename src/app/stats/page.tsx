@@ -1,17 +1,19 @@
-// PERFORMANCE HOME, LIVE. The rebuilt Performance area took over the
-// `/stats` address; today's old page moved to `/stats-old` and is
-// still reachable with his real numbers, his ruling of 31 August 2026.
+// PERFORMANCE, LIVE. The rebuilt area took over `/stats`; the old page
+// moved to `/stats-old` and is still reachable with his real numbers.
 //
-// The page itself is the same component the public preview draws. The
-// only difference is what it is handed: the preview gets demo bets,
-// this gets the signed in user's own, and the addresses its links
-// point at come from LIVE_ROUTES instead of the preview set.
+// Home, Lab and Totals are one page here. The bets are loaded once and
+// switching tabs asks the server for nothing.
 
-import HomeApp from "../preview/performance-home/HomeApp";
+import { Suspense } from "react";
+import PerfArea from "../preview/performance-area";
 import { loadUserBets } from "@/lib/load-bets";
 import { LIVE_ROUTES } from "@/lib/performance-routes";
 
 export default async function StatsPage() {
   const bets = await loadUserBets();
-  return <HomeApp bets={bets} routes={LIVE_ROUTES} live />;
+  return (
+    <Suspense fallback={null}>
+      <PerfArea bets={bets} initial="home" routes={LIVE_ROUTES} live />
+    </Suspense>
+  );
 }

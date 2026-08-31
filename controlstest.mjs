@@ -74,19 +74,19 @@ for (const [label, group, head] of [
   await page.goto(`${B}performance-totals`, { waitUntil: "networkidle" });
   await page.waitForTimeout(400);
   await page.click(`h2:has-text("${label}") + a`);
-  let landed = true;
-  try {
-    await page.waitForURL(`**group=${group}**`, { timeout: 8000 });
-  } catch {
-    landed = false;
-  }
-  await page.waitForTimeout(900);
+  // Checked by the MARK, not by the address. The tab area switches in
+  // place now and hands the group over as a prop, so the URL no longer
+  // carries it: a test that watched the address went red on 31 August
+  // 2026 while the feature itself was working perfectly.
+  await page.waitForTimeout(1500);
+  const landed = (await page.innerText("body")).includes("Build your view");
   const marked = await page.evaluate(() =>
     [...document.querySelectorAll("div")]
       .filter((d) => d.style.background && d.style.background.includes("240"))
       .map((d) => (d.innerText || "").split("\n")[0])
   );
   say(landed && marked.includes(head), `Totals "${label}" lands on Lab's ${head}`);
+  void group;
 }
 
 // JOB 4. One period control, three pages. A pill that changes its own

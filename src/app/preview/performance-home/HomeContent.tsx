@@ -1,9 +1,5 @@
 "use client";
 
-// It became a client component on 31 August 2026, when the Actuals
-// noticed strip gained the insights sheet. Nothing else about it
-// changed: it still takes its bets from the caller and computes
-// everything from them.
 // The new Performance Home, round 3, rebuilt to the combined master
 // mockup "0. Chat Aug 28.png" (853px wide for a 390pt frame, scale
 // 2.187). Every size here comes from probe.py ink measurements of that
@@ -42,18 +38,22 @@
 // Never write a hex in this folder again. Add a token to the dial and
 // import it.
 
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { HeroChart, Spark } from "./charts";
 import type { ReactNode } from "react";
 import { buildHomeView, type HomeRow } from "./home-model";
 import { makeEngine, type GroupKey } from "../pf/engine";
+import PeriodPill from "../performance-lab/PeriodPill";
+import {
+  betsIn,
+  type CustomRange,
+  type PeriodKey,
+} from "../performance-lab/period";
+import { useState } from "react";
 import type { BetWithLegs } from "@/lib/types";
 import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
 import InsightSheet, { rollInsights } from "../performance-insight-sheet";
-import PerfPage from "../performance-shell";
-import PerfMenu from "../performance-menu";
 import {
   BallIcon,
   ChangedMark,
@@ -106,7 +106,6 @@ import {
   R_TILE,
   SELECTOR_INK,
   SUBGREEN,
-  TAIL_TALL,
   T_BODY,
   T_LABEL,
   T_LEAD,
@@ -145,23 +144,43 @@ const FACT_ICONS = [
   <FactWave key="returned" size={19} />,
 ];
 
-export default function HomeApp({
+export default function HomeContent({
   bets,
   routes = PREVIEW_ROUTES,
+  onJump,
+  period,
+  range,
+  onPeriod,
+  onRange,
   live = false,
 }: {
   /** The preview passes demo bets; the live page passes the signed in
       user's own. The page itself never knows which. */
   bets: BetWithLegs[];
   routes?: PerfRoutes;
-  /** True on the live page, where the bottom tab bar must navigate. */
+  /** The insights page is behind login, so the sheet only offers a
+      door to it on the live page. */
   live?: boolean;
+  /** Switch to Lab in place instead of navigating. The tab area passes
+      this so a ranked row swaps the view rather than loading a page. */
+  onJump?: (sel: string) => void;
+  /** The window, owned by the tab area and shared with Lab and
+      Totals. The pill in the corner used to be a picture of a control
+      that read "This month" over an all time number. */
+  period: PeriodKey;
+  range: CustomRange;
+  onPeriod: (key: PeriodKey) => void;
+  onRange: (r: CustomRange) => void;
 }) {
+  const [periodOpen, setPeriodOpen] = useState(false);
   // The insights sheet, 31 August 2026. null means closed.
   const [insights, setInsights] = useState<string[] | null>(null);
-  const view = buildHomeView(makeEngine(bets));
+  // The period is applied by filtering the bets, so every figure on
+  // the page follows: the number, the chart, the KPI row and the
+  // ranked list, with no call site knowing about dates.
+  const view = buildHomeView(makeEngine(betsIn(bets, period, range)));
   return (
-    <PerfPage live={live} tail={TAIL_TALL}>
+    <>
         {/* The colour wash behind the chart and KPI row, re-extracted
             from "2. big chart Aug 28.png": his 29 August order to go
             back to that sheet's fade. It ends before the insight card,
@@ -178,12 +197,7 @@ export default function HomeApp({
           <WashTexture />
         </div>
 
-        {/* The Home / Lab / Totals menu. One shared component since
-            30 August 2026: Home used to hold its own copy of the same
-            geometry because this folder was locked to one chat. */}
-        <PerfMenu active="home" routes={routes} />
-
-        {/* Net profit and the This month selector. */}
+        {/* Net profit and the period selector. */}
         <div className="relative mt-[10px] flex items-center justify-between pl-[22px] pr-[10px]">
           <p
             className={`flex items-center gap-[1px] ${T_LABEL} ${W_SEMI}`}
@@ -192,12 +206,15 @@ export default function HomeApp({
             Net profit
             <InfoDot size={13} />
           </p>
-          <span
-            className={`relative top-[2px] flex h-[24px] items-center gap-[3px] rounded-full bg-white px-[12px] ${T_SMALL} ${W_SEMI}`}
-            style={{ color: SELECTOR_INK, boxShadow: "0 1px 3px rgba(30,25,60,0.07)" }}
-          >
-            This month
-            <ChevDown size={11} />
+          <span className="relative top-[2px] z-30">
+            <PeriodPill
+              period={period}
+              onPick={onPeriod}
+              open={periodOpen}
+              setOpen={setPeriodOpen}
+              range={range}
+              onRange={onRange}
+            />
           </span>
         </div>
 
@@ -367,6 +384,11 @@ export default function HomeApp({
             <Link
               key={row.chip.group + row.name}
               href={`${routes.lab}?sel=${encodeURIComponent(row.sel)}`}
+              onClick={(e) => {
+                if (!onJump) return;
+                e.preventDefault();
+                onJump(row.sel);
+              }}
               className={
                 i === 0
                   ? `mx-[12px] mb-[4px] flex h-[49px] items-center ${R_INNER} bg-white pl-[8px] pr-[12px]`
@@ -433,6 +455,11 @@ export default function HomeApp({
             selections." */}
         <Link
           href={routes.lab}
+          onClick={(e) => {
+            if (!onJump) return;
+            e.preventDefault();
+            onJump("");
+          }}
           className={`relative mx-[14px] mt-[8px] flex h-[69px] items-center ${R_TILE} pl-[15px] pr-[15px]`}
           style={{ background: LAB_CARD }}
         >
@@ -469,6 +496,6 @@ export default function HomeApp({
             <Chev size={7} color={ON_BRAND} />
           </span>
         </Link>
-    </PerfPage>
+    </>
   );
 }

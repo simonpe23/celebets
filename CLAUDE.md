@@ -116,7 +116,7 @@ failure.
 
 **Screenshots cannot see everything.** Gestures, motion and absences all
 need a script: `scrubtest.mjs`, `motiontest.mjs`, `pftest.mjs`,
-`jumptest.mjs`.
+`jumptest.mjs`, `periodtest.mjs`.
 
 **A change that is meant to be invisible needs `shotdiff.mjs`.** It
 shoots every page on the old code and the new and compares them pixel

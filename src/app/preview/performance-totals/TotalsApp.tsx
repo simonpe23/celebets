@@ -53,7 +53,7 @@ import {
 } from "../performance-ui";
 import Explain from "../performance-lab/Explain";
 import PeriodPill from "../performance-lab/PeriodPill";
-import { betsIn, isPeriod, withPeriod, type PeriodKey } from "../performance-lab/period";
+import { type CustomRange, type PeriodKey, betsIn, isPeriod, withPeriod } from "../performance-lab/period";
 import { Donut } from "./donut";
 import { HeroLine } from "./hero-chart";
 import {
@@ -117,10 +117,14 @@ function SectionHead({
   title,
   link,
   href,
+  onClick,
 }: {
   title: string;
   link?: string;
   href?: string;
+  /** Intercepts the link so the tab area can switch in place. The
+      href stays, so the address is still shareable. */
+  onClick?: (e: React.MouseEvent) => void;
 }) {
   return (
     <div className="flex items-center justify-between px-[13px] pt-[13px]">
@@ -128,6 +132,7 @@ function SectionHead({
       {link && href ? (
         <Link
           href={href}
+          onClick={onClick}
           className={`flex items-center gap-[3px] ${T_SMALL} ${W_SEMI}`}
           style={{ color: INDIGO }}
         >
@@ -142,26 +147,34 @@ function SectionHead({
 export default function TotalsApp({
   bets,
   routes = PREVIEW_ROUTES,
+  period,
+  range,
+  onPeriod,
+  onRange,
+  onJumpGroup,
 }: {
   /** Demo bets on the public preview, the signed in user's own
       bets on the live page. The component never knows which. */
   bets: BetWithLegs[];
   routes?: PerfRoutes;
+  /** Owned by the tab area so all three tabs show one window. It used
+      to be a router.replace here, which is a server navigation: inside
+      the shared area that would reload the page to change a filter. */
+  period: PeriodKey;
+  range: CustomRange;
+  onPeriod: (key: PeriodKey) => void;
+  onRange: (r: CustomRange) => void;
+  /** Open Lab on a group without leaving the page. */
+  onJumpGroup?: (group: string) => void;
 }) {
   // Job 4. The period is applied by building the engine from a
   // filtered record, so every number on the page follows without a
   // single call site knowing about dates.
-  const params = useSearchParams();
-  const router = useRouter();
-  const raw = params.get("period");
-  const period: PeriodKey = isPeriod(raw) ? raw : "all";
   const [periodOpen, setPeriodOpen] = useState(false);
-  const setPeriod = (key: PeriodKey) =>
-    router.replace(withPeriod(routes.totals, key), {
-      scroll: false,
-    });
-
-  const engine = useMemo(() => makeEngine(betsIn(bets, period)), [bets, period]);
+  const engine = useMemo(
+    () => makeEngine(betsIn(bets, period, range)),
+    [bets, period, range]
+  );
   const all = useMemo(() => overall(engine), [engine]);
   const series = useMemo(
     () => engine.runningFor([]).map((r) => ({ t: r.t, v: r.profit })),
@@ -192,9 +205,11 @@ export default function TotalsApp({
       <div className="relative z-30 mt-[10px] flex items-center pl-[15px]">
         <PeriodPill
           period={period}
-          onPick={setPeriod}
+          onPick={onPeriod}
           open={periodOpen}
           setOpen={setPeriodOpen}
+          range={range}
+          onRange={onRange}
           align="left"
           size="plain"
         />
@@ -266,6 +281,11 @@ export default function TotalsApp({
           title="Profit by Sport"
           link="View all"
           href={withPeriod(`${routes.lab}?group=sport`, period)}
+          onClick={(e) => {
+            if (!onJumpGroup) return;
+            e.preventDefault();
+            onJumpGroup("sport");
+          }}
         />
         <div className="mt-[8px] flex items-center gap-[8px] pl-[9px] pr-[11px]">
           <Donut
@@ -319,6 +339,11 @@ export default function TotalsApp({
           title="Per Category"
           link="View all"
           href={withPeriod(`${routes.lab}?group=what`, period)}
+          onClick={(e) => {
+            if (!onJumpGroup) return;
+            e.preventDefault();
+            onJumpGroup("what");
+          }}
         />
         <div className="mt-[6px] flex px-[11px]">
           {[catLeft, catRight].map((col, ci) => (

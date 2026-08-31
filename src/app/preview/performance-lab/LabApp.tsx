@@ -79,7 +79,7 @@ import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
 import Explain from "./Explain";
 import PeriodPill from "./PeriodPill";
 import InsightSheet, { rollInsights } from "../performance-insight-sheet";
-import { betsIn, isPeriod, type PeriodKey } from "./period";
+import { type CustomRange, type PeriodKey, betsIn, isPeriod } from "./period";
 import {
   buildGroups,
   DOMAINS,
@@ -223,6 +223,12 @@ export default function LabApp({
   bets,
   routes = PREVIEW_ROUTES,
   live = false,
+  initialSel,
+  initialGroup,
+  period,
+  range,
+  onPeriod,
+  onRange,
 }: {
   /** Demo bets on the public preview, the signed in user's own
       bets on the live page. The component never knows which. */
@@ -231,6 +237,21 @@ export default function LabApp({
   /** The insights page is behind login, so the sheet only offers a
       door to it on the live page. */
   live?: boolean;
+  /** The selection handed over by a jump from Home, as
+      `group~kind~value`. It is a prop and not read from the address
+      because the tab area switches with pushState, which does not
+      refresh useSearchParams. */
+  initialSel?: string;
+  /** The group to scroll to, handed over by a jump from Totals. A
+      prop for the same reason as initialSel: pushState does not
+      refresh useSearchParams. */
+  initialGroup?: string;
+  /** The period is owned by the tab area, so Home, Lab and Totals all
+      show the same window. */
+  period: PeriodKey;
+  range: CustomRange;
+  onPeriod: (key: PeriodKey) => void;
+  onRange: (r: CustomRange) => void;
 }) {
   // The insights sheet, 31 August 2026. null means closed.
   const [insights, setInsights] = useState<string[] | null>(null);
@@ -238,21 +259,22 @@ export default function LabApp({
   // Job 4. The period is applied by building the engine from a
   // filtered record, so every chip price, the chart and the KPI row
   // all follow with no call site knowing about dates.
-  const rawPeriod = params.get("period");
-  const [period, setPeriod] = useState<PeriodKey>(
-    isPeriod(rawPeriod) ? rawPeriod : "all"
-  );
   const [periodOpen, setPeriodOpen] = useState(false);
   // Job 7. A row that scrolls sideways hides whatever ran off the
   // edge, and "All sports" promised a way to see it. Tapping it wraps
   // the row instead, so every fact in that group is on screen at once.
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
-  const engine = useMemo(() => makeEngine(betsIn(bets, period)), [bets, period]);
+  const engine = useMemo(
+    () => makeEngine(betsIn(bets, period, range)),
+    [bets, period, range]
+  );
   const [domain, setDomain] = useState<Domain>(() => {
     const d = params.get("domain");
     return (DOMAINS as string[]).includes(d ?? "") ? (d as Domain) : "Sports";
   });
-  const [sel, setSel] = useState<Chip[]>(() => parseSel(params.get("sel")));
+  const [sel, setSel] = useState<Chip[]>(() =>
+    parseSel(initialSel !== undefined ? initialSel : params.get("sel"))
+  );
   const [domainOpen, setDomainOpen] = useState(false);
   const groupsRef = useRef<HTMLDivElement>(null);
 
@@ -263,7 +285,7 @@ export default function LabApp({
   // Job 3. Totals' "View all" links name a group; Lab is the full
   // list, so it just scrolls there.
   const groupRefs = useRef<Record<string, HTMLDivElement | null>>({});
-  const jumpTo = params.get("group");
+  const jumpTo = initialGroup !== undefined ? initialGroup : params.get("group");
   // The six groups all fit on one screen at the bottom of the page, so
   // scrolling alone cannot say which one you were sent to. The arrival
   // is marked instead, and fades.
@@ -416,9 +438,11 @@ export default function LabApp({
         <span className="relative top-[2px] z-30">
           <PeriodPill
             period={period}
-            onPick={setPeriod}
+            onPick={onPeriod}
             open={periodOpen}
             setOpen={setPeriodOpen}
+            range={range}
+            onRange={onRange}
           />
         </span>
       </div>

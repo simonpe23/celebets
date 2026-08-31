@@ -157,6 +157,77 @@ nonsense "$0, -$1, -$2, -$3".
 account gets a page with no ranked rows, a flat line and "- ROI",
 which does not crash but was never designed.
 
+## Home, Lab and Totals are ONE page, 31 August 2026
+
+They were three routes. Switching tabs meant a server round trip, a
+fresh database query, and Next showing `/stats/loading` in between,
+which was the OLD design's skeleton: the word Performance, three grey
+cards and the three tab bottom bar. His words after the first look at
+the live site: "it's very slow when jumping tabs... it's loading this
+page in between, not at all a smooth experience. i dont want that. i
+want the transition to be a clean smooth swap. i want to see the tab
+bar slide over."
+
+`performance-area.tsx` now holds all three. The bets load once, the
+frame and the menu stay mounted, and the tab is React state.
+**Measured: zero server requests per switch, and roughly a tenth of a
+second to render.**
+
+- **The addresses still work.** Each tab keeps its own route for deep
+  links and for the jump from Home; those routes render the same area
+  with a different starting tab. Switching uses `pushState`, and the
+  back button is wired to it.
+- **The pill slides.** It is one element with a stable key, so the
+  browser animates the move instead of React replacing it.
+- **The selection travels as a PROP, not in the address.** `pushState`
+  does not refresh `useSearchParams`, so a jump that relied on the
+  address arrived at an unscoped Lab, and Lab then overwrote the
+  address with its own empty state.
+- **`/stats/loading.tsx` no longer shows the old design.** It is a
+  blank frame in the page's own colour, and it is only ever seen on a
+  cold arrival now.
+
+**A test that was lying, fixed.** `jumptest.mjs` asserted only that the
+fact's record appeared somewhere on Lab. Every chip in Lab prints its
+own record, so "30-16" was on screen whether or not the jump landed:
+five of six jumps passed while the feature was broken. It now asserts
+that Lab is SCOPED, that the empty Lab says so, and that the fact is
+named in the tray.
+
+## The period filter, 31 August 2026
+
+His words after the first live look: "i did fix the month toggle in
+the top corner on the lab page. they added a time filter there, so i
+should be able to see result from all time, year, month, week, day and
+then add custom as well, just as the old performance page."
+
+- **Home's corner pill was a picture of a control.** It read "This
+  month" above an all time number. It is the real control now, the
+  same `PeriodPill` Lab and Totals already used, so all four screens
+  read as one product.
+- **Custom is in.** It was deliberately left out while these were demo
+  pages with a generated record; they are the live pages now. The old
+  page's own behaviour is copied: the from date starts at midnight,
+  the to date ends at 23:59:59.999, and a half filled range is open at
+  that end. A chosen range names itself on the pill ("From 1 Aug"),
+  so the window is never hidden behind the word Custom.
+- **ONE window for the whole area.** The period used to live inside
+  Lab and inside Totals and travel between them in the address. It
+  lives in `performance-area.tsx` now: change it on Home and Lab is
+  already looking at the same window.
+- **Totals no longer changes the period by navigating.** It used
+  `router.replace`, which is a server round trip: inside the shared
+  area that meant reloading the page to change a filter. Its "View
+  all" links into Lab switch in place too, measured at zero server
+  requests.
+
+**`periodtest.mjs` proves it filters.** A control that looks right and
+filters nothing is exactly the bug this page already had, and a
+screenshot cannot tell the difference between a working control and a
+picture of one. The script checks every period changes the numbers,
+that Custom offers two dates and names itself, and that the window
+survives a tab switch.
+
 ## Where the older work lives
 
 - `src/app/preview/pf/`, the Portfolio prototype, walkable end to end.
