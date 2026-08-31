@@ -221,11 +221,17 @@ function selToUrl(sel: Chip[], domain: Domain, period: PeriodKey): string {
 export default function LabApp({
   bets,
   routes = PREVIEW_ROUTES,
+  initialSel,
 }: {
   /** Demo bets on the public preview, the signed in user's own
       bets on the live page. The component never knows which. */
   bets: BetWithLegs[];
   routes?: PerfRoutes;
+  /** The selection handed over by a jump from Home, as
+      `group~kind~value`. It is a prop and not read from the address
+      because the tab area switches with pushState, which does not
+      refresh useSearchParams. */
+  initialSel?: string;
 }) {
   const params = useSearchParams();
   // Job 4. The period is applied by building the engine from a
@@ -245,7 +251,9 @@ export default function LabApp({
     const d = params.get("domain");
     return (DOMAINS as string[]).includes(d ?? "") ? (d as Domain) : "Sports";
   });
-  const [sel, setSel] = useState<Chip[]>(() => parseSel(params.get("sel")));
+  const [sel, setSel] = useState<Chip[]>(() =>
+    parseSel(initialSel !== undefined ? initialSel : params.get("sel"))
+  );
   const [domainOpen, setDomainOpen] = useState(false);
   const groupsRef = useRef<HTMLDivElement>(null);
 
