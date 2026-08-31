@@ -1144,6 +1144,16 @@ offered one, and wrapping the row answers the real need for a fraction
 of the work. If he wants a sheet showing sports he has never bet, that
 is a new job.
 
+**TODAY'S /STATS SURVIVES THE SWAP, WITH HIS REAL NUMBERS. Ruled 31
+August 2026**, after he had to say it three times, his words: "I have
+said this many times: want today's /stats to be reachable with my
+numbers in the future. that's all i want." When the new Performance
+takes over the `/stats` address, the old page moves to its own address
+(working name `/stats-old`), behind login, on his real data, design
+untouched, and stays until he retires it himself. Skipping `/stats` in
+the design-token work is unrelated and fine: a page does not need
+tokens to stay alive.
+
 ## Process
 
 **Past reactions are not constraints.** Said twice in two days: "just

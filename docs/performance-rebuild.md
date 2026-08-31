@@ -492,7 +492,15 @@ Not design work, and nobody has scoped it:
 1. **Empty states.** Every view assumes a full record.
 2. **Loading states.** The prototype computes instantly on demo data.
 3. **The swap.** Replace `/stats` in one go, or run both behind a
-   switch while the numbers are checked.
+   switch while the numbers are checked. **RULED, 31 August 2026, and
+   he has repeated it: the old page does not die.** His words: "want
+   today's /stats to be reachable with my numbers in the future.
+   that's all i want." So swap day includes one small job: today's
+   `/stats` page moves to its own address (working name `/stats-old`),
+   behind his login, reading his real numbers, design untouched. It
+   stays until he himself retires it. The demo-data mirror at
+   `/preview/performance` is NOT this; it shows fake numbers and does
+   not satisfy the ruling.
 4. **One colour dial for all pages. DONE, 30 August 2026.** It was
    parked by the owner on 29 August 2026: "I don't feel the need to
    do anything drastic right now... what is important is that pages
