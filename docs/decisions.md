@@ -1154,6 +1154,52 @@ untouched, and stays until he retires it himself. Skipping `/stats` in
 the design-token work is unrelated and fine: a page does not need
 tokens to stay alive.
 
+**ONE CHAT MAY WIRE BOTH HOME AND LAB. Ruled 31 August 2026.** His
+words: "if I could merge the two chats, Lab and Home, I would do it in
+a heartbeat... you are allowed to wire stuff in the lab chat if
+needed, if it makes things easier." His reasoning, and it is right:
+"the design is one thing, but when it comes to the numbers, they are
+absolutely intertwined. Home Lab totals, everything is 100% connected
+and has to align across the board."
+
+**He wants the Performance design in ONE chat, not several.** His
+words the same day: "I just so regret I have multiple chats. If I was
+me, my biggest wish would be that the design for all these seven
+pages, or however many pages is under Performance, they lived in one
+chat." Recorded at that confidence: a regret and a wish, and he added
+that it is moot for now because he will "redesign locally and then
+probably open new chats after we go live."
+
+**Nothing in this repo forces work to be split by chat.** The folder
+ownership lines in `CLAUDE.md` are a collision convention between
+chats working at the same time, never a rule about who may do what.
+One chat may take every Performance page, design and numbers both.
+
+**CLAUDE's earlier line "design is per chat, numbers are one job in
+one chat" was an inference, not his ruling, and he rejected it.** It
+is struck. Split work when two chats are genuinely working at once;
+otherwise do not split it at all.
+
+**The architecture already supports this, verified 31 August 2026 by
+reading the code, not by assuming:**
+
+- `src/lib/stats.ts` is the ONLY money engine. `legShares` splits a
+  bet's profit across its legs and the shares sum back to
+  `payout - stake`, the app's one definition.
+- `src/app/preview/pf/engine.ts` does NOT compute money. It imports
+  `effectiveResult`, `legShares` and `legStakeShares` from
+  `src/lib/stats.ts` and only groups the results by sport, league,
+  category and the rest.
+- Lab and Totals both read that engine over one shared list of bets,
+  so they cannot disagree with each other.
+- **Home is the only page with hand typed numbers.** Its `ROWS` array
+  was typed to match the mockup and nothing computes it. That is the
+  single place where the three tabs could ever drift apart, and
+  wiring it to the engine closes it.
+- The demo bets are already the app's own `BetWithLegs` type, so
+  swapping demo for real data is a drop in at the source, not a
+  rewrite of any page.
+
 ## Process
 
 **Past reactions are not constraints.** Said twice in two days: "just

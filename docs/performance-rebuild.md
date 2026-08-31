@@ -75,6 +75,49 @@ Still to come, pass two of the same job: the live pages (Track,
 Research, Settings, today's `/stats`) and a build check that fails on
 a colour or a font written inside a page.
 
+## Home computes its numbers, 31 August 2026
+
+Home's five ranked rows, its KPI figures, its hero number, its chart
+and its insight sentence were all literals copied off the mockup.
+Nothing computed them, so Home could disagree with Lab and Totals
+about the same bets. They read one engine; Home read nothing.
+
+`home-model.ts` now builds everything Home shows from bets.
+`charts.tsx` draws from values instead of the traced arrays. The
+money is still never computed here: `pf/engine.ts` groups the facts
+and imports every money rule from `src/lib/stats.ts`.
+
+**Verified before wiring, by running both over the same bets:** the
+engine and `netProfitOf` agree to the cent ($2,636.93). There is one
+money definition, not two.
+
+**His ruling on what the list contains, 31 August 2026:** "the top 5
+best performing, across all variations, based on profit." No
+one-per-family rule and no guaranteed losing row.
+
+**What the wiring exposed, all of it now fixed:**
+
+- The five rows were not the top five by profit. They are now
+  Moneyline, Match Winner, Parlays, Medium odds and Football.
+- Rows that survived still had invented figures: Moneyline showed 60%
+  hit and ROI +31%, against a real 65% and +56%.
+- `rankedFacts` returns `spark: []` on purpose, so the sparklines drew
+  as flat lines until each fact asked for its own `sparkFor`.
+- The axis and the line now share ONE scale, on round numbers. Reading
+  them off the data alone produced labels like "-$16".
+- The insight card said "Player Props drove most of your losses this
+  month". Player Props is not in the list and is not the biggest leak.
+  The sentence is computed from the worst fact now.
+
+**`jumptest.mjs` reads the rows off Home** instead of listing them.
+The rows are computed, so a hardcoded list would go stale the moment
+the data changes. It proves every fact Home ranks arrives in Lab
+showing the same record, which is the alignment guarantee itself.
+
+**Still not computed on Home:** the "This month" selector. It is inert
+and the number beside it is all time, so the label overstates. Lab's
+panel says "All time" for exactly this reason. Flagged, not changed.
+
 ## Where the older work lives
 
 - `src/app/preview/pf/`, the Portfolio prototype, walkable end to end.

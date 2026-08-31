@@ -39,6 +39,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { HeroChart, Spark } from "./charts";
+import type { ReactNode } from "react";
+import { buildHomeView, type HomeRow } from "./home-model";
+import { makeEngine, type GroupKey } from "../pf/engine";
+import { labBets } from "../performance-lab/lab-data";
 import PerfPage from "../performance-shell";
 import PerfMenu from "../performance-menu";
 import {
@@ -105,82 +109,38 @@ import {
   W_SEMI,
 } from "../performance-ui";
 
-const ROWS = [
-  {
-    rank: 1,
-    icon: <DollarIcon size={20} />,
-    tile: PILL_LAV,
-    name: "Moneyline",
-    sel: "what~category~Moneyline",
-    meta: "30–16",
-    hit: "60% hit rate",
-    spark: "s1" as const,
-    money: "+$2,658",
-    roi: "ROI +31%",
-    moneyColor: GREEN,
-  },
-  {
-    rank: 2,
-    icon: <BallIcon size={20} />,
-    tile: PILL_LAV,
-    name: "Premier League",
-    sel: "where~plain~Premier League",
-    meta: "14–8",
-    hit: "64% hit rate",
-    spark: "s2" as const,
-    money: "+$743",
-    roi: "ROI +22%",
-    moneyColor: GREEN,
-  },
-  {
-    rank: 3,
-    icon: <TrendTileIcon size={20} />,
-    tile: PILL_LAV,
-    name: "Low odds",
-    sel: "risk~plain~Low odds",
-    meta: "18–11",
-    hit: "62% hit rate",
-    spark: "s3" as const,
-    money: "+$612",
-    roi: "ROI +15%",
-    moneyColor: GREEN,
-  },
-  {
-    rank: 4,
-    icon: <LayersIcon size={20} />,
-    tile: PILL_LAV,
-    name: "Singles",
-    sel: "how~plain~Singles",
-    meta: "24–18",
-    hit: "57% hit rate",
-    spark: "s4" as const,
-    money: "+$440",
-    roi: "ROI +11%",
-    moneyColor: GREEN,
-  },
-  {
-    rank: 5,
-    icon: <RedTarget size={20} />,
-    tile: ROW_TILE_BAD,
-    name: "Player Props",
-    sel: "what~category~Player Props",
-    meta: "7–11",
-    hit: "39% hit rate",
-    spark: "s5" as const,
-    money: "-$440",
-    roi: "ROI -18%",
-    moneyColor: RED,
-  },
-];
+// A ranked row's tile icon comes from the family the fact belongs to,
+// because the rows are computed now and no longer a fixed five. A
+// losing fact wears the red target on a red tile, the pattern the
+// accepted design already used for Player Props.
+const GROUP_ICON: Record<GroupKey, (size: number) => ReactNode> = {
+  what: (size) => <DollarIcon size={size} />,
+  sport: (size) => <BallIcon size={size} />,
+  where: (size) => <BallIcon size={size} />,
+  risk: (size) => <TrendTileIcon size={size} />,
+  how: (size) => <LayersIcon size={size} />,
+  when: (size) => <TrendTileIcon size={size} />,
+};
 
-const FACTS = [
-  { icon: <FactNote size={19} />, value: "87", label: "Bets" },
-  { icon: <FactTarget size={19} />, value: "56%", label: "Hit rate" },
-  { icon: <FactTrend size={19} />, value: "$10.9K", label: "Wagered" },
-  { icon: <FactWave size={19} />, value: "$13.6K", label: "Returned" },
+function rowIcon(row: HomeRow): ReactNode {
+  if (!row.positive) return <RedTarget size={20} />;
+  return GROUP_ICON[row.chip.group](20);
+}
+
+// The four fact icons, in the order the KPI row draws them. The
+// figures beside them are computed, not typed.
+const FACT_ICONS = [
+  <FactNote key="bets" size={19} />,
+  <FactTarget key="hit" size={19} />,
+  <FactTrend key="wagered" size={19} />,
+  <FactWave key="returned" size={19} />,
 ];
 
 export default function PerformanceHomePreview() {
+  // Demo bets, because a preview page is public by ruling and must
+  // never carry real user data. The real page hands the same builder
+  // the logged in user's own bets instead.
+  const view = buildHomeView(makeEngine(labBets));
   return (
     <PerfPage tail={TAIL_TALL}>
         {/* The colour wash behind the chart and KPI row, re-extracted
@@ -225,46 +185,57 @@ export default function PerformanceHomePreview() {
         {/* The number. */}
         <p
           className={`relative mt-[4px] pl-[18px] text-[45px] ${W_BOLD} leading-none`}
-          style={{ color: INDIGO }}
+          style={{ color: view.positive ? INDIGO : RED }}
         >
-          +$2,637
+          {view.netProfit}
         </p>
 
         {/* The ROI and record line. */}
         <p className={`relative mt-[7px] flex items-center gap-[4px] pl-[22px] ${T_LABEL} ${W_SEMI}`}>
           <MiniTrend size={12} />
-          <span style={{ color: SUBGREEN }}>+24.1% ROI</span>
+          <span style={{ color: view.positive ? SUBGREEN : RED }}>
+            {view.roiLine}
+          </span>
           <span
             className="mx-[1px] inline-block h-[3px] w-[3px] rounded-full"
             style={{ background: DOT_MUTED }}
           />
-          <span style={{ color: NET_LABEL }}>49–38 Record</span>
+          <span style={{ color: NET_LABEL }}>{view.recordLine}</span>
         </p>
 
         {/* The chart: full width, no card, blending into the wash. Its
             right end rides up beside the number, like the sheet. */}
         <div className="relative mt-[-30px]">
           <div className="pl-[22px] pr-[54px]">
-            <HeroChart width={313.6} height={CHART_H_HOME} />
+            <HeroChart
+              values={view.series}
+              top={view.chartTop}
+              bottom={view.chartBottom}
+              width={313.6}
+              height={CHART_H_HOME}
+            />
           </div>
           <div
             className={`absolute right-0 top-0 w-[38px] ${T_TINY} ${W_SEMI}`}
             style={{ color: GREY_TEXT }}
           >
-            <span className="absolute left-0 top-[-9px]">$3K</span>
-            <span className="absolute left-0 top-[24px]">$1.5K</span>
-            <span className="absolute left-0 top-[58px]">$0</span>
-            <span className="absolute left-0 top-[91px]">-$1.5K</span>
+            {view.yLabels.map((label, i) => (
+              <span
+                key={label + i}
+                className="absolute left-0"
+                style={{ top: [-9, 24, 58, 91][i] }}
+              >
+                {label}
+              </span>
+            ))}
           </div>
           <div
             className={`mt-[12px] flex justify-between pl-[24px] pr-[52px] text-[7px] ${W_SEMI}`}
             style={{ color: GREY_TEXT }}
           >
-            <span>Mar 1</span>
-            <span>Mar 8</span>
-            <span>Mar 15</span>
-            <span>Mar 22</span>
-            <span>Mar 29</span>
+            {view.xLabels.map((label, i) => (
+              <span key={label + i}>{label}</span>
+            ))}
           </div>
         </div>
 
@@ -280,13 +251,13 @@ export default function PerformanceHomePreview() {
               style={{ left, background: DIVIDER }}
             />
           ))}
-          {FACTS.map((f, i) => (
+          {view.kpis.map((f, i) => (
             <div
               key={f.label}
               className="flex items-center gap-[6px]"
               style={{ width: ["74px", "78px", "86px", "auto"][i] }}
             >
-              <span className="relative top-[-3px]">{f.icon}</span>
+              <span className="relative top-[-3px]">{FACT_ICONS[i]}</span>
               <div>
                 <p className={`text-[12.5px] ${W_BOLD} leading-none tracking-[-0.01em]`}>
                   {f.value}
@@ -320,7 +291,7 @@ export default function PerformanceHomePreview() {
               Actuals noticed
             </p>
             <p className="mt-[2px] whitespace-nowrap text-[8.7px]" style={{ color: AMBER_INK }}>
-              Player Props drove most of your losses this month.
+              {view.insight}
             </p>
           </div>
           <Chev size={11} color={ORANGE} />
@@ -361,17 +332,17 @@ export default function PerformanceHomePreview() {
 
         {/* The top list. */}
         <div className="relative mt-[8px]">
-          {ROWS.map((row, i) => (
+          {view.rows.map((row, i) => (
             <Link
-              key={row.name}
+              key={row.chip.group + row.name}
               href={`/preview/performance-lab?sel=${encodeURIComponent(row.sel)}`}
               className={
-                row.rank === 1
+                i === 0
                   ? `mx-[12px] mb-[4px] flex h-[49px] items-center ${R_INNER} bg-white pl-[8px] pr-[12px]`
                   : "mx-[12px] flex h-[47px] items-center pl-[8px] pr-[12px]"
               }
               style={
-                row.rank === 1
+                i === 0
                   ? { boxShadow: "0 6px 16px rgba(28,24,58,0.08)" }
                   : { borderTop: i > 1 ? `1px solid ${HAIR}` : undefined }
               }
@@ -379,18 +350,18 @@ export default function PerformanceHomePreview() {
               <span
                 className={`flex h-[19.5px] w-[19.5px] shrink-0 items-center justify-center rounded-full ${T_LABEL} ${W_BOLD}`}
                 style={
-                  row.rank === 1
+                  i === 0
                     ? { background: INDIGO_FILL, color: ON_BRAND }
                     : { background: HAIRLINE, color: RANK_INK }
                 }
               >
-                {row.rank}
+                {i + 1}
               </span>
               <span
                 className={`ml-[13px] flex h-[30px] w-[30px] shrink-0 items-center justify-center ${R_SMALL}`}
-                style={{ background: row.tile }}
+                style={{ background: row.positive ? PILL_LAV : ROW_TILE_BAD }}
               >
-                {row.icon}
+                {rowIcon(row)}
               </span>
               <div className="ml-[16px] w-[100px] shrink-0">
                 <p className={`whitespace-nowrap ${T_STRONG} ${W_BOLD} leading-[1.2]`}>
@@ -400,7 +371,7 @@ export default function PerformanceHomePreview() {
                   className={`mt-[2px] flex items-center gap-[7px] whitespace-nowrap text-[8.2px] ${W_SEMI}`}
                   style={{ color: GREY_TEXT }}
                 >
-                  {row.meta}
+                  {row.record}
                   <span
                     className="inline-block h-[2.5px] w-[2.5px] rounded-full"
                     style={{ background: GREY_TEXT }}
@@ -409,13 +380,13 @@ export default function PerformanceHomePreview() {
                 </p>
               </div>
               <div className="ml-[8px] w-[74px] shrink-0">
-                <Spark shape={row.spark} />
+                <Spark values={row.spark} positive={row.positive} />
               </div>
               <div className="ml-auto w-[58px] shrink-0 text-right">
-                <p className={`${T_LEAD} ${W_BOLD} leading-[1.2]`} style={{ color: row.moneyColor }}>
-                  {row.money}
+                <p className={`${T_LEAD} ${W_BOLD} leading-[1.2]`} style={{ color: row.positive ? GREEN : RED }}>
+                  {row.moneyLabel}
                 </p>
-                <p className={`mt-[1px] ${T_NANO} ${W_SEMI}`} style={{ color: row.moneyColor }}>
+                <p className={`mt-[1px] ${T_NANO} ${W_SEMI}`} style={{ color: row.positive ? GREEN : RED }}>
                   {row.roi}
                 </p>
               </div>
