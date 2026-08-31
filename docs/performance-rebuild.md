@@ -1,7 +1,8 @@
 # The Performance rebuild (in flight)
 
-Status as of 28 August 2026. **Nothing here is shipped.** `/stats` still
-serves the old Analytics page.
+Status as of 31 August 2026. **The rebuilt Performance area is LIVE at
+`/stats`** on real numbers. The old page is still reachable at
+`/stats-old`, his ruling. See "The Performance area is LIVE" below.
 
 ## The build from finished mockups (current stage)
 
@@ -117,6 +118,44 @@ showing the same record, which is the alignment guarantee itself.
 **Still not computed on Home:** the "This month" selector. It is inert
 and the number beside it is all time, so the label overstates. Lab's
 panel says "All time" for exactly this reason. Flagged, not changed.
+
+## The Performance area is LIVE, 31 August 2026
+
+`/stats` now serves the rebuilt Performance area on the signed in
+user's own bets. Today's old page moved to `/stats-old`, unchanged,
+his ruling.
+
+| Address | Page |
+|---|---|
+| `/stats` | Home |
+| `/stats/lab` | Lab |
+| `/stats/totals` | Totals |
+| `/stats/compare`, `/stats/bets`, `/stats/heatmap` | The pages inside |
+| `/stats-old` | The old page, real numbers, design untouched |
+
+**One component serves both surfaces.** Every page takes its bets and
+its route set from the caller. The public preview hands it demo bets
+and `PREVIEW_ROUTES`; the live page hands it `loadUserBets()` and
+`LIVE_ROUTES`. Neither page knows which it is, so the preview cannot
+drift away from the thing it is previewing.
+
+**The bottom tab bar navigates only on the live pages.** A preview is
+a picture of a design and a tap that left the preview area would be a
+surprise; on the live pages an inert bar would strand you on
+Performance.
+
+**Proved invisible:** 24 preview screenshots before and after, pixel
+identical, twice. `jumptest.mjs` passes all 6 doors. Every live route
+redirects a signed out visitor to `/login`.
+
+**Tested against a new account** (`emptytest.mjs` pattern): no bets,
+one bet and three bets all render without throwing. An account with no
+range at all draws its chart with no axis labels rather than the
+nonsense "$0, -$1, -$2, -$3".
+
+**Still to do, and he knows:** the empty state itself. A brand new
+account gets a page with no ranked rows, a flat line and "- ROI",
+which does not crash but was never designed.
 
 ## Where the older work lives
 

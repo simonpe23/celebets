@@ -24,7 +24,8 @@ import {
   type Chip,
   type Stats,
 } from "../pf/engine";
-import { labBets } from "../performance-lab/lab-data";
+import type { BetWithLegs } from "@/lib/types";
+import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
 import { chipIcon } from "../performance-lab/LabApp";
 import Explain from "../performance-lab/Explain";
 import {
@@ -126,8 +127,16 @@ function axisMoney(v: number): string {
   return `${v < 0 ? "-" : ""}$${t}`;
 }
 
-export default function CompareApp() {
-  const engine = useMemo(() => makeEngine(labBets), []);
+export default function CompareApp({
+  bets,
+  routes = PREVIEW_ROUTES,
+}: {
+  /** Demo bets on the public preview, the signed in user's own
+      bets on the live page. The component never knows which. */
+  bets: BetWithLegs[];
+  routes?: PerfRoutes;
+}) {
+  const engine = useMemo(() => makeEngine(bets), [bets]);
   const params = useSearchParams();
   const [metric, setMetric] = useState<Metric>("Profit");
   const [period, setPeriod] = useState<PeriodKey>("All");
@@ -277,7 +286,7 @@ export default function CompareApp() {
           `tall` is Compare's own 44px shape, four pixels more than the
           other two headers. See performance-header.tsx. */}
       <PerfHeader
-        href={`/preview/performance-lab?sel=${encodeURIComponent(backSel)}`}
+        href={`${routes.lab}?sel=${encodeURIComponent(backSel)}`}
         label="Back to Lab"
         title="Compare"
         tall

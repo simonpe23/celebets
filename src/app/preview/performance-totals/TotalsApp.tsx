@@ -18,7 +18,8 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { makeEngine, money, type Chip } from "../pf/engine";
-import { labBets } from "../performance-lab/lab-data";
+import type { BetWithLegs } from "@/lib/types";
+import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
 import { chipIcon } from "../performance-lab/LabApp";
 import { Chev, InfoDot } from "../performance-icons";
 import {
@@ -138,7 +139,15 @@ function SectionHead({
   );
 }
 
-export default function TotalsApp() {
+export default function TotalsApp({
+  bets,
+  routes = PREVIEW_ROUTES,
+}: {
+  /** Demo bets on the public preview, the signed in user's own
+      bets on the live page. The component never knows which. */
+  bets: BetWithLegs[];
+  routes?: PerfRoutes;
+}) {
   // Job 4. The period is applied by building the engine from a
   // filtered record, so every number on the page follows without a
   // single call site knowing about dates.
@@ -148,11 +157,11 @@ export default function TotalsApp() {
   const period: PeriodKey = isPeriod(raw) ? raw : "all";
   const [periodOpen, setPeriodOpen] = useState(false);
   const setPeriod = (key: PeriodKey) =>
-    router.replace(withPeriod("/preview/performance-totals", key), {
+    router.replace(withPeriod(routes.totals, key), {
       scroll: false,
     });
 
-  const engine = useMemo(() => makeEngine(betsIn(labBets, period)), [period]);
+  const engine = useMemo(() => makeEngine(betsIn(bets, period)), [bets, period]);
   const all = useMemo(() => overall(engine), [engine]);
   const series = useMemo(
     () => engine.runningFor([]).map((r) => ({ t: r.t, v: r.profit })),
@@ -256,7 +265,7 @@ export default function TotalsApp() {
         <SectionHead
           title="Profit by Sport"
           link="View all"
-          href={withPeriod("/preview/performance-lab?group=sport", period)}
+          href={withPeriod(`${routes.lab}?group=sport`, period)}
         />
         <div className="mt-[8px] flex items-center gap-[8px] pl-[9px] pr-[11px]">
           <Donut
@@ -309,7 +318,7 @@ export default function TotalsApp() {
         <SectionHead
           title="Per Category"
           link="View all"
-          href={withPeriod("/preview/performance-lab?group=what", period)}
+          href={withPeriod(`${routes.lab}?group=what`, period)}
         />
         <div className="mt-[6px] flex px-[11px]">
           {[catLeft, catRight].map((col, ci) => (
@@ -438,7 +447,7 @@ export default function TotalsApp() {
           <h2 className={`text-[12px] ${W_BOLD}`}>Recent Bets</h2>
           {/* Job 5. */}
           <Link
-            href={withPeriod("/preview/performance-bets?from=totals", period)}
+            href={withPeriod(`${routes.bets}?from=totals`, period)}
             className={`flex items-center gap-[3px] ${T_SMALL} ${W_SEMI}`}
             style={{ color: INDIGO }}
           >

@@ -9,12 +9,13 @@
 import { Suspense } from "react";
 import PerfPage from "../performance-shell";
 import HeatmapApp from "./HeatmapApp";
+import { labBets } from "../performance-lab/lab-data";
 
 export default function PerformanceHeatmapPreview() {
   return (
     <PerfPage>
       <Suspense fallback={null}>
-        <HeatmapApp />
+        <HeatmapApp bets={labBets} />
       </Suspense>
     </PerfPage>
   );

@@ -139,7 +139,11 @@ by pixel. "It looks the same to me" is not a check.
   promoted to a tab and due a rework. Track keeps its small profile
   button in the top corner for now.
 - Performance lives at `/stats` and Research at `/recommendations`. The
-  addresses were kept from the old names on purpose.
+  addresses were kept from the old names on purpose. **The rebuilt
+  Performance went live at `/stats` on 31 August 2026**, with Lab at
+  `/stats/lab` and Totals at `/stats/totals`. **Today's old page is
+  alive at `/stats-old` with his real numbers and must stay** until
+  he retires it himself.
 - USD, 2 decimals. Decimal odds, 2 decimals.
 - **The user types the stake and the exact To Collect. There are no odds
   inputs anywhere.** Total odds are always derived.

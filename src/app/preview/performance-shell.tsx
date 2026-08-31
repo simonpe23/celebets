@@ -14,6 +14,7 @@
 // and nothing about it changed.
 
 import type { ReactNode } from "react";
+import Link from "next/link";
 import {
   COL_W,
   FONT_CLASS,
@@ -39,11 +40,48 @@ import {
   TrackTabIcon,
 } from "./performance-icons";
 
+// The four bottom tabs. On the public previews they are inert: a
+// preview is a picture of a design, and a tap that left the preview
+// area would be a surprise. On the live pages they are real links, or
+// the bar would strand you on Performance.
+const LIVE_TABS = {
+  track: "/app",
+  performance: "/stats",
+  research: "/recommendations",
+  // Profile IS today's Settings page, promoted to a tab by his ruling
+  // of 26 August 2026 and due a rework.
+  profile: "/settings",
+};
+
+// One tab: a link on the live pages, a plain span on the previews.
+function TabSlot({
+  live,
+  href,
+  children,
+}: {
+  live: boolean;
+  href: string;
+  children: ReactNode;
+}) {
+  const cls =
+    "flex flex-1 flex-col items-center justify-center gap-[4px] py-1.5";
+  return live ? (
+    <Link href={href} className={cls}>
+      {children}
+    </Link>
+  ) : (
+    <span className={cls}>{children}</span>
+  );
+}
+
 export default function PerfPage({
   children,
   tail = TAIL_SHORT,
+  live = false,
 }: {
   children: ReactNode;
+  /** True on the live pages, where the tab bar must navigate. */
+  live?: boolean;
   // The spacer at the foot of the column, which decides how leftover
   // height is shared out. Home and Lab pass TAIL_TALL because they
   // have their own growing gaps higher up and this one has to lose.
@@ -77,30 +115,30 @@ export default function PerfPage({
             boxShadow: `0 6px 20px -10px rgba(16,16,26,0.35), inset 0 0 0 1px ${TAB_EDGE}`,
           }}
         >
-          <span className="flex flex-1 flex-col items-center justify-center gap-[4px] py-1.5">
+          <TabSlot live={live} href={LIVE_TABS.track}>
             <TrackTabIcon size={TAB_ICON} />
             <span className={`${T_LABEL} ${W_SEMI}`} style={{ color: TAB_IDLE }}>
               Track
             </span>
-          </span>
-          <span className="flex flex-1 flex-col items-center justify-center gap-[4px] py-1.5">
+          </TabSlot>
+          <TabSlot live={live} href={LIVE_TABS.performance}>
             <PerformanceTabIcon size={TAB_ICON} />
             <span className={`${T_LABEL} ${W_SEMI}`} style={{ color: INDIGO }}>
               Performance
             </span>
-          </span>
-          <span className="flex flex-1 flex-col items-center justify-center gap-[4px] py-1.5">
+          </TabSlot>
+          <TabSlot live={live} href={LIVE_TABS.research}>
             <ResearchTabIcon size={TAB_ICON} />
             <span className={`${T_LABEL} ${W_SEMI}`} style={{ color: TAB_IDLE }}>
               Research
             </span>
-          </span>
-          <span className="flex flex-1 flex-col items-center justify-center gap-[4px] py-1.5">
+          </TabSlot>
+          <TabSlot live={live} href={LIVE_TABS.profile}>
             <ProfileTabIcon size={TAB_ICON} />
             <span className={`${T_LABEL} ${W_SEMI}`} style={{ color: TAB_IDLE }}>
               Profile
             </span>
-          </span>
+          </TabSlot>
         </div>
       </nav>
     </div>

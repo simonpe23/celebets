@@ -112,6 +112,11 @@ function niceStep(rough: number): number {
 function axis(series: number[]): { top: number; bottom: number; labels: string[] } {
   const lo = Math.min(0, ...series);
   const hi = Math.max(0, ...series);
+  // An account with no settled bets has no range at all. Inventing one
+  // produced "$0, -$1, -$2, -$3", which reads as a bug rather than as
+  // an empty page. Draw the flat line with no axis instead; the real
+  // empty state is still to be designed.
+  if (hi === lo) return { top: 1, bottom: -1, labels: [] };
   let step = niceStep((hi - lo || 1) / 3);
   let top = Math.ceil(hi / step) * step;
   // Widen until the worst point fits under the bottom label.

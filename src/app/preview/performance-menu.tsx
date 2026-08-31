@@ -35,11 +35,14 @@ import {
   W_SEMI,
 } from "./performance-ui";
 import { withPeriod, type PeriodKey } from "./performance-lab/period";
+import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
 
+// The address of each tab comes from the route set, because the same
+// menu is drawn on the public previews and on the live pages.
 const TABS = [
-  { key: "home", label: "Home", href: "/preview/performance-home", left: 59, pill: 4 },
-  { key: "lab", label: "Lab", href: "/preview/performance-lab", left: 181, pill: 126 },
-  { key: "totals", label: "Totals", href: "/preview/performance-totals", left: 296, pill: 248 },
+  { key: "home", label: "Home", left: 59, pill: 4 },
+  { key: "lab", label: "Lab", left: 181, pill: 126 },
+  { key: "totals", label: "Totals", left: 296, pill: 248 },
 ] as const;
 
 export type PerfTab = (typeof TABS)[number]["key"];
@@ -47,9 +50,11 @@ export type PerfTab = (typeof TABS)[number]["key"];
 export default function PerfMenu({
   active,
   period = "all",
+  routes = PREVIEW_ROUTES,
 }: {
   active: PerfTab;
   period?: PeriodKey;
+  routes?: PerfRoutes;
 }) {
   return (
     <div
@@ -68,7 +73,11 @@ export default function PerfMenu({
         ) : (
           <Link
             key={t.key}
-            href={t.key === "home" ? t.href : withPeriod(t.href, period)}
+            href={
+              t.key === "home"
+                ? routes.home
+                : withPeriod(routes[t.key], period)
+            }
             className={`absolute top-1/2 -translate-x-1/2 -translate-y-1/2 px-[18px] py-[10px] ${T_LABEL} ${W_SEMI}`}
             style={{ color: MENU_IDLE, left: t.left }}
           >

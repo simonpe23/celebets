@@ -9,12 +9,13 @@
 import { Suspense } from "react";
 import PerfPage from "../performance-shell";
 import CompareApp from "./CompareApp";
+import { labBets } from "../performance-lab/lab-data";
 
 export default function PerformanceComparePreview() {
   return (
     <PerfPage>
       <Suspense fallback={null}>
-        <CompareApp />
+        <CompareApp bets={labBets} />
       </Suspense>
     </PerfPage>
   );
