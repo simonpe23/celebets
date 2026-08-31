@@ -28,6 +28,7 @@ import {
   INDIGO,
   INDIGO_FILL,
   INK,
+  INSIGHT_ROW,
   NET_LABEL,
   ON_BRAND,
   R_CARD,
@@ -98,7 +99,7 @@ export default function InsightSheet({
               <li
                 key={text}
                 className={`${R_CHIP} px-[12px] py-[10px] ${T_BODY} ${W_SEMI} leading-[1.5]`}
-                style={{ background: "#FAFAFC", color: NET_LABEL }}
+                style={{ background: INSIGHT_ROW, color: NET_LABEL }}
               >
                 {text}
               </li>
