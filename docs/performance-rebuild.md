@@ -130,7 +130,8 @@ his ruling.
 | `/stats` | Home |
 | `/stats/lab` | Lab |
 | `/stats/totals` | Totals |
-| `/stats/compare`, `/stats/bets`, `/stats/heatmap` | The pages inside |
+| `/stats/compare`, `/stats/bets` | Two more pages inside |
+| `/stats/heatmap` | The Heat Map. An address, not a page: it opens the area on that view |
 | `/stats-old` | The old page, real numbers, design untouched |
 
 **One component serves both surfaces.** Every page takes its bets and
@@ -344,9 +345,10 @@ a time, a screenshot after each, his reaction before the next.
   wins pill folded into the grey one), all applied.
 - **THE HEAT MAP IS BUILT, awaiting his reaction.** At
   `src/app/preview/performance-heatmap/`, from his sheet
-  `2. heat map.png`, on his order of 29 August 2026. Its own page at
-  `/preview/performance-heatmap`, reached from the Heat Map pill on
-  Home, back arrow returns there. Four compact insight cards
+  `2. heat map.png`, on his order of 29 August 2026. Reached from the
+  Heat Map pill on Home, back arrow returns there. It was its own page
+  until 31 August 2026 and is now a fourth view inside the tab area,
+  so opening it loads nothing: see `docs/decisions.md`. Four compact insight cards
   (Strongest Edge, Biggest Leak, New Pattern, Cooling Off) in two
   rows of two, 64px each, then a tall squarified
   treemap where a tile's area is the money that fact moved and every

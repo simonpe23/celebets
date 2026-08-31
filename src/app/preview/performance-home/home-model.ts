@@ -130,6 +130,30 @@ function axis(series: number[]): { top: number; bottom: number; labels: string[]
   };
 }
 
+// THE "Actuals noticed" SENTENCE, AND THERE IS ONLY ONE OF IT.
+//
+// Home computed this from the bets. Lab printed the literal "Player
+// Props are driving most of your losses" on every record, his own
+// included, whether or not it was true. Two pages, two answers, one of
+// them a guess, on a page whose whole argument is honesty. Both call
+// this now, so they cannot disagree.
+//
+// The leak is the worst losing fact in the whole ranked list, not only
+// the five Home draws, and the list is already filtered to the chosen
+// period because the engine is built from filtered bets.
+//
+// `ranked` is an optimisation, nothing more: Home has already paid for
+// this list, so it hands it over instead of making the engine walk
+// every chip a second time.
+export function leakInsight(engine: Engine, ranked?: Fact[]): string | null {
+  const facts =
+    ranked ?? engine.sortFacts(dedupeFacts(engine.rankedFacts([], 5)), "profit");
+  const losing = facts.filter((f) => f.s.profit < 0);
+  if (losing.length === 0) return null;
+  const worst = losing.reduce((a, b) => (a.s.profit <= b.s.profit ? a : b));
+  return `${worst.chip.value} is your biggest leak at ${money(worst.s.profit)}.`;
+}
+
 export function buildHomeView(engine: Engine): HomeView {
   const whole = engine.statsFor([]);
   const running = engine.runningFor([]);
@@ -162,14 +186,6 @@ export function buildHomeView(engine: Engine): HomeView {
         )
       : [];
 
-  // The insight names the biggest leak. It used to be the literal
-  // "Player Props drove most of your losses this month", which stopped
-  // being true the moment the rows were computed.
-  const losing = facts.filter((f) => f.s.profit < 0);
-  const worst = losing.length
-    ? losing.reduce((a, b) => (a.s.profit <= b.s.profit ? a : b))
-    : null;
-
   const scale = axis(series);
   const picks = whole.wins + whole.losses;
   const returned = whole.profit + whole.staked;
@@ -186,9 +202,7 @@ export function buildHomeView(engine: Engine): HomeView {
       { value: compact(returned), label: "Returned" },
     ],
     rows,
-    insight: worst
-      ? `${worst.chip.value} is your biggest leak at ${money(worst.s.profit)}.`
-      : null,
+    insight: leakInsight(engine, facts),
     series,
     chartTop: scale.top,
     chartBottom: scale.bottom,

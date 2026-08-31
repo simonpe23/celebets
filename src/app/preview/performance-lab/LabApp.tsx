@@ -87,6 +87,7 @@ import {
   marketsUnder,
   recordOf,
 } from "./lab-model";
+import { leakInsight } from "../performance-home/home-model";
 import {
   AMBER_BG,
   AMBER_EDGE,
@@ -225,6 +226,7 @@ export default function LabApp({
   live = false,
   initialSel,
   initialGroup,
+  initialDomain,
   period,
   range,
   onPeriod,
@@ -246,6 +248,10 @@ export default function LabApp({
       prop for the same reason as initialSel: pushState does not
       refresh useSearchParams. */
   initialGroup?: string;
+  /** The domain handed over by a jump from the Heat Map, whose tiles
+      are not all Sports. A prop for the same reason as the two above:
+      pushState does not refresh useSearchParams. */
+  initialDomain?: string;
   /** The period is owned by the tab area, so Home, Lab and Totals all
       show the same window. */
   period: PeriodKey;
@@ -268,8 +274,11 @@ export default function LabApp({
     () => makeEngine(betsIn(bets, period, range)),
     [bets, period, range]
   );
+  // The "Actuals noticed" sentence, computed from the same filtered
+  // record Home uses. One function, two pages. See `leakInsight`.
+  const insight = useMemo(() => leakInsight(engine), [engine]);
   const [domain, setDomain] = useState<Domain>(() => {
-    const d = params.get("domain");
+    const d = initialDomain !== undefined ? initialDomain : params.get("domain");
     return (DOMAINS as string[]).includes(d ?? "") ? (d as Domain) : "Sports";
   });
   const [sel, setSel] = useState<Chip[]>(() =>
@@ -503,7 +512,14 @@ export default function LabApp({
       </div>
 
       {/* Actuals noticed. Tapping it opens the insights sheet, his
-          ruling of 31 August 2026. */}
+          ruling of 31 August 2026.
+          THE SENTENCE IS COMPUTED, since 31 August 2026. It used to be
+          the literal "Player Props are driving most of your losses",
+          printed on every record including his own, true or not, on a
+          page whose whole argument is honesty. It is Home's own
+          sentence now, from `leakInsight`, so the two cannot disagree.
+          No leak means no sentence, and then no card. */}
+      {insight ? (
       <button
         onClick={() => setInsights(rollInsights(bets))}
         aria-label="Open your insights"
@@ -524,11 +540,12 @@ export default function LabApp({
             className="mt-[2px] block truncate text-[8.7px]"
             style={{ color: AMBER_INK }}
           >
-            Player Props are driving most of your losses.
+            {insight}
           </span>
         </span>
         <Chev size={11} color={ORANGE} />
       </button>
+      ) : null}
       <InsightSheet
         items={insights}
         live={live}

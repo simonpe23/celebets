@@ -35,10 +35,9 @@
 // Tapping a tile opens Lab with that fact selected, his ruling of
 // 26 August 2026, and the figure on the tile is the figure Lab shows.
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type MouseEvent } from "react";
 import PerfHeader from "../performance-header";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { money, makeEngine, type Chip } from "../pf/engine";
 import type { BetWithLegs } from "@/lib/types";
 import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
@@ -47,8 +46,8 @@ import Explain from "../performance-lab/Explain";
 import PeriodPill from "../performance-lab/PeriodPill";
 import {
   betsIn,
-  isPeriod,
   withPeriod,
+  type CustomRange,
   type PeriodKey,
 } from "../performance-lab/period";
 import {
@@ -198,6 +197,7 @@ function InsightCard({
   headline,
   meta,
   href,
+  onClick,
 }: {
   kind: "edge" | "leak" | "hot" | "cool";
   title: string;
@@ -205,6 +205,9 @@ function InsightCard({
   headline: string;
   meta: string;
   href: string;
+  // Set by the tab area so the card swaps the view instead of loading
+  // Lab as a page. The href stays either way.
+  onClick?: (e: MouseEvent<HTMLAnchorElement>) => void;
 }) {
   const good = kind === "edge" || kind === "hot";
   const accent = kind === "edge" ? ORANGE : good ? GREEN : RED;
@@ -212,6 +215,7 @@ function InsightCard({
   return (
     <Link
       href={href}
+      onClick={onClick}
       className={`flex min-w-0 flex-1 items-center gap-[8px] ${R_CHIP} py-[9px] pl-[9px] pr-[10px]`}
       style={{ background: CARD, boxShadow: "0 1px 5px rgba(24,20,50,0.07)" }}
     >
@@ -304,22 +308,38 @@ type Streak = {
 export default function HeatmapApp({
   bets,
   routes = PREVIEW_ROUTES,
+  period,
+  range,
+  onPeriod,
+  onRange,
+  onBack,
+  onJump,
 }: {
   /** Demo bets on the public preview, the signed in user's own
       bets on the live page. The component never knows which. */
   bets: BetWithLegs[];
   routes?: PerfRoutes;
+  /** The window, owned by the tab area and shared with Home, Lab and
+      Totals. It used to be this page's own state, read out of the
+      address, which is what a separate page has to do. */
+  period: PeriodKey;
+  range: CustomRange;
+  onPeriod: (key: PeriodKey) => void;
+  onRange: (r: CustomRange) => void;
+  /** Back to Home in place, no page load. */
+  onBack?: () => void;
+  /** Open Lab on a fact in place, no page load. The domain travels
+      with it because not every tile is a Sports fact. */
+  onJump?: (sel: string, domain?: string) => void;
 }) {
   // Job 4. The whole page follows the period: the four cards, the map
   // and the streak windows, because the engine itself is built from
   // the filtered record.
-  const params = useSearchParams();
-  const rawPeriod = params.get("period");
-  const [period, setPeriod] = useState<PeriodKey>(
-    isPeriod(rawPeriod) ? rawPeriod : "all"
-  );
   const [periodOpen, setPeriodOpen] = useState(false);
-  const engine = useMemo(() => makeEngine(betsIn(bets, period)), [bets, period]);
+  const engine = useMemo(
+    () => makeEngine(betsIn(bets, period, range)),
+    [bets, period, range]
+  );
 
   const singles = useMemo(() => singleFacts(engine), [engine]);
   const pairs = useMemo(() => pairFacts(engine, singles), [engine, singles]);
@@ -409,12 +429,26 @@ export default function HeatmapApp({
 
   const { edge, leak, hot, cool } = cards;
 
+  // Every door out of this page points at Lab on one fact. It stays a
+  // real link so the address works, and the tap swaps the view when
+  // the tab area is driving. The domain rides along: a Crypto fact
+  // landing on a Sports mode Lab shows nothing.
+  const door = (f: Fact) => ({
+    href: labUrl(f, period, routes.lab),
+    onClick: (e: MouseEvent<HTMLAnchorElement>) => {
+      if (!onJump) return;
+      e.preventDefault();
+      onJump(selOf(f.chips), f.domain === "Sports" ? undefined : f.domain);
+    },
+  });
+
   return (
     <>
       {/* The header: back to Home, the title, and the insight sparkle
           the brief puts on every Performance screen. */}
       <PerfHeader
         href={routes.home}
+        onBack={onBack}
         label="Back to Home"
         title="Heat Map"
         right={
@@ -432,10 +466,12 @@ export default function HeatmapApp({
       <div className="relative z-30 mt-[8px] flex justify-center">
         <PeriodPill
           period={period}
-          onPick={setPeriod}
+          onPick={onPeriod}
           open={periodOpen}
           setOpen={setPeriodOpen}
           align="left"
+          range={range}
+          onRange={onRange}
         />
       </div>
 
@@ -449,7 +485,7 @@ export default function HeatmapApp({
             name={edge.label}
             headline={`+${pct(edge.roi)} ROI`}
             meta={`${edge.s.wins}–${edge.s.losses} record`}
-            href={labUrl(edge, period, routes.lab)}
+            {...door(edge)}
           />
         ) : null}
         {leak ? (
@@ -459,7 +495,7 @@ export default function HeatmapApp({
             name={leak.label}
             headline={`${pct(leak.roi)} ROI`}
             meta={`${leak.s.wins}–${leak.s.losses} record`}
-            href={labUrl(leak, period, routes.lab)}
+            {...door(leak)}
           />
         ) : null}
       </div>
@@ -472,7 +508,7 @@ export default function HeatmapApp({
               name={hot.f.label}
               headline="Hot streak"
               meta={`${hot.form.wins}–${hot.form.losses} in last ${hot.form.picks} picks`}
-              href={labUrl(hot.f, period, routes.lab)}
+              {...door(hot.f)}
             />
           ) : null}
           {cool ? (
@@ -482,7 +518,7 @@ export default function HeatmapApp({
               name={cool.f.label}
               headline="Cooling off"
               meta={`${cool.form.wins}–${cool.form.losses} in last ${cool.form.picks} picks`}
-              href={labUrl(cool.f, period, routes.lab)}
+              {...door(cool.f)}
             />
           ) : null}
         </div>
@@ -578,7 +614,7 @@ export default function HeatmapApp({
               ) : (
                 <Link
                   key={t.key}
-                  href={labUrl(t.fact!, period, routes.lab)}
+                  {...door(t.fact!)}
                   className={className}
                   style={style}
                 >

@@ -148,6 +148,7 @@ export default function HomeContent({
   bets,
   routes = PREVIEW_ROUTES,
   onJump,
+  onHeatmap,
   period,
   range,
   onPeriod,
@@ -164,6 +165,10 @@ export default function HomeContent({
   /** Switch to Lab in place instead of navigating. The tab area passes
       this so a ranked row swaps the view rather than loading a page. */
   onJump?: (sel: string) => void;
+  /** Open the Heat Map in place. Same reason as onJump: the Heat Map
+      is a view inside the tab area now, so the pill swaps the view
+      instead of loading a page and re-reading the database. */
+  onHeatmap?: () => void;
   /** The window, owned by the tab area and shared with Lab and
       Totals. The pill in the corner used to be a picture of a control
       that read "This month" over an all time number. */
@@ -309,7 +314,13 @@ export default function HomeContent({
         <div className="min-h-[12px] grow-[2]" />
 
         {/* Actuals noticed: its own section on the plain page. Tapping
-            it opens the insights sheet, his ruling of 31 August 2026. */}
+            it opens the insights sheet, his ruling of 31 August 2026.
+            The sentence is computed, so a record with nothing losing
+            has no sentence. The card goes with it: an amber card with
+            a blank line under its heading is not a design, it is a
+            hole. What a brand new account should see here instead is
+            still open, in docs/open-questions.md. */}
+        {view.insight ? (
         <button
           onClick={() => setInsights(rollInsights(bets))}
           aria-label="Open your insights"
@@ -338,6 +349,7 @@ export default function HomeContent({
           </span>
           <Chev size={11} color={ORANGE} />
         </button>
+        ) : null}
         <InsightSheet
           items={insights}
           live={live}
@@ -358,10 +370,17 @@ export default function HomeContent({
             </p>
           </div>
           <div className="relative top-[3px] flex shrink-0 items-center gap-[6px]">
-            {/* The pill opens the Heat Map page, 29 August 2026. Tap
-                wiring only: nothing about the pill's look changes. */}
+            {/* The pill opens the Heat Map, 29 August 2026. It stays a
+                real link so the address works and a long press can
+                open it in a new tab; the tab area intercepts the tap
+                and swaps the view instead, 31 August 2026. */}
             <Link
               href={routes.heatmap}
+              onClick={(e) => {
+                if (!onHeatmap) return;
+                e.preventDefault();
+                onHeatmap();
+              }}
               className={`flex h-[23px] items-center gap-[4px] rounded-full px-[9px] ${T_SMALL} ${W_SEMI}`}
               style={{ background: PILL_LAV, color: INDIGO }}
             >

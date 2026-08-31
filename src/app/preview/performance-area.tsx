@@ -20,6 +20,15 @@
 // component with a different starting tab. Switching updates the
 // address with pushState so the back button and a shared link both
 // behave, without asking the server for anything.
+//
+// THE HEAT MAP JOINED THIS ON 31 AUGUST 2026, for the same reason.
+// His words: "heat map is loading slowly." It was not slow code: the
+// server rendered it in 0.11s. It was a separate page, so tapping the
+// Heat Map pill on Home left the area, asked the database for his
+// bets a second time and drew a loading screen on the way. It is a
+// view in here now, on the bets already in memory. It is NOT a menu
+// tab: the menu is still Home, Lab and Totals, and the Heat Map keeps
+// its back arrow to Home.
 
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -28,6 +37,7 @@ import PerfMenu, { type PerfTab } from "./performance-menu";
 import HomeContent from "./performance-home/HomeContent";
 import LabApp from "./performance-lab/LabApp";
 import TotalsApp from "./performance-totals/TotalsApp";
+import HeatmapApp from "./performance-heatmap/HeatmapApp";
 import { TAIL_SHORT, TAIL_TALL } from "./performance-ui";
 import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
 import type { BetWithLegs } from "@/lib/types";
@@ -38,6 +48,10 @@ import {
   type PeriodKey,
 } from "./performance-lab/period";
 
+// What the area can show. The menu draws three of these; the Heat Map
+// is a fourth view reached from Home's pill, with no menu of its own.
+export type PerfView = PerfTab | "heatmap";
+
 export default function PerfArea({
   bets,
   initial,
@@ -45,12 +59,12 @@ export default function PerfArea({
   live = false,
 }: {
   bets: BetWithLegs[];
-  initial: PerfTab;
+  initial: PerfView;
   routes?: PerfRoutes;
   live?: boolean;
 }) {
   const params = useSearchParams();
-  const [tab, setTab] = useState<PerfTab>(initial);
+  const [tab, setTab] = useState<PerfView>(initial);
   // THE PERIOD IS SHARED BY ALL THREE TABS. It used to live inside Lab
   // and inside Totals, travelling between them in the address. They
   // are one page now, so it lives here: change the window on Home and
@@ -67,12 +81,17 @@ export default function PerfArea({
   // uses pushState, and useSearchParams does not see that.
   const [labSel, setLabSel] = useState<string | undefined>(undefined);
   const [labGroup, setLabGroup] = useState<string | undefined>(undefined);
+  // The Heat Map's tiles carry a domain as well as a selection: a
+  // Crypto fact landing on a Sports mode Lab shows nothing. Same
+  // reason as above, it travels as a prop.
+  const [labDomain, setLabDomain] = useState<string | undefined>(undefined);
 
   const go = useCallback(
-    (next: PerfTab, sel?: string, group?: string) => {
+    (next: PerfView, sel?: string, group?: string, domain?: string) => {
       const url =
         next === "lab" && sel
-          ? `${routes.lab}?sel=${encodeURIComponent(sel)}`
+          ? `${routes.lab}?sel=${encodeURIComponent(sel)}` +
+            (domain ? `&domain=${encodeURIComponent(domain)}` : "")
           : routes[next];
       if (typeof window !== "undefined") {
         window.history.pushState(null, "", url);
@@ -80,6 +99,7 @@ export default function PerfArea({
       if (next === "lab") {
         setLabSel(sel ?? "");
         setLabGroup(group);
+        setLabDomain(domain);
         setLabKey((k) => k + 1);
       }
       setTab(next);
@@ -92,7 +112,7 @@ export default function PerfArea({
   useEffect(() => {
     function onPop() {
       const path = window.location.pathname;
-      const match = (["lab", "totals", "home"] as const).find((k) =>
+      const match = (["lab", "totals", "heatmap", "home"] as const).find((k) =>
         k === "home" ? path === routes.home : path.startsWith(routes[k])
       );
       if (match) {
@@ -108,8 +128,15 @@ export default function PerfArea({
     // Home and Lab have their own growing gaps higher up, so their
     // foot spacer has to lose; Totals does not, and keeps the short
     // one it has always had.
-    <PerfPage live={live} tail={tab === "totals" ? TAIL_SHORT : TAIL_TALL}>
-      <PerfMenu active={tab} routes={routes} onSelect={go} />
+    <PerfPage
+      live={live}
+      tail={tab === "totals" || tab === "heatmap" ? TAIL_SHORT : TAIL_TALL}
+    >
+      {/* The Heat Map is not one of the three, so it draws no menu.
+          Nothing about how it looks changed in the move. */}
+      {tab !== "heatmap" && (
+        <PerfMenu active={tab} routes={routes} onSelect={go} />
+      )}
 
       {tab === "home" && (
         <HomeContent
@@ -121,6 +148,7 @@ export default function PerfArea({
           onPeriod={setPeriod}
           onRange={setRange}
           onJump={(sel) => go("lab", sel)}
+          onHeatmap={() => go("heatmap")}
         />
       )}
       {tab === "lab" && (
@@ -131,6 +159,7 @@ export default function PerfArea({
           live={live}
           initialSel={labSel}
           initialGroup={labGroup}
+          initialDomain={labDomain}
           period={period}
           range={range}
           onPeriod={setPeriod}
@@ -146,6 +175,18 @@ export default function PerfArea({
           onPeriod={setPeriod}
           onRange={setRange}
           onJumpGroup={(g) => go("lab", undefined, g)}
+        />
+      )}
+      {tab === "heatmap" && (
+        <HeatmapApp
+          bets={bets}
+          routes={routes}
+          period={period}
+          range={range}
+          onPeriod={setPeriod}
+          onRange={setRange}
+          onBack={() => go("home")}
+          onJump={(sel, domain) => go("lab", sel, undefined, domain)}
         />
       )}
     </PerfPage>

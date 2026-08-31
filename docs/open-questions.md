@@ -51,31 +51,41 @@ old words, and every provider mapper points at them.
 
 **LIVE AND UNFIXED, 31 August 2026. These are on his live page now.**
 
-1. **Lab's "Actuals noticed" sentence is hardcoded.** It reads "Player
-   Props are driving most of your losses" on every record, including
-   his own, whether or not it is true. Home's is computed from the
-   bets. He has been told; he has not said fix it yet. It is a lie on
-   a page whose whole argument is honesty, so it should not sit here
-   long.
-2. **The heat map feels slow on his phone.** His words: "heat map is
-   loading slowly." Measured locally: the server renders it in 0.11s
-   and the tap takes 0.2s with no page reload, so the code is not
-   slow. It is slow live because it is still a separate page that
-   asks the database for his bets again. The fix is the one already
-   built for the tabs: bring it inside the instant area.
-3. **The empty state does not exist.** A brand new account gets a page
+**Two are FIXED**, on his say-so the same day: "go for the heat map
+and the lab sentence."
+
+- **Lab's hardcoded "Actuals noticed" sentence is gone.** Both pages
+  call one function, `leakInsight`, so Home and Lab cannot disagree
+  about what is losing money.
+- **The heat map is inside the instant area**, so opening it asks the
+  server for nothing. `heattest.mjs` counts the requests and fails if
+  any appear.
+
+1. **The empty state does not exist.** A brand new account gets a page
    with no ranked rows, a flat line and "- ROI". It does not crash,
    and the axis no longer invents "$0, -$1, -$2, -$3", but nobody has
-   designed what it should say.
-4. **The pages have no dark mode at all**, by his ruling, until the
+   designed what it should say. The amber insight card at least no
+   longer draws itself with a blank line under its heading when
+   nothing is losing: it is left out. CLAUDE's call, not a ruling of
+   his.
+2. **The pages have no dark mode at all**, by his ruling, until the
    app-wide redesign.
-5. **All six pages scroll sideways on a 320px phone**, 22 to 52px,
+3. **All six pages scroll sideways on a 320px phone**, 22 to 52px,
    from the menu's absolute pixel positions. `sitecheck.mjs` guards
    393px and 1512px; extend it to 320 once fixed. Reported by the Lab
    chat at handover, not yet verified here.
-6. **The "This month" label on Home is gone**, so that inconsistency
+4. **The "This month" label on Home is gone**, so that inconsistency
    is closed, but the period is still not written into the address
    when it changes on Home. A shared link does not carry the window.
+5. **Compare and All Bets are still separate pages.** The Heat Map
+   moved inside the instant area; those two did not, because he asked
+   for the heat map and nothing else. They will feel exactly as slow
+   as the heat map did. Not scheduled.
+6. **Lab's sentence ignores what you selected.** It names the whole
+   record's biggest leak, the same sentence Home shows, because that
+   is the honest fix and it needed no product decision. Whether Lab's
+   sentence should speak about the current selection instead has not
+   been asked. CLAUDE's call, his to overturn.
 
 
 
