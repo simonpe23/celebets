@@ -270,6 +270,47 @@ say(
   "and the label offers Show less"
 );
 
+// THE INSIGHTS SHEET, 31 August 2026. His ruling: "the insight button
+// does not work. make a pop up window, similar to what we have on
+// Track." A sheet that opens but never rerolls is the failure a
+// screenshot cannot see.
+for (const route of ["performance-home", "performance-lab"]) {
+  await page.goto(`${B}${route}`, { waitUntil: "networkidle" });
+  await page.waitForTimeout(700);
+  await page.locator('button[aria-label="Open your insights"]').click();
+  await page.waitForTimeout(500);
+  const first = await page.evaluate(() =>
+    [...document.querySelectorAll("ul li")].map((l) => l.innerText)
+  );
+  say(
+    (await page.innerText("body")).includes("Your insights") &&
+      first.length > 0 &&
+      first.length <= 4,
+    `${route}: the strip opens the sheet (${first.length} insights)`
+  );
+  await page.locator('button:has-text("New mix")').click();
+  await page.waitForTimeout(500);
+  const second = await page.evaluate(() =>
+    [...document.querySelectorAll("ul li")].map((l) => l.innerText)
+  );
+  say(
+    JSON.stringify(first) !== JSON.stringify(second) || first.length < 2,
+    `${route}: New mix rerolls them`
+  );
+  // /insights is behind login, so the public preview must not offer a
+  // door to a login screen.
+  say(
+    (await page.locator('a:has-text("Show all")').count()) === 0,
+    `${route}: no Show all on the public preview`
+  );
+  await page.locator('button:has-text("Close")').click();
+  await page.waitForTimeout(400);
+  say(
+    !(await page.innerText("body")).includes("Your insights"),
+    `${route}: Close shuts it`
+  );
+}
+
 await browser.close();
 stopServer();
 console.log(fails ? `${fails} control(s) broken` : "Every control works.");

@@ -78,6 +78,7 @@ import type { BetWithLegs } from "@/lib/types";
 import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
 import Explain from "./Explain";
 import PeriodPill from "./PeriodPill";
+import InsightSheet, { rollInsights } from "../performance-insight-sheet";
 import { betsIn, isPeriod, type PeriodKey } from "./period";
 import {
   buildGroups,
@@ -221,12 +222,18 @@ function selToUrl(sel: Chip[], domain: Domain, period: PeriodKey): string {
 export default function LabApp({
   bets,
   routes = PREVIEW_ROUTES,
+  live = false,
 }: {
   /** Demo bets on the public preview, the signed in user's own
       bets on the live page. The component never knows which. */
   bets: BetWithLegs[];
   routes?: PerfRoutes;
+  /** The insights page is behind login, so the sheet only offers a
+      door to it on the live page. */
+  live?: boolean;
 }) {
+  // The insights sheet, 31 August 2026. null means closed.
+  const [insights, setInsights] = useState<string[] | null>(null);
   const params = useSearchParams();
   // Job 4. The period is applied by building the engine from a
   // filtered record, so every chip price, the chart and the KPI row
@@ -471,9 +478,12 @@ export default function LabApp({
         ))}
       </div>
 
-      {/* Actuals noticed. */}
-      <div
-        className={`relative mx-[15px] mt-[16px] flex h-[45px] items-center ${R_CHIP} pl-[7px] pr-[12px]`}
+      {/* Actuals noticed. Tapping it opens the insights sheet, his
+          ruling of 31 August 2026. */}
+      <button
+        onClick={() => setInsights(rollInsights(bets))}
+        aria-label="Open your insights"
+        className={`relative mx-[15px] mt-[16px] flex h-[45px] w-[calc(100%-30px)] items-center ${R_CHIP} pl-[7px] pr-[12px] text-left`}
         style={{ background: AMBER_BG, boxShadow: `inset 0 0 0 1px ${AMBER_EDGE}` }}
       >
         <span
@@ -482,16 +492,25 @@ export default function LabApp({
         >
           <GoldSparkle size={16} />
         </span>
-        <div className="ml-[11px] min-w-0 flex-1 leading-[1.4]">
-          <p className={`text-[7.8px] ${W_SEMI}`} style={{ color: ORANGE }}>
+        <span className="ml-[11px] block min-w-0 flex-1 leading-[1.4]">
+          <span className={`block text-[7.8px] ${W_SEMI}`} style={{ color: ORANGE }}>
             Actuals noticed
-          </p>
-          <p className="mt-[2px] whitespace-nowrap text-[8.7px]" style={{ color: AMBER_INK }}>
+          </span>
+          <span
+            className="mt-[2px] block truncate text-[8.7px]"
+            style={{ color: AMBER_INK }}
+          >
             Player Props are driving most of your losses.
-          </p>
-        </div>
+          </span>
+        </span>
         <Chev size={11} color={ORANGE} />
-      </div>
+      </button>
+      <InsightSheet
+        items={insights}
+        live={live}
+        onReroll={() => setInsights(rollInsights(bets))}
+        onClose={() => setInsights(null)}
+      />
 
       {/* The doors: the bets behind the answer, and the parked
           Compare door at exactly two selections, wearing Soon. */}

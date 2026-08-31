@@ -1,3 +1,9 @@
+"use client";
+
+// It became a client component on 31 August 2026, when the Actuals
+// noticed strip gained the insights sheet. Nothing else about it
+// changed: it still takes its bets from the caller and computes
+// everything from them.
 // The new Performance Home, round 3, rebuilt to the combined master
 // mockup "0. Chat Aug 28.png" (853px wide for a 390pt frame, scale
 // 2.187). Every size here comes from probe.py ink measurements of that
@@ -36,6 +42,7 @@
 // Never write a hex in this folder again. Add a token to the dial and
 // import it.
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { HeroChart, Spark } from "./charts";
@@ -44,6 +51,7 @@ import { buildHomeView, type HomeRow } from "./home-model";
 import { makeEngine, type GroupKey } from "../pf/engine";
 import type { BetWithLegs } from "@/lib/types";
 import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
+import InsightSheet, { rollInsights } from "../performance-insight-sheet";
 import PerfPage from "../performance-shell";
 import PerfMenu from "../performance-menu";
 import {
@@ -149,6 +157,8 @@ export default function HomeApp({
   /** True on the live page, where the bottom tab bar must navigate. */
   live?: boolean;
 }) {
+  // The insights sheet, 31 August 2026. null means closed.
+  const [insights, setInsights] = useState<string[] | null>(null);
   const view = buildHomeView(makeEngine(bets));
   return (
     <PerfPage live={live} tail={TAIL_TALL}>
@@ -281,9 +291,12 @@ export default function HomeApp({
 
         <div className="min-h-[12px] grow-[2]" />
 
-        {/* Actuals noticed: its own section on the plain page. */}
-        <div
-          className={`relative mx-[15px] flex h-[45px] items-center ${R_CHIP} pl-[7px] pr-[12px]`}
+        {/* Actuals noticed: its own section on the plain page. Tapping
+            it opens the insights sheet, his ruling of 31 August 2026. */}
+        <button
+          onClick={() => setInsights(rollInsights(bets))}
+          aria-label="Open your insights"
+          className={`relative mx-[15px] flex h-[45px] items-center ${R_CHIP} pl-[7px] pr-[12px] text-left`}
           style={{
             background: AMBER_BG,
             boxShadow: `inset 0 0 0 1px ${AMBER_EDGE}`,
@@ -295,16 +308,25 @@ export default function HomeApp({
           >
             <GoldSparkle size={16} />
           </span>
-          <div className="ml-[11px] min-w-0 flex-1 leading-[1.4]">
-            <p className={`text-[7.8px] ${W_SEMI}`} style={{ color: ORANGE }}>
+          <span className="ml-[11px] block min-w-0 flex-1 leading-[1.4]">
+            <span className={`block text-[7.8px] ${W_SEMI}`} style={{ color: ORANGE }}>
               Actuals noticed
-            </p>
-            <p className="mt-[2px] whitespace-nowrap text-[8.7px]" style={{ color: AMBER_INK }}>
+            </span>
+            <span
+              className="mt-[2px] block truncate text-[8.7px]"
+              style={{ color: AMBER_INK }}
+            >
               {view.insight}
-            </p>
-          </div>
+            </span>
+          </span>
           <Chev size={11} color={ORANGE} />
-        </div>
+        </button>
+        <InsightSheet
+          items={insights}
+          live={live}
+          onReroll={() => setInsights(rollInsights(bets))}
+          onClose={() => setInsights(null)}
+        />
 
         <div className="min-h-[12px] grow-[2]" />
 

@@ -1257,6 +1257,31 @@ he names and nothing else. Something else that seems needed gets said
 in one line and then waits for him. No more work done "while I was in
 there", however small or however well meant.
 
+**THE INSIGHT STRIP OPENS A SHEET. Ruled 31 August 2026**, his words:
+"the insight button does not work. make a pop up window, similar to
+what we have on Track that shows some top insights. then you can click
+new mix and new insights come up, or click all and you'll get to the
+insight page." Built on the Actuals noticed strip on both Home and Lab.
+
+- **The content is Track's own**, through `rollInsights` in
+  `src/components/InsightsPopup.tsx`, the same call the Track page's
+  Insight of the day makes. Two screens saying different things about
+  one record is what this avoids.
+- **Only the dress is new.** Track's sheet is the old palette with its
+  own dark rules; dropping it into Performance would look like a
+  different app. The new one is built from `performance-ui.ts`.
+- **"Show all" only appears on the live page.** `/insights` is behind
+  login, so on the public preview that link would send a stranger to a
+  login screen.
+- **Home became a client component** to hold the open sheet. Nothing
+  else about it changed.
+
+**STILL BROKEN AND NOT FIXED, because he did not ask: Lab's Actuals
+noticed sentence is HARDCODED.** It reads "Player Props are driving
+most of your losses" on every record, including his live one, where it
+may simply be false. Home's version is computed from the bets
+(`view.insight`). Told to him 31 August 2026; his call whether to fix.
+
 ## Process
 
 **Past reactions are not constraints.** Said twice in two days: "just

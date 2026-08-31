@@ -17,7 +17,7 @@ export default async function StatsLabPage() {
       </Suspense>
 
       <Suspense fallback={null}>
-        <LabApp bets={bets} routes={LIVE_ROUTES} />
+        <LabApp bets={bets} routes={LIVE_ROUTES} live />
       </Suspense>
     </PerfPage>
   );
