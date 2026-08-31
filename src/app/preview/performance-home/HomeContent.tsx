@@ -1,3 +1,5 @@
+"use client";
+
 // The new Performance Home, round 3, rebuilt to the combined master
 // mockup "0. Chat Aug 28.png" (853px wide for a 390pt frame, scale
 // 2.187). Every size here comes from probe.py ink measurements of that
@@ -51,6 +53,7 @@ import {
 import { useState } from "react";
 import type { BetWithLegs } from "@/lib/types";
 import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
+import InsightSheet, { rollInsights } from "../performance-insight-sheet";
 import {
   BallIcon,
   ChangedMark,
@@ -149,11 +152,15 @@ export default function HomeContent({
   range,
   onPeriod,
   onRange,
+  live = false,
 }: {
   /** The preview passes demo bets; the live page passes the signed in
       user's own. The page itself never knows which. */
   bets: BetWithLegs[];
   routes?: PerfRoutes;
+  /** The insights page is behind login, so the sheet only offers a
+      door to it on the live page. */
+  live?: boolean;
   /** Switch to Lab in place instead of navigating. The tab area passes
       this so a ranked row swaps the view rather than loading a page. */
   onJump?: (sel: string) => void;
@@ -166,6 +173,8 @@ export default function HomeContent({
   onRange: (r: CustomRange) => void;
 }) {
   const [periodOpen, setPeriodOpen] = useState(false);
+  // The insights sheet, 31 August 2026. null means closed.
+  const [insights, setInsights] = useState<string[] | null>(null);
   // The period is applied by filtering the bets, so every figure on
   // the page follows: the number, the chart, the KPI row and the
   // ranked list, with no call site knowing about dates.
@@ -299,9 +308,12 @@ export default function HomeContent({
 
         <div className="min-h-[12px] grow-[2]" />
 
-        {/* Actuals noticed: its own section on the plain page. */}
-        <div
-          className={`relative mx-[15px] flex h-[45px] items-center ${R_CHIP} pl-[7px] pr-[12px]`}
+        {/* Actuals noticed: its own section on the plain page. Tapping
+            it opens the insights sheet, his ruling of 31 August 2026. */}
+        <button
+          onClick={() => setInsights(rollInsights(bets))}
+          aria-label="Open your insights"
+          className={`relative mx-[15px] flex h-[45px] items-center ${R_CHIP} pl-[7px] pr-[12px] text-left`}
           style={{
             background: AMBER_BG,
             boxShadow: `inset 0 0 0 1px ${AMBER_EDGE}`,
@@ -313,16 +325,25 @@ export default function HomeContent({
           >
             <GoldSparkle size={16} />
           </span>
-          <div className="ml-[11px] min-w-0 flex-1 leading-[1.4]">
-            <p className={`text-[7.8px] ${W_SEMI}`} style={{ color: ORANGE }}>
+          <span className="ml-[11px] block min-w-0 flex-1 leading-[1.4]">
+            <span className={`block text-[7.8px] ${W_SEMI}`} style={{ color: ORANGE }}>
               Actuals noticed
-            </p>
-            <p className="mt-[2px] whitespace-nowrap text-[8.7px]" style={{ color: AMBER_INK }}>
+            </span>
+            <span
+              className="mt-[2px] block truncate text-[8.7px]"
+              style={{ color: AMBER_INK }}
+            >
               {view.insight}
-            </p>
-          </div>
+            </span>
+          </span>
           <Chev size={11} color={ORANGE} />
-        </div>
+        </button>
+        <InsightSheet
+          items={insights}
+          live={live}
+          onReroll={() => setInsights(rollInsights(bets))}
+          onClose={() => setInsights(null)}
+        />
 
         <div className="min-h-[12px] grow-[2]" />
 

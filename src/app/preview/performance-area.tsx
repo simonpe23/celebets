@@ -115,6 +115,7 @@ export default function PerfArea({
         <HomeContent
           bets={bets}
           routes={routes}
+          live={live}
           period={period}
           range={range}
           onPeriod={setPeriod}
@@ -127,6 +128,7 @@ export default function PerfArea({
           key={labKey}
           bets={bets}
           routes={routes}
+          live={live}
           initialSel={labSel}
           initialGroup={labGroup}
           period={period}

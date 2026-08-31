@@ -74,19 +74,19 @@ for (const [label, group, head] of [
   await page.goto(`${B}performance-totals`, { waitUntil: "networkidle" });
   await page.waitForTimeout(400);
   await page.click(`h2:has-text("${label}") + a`);
-  let landed = true;
-  try {
-    await page.waitForURL(`**group=${group}**`, { timeout: 8000 });
-  } catch {
-    landed = false;
-  }
-  await page.waitForTimeout(900);
+  // Checked by the MARK, not by the address. The tab area switches in
+  // place now and hands the group over as a prop, so the URL no longer
+  // carries it: a test that watched the address went red on 31 August
+  // 2026 while the feature itself was working perfectly.
+  await page.waitForTimeout(1500);
+  const landed = (await page.innerText("body")).includes("Build your view");
   const marked = await page.evaluate(() =>
     [...document.querySelectorAll("div")]
       .filter((d) => d.style.background && d.style.background.includes("240"))
       .map((d) => (d.innerText || "").split("\n")[0])
   );
   say(landed && marked.includes(head), `Totals "${label}" lands on Lab's ${head}`);
+  void group;
 }
 
 // JOB 4. One period control, three pages. A pill that changes its own
@@ -269,6 +269,47 @@ say(
   (await page.locator('button[aria-label="Collapse sport"]').count()) === 1,
   "and the label offers Show less"
 );
+
+// THE INSIGHTS SHEET, 31 August 2026. His ruling: "the insight button
+// does not work. make a pop up window, similar to what we have on
+// Track." A sheet that opens but never rerolls is the failure a
+// screenshot cannot see.
+for (const route of ["performance-home", "performance-lab"]) {
+  await page.goto(`${B}${route}`, { waitUntil: "networkidle" });
+  await page.waitForTimeout(700);
+  await page.locator('button[aria-label="Open your insights"]').click();
+  await page.waitForTimeout(500);
+  const first = await page.evaluate(() =>
+    [...document.querySelectorAll("ul li")].map((l) => l.innerText)
+  );
+  say(
+    (await page.innerText("body")).includes("Your insights") &&
+      first.length > 0 &&
+      first.length <= 4,
+    `${route}: the strip opens the sheet (${first.length} insights)`
+  );
+  await page.locator('button:has-text("New mix")').click();
+  await page.waitForTimeout(500);
+  const second = await page.evaluate(() =>
+    [...document.querySelectorAll("ul li")].map((l) => l.innerText)
+  );
+  say(
+    JSON.stringify(first) !== JSON.stringify(second) || first.length < 2,
+    `${route}: New mix rerolls them`
+  );
+  // /insights is behind login, so the public preview must not offer a
+  // door to a login screen.
+  say(
+    (await page.locator('a:has-text("Show all")').count()) === 0,
+    `${route}: no Show all on the public preview`
+  );
+  await page.locator('button:has-text("Close")').click();
+  await page.waitForTimeout(400);
+  say(
+    !(await page.innerText("body")).includes("Your insights"),
+    `${route}: Close shuts it`
+  );
+}
 
 await browser.close();
 stopServer();
