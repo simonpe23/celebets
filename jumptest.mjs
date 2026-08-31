@@ -65,25 +65,38 @@ for (const row of rows) {
 
 // The door lands on an EMPTY Lab, the ruling: "i want a view inside
 // the lab that is clean from selections." Empty shows the whole
-// record, which is the record Home puts under its big number.
+// record, so its big number has to be the number Home was showing.
+//
+// It used to compare the "NN-NN Record" line under Home's number.
+// That line was REMOVED on 31 August 2026, his words: "Remove Roi and
+// record inside the charts on home, lab." The hero figure is the
+// better check anyway: it is the one number both pages promise is the
+// same, and it is the one money rule in the app.
+const hero = () =>
+  page.evaluate(() => {
+    const p = [...document.querySelectorAll("p")].find(
+      (e) => getComputedStyle(e).fontSize === "45px"
+    );
+    return p ? (p.textContent || "").trim() : "";
+  });
+
 await page.goto(HOME, { waitUntil: "networkidle" });
-const wholeRecord = await page.evaluate(() => {
-  const m = (document.body.textContent || "").match(/(\d+–\d+) Record/);
-  return m ? m[1] : "";
-});
+const homeNet = await hero();
 await page.click('a:has-text("Explore Lab")');
 await page.waitForURL("**/preview/performance-lab**");
 await page.waitForTimeout(700);
 const body = await page.textContent("body");
+const labNet = await hero();
 const okEmpty =
   !page.url().includes("sel=") &&
-  wholeRecord !== "" &&
-  body.includes(wholeRecord) &&
+  homeNet !== "" &&
+  labNet === homeNet &&
   // and it really is the unscoped Lab, not merely a page without a
   // selection in its address
   body.includes("Showing your whole record");
 console.log(
-  `${okEmpty ? "PASS" : "FAIL"} Explore Lab lands on the empty Lab (${wholeRecord})`
+  `${okEmpty ? "PASS" : "FAIL"} Explore Lab lands on the empty Lab ` +
+    `(Home ${homeNet || "?"}, Lab ${labNet || "?"})`
 );
 if (!okEmpty) fails++;
 

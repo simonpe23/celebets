@@ -130,8 +130,7 @@ his ruling.
 | `/stats` | Home |
 | `/stats/lab` | Lab |
 | `/stats/totals` | Totals |
-| `/stats/compare`, `/stats/bets` | Two more pages inside |
-| `/stats/heatmap` | The Heat Map. An address, not a page: it opens the area on that view |
+| `/stats/compare`, `/stats/bets`, `/stats/heatmap` | Compare, All Bets, the Heat Map. Addresses, not pages: each opens the area on that view |
 | `/stats-old` | The old page, real numbers, design untouched |
 
 **One component serves both surfaces.** Every page takes its bets and

@@ -1408,11 +1408,61 @@ loading slowly."
   already looking at This week. It used to start over at All time.
 - `/stats/heatmap` and `/preview/performance-heatmap` still work. They
   are addresses that open the area on that view.
-- **A screenshot cannot see any of this**, so `heattest.mjs` counts
+- **A screenshot cannot see any of this**, so `instanttest.mjs` counts
   the server page requests a tap causes and fails if there are any.
-- **NOT DONE, and he did not ask for it:** Compare and All Bets are
-  still separate pages and will feel exactly as slow as the Heat Map
-  did.
+  It was written as `heattest.mjs` and grew to cover all six views
+  when Compare and All Bets followed.
+- **Compare and All Bets followed the same evening**, on his order:
+  "Fix compare and all bets pages the same way as well. fix all of
+  them, if there's anyone i've missed." Nothing under Performance
+  loads a page any more. See the section below.
+
+### Nothing under Performance loads a page, 31 August 2026
+
+His words, after the Heat Map was fixed: "Fix compare and all bets
+pages the same way as well. fix all of them, if there's anyone i've
+missed."
+
+**All six views are one page now.** Home, Lab, Totals, the Heat Map,
+Compare and All Bets read one list of bets, fetched once.
+
+- **Every door costs zero server page requests.** The menu tabs,
+  Home's ranked rows, the Heat Map pill and its tiles, Lab's "See
+  these N bets" and Compare doors, Totals' "See all bets", and every
+  back arrow. `instanttest.mjs` counts them and fails on any.
+- **Three of the six are not menu tabs.** The menu is still Home, Lab
+  and Totals. The Heat Map, Compare and All Bets keep their own back
+  arrows: the Heat Map to Home, Compare to Lab with both chips still
+  chosen, All Bets to whichever door sent it.
+- **Every address still works.** `/stats/compare`, `/stats/bets` and
+  `/stats/heatmap` are addresses, not pages: each opens the area on
+  that view, and a shared link still carries the selection.
+- **Nothing moved on screen.** `shotdiff.mjs` reports Compare, All
+  Bets, the Heat Map and Totals pixel identical at phone and laptop
+  width.
+
+### ROI and the record come off the charts, 31 August 2026
+
+His words, with a screenshot of the chart line running through the
+text: "Remove Roi and record inside the charts on home, lab. see
+attached image, chart is blocking those numbers."
+
+- **Both are gone from Home and from Lab.** The line read
+  "+24.1% ROI . 49-38 Record" and sat directly under the big number,
+  where the chart rides up beside it.
+- **The chart did not move.** The line took 22.75px of height and the
+  chart's own margin gives exactly that back, so nothing below shifts
+  by a pixel. Proved with `shotdiff.mjs`: the only pixels that changed
+  anywhere are the 8px band the text occupied.
+- **On LAB both figures survive**, in the KPI row right below: Record
+  and ROI are two of its four tiles.
+- **ON HOME THEY NOW APPEAR NOWHERE.** Home's four KPIs are Bets, Hit
+  rate, Wagered and Returned. Flagged to him the same day; he has not
+  said to put either back. Recorded as a consequence of his edit, not
+  as a ruling that Home should have no ROI.
+- `jumptest.mjs` used to read Home's record line to check that Explore
+  Lab lands on the whole record. It compares the two hero numbers now,
+  which is the better check anyway: one money rule, two pages.
 
 ## Process
 

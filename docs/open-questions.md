@@ -51,15 +51,16 @@ old words, and every provider mapper points at them.
 
 **LIVE AND UNFIXED, 31 August 2026. These are on his live page now.**
 
-**Two are FIXED**, on his say-so the same day: "go for the heat map
-and the lab sentence."
+**Three are FIXED**, on his say-so the same day.
 
 - **Lab's hardcoded "Actuals noticed" sentence is gone.** Both pages
   call one function, `leakInsight`, so Home and Lab cannot disagree
   about what is losing money.
-- **The heat map is inside the instant area**, so opening it asks the
-  server for nothing. `heattest.mjs` counts the requests and fails if
-  any appear.
+- **Nothing under Performance loads a page.** The Heat Map went first
+  ("go for the heat map and the lab sentence"), then Compare and All
+  Bets ("fix all of them, if there's anyone i've missed").
+  `instanttest.mjs` counts the server page requests each door causes
+  and fails if any appear.
 
 1. **The empty state does not exist.** A brand new account gets a page
    with no ranked rows, a flat line and "- ROI". It does not crash,
@@ -77,10 +78,10 @@ and the lab sentence."
 4. **The "This month" label on Home is gone**, so that inconsistency
    is closed, but the period is still not written into the address
    when it changes on Home. A shared link does not carry the window.
-5. **Compare and All Bets are still separate pages.** The Heat Map
-   moved inside the instant area; those two did not, because he asked
-   for the heat map and nothing else. They will feel exactly as slow
-   as the heat map did. Not scheduled.
+5. **Home shows no ROI and no record anywhere.** Both came off the
+   chart on 31 August 2026 at his instruction, and Home's four KPIs
+   are Bets, Hit rate, Wagered and Returned. Lab keeps both in its
+   KPI row. Flagged to him; he has not said to put either back.
 6. **Lab's sentence ignores what you selected.** It names the whole
    record's biggest leak, the same sentence Home shows, because that
    is the honest fix and it needed no product decision. Whether Lab's

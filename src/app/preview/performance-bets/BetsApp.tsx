@@ -41,7 +41,13 @@ import { makeEngine, money, type Chip, type GroupKey } from "../pf/engine";
 import type { BetWithLegs } from "@/lib/types";
 import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
 import { chipIcon } from "../performance-lab/LabApp";
-import { betsIn, isPeriod, labelOf, type PeriodKey } from "../performance-lab/period";
+import {
+  betsIn,
+  isPeriod,
+  labelOf,
+  type CustomRange,
+  type PeriodKey,
+} from "../performance-lab/period";
 import { Chev } from "../performance-icons";
 import {
   AMBER_BG,
@@ -112,31 +118,53 @@ function parseSel(raw: string | null): Chip[] {
 export default function BetsApp({
   bets,
   routes = PREVIEW_ROUTES,
+  sel: selRaw,
+  from: fromProp,
+  period: periodProp,
+  range,
+  onBack,
 }: {
   /** Demo bets on the public preview, the signed in user's own
       bets on the live page. The component never knows which. */
   bets: BetWithLegs[];
   routes?: PerfRoutes;
+  /** The selection this list is showing. A prop since 31 August 2026,
+      because All Bets is a view inside the tab area now and pushState
+      does not refresh useSearchParams. */
+  sel?: string;
+  /** Which door opened it, so the back arrow returns there. */
+  from?: "lab" | "totals";
+  /** The window, owned by the tab area and shared with every view. */
+  period?: PeriodKey;
+  range?: CustomRange;
+  /** Back in place, no page load. */
+  onBack?: () => void;
 }) {
   const params = useSearchParams();
   const [openBet, setOpenBet] = useState<string | null>(null);
-  const sel = useMemo(() => parseSel(params.get("sel")), [params]);
+  const selStr = selRaw !== undefined ? selRaw : params.get("sel");
+  const sel = useMemo(() => parseSel(selStr), [selStr]);
   const rawPeriod = params.get("period");
-  const period: PeriodKey = isPeriod(rawPeriod) ? rawPeriod : "all";
+  const period: PeriodKey =
+    periodProp ?? (isPeriod(rawPeriod) ? rawPeriod : "all");
   // Where the door was: back returns you where you came from, with
   // your selection and period intact.
-  const from = params.get("from") === "totals" ? "totals" : "lab";
+  const from =
+    fromProp ?? (params.get("from") === "totals" ? "totals" : "lab");
 
-  const engine = useMemo(() => makeEngine(betsIn(bets, period)), [bets, period]);
+  const engine = useMemo(
+    () => makeEngine(betsIn(bets, period, range)),
+    [bets, period, range]
+  );
   const rows = useMemo(() => engine.betsFor(sel), [engine, sel]);
   const stats = useMemo(() => engine.statsFor(sel), [engine, sel]);
 
   const backHref =
     from === "totals"
       ? `${routes.totals}${period === "all" ? "" : `?period=${period}`}`
-      : `${routes.lab}${params.get("sel") || period !== "all" ? "?" : ""}` +
+      : `${routes.lab}${selStr || period !== "all" ? "?" : ""}` +
         [
-          params.get("sel") ? `sel=${encodeURIComponent(params.get("sel") as string)}` : "",
+          selStr ? `sel=${encodeURIComponent(selStr)}` : "",
           period === "all" ? "" : `period=${period}`,
         ]
           .filter(Boolean)
@@ -148,12 +176,14 @@ export default function BetsApp({
     sel.length === 0
       ? "Your whole record"
       : sel.map((c) => c.value).join(" and ");
-  const when = period === "all" ? "all time" : labelOf(period).toLowerCase();
+  const when =
+    period === "all" ? "all time" : labelOf(period, range).toLowerCase();
 
   return (
     <>
       <PerfHeader
         href={backHref}
+        onBack={onBack}
         label="Back"
         title="All bets"
         right={<span className={`ml-auto ${HEAD_BTN_W}`} />}

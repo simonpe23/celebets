@@ -39,8 +39,6 @@ export interface HomeRow {
 export interface HomeView {
   netProfit: string;
   positive: boolean;
-  roiLine: string;
-  recordLine: string;
   kpis: { value: string; label: string }[];
   rows: HomeRow[];
   /** The Actuals noticed sentence, or null when nothing is losing. */
@@ -60,13 +58,6 @@ function recordOf(s: Stats): string {
 function hitPct(s: Stats): number {
   const picks = s.wins + s.losses;
   return picks > 0 ? (s.wins / picks) * 100 : 0;
-}
-
-// The hero line shows one decimal, the way the accepted design does.
-function roiExact(s: Stats): string {
-  if (s.staked <= 0) return "-";
-  const pct = (s.profit / s.staked) * 100;
-  return `${pct >= 0 ? "+" : ""}${pct.toFixed(1)}%`;
 }
 
 function roiLabel(s: Stats): string {
@@ -193,8 +184,6 @@ export function buildHomeView(engine: Engine): HomeView {
   return {
     netProfit: money(whole.profit),
     positive: whole.profit >= 0,
-    roiLine: `${roiExact(whole)} ROI`,
-    recordLine: `${recordOf(whole)} Record`,
     kpis: [
       { value: String(picks), label: "Bets" },
       { value: `${Math.round(hitPct(whole))}%`, label: "Hit rate" },
