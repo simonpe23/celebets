@@ -1521,6 +1521,36 @@ important file, he answered: "can you do that now?"
 Older entries in this file still name the old paths. They are a record
 of what was decided then and were left alone on purpose.
 
+### Two things he decided NOT to have, 31 August 2026
+
+Both in one message, after the rename: "remove what changed button. i
+don't think it's that needed. also no need to be able to tap Totals'
+six Per Category rows. dont have to do anything."
+
+**1. "What changed?" is gone from Home.** The lavender pill beside
+Heat Map. It was drawn but inert, so nothing stopped working when it
+went. CLAUDE had proposed deleting it in August (job 8 on the numbered
+list) and this is his decision, not that suggestion being acted on
+quietly.
+
+- The Heat Map's New Pattern and Cooling Off cards already answer
+  "what moved lately". Two answers to one question is how a page gets
+  confusing.
+- The `ChangedMark` icon is kept in `icons.tsx` with a note saying
+  nothing draws it. It is an icon library; the shape may be wanted.
+- Nothing else on Home moved. Only the pill's own pixels changed.
+
+**2. Totals' six Per Category rows stay untappable. WON'T DO.** Job 2
+on the numbered list, which was going to make each row open Lab with
+that category selected.
+
+- The number stays stable at 2. It is marked WON'T DO, not deleted, so
+  nobody proposes it again as if it were new.
+- Totals' two "View all" links still open Lab at that group. That door
+  is job 3 and it is built.
+- This is the second of the two dead controls CLAUDE reported to him.
+  One was removed, one was ruled fine as it is.
+
 ## Process
 
 **Past reactions are not constraints.** Said twice in two days: "just

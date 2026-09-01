@@ -381,9 +381,12 @@ a time, a screenshot after each, his reaction before the next.
      page: point it at `/settings`, which IS Profile today, until job
      13. Touches all five preview pages plus the protected Home
      folder, so it needs the Home unlock.
-  2. **Totals' six Per Category rows open Lab** with that category
-     selected. Identical mechanic to Home's ranked rows, which is
-     built and proved by `jumptest.mjs`.
+  2. **WON'T DO, 31 August 2026, his ruling.** Totals' six Per
+     Category rows were going to open Lab with that category
+     selected. His words: "no need to be able to tap Totals' six Per
+     Category rows. dont have to do anything." They stay as they are,
+     plain rows that read as numbers rather than doors. Totals' two
+     "View all" links still open Lab at that group, job 3.
   3. **DONE, 29 August 2026. Totals' two "View all" links open Lab**
      at that group. Profit by Sport goes to the Sport group, Per
      Category to the Category group. No new page: Lab is the full
@@ -417,10 +420,12 @@ a time, a screenshot after each, his reaction before the next.
      Tapping "All sports" wraps that row instead of scrolling it, so
      every fact in the group is on screen; the label becomes "Show
      less". No new page, no vocabulary sheet.
-  8. **Delete "What changed?" from Home.** CLAUDE's suggestion, not
-     his decision. The Heat Map's New Pattern and Cooling Off cards
-     already answer "what moved lately", and two answers to one
-     question is how a page gets confusing. Needs the Home unlock.
+  8. **DONE, 31 August 2026.** "What changed?" is gone from Home. It
+     was CLAUDE's suggestion in August and his decision on the 31st:
+     "remove what changed button. i don't think it's that needed."
+     The pill was drawn but inert, so nothing stopped working. The
+     Heat Map's New Pattern and Cooling Off cards already answer
+     "what moved lately".
   9. **Real numbers.** The four pages read `lab-data.ts`, a demo
      fixture. Point them at his actual record through the same
      engine. The biggest unknown in the whole rebuild: a thin record

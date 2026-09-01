@@ -56,7 +56,6 @@ import { PREVIEW_ROUTES, type PerfRoutes } from "@/lib/performance-routes";
 import InsightSheet, { rollInsights } from "@/components/performance/insight-sheet";
 import {
   BallIcon,
-  ChangedMark,
   Chev,
   ChevDown,
   DollarIcon,
@@ -375,7 +374,11 @@ export default function HomeContent({
             {/* The pill opens the Heat Map, 29 August 2026. It stays a
                 real link so the address works and a long press can
                 open it in a new tab; the tab area intercepts the tap
-                and swaps the view instead, 31 August 2026. */}
+                and swaps the view instead, 31 August 2026.
+
+                IT USED TO HAVE A NEIGHBOUR, "What changed?", drawn but
+                inert. He deleted it on 31 August 2026: "remove what
+                changed button. i don't think it's that needed." */}
             <Link
               href={routes.heatmap}
               onClick={(e) => {
@@ -389,13 +392,6 @@ export default function HomeContent({
               <HeatDots size={11} />
               Heat Map
             </Link>
-            <span
-              className={`flex h-[23px] items-center gap-[4px] rounded-full px-[9px] ${T_SMALL} ${W_SEMI}`}
-              style={{ background: PILL_LAV, color: INDIGO }}
-            >
-              <ChangedMark size={12} />
-              What changed?
-            </span>
           </div>
         </div>
 
