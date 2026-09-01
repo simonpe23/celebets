@@ -793,7 +793,11 @@ export default function Settings({
         )}
 
       </div>
-      <TabBar activeHref="/app" />
+      {/* PROFILE, not Track. Settings IS Profile, his ruling of 26
+          August 2026, and until the fourth tab existed this page had
+          to light something, so it lit the tab you usually arrived
+          from. Corrected 31 August 2026. */}
+      <TabBar activeHref="/settings" />
     </main>
   );
 }

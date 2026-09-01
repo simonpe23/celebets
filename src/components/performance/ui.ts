@@ -59,7 +59,6 @@ export const LINK_INK = "#626774";
 export const GREY_TEXT = "#757B87";
 export const GLYPH = "#6E7076";
 export const MENU_IDLE = "#6B6E7A";
-export const TAB_IDLE = "#3E4553";
 
 // Money moved, and nothing else.
 export const GREEN = "#1EAD2E";
@@ -85,9 +84,10 @@ export const HAIRLINE = "#EFEFF1";
 export const SEL_EDGE = "#B3A4F6";
 export const TRAY_EDGE = "rgba(55,8,228,0.45)";
 export const EDGE_SOFT = "#E7E7EC";
-// The floating tab bar: its frosted ground and the hairline inside
-// it. The one hex that had escaped the dial, on every page at once.
-export const TAB_GLASS = "rgba(252,251,253,0.92)";
+// A hairline inside a raised surface. It was drawn for the floating
+// tab bar, which is gone since 31 August 2026; Lab's domain dropdown
+// still uses it, so the value stays and only the name is now a little
+// historical.
 export const TAB_EDGE = "#EFEFF2";
 export const DIVIDER = "#E6E7EC";
 export const CHEV = "#C3C4C9";
@@ -171,10 +171,9 @@ export const SELECTOR_CHEV = "#2A2B30";
 // The red target on a losing row. Also a shade off RED, sampled from
 // the sheet's stroke.
 export const TARGET_RED = "#FB1D1F";
-// The three idle tab bar icons. Darker than TAB_IDLE, which is their
-// label, because a thin stroke reads lighter than text at the same
-// value.
-export const TAB_GLYPH = "#26262B";
+// TAB_GLYPH lived here: the stroke colour of the four tab bar icons.
+// It went with them on 31 August 2026, when the Performance area's
+// private tab bar was deleted. Nothing else ever used it.
 // The near invisible contour lines and dot grid inside Home's wash.
 export const WASH_LINE = "#C9BCE8";
 export const WASH_DOT = "#CFC3EA";
@@ -241,7 +240,6 @@ export const R_TILE = "rounded-[14px]"; // a tile inside a card
 export const R_CHIP = "rounded-[13px]"; // a chip in a picker
 export const R_INNER = "rounded-[12px]"; // a row inside a tile
 export const R_SMALL = "rounded-[10px]"; // the smallest boxed thing
-export const R_BAR = "rounded-2xl"; // the floating tab bar
 
 // THE PAGE COLUMN. Every Performance page is a 390pt phone column
 // centred on whatever screen it lands on.
@@ -255,9 +253,10 @@ export const TAIL_TALL = "min-h-[8px] grow-[3]";
 export const TAIL_SHORT = "min-h-[6px] grow";
 export type PerfTail = typeof TAIL_TALL | typeof TAIL_SHORT;
 
-// THE FLOATING TAB BAR, which is identical on all six pages.
-export const TAB_BAR_W = "max-w-[382px]";
-export const TAB_ICON = 24;
+// THE FLOATING TAB BAR IS GONE, 31 August 2026. Its width, its icon
+// size, its glass and its radius lived here. The Performance pages
+// draw the app's own `src/components/TabBar.tsx` now, the one every
+// other page has always drawn, so there is nothing left to dial.
 
 // THE HOME / LAB / TOTALS MENU.
 //

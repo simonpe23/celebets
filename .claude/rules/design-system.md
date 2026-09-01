@@ -13,6 +13,10 @@ Full reference: `docs/design-system.md`. The rules that bite:
 - **Never restate a design value inline.** Import the component or reuse
   the exact class string. If a value lives in two places, that is the
   bug; fix that first.
+- **THERE IS ONE BOTTOM BAR:** `src/components/TabBar.tsx`, four tabs,
+  on every page. There were two until 31 August 2026, and they
+  disagreed about how many tabs the app has. `design-check` rule 13
+  fails the build if a second one appears.
 - **Colours, type sizes and corner radii live in three files and
   nowhere else:** `src/app/globals.css` (the app's scale and radii),
   `src/lib/ui.ts` (the live app's repeated class strings) and
