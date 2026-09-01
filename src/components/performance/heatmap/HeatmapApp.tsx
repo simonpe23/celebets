@@ -137,6 +137,20 @@ const labUrl = (f: Fact, period: PeriodKey, lab: string) =>
     period
   );
 
+// A TILE'S TEXT IS SIZED TO ITS TILE, not typed by hand.
+//
+// These are the app's own steps, in numbers rather than class names,
+// because a treemap tile is not a fixed box: the figure has to shrink
+// to fit whatever the layout hands it, and a class cannot do that.
+// The ceiling of every tile is a step on the list in globals.css and
+// the floor is its smallest step, so nothing here invents a size.
+// Written down on 31 August 2026, phase 2 of the size and layout job.
+const T_XS = 11;
+const T_SM = 12;
+const T_BASE = 13;
+const T_LG = 15;
+const T_2XL = 20;
+
 // Type scales with the phone so a 320px screen shrinks the figures
 // instead of clipping them, and never grows past the drawn size.
 const fluid = (px: number) => `min(${px}px, ${((px / 390) * 100).toFixed(2)}vw)`;
@@ -145,8 +159,13 @@ const fluid = (px: number) => `min(${px}px, ${((px / 390) * 100).toFixed(2)}vw)`
 // be cropped, and a treemap will hand you a 44px tile. So the money
 // shrinks to fit its own tile. Bold Figtree digits run about 0.6em
 // wide each, which is what the divisor is.
+//
+// The floor is the app's smallest step. It used to be 9, below the
+// list's floor and below what anyone can read; a tile that cannot
+// hold 11px digits is a tile whose figure should be left out, which
+// is what happens now.
 const fitMoney = (text: string, boxW: number, want: number) =>
-  Math.max(9, Math.min(want, (boxW * 0.94) / (text.length * 0.62)));
+  Math.max(T_XS, Math.min(want, (boxW * 0.94) / (text.length * 0.62)));
 
 function mix(a: string, b: string, t: number): string {
   const p = (h: string, i: number) => parseInt(h.slice(1 + i * 2, 3 + i * 2), 16);
@@ -551,9 +570,9 @@ export default function HeatmapApp({
               const w = t.w - GAP;
               const band = h >= BIG_H && w >= 120 ? 2 : h >= SMALL_H && w >= 84 ? 1 : 0;
               const pad = band === 0 ? 7 : 9;
-              const nameSize = [9.5, 10.5, 11.5][band];
+              const nameSize = [T_XS, T_SM, T_BASE][band];
               const figure = money(t.profit);
-              const moneySize = fitMoney(figure, w - pad * 2, [12.5, 15.5, 20][band]);
+              const moneySize = fitMoney(figure, w - pad * 2, [T_BASE, T_LG, T_2XL][band]);
               const withIcon = h >= ICON_MIN_H && w >= 46;
               const neutral = t.fact === null;
               const inner = (

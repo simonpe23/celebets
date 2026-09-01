@@ -437,7 +437,7 @@ export default function LabApp({
           Add a fact
         </button>
         {sel.length === 0 ? (
-          <span className="text-[8.9px]" style={{ color: GREY_TEXT }}>
+          <span className="text-xs" style={{ color: GREY_TEXT }}>
             Showing your whole record
           </span>
         ) : null}
@@ -467,7 +467,7 @@ export default function LabApp({
         </span>
       </div>
       <p
-        className={`relative mt-[4px] pl-[18px] text-[45px] ${W_BOLD} leading-none`}
+        className={`relative mt-[4px] pl-[18px] text-hero ${W_BOLD} leading-none`}
         style={{ color: whole.profit < 0 ? RED : INDIGO }}
       >
         {money(whole.profit)}
@@ -505,7 +505,7 @@ export default function LabApp({
           <div key={f.label} className="flex items-center gap-[6px]" style={{ width: ["78px", "92px", "96px", "auto"][i] }}>
             <span className="relative top-[-3px]">{f.icon}</span>
             <div>
-              <p className={`text-[12.5px] ${W_BOLD} leading-none tracking-[-0.01em]`}>{f.value}</p>
+              <p className={`text-base ${W_BOLD} leading-none tracking-[-0.01em]`}>{f.value}</p>
               <p className={`mt-[3px] ${T_NANO}`} style={{ color: GREY_TEXT }}>
                 {f.label}
               </p>
@@ -536,11 +536,11 @@ export default function LabApp({
           <GoldSparkle size={16} />
         </span>
         <span className="ml-[11px] block min-w-0 flex-1 leading-[1.4]">
-          <span className={`block text-[7.8px] ${W_SEMI}`} style={{ color: ORANGE }}>
+          <span className={`block text-xs ${W_SEMI}`} style={{ color: ORANGE }}>
             Actuals noticed
           </span>
           <span
-            className="mt-[2px] block truncate text-[8.7px]"
+            className="mt-[2px] block truncate text-xs"
             style={{ color: AMBER_INK }}
           >
             {insight}
@@ -582,7 +582,7 @@ export default function LabApp({
               <FactNote size={17} />
             </span>
             <span className="ml-[10px] min-w-0 flex-1 leading-[1.4]">
-              <span className={`block truncate text-[9.8px] ${W_BOLD}`}>
+              <span className={`block truncate text-sm ${W_BOLD}`}>
                 See these {whole.bets} {whole.bets === 1 ? "bet" : "bets"}
               </span>
               <span className={`block ${T_TINY}`} style={{ color: GREY_TEXT }}>
@@ -609,7 +609,7 @@ export default function LabApp({
                 <CompareIcon size={17} />
               </span>
               <span className="ml-[10px] min-w-0 flex-1 leading-[1.4]">
-                <span className={`block truncate text-[9.8px] ${W_BOLD}`} style={{ color: INDIGO }}>
+                <span className={`block truncate text-sm ${W_BOLD}`} style={{ color: INDIGO }}>
                   Compare
                 </span>
                 <span className={`block truncate ${T_TINY}`} style={{ color: GREY_TEXT }}>
@@ -624,10 +624,10 @@ export default function LabApp({
 
       {/* Add another fact. */}
       <div ref={groupsRef} className="relative mt-[22px] scroll-mt-[10px] pl-[20px] pr-[19px]">
-        <h2 className={`text-[11.2px] ${W_BOLD}`}>
+        <h2 className={`text-base ${W_BOLD}`}>
           {sel.length === 0 ? "Build your view" : "Add another fact"}
         </h2>
-        <p className="mt-[1px] text-[8.9px]" style={{ color: GREY_TEXT }}>
+        <p className="mt-[1px] text-xs" style={{ color: GREY_TEXT }}>
           {sel.length === 0
             ? "Tap any fact and the numbers above become its record"
             : "See how one more fact changes your result"}
@@ -755,7 +755,7 @@ export default function LabApp({
                       {c.value}
                     </span>
                     <span
-                      className={`mt-[3px] block text-[8.4px] ${W_SEMI}`}
+                      className={`mt-[3px] block text-xs ${W_SEMI}`}
                       style={{ color: on ? INDIGO : GREY_TEXT }}
                     >
                       {recordOf(s)}

@@ -201,7 +201,7 @@ export function CompareChart({
         </div>
       </div>
       <div
-        className={`mt-[9px] flex justify-between pl-[40px] pr-[6px] text-[7.4px] ${W_SEMI}`}
+        className={`mt-[9px] flex justify-between pl-[40px] pr-[6px] text-xs ${W_SEMI}`}
         style={{ color: GREY_TEXT }}
       >
         {labelT.map((t, i) => (

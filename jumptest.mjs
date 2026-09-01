@@ -73,12 +73,24 @@ for (const row of rows) {
 // record inside the charts on home, lab." The hero figure is the
 // better check anyway: it is the one number both pages promise is the
 // same, and it is the one money rule in the app.
+// The hero is the BIGGEST piece of text on the page, not a hardcoded
+// size. It was written as 45px and went stale the moment phase 2 of
+// the size and layout job put the app on one scale and the hero
+// became 34. A test that names a pixel breaks every time a design
+// decision lands, which teaches people to ignore it.
 const hero = () =>
   page.evaluate(() => {
-    const p = [...document.querySelectorAll("p")].find(
-      (e) => getComputedStyle(e).fontSize === "45px"
+    const all = [...document.querySelectorAll("p")].filter((e) =>
+      (e.textContent || "").trim().startsWith("$") ||
+      /^[+-]\$/.test((e.textContent || "").trim())
     );
-    return p ? (p.textContent || "").trim() : "";
+    if (all.length === 0) return "";
+    const biggest = all.sort(
+      (a, b) =>
+        parseFloat(getComputedStyle(b).fontSize) -
+        parseFloat(getComputedStyle(a).fontSize)
+    )[0];
+    return (biggest.textContent || "").trim();
   });
 
 await page.goto(HOME, { waitUntil: "networkidle" });

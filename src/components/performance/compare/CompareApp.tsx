@@ -340,7 +340,7 @@ export default function CompareApp({
                 )}
               </span>
               <p
-                className={`min-w-0 truncate text-[14px] ${W_BOLD}`}
+                className={`min-w-0 truncate text-lg ${W_BOLD}`}
                 style={{ paddingRight: winner ? "26px" : undefined }}
               >
                 {chip.value}
@@ -361,7 +361,7 @@ export default function CompareApp({
               Net profit
             </p>
             <p
-              className={`mt-[5px] text-[30px] ${W_BOLD} leading-none tracking-[-0.01em]`}
+              className={`mt-[5px] text-3xl ${W_BOLD} leading-none tracking-[-0.01em]`}
               style={{ color: s.profit < 0 ? RED : GREEN }}
             >
               {money(s.profit)}
@@ -576,7 +576,7 @@ export default function CompareApp({
                   <TickRise />
                 </span>
                 <span className="min-w-0 leading-[1.35]">
-                  <span className={`block truncate text-[8.6px] ${W_BOLD}`}>{r.title}</span>
+                  <span className={`block truncate text-xs ${W_BOLD}`}>{r.title}</span>
                   <span className={`block truncate ${T_TINY}`} style={{ color: GREY_TEXT }}>
                     {r.detail}
                   </span>

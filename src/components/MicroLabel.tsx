@@ -19,7 +19,7 @@ export default function MicroLabel({
   const color = onDark ? "text-white/40" : "text-neutral-400";
   return (
     <span
-      className={`block text-[10px] font-bold uppercase tracking-widest ${color} ${className}`}
+      className={`block text-xs font-bold uppercase tracking-widest ${color} ${className}`}
     >
       {children}
     </span>

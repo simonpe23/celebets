@@ -1415,6 +1415,67 @@ one phone screen the way his mockup did. Either it scrolls or it loses
 rows.
 
 
+### Phase 2: one type scale. DONE, 31 August 2026
+
+He looked at three scales side by side at `/preview/scale` and chose
+the middle one. His words before seeing them: "Track feels too zoomed
+in and Performance feels too zoomed out."
+
+**THE APP'S ONE LIST, in `src/app/globals.css` and nowhere else:**
+
+| px | name | job |
+|---|---|---|
+| 11 | `text-xs` | the smallest mark: an axis tick, a unit |
+| 12 | `text-sm` | a label, a caption |
+| 13 | `text-base` | ordinary text, and the primary button |
+| 15 | `text-lg` | a figure or a heading inside a card |
+| 17 | `text-xl` | a card's lead line |
+| 20 | `text-2xl` | a screen's own title |
+| 26 | `text-3xl` | a big heading |
+| 34 | `text-hero` | the one enormous money figure at the top |
+
+**What it replaced:** Track's 12 to 30 and Performance's 7.6 to 15,
+two lists that shared nothing, plus 120 sizes written by hand across
+30 files.
+
+**`design-check.mjs` rule 14** fails the build on a text size written
+by hand anywhere in the app or in Performance. That is what makes "one
+place to change it" true rather than a hope. Tested by planting one.
+
+**PERFORMANCE'S TEN STEPS BECAME FIVE**, deliberately. Ten sizes inside
+a 7px range is not a hierarchy, it is noise: 8px and 8.5px do not read
+as different jobs. Performance uses 11, 12, 13, 15 and 17, the small
+end of the list, which is what keeps it denser than Track. His ruling
+allows exactly that: "Pages are allowed to look different from each
+other for now."
+
+**HOME IS ALLOWED TO SCROLL**, his choice when told the cost: "i pick
+1. let home scroll." As it turned out it did not need to on a 390px
+phone; the growing spacers absorbed the extra height and all five rows
+still fit. It will scroll on a shorter phone, which is now fine.
+
+**THE PUBLIC PAGES KEEP THEIR OWN SIZES, CLAUDE's call, his to
+overturn.** Terms, Privacy and the landing page are long prose and a
+shop window, not dense screens full of numbers, and the list was
+chosen for the latter. They are pinned and measured identical. Two
+pages did move and were left moved on purpose:
+
+- **Login and the demo page adopt the scale.** They are plain
+  functional screens behind the same door as the app, and they read
+  better smaller. Looked at, not assumed.
+- **Two decorative chips on the landing page went 10px to 11px**,
+  through the shared `MicroLabel`. They only appear on very wide
+  screens. One pixel, left alone.
+
+**The primary button did not change size at all.** It was 13px and
+13px is on the list, so `BTN` is `text-base`. The one control whose
+size is identical before and after.
+
+**A test that named a pixel broke and was fixed properly.**
+`jumptest.mjs` looked for the hero by `fontSize === "45px"`. It now
+takes the biggest money figure on the page. A test that names a pixel
+breaks on every design decision, which teaches people to ignore it.
+
 ## The go-live day, 31 August 2026
 
 Every ruling he made while taking Performance live, in his own words.

@@ -457,7 +457,7 @@ export default function ProfitChart({
           "Aug 9" were losing a sliver at the page edges. Measured at
           4x, not guessed. */}
       <div
-        className="mt-3 flex justify-between px-1 text-[10px]"
+        className="mt-3 flex justify-between px-1 text-xs"
         style={{ color: "var(--chart-muted)" }}
       >
         {[0, 0.25, 0.5, 0.75, 1].map((f) => (

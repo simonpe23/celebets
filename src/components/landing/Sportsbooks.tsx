@@ -65,7 +65,7 @@ export function BookTiles() {
           {name[0]}
         </span>
       ))}
-      <span className="flex h-[80px] w-[80px] items-center justify-center rounded-[20px] border border-dashed border-brand-top/30 bg-brand-top/[0.05] text-3xl font-bold text-brand-top dark:border-brand-mark/30 dark:bg-brand-mark/[0.08] dark:text-brand-mark">
+      <span className="flex h-[80px] w-[80px] items-center justify-center rounded-[20px] border border-dashed border-brand-top/30 bg-brand-top/[0.05] text-[30px] font-bold text-brand-top dark:border-brand-mark/30 dark:bg-brand-mark/[0.08] dark:text-brand-mark">
         +
       </span>
     </div>

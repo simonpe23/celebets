@@ -128,7 +128,7 @@ function SectionHead({
 }) {
   return (
     <div className="flex items-center justify-between px-[13px] pt-[13px]">
-      <h2 className={`text-[12px] ${W_BOLD}`}>{title}</h2>
+      <h2 className={`text-sm ${W_BOLD}`}>{title}</h2>
       {link && href ? (
         <Link
           href={href}
@@ -222,7 +222,7 @@ export default function TotalsApp({
       <div className="relative mt-[6px] flex items-start justify-between pl-[15px] pr-[8px]">
         <div className="pt-[4px]">
           <p
-            className={`text-[38px] ${W_BOLD} leading-none tracking-[-0.015em]`}
+            className={`text-hero ${W_BOLD} leading-none tracking-[-0.015em]`}
             style={{ color: all.profit < 0 ? RED : INDIGO }}
           >
             {money(all.profit)}
@@ -269,7 +269,7 @@ export default function TotalsApp({
                 {k.value}
               </p>
               <p
-                className={`mt-[4px] truncate text-[7.2px] ${W_SEMI}`}
+                className={`mt-[4px] truncate text-xs ${W_SEMI}`}
                 style={{ color: GREY_TEXT }}
               >
                 {k.label}
@@ -378,14 +378,14 @@ export default function TotalsApp({
                   >
                     {chipIcon(catChip(r.key), false, undefined, 11)}
                   </span>
-                  <span className={`min-w-0 flex-1 truncate text-[7.9px] ${W_SEMI}`}>
+                  <span className={`min-w-0 flex-1 truncate text-xs ${W_SEMI}`}>
                     {shortLabel(r.label)}
                   </span>
-                  <span className={`ml-[3px] text-[7.4px] ${W_SEMI}`} style={{ color: NET_LABEL }}>
+                  <span className={`ml-[3px] text-xs ${W_SEMI}`} style={{ color: NET_LABEL }}>
                     {record(r)}
                   </span>
                   <span
-                    className={`ml-[4px] whitespace-nowrap text-[7.9px] ${W_BOLD}`}
+                    className={`ml-[4px] whitespace-nowrap text-xs ${W_BOLD}`}
                     style={{ color: r.profit < 0 ? RED : r.profit > 0 ? GREEN : NET_LABEL }}
                   >
                     {r.profit === 0 ? "$0.00" : cash(r.profit)}
@@ -473,7 +473,7 @@ export default function TotalsApp({
       {/* The ledger. */}
       <Card className="mb-[6px] mt-[11px] pb-[8px]">
         <div className="flex items-center justify-between px-[13px] pt-[13px]">
-          <h2 className={`text-[12px] ${W_BOLD}`}>Recent Bets</h2>
+          <h2 className={`text-sm ${W_BOLD}`}>Recent Bets</h2>
           {/* Job 5. */}
           <Link
             href={withPeriod(`${routes.bets}?from=totals`, period)}

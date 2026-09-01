@@ -225,7 +225,7 @@ export default function HomeContent({
 
         {/* The number. */}
         <p
-          className={`relative mt-[4px] pl-[18px] text-[45px] ${W_BOLD} leading-none`}
+          className={`relative mt-[4px] pl-[18px] text-hero ${W_BOLD} leading-none`}
           style={{ color: view.positive ? INDIGO : RED }}
         >
           {view.netProfit}
@@ -269,7 +269,7 @@ export default function HomeContent({
             ))}
           </div>
           <div
-            className={`mt-[12px] flex justify-between pl-[24px] pr-[52px] text-[7px] ${W_SEMI}`}
+            className={`mt-[12px] flex justify-between pl-[24px] pr-[52px] text-xs ${W_SEMI}`}
             style={{ color: GREY_TEXT }}
           >
             {view.xLabels.map((label, i) => (
@@ -301,7 +301,7 @@ export default function HomeContent({
             >
               <span className="relative top-[-3px]">{FACT_ICONS[i]}</span>
               <div>
-                <p className={`text-[12.5px] ${W_BOLD} leading-none tracking-[-0.01em]`}>
+                <p className={`text-base ${W_BOLD} leading-none tracking-[-0.01em]`}>
                   {f.value}
                 </p>
                 <p className={`mt-[3px] ${T_NANO}`} style={{ color: GREY_TEXT }}>
@@ -338,11 +338,11 @@ export default function HomeContent({
             <GoldSparkle size={16} />
           </span>
           <span className="ml-[11px] block min-w-0 flex-1 leading-[1.4]">
-            <span className={`block text-[7.8px] ${W_SEMI}`} style={{ color: ORANGE }}>
+            <span className={`block text-xs ${W_SEMI}`} style={{ color: ORANGE }}>
               Actuals noticed
             </span>
             <span
-              className="mt-[2px] block truncate text-[8.7px]"
+              className="mt-[2px] block truncate text-xs"
               style={{ color: AMBER_INK }}
             >
               {view.insight}
@@ -363,10 +363,10 @@ export default function HomeContent({
         {/* What drives your result. */}
         <div className="relative flex items-start justify-between pl-[20px] pr-[19px]">
           <div>
-            <h2 className={`whitespace-nowrap text-[11.2px] ${W_BOLD}`}>
+            <h2 className={`whitespace-nowrap text-base ${W_BOLD}`}>
               What drives your result
             </h2>
-            <p className="mt-[1px] whitespace-nowrap text-[8.9px]" style={{ color: GREY_TEXT }}>
+            <p className="mt-[1px] whitespace-nowrap text-xs" style={{ color: GREY_TEXT }}>
               Ranked by contribution to net profit
             </p>
           </div>
@@ -438,7 +438,7 @@ export default function HomeContent({
                   {row.name}
                 </p>
                 <p
-                  className={`mt-[2px] flex items-center gap-[7px] whitespace-nowrap text-[8.2px] ${W_SEMI}`}
+                  className={`mt-[2px] flex items-center gap-[7px] whitespace-nowrap text-xs ${W_SEMI}`}
                   style={{ color: GREY_TEXT }}
                 >
                   {row.record}
@@ -490,10 +490,10 @@ export default function HomeContent({
             <OrbLayers size={25} />
           </span>
           <div className="ml-[13px] min-w-0 flex-1 pt-[2px] leading-[1.55]">
-            <p className={`whitespace-nowrap text-[10.2px] ${W_BOLD}`}>
+            <p className={`whitespace-nowrap text-sm ${W_BOLD}`}>
               Build your performance view
             </p>
-            <p className="mt-[4px] text-[7.8px]" style={{ color: GREY_TEXT }}>
+            <p className="mt-[4px] text-xs" style={{ color: GREY_TEXT }}>
               Create custom views in{" "}
               <span className={`${W_SEMI}`} style={{ color: INDIGO }}>
                 Lab

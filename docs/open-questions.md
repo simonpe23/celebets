@@ -49,6 +49,17 @@ old words, and every provider mapper points at them.
 
 ## Not blocking, still open
 
+**FIRST JOB OF PHASE 3, and the one thing phase 2 made worse:**
+
+**Totals' Per Category grid truncates its names.** "Moneyline" reads
+"Mo...", "Spread / Handicap" reads "Spread /...". Those names used to
+fit because they were 7.2px, and 7.2px is not a size, it is a
+photograph of one. At 11px, the app's smallest step, two columns on a
+390px phone cannot hold a rank, an icon, a name, a record, a figure
+and a chevron. There is no size that fixes it: the row needs a
+different layout, which is exactly phase 3. Flagged to him with the
+merge, not hidden.
+
 **LIVE AND UNFIXED, 31 August 2026. These are on his live page now.**
 
 **Three are FIXED**, on his say-so the same day.

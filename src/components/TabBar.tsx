@@ -304,7 +304,7 @@ export default function TabBar({
           const active = tab.match(shown);
           const on = light ? ACTIVE_LIGHT : ACTIVE;
           const off = light ? IDLE_LIGHT : "text-neutral-500 dark:text-neutral-400";
-          const cls = `flex flex-1 flex-col items-center justify-center gap-0.5 py-1.5 text-[11px] font-semibold ${
+          const cls = `flex flex-1 flex-col items-center justify-center gap-0.5 py-1.5 text-xs font-semibold ${
             active ? on : off
           }`;
           const inner = (

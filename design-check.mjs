@@ -33,6 +33,11 @@ const COMPACT_OK = [
   "TransactionsList.tsx",
   // The Remove control on a parlay leg row is the same dense pattern.
   "NewBetForm.tsx",
+  // The bottom bar's four labels. They were written as text-[11px]
+  // until 31 August 2026, when phase 2 of the size and layout job put
+  // the app on one list and 11px became text-xs. The label did not
+  // change size; only its name did.
+  "TabBar.tsx",
 ];
 
 // Colors that are allowed to appear as raw hex, and what each is for.
@@ -155,7 +160,15 @@ for (const file of files) {
 
     // A pill that states a fact is not a control, so it is not bound by
     // the button tiers. Both rules below share this test.
-    const isBadge = line.includes("rounded-full") && line.includes("px-2.5");
+    //
+    // px-2 joined px-2.5 on 31 August 2026. Phase 2 of the size and
+    // layout job put the app on one type scale, and two badges that
+    // had been written as text-[10px] became text-xs, which is what
+    // they always were. They are still badges: "Coming Soon" on the
+    // Polymarket row and the status pill on a settled bet.
+    const isBadge =
+      line.includes("rounded-full") &&
+      (line.includes("px-2.5") || line.includes("px-2 "));
 
     // 1. The compact tier belongs only inside bet card rows.
     if (
@@ -771,6 +784,68 @@ for (const file of PROSE_FILES) {
         `a bar stuck to the bottom here names ${hits.length} of the app's tabs. There is ONE bottom bar, ${BAR_OWNER}. Import it`
       );
     }
+  }
+}
+
+// ===================================================================
+// RULE 14: NO TEXT SIZE IS WRITTEN BY HAND.
+//
+// Added 31 August 2026, phase 2 of the size and layout job. His order:
+// "The app operates under ONE set of rules... one bar, one size scale,
+// one set of spacing rules, and one place in the code where I change
+// any of it for every page at once."
+//
+// A list in one file only means something if nobody may write a size
+// outside it. Before this rule the app had 120 hand written sizes
+// across 30 files, including 7.6px, 8.2px and 8.9px, which is how two
+// scales grew without anybody deciding to have two.
+//
+// The list is the @theme block in src/app/globals.css. Reach it by
+// name: text-xs, text-sm, text-base, text-lg, text-xl, text-2xl,
+// text-3xl, text-hero.
+//
+// SPACING IS NOT CHECKED, deliberately, and neither is any other
+// arbitrary value. A margin used once on one page is not a shared
+// value. This rule is about text size and nothing else.
+//
+// THE PUBLIC PAGES ARE EXEMPT. Terms, Privacy and the landing page are
+// long prose that people read, not dense screens full of numbers, and
+// the app's list was chosen for the latter. See LegalPage.tsx.
+// ===================================================================
+{
+  const PUBLIC_FACING = [
+    "src/components/LegalPage.tsx",
+    "src/components/landing/",
+    "src/app/page.tsx",
+    "src/app/login/",
+    "src/app/about/",
+    "src/app/terms/",
+    "src/app/privacy/",
+    "src/app/demo/",
+    // The landing page's call to action. It lives in src/components
+    // because it is used three times on that one page, but it is the
+    // shop window, not the app.
+    "src/components/StartTracking.tsx",
+  ];
+  for (const file of files) {
+    const f = file.replace(/^\.\//, "");
+    // The old rejected concepts under /preview are dead code kept for
+    // the history. The Performance pages under it are live and are
+    // checked; so is /preview/scale, which is the decision page.
+    if (f.startsWith("src/app/preview/")) continue;
+    if (PUBLIC_FACING.some((p) => f.startsWith(p))) continue;
+    readFileSync(file, "utf8")
+      .split("\n")
+      .forEach((line, i) => {
+        const hit = line.match(/text-\[[0-9.]+px\]/);
+        if (hit) {
+          note(
+            f,
+            i + 1,
+            `${hit[0]} written by hand. The app has ONE list of text sizes, in src/app/globals.css. Use text-xs, text-sm, text-base, text-lg, text-xl, text-2xl, text-3xl or text-hero`
+          );
+        }
+      });
   }
 }
 

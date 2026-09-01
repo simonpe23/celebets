@@ -82,7 +82,7 @@ coordination."
 
 | File | Holds |
 |---|---|
-| `src/app/globals.css` | The whole app's colours, type scale and corner radii. |
+| `src/app/globals.css` | The whole app's colours, THE ONE TYPE SCALE and corner radii. Eight sizes: 11, 12, 13, 15, 17, 20, 26, 34. Nothing else is allowed, and rule 14 fails the build on a size written by hand. |
 | `src/lib/ui.ts` | The live app's repeated class strings: the page frame, its column, the page title, a card's heading. |
 | `src/components/TabBar.tsx` | **The app's ONE bottom bar**, four tabs, on every page. `design-check.mjs` rule 13 fails the build if a second one appears. |
 | `src/components/performance/ui.ts` | Everything the six Performance views share: colours, the face, the type scale, weights, radii, the menu, the header and the chart heights. |
@@ -216,10 +216,10 @@ Keep it current: when a job finishes, delete its line.
   and one place in the code to change any of it.
   1. **One bottom bar. DONE.** `src/components/TabBar.tsx` is the only
      one, with four tabs. Rule 13 in `design-check.mjs` stops a second.
-  2. **One size scale.** NOT STARTED. **He must choose first, and he
-     asked to be reminded of the trade-off when phase 2 begins: read
-     "THE PHASE 2 REMINDER HE ASKED FOR" in `docs/decisions.md` and
-     put it in front of him before anything is built.**
+  2. **One size scale. DONE.** He chose the middle of three at
+     `/preview/scale`. The list is 11, 12, 13, 15, 17, 20, 26 and a
+     34px hero, in `src/app/globals.css` and nowhere else. Rule 14 in
+     `design-check.mjs` fails the build on a size written by hand.
   3. **One layout system.** The 320px sideways scroll and the
      stretching gap on Performance die here.
   4. **Laptop and full responsive.** He picks from three options

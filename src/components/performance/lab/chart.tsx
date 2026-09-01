@@ -149,7 +149,7 @@ export function LabChart({ points }: { points: ChartPoint[] }) {
         ))}
       </div>
       <div
-        className={`mt-[12px] flex justify-between pl-[24px] pr-[52px] text-[7px] ${W_SEMI}`}
+        className={`mt-[12px] flex justify-between pl-[24px] pr-[52px] text-xs ${W_SEMI}`}
         style={{ color: GREY_TEXT }}
       >
         {labelT.map((t, i) => (

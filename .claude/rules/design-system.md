@@ -17,6 +17,13 @@ Full reference: `docs/design-system.md`. The rules that bite:
   on every page. There were two until 31 August 2026, and they
   disagreed about how many tabs the app has. `design-check` rule 13
   fails the build if a second one appears.
+- **THE APP HAS ONE LIST OF TEXT SIZES**, in `src/app/globals.css`:
+  11 (`text-xs`), 12 (`text-sm`), 13 (`text-base`), 15 (`text-lg`),
+  17 (`text-xl`), 20 (`text-2xl`), 26 (`text-3xl`), 34 (`text-hero`).
+  **Never write a size by hand.** `design-check` rule 14 fails the
+  build on `text-[Npx]` anywhere in the app or in Performance. Chosen
+  by him on 31 August 2026 from three drawn side by side. The public
+  pages are exempt and pinned: see `LegalPage.tsx`.
 - **Colours, type sizes and corner radii live in three files and
   nowhere else:** `src/app/globals.css` (the app's scale and radii),
   `src/lib/ui.ts` (the live app's repeated class strings) and

@@ -477,7 +477,7 @@ export default function NewBetForm({
   // a plain outline.
   const TILE =
     "flex flex-col items-center justify-start gap-1.5 rounded-xl px-1 py-3 " +
-    "text-center text-[12px] font-semibold leading-tight disabled:opacity-50 " +
+    "text-center text-sm font-semibold leading-tight disabled:opacity-50 " +
     "border border-neutral-200 bg-neutral-50 active:bg-neutral-100 " +
     "dark:border-white/10 dark:bg-white/[0.04] dark:active:bg-white/10";
 
@@ -533,7 +533,7 @@ export default function NewBetForm({
           {connectedPlatforms.length > 0 ? (
             <Link
               href="/connect"
-              className="mt-3 flex items-center justify-center gap-2 rounded-xl border border-neutral-200 px-3 py-4 text-[14px] font-semibold dark:border-white/10"
+              className="mt-3 flex items-center justify-center gap-2 rounded-xl border border-neutral-200 px-3 py-4 text-base font-semibold dark:border-white/10"
             >
               <svg
                 viewBox="0 0 24 24"
@@ -556,7 +556,7 @@ export default function NewBetForm({
           ) : (
             <Link
               href="/connect"
-              className="mt-3 flex items-center justify-center gap-2 rounded-xl border border-neutral-200 px-3 py-4 text-[14px] font-semibold dark:border-white/10"
+              className="mt-3 flex items-center justify-center gap-2 rounded-xl border border-neutral-200 px-3 py-4 text-base font-semibold dark:border-white/10"
             >
               <span className="text-[#22C55E]">
                 <LinkIcon className="h-5 w-5" />

@@ -110,7 +110,7 @@ export function HeroLine({
         />
       </svg>
       <div
-        className={`pointer-events-none absolute right-0 top-0 h-full w-[32px] text-[7.5px] ${W_SEMI}`}
+        className={`pointer-events-none absolute right-0 top-0 h-full w-[32px] text-xs ${W_SEMI}`}
         style={{ color: GREY_TEXT }}
       >
         {ticks.map((v) => (

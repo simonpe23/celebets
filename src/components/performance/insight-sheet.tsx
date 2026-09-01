@@ -71,7 +71,7 @@ export default function InsightSheet({
         style={{ background: CARD, boxShadow: "0 -8px 40px rgba(16,16,26,0.22)" }}
       >
         <div className="flex items-center justify-between">
-          <p className={`flex items-center gap-[7px] text-[14px] ${W_BOLD}`} style={{ color: INK }}>
+          <p className={`flex items-center gap-[7px] text-lg ${W_BOLD}`} style={{ color: INK }}>
             <span
               className="flex h-[26px] w-[26px] items-center justify-center rounded-full"
               style={{ background: AMBER_TILE }}

@@ -203,24 +203,51 @@ export const WASH_DOT = "#CFC3EA";
 // with a real build before any of this was written, not assumed.
 // ===================================================================
 
-// THE TYPE SCALE.
+// THE TYPE SCALE, WHICH IS THE APP'S, NOT THIS FOLDER'S ANY MORE.
 //
-// Ten steps, every one of them already on three or more pages. Size
-// only: the weight is a separate token below, because the same size
-// carries both weights depending on the job.
+// Since 31 August 2026, phase 2 of the size and layout job. Every name
+// below is a step on the ONE list in `src/app/globals.css`. Nothing
+// here is a number, and `design-check.mjs` rule 14 fails the build if
+// anyone writes one.
 //
-// Change a line here and that step moves on every Performance page at
-// once. That is the whole point of the file.
-export const T_TITLE = "text-[15px]"; // a screen's own title, in a back header
-export const T_LEAD = "text-[11.5px]"; // a card's lead line
-export const T_STRONG = "text-[11px]"; // a figure or a heading inside a card
-export const T_LABEL = "text-[10.5px]"; // the workhorse: menu tabs, tab bar labels, row names
-export const T_BODY = "text-[10px]"; // ordinary text under a heading
-export const T_SMALL = "text-[9.5px]"; // a caption, a chip, a second figure
-export const T_META = "text-[9px]"; // a record, a date, a unit
-export const T_MICRO = "text-[8.5px]"; // a note beside a figure
-export const T_TINY = "text-[8px]"; // a chart's axis tick
-export const T_NANO = "text-[7.6px]"; // the smallest mark on a chart
+// WHAT THESE USED TO BE, and why it had to go: ten hand written steps
+// from 7.6px to 15px, measured off a 390px PICTURE of a phone so the
+// build would match his mockup image. Right for copying a picture,
+// wrong for a screen. His words on the result: "Performance feels too
+// zoomed out". He chose the middle of three scales on 31 August 2026.
+//
+// TEN STEPS BECAME FIVE, and that is deliberate. Ten sizes inside a
+// 7px range is not a hierarchy, it is noise: 8px and 8.5px do not
+// read as different jobs. The five that remain are the small end of
+// the app's list, which is what keeps Performance denser than Track
+// while both obey the same rules. His ruling: "Pages are allowed to
+// look different from each other for now."
+//
+//   was 15    -> 17  T_TITLE
+//   was 11.5  -> 15  T_LEAD
+//   was 11    -> 13  T_STRONG
+//   was 10.5  -> 13  T_LABEL
+//   was 10    -> 12  T_BODY
+//   was 9.5   -> 12  T_SMALL
+//   was 9     -> 11  T_META
+//   was 8.5   -> 11  T_MICRO
+//   was 8     -> 11  T_TINY
+//   was 7.6   -> 11  T_NANO
+//
+// The ten names are kept so the pages did not all have to be rewritten
+// in the same commit that changed the sizes. Whoever next touches a
+// page may collapse its T_NANO and T_TINY into T_META; there is no
+// hurry, because they are the same size now and cannot drift.
+export const T_TITLE = "text-xl"; // 17, a screen's own title in a back header
+export const T_LEAD = "text-lg"; // 15, a card's lead line
+export const T_STRONG = "text-base"; // 13, a figure or a heading inside a card
+export const T_LABEL = "text-base"; // 13, the workhorse: menu tabs, row names
+export const T_BODY = "text-sm"; // 12, ordinary text under a heading
+export const T_SMALL = "text-sm"; // 12, a caption, a chip, a second figure
+export const T_META = "text-xs"; // 11, a record, a date, a unit
+export const T_MICRO = "text-xs"; // 11, a note beside a figure
+export const T_TINY = "text-xs"; // 11, a chart's axis tick
+export const T_NANO = "text-xs"; // 11, the smallest mark on a chart
 
 // THE TWO WEIGHTS. Performance uses these and nothing else: no
 // regular, no medium, no black. Both are here so a weight change is

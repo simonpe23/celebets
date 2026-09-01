@@ -204,7 +204,7 @@ export default function BalanceCard({
                 balance < 0 ? "text-red-600 dark:text-red-400" : ""
               }`}
             >
-              <HeroMoney value={balance} signed={false} className="text-[40px]" />
+              <HeroMoney value={balance} signed={false} className="text-hero" />
             </p>
             <p className="mt-1.5 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
               <span className={`text-sm font-semibold ${profitColor}`}>
@@ -213,7 +213,7 @@ export default function BalanceCard({
                   {formatSignedMoney(netProfit)}
                 </span>
               </span>
-              <span className="text-[11.5px] text-neutral-500 dark:text-neutral-400">
+              <span className="text-sm text-neutral-500 dark:text-neutral-400">
                 {trackingSince
                   ? `net profit since ${shortDate(trackingSince)}`
                   : "net profit, all time"}
@@ -265,7 +265,7 @@ export default function BalanceCard({
         <div className="px-4 py-4 sm:px-5">
           <MicroLabel>Net profit</MicroLabel>
           <p className="mt-1 break-words">
-            <HeroMoney value={netProfit} className="text-[32px]" />
+            <HeroMoney value={netProfit} className="text-3xl" />
           </p>
           <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
             From {betCount} tracked {betCount === 1 ? "bet" : "bets"}.
@@ -287,7 +287,7 @@ export default function BalanceCard({
           <button
             type="button"
             onClick={openSheet}
-            className="text-[13px] font-semibold text-brand-mark"
+            className="text-sm font-semibold text-brand-mark"
           >
             Set tracking balance
           </button>

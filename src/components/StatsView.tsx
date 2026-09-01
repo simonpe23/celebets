@@ -92,7 +92,7 @@ function Fact({
     >
       <MicroLabel>{label}</MicroLabel>
       <p
-        className={`mt-0.5 font-money text-[17px] font-bold tabular-nums ${
+        className={`mt-0.5 font-money text-lg font-bold tabular-nums ${
           tone ?? "text-neutral-900 dark:text-white"
         }`}
       >
@@ -293,7 +293,7 @@ export default function StatsView({
             five. ProfitPanel was built with a `header` slot for exactly
             this and nothing had used it. */}
         <header className="flex items-baseline justify-between gap-3">
-          <h1 className="text-[22px] font-bold tracking-tight">Performance</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Performance</h1>
           {trackingSince && (
             <button
               type="button"
@@ -665,7 +665,7 @@ export default function StatsView({
             and its own heading: without them it reads as a third set of
             numbers disagreeing with the two above. */}
         <div className="border-t border-neutral-200 pt-5 dark:border-white/10">
-          <h2 className="text-[17px] font-bold">Your review</h2>
+          <h2 className="text-lg font-bold">Your review</h2>
           <p className="mt-0.5 text-xs text-neutral-500 dark:text-neutral-400">
             All time, and it ignores the filters above.
           </p>

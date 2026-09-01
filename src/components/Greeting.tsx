@@ -29,7 +29,7 @@ export default function Greeting({ name }: { name: string | null }) {
   // now shares a row with the mark and the avatar, and a long name
   // must shorten rather than wrap the header to two lines.
   return (
-    <h2 className="min-h-7 truncate text-[22px] font-bold leading-7 tracking-[-0.01em]">
+    <h2 className="min-h-7 truncate text-2xl font-bold leading-7 tracking-[-0.01em]">
       {daypart === null ? "" : `${daypart}${name ? `, ${name}` : ""}`}
     </h2>
   );
