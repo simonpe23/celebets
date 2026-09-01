@@ -200,32 +200,44 @@ export default function TotalsApp({
     { value: `$${(all.returned / 1000).toFixed(1)}K`, label: "Returned" },
   ];
 
-  // PER CATEGORY IS TOP 3 AND BOTTOM 3, IN ONE WIDE COLUMN.
+  // PER CATEGORY IS TWO LISTS: THE BEST 3 AND THE WORST 3.
   //
-  // His idea and his choice, 31 August 2026: "instead of a list of top
+  // His idea and his words, 31 August 2026: "instead of a list of top
   // 6 categories in 2 columns. a top 3 list in 1 wider column is my
-  // preferred look. possible?" Then, told a plain top 3 would hide
-  // every losing category: "top 3 and bottom 3, go".
+  // preferred look." Then, told a plain top 3 would hide every losing
+  // category: "top 3 and bottom 3, go".
   //
-  // Two columns had stopped working. The names were readable at 7.2px
-  // and 7.2px is not a size, it is a photograph of one; at 11px, the
-  // app's smallest step, half a phone cannot hold a rank, an icon, a
-  // name, a record and a figure, so "Moneyline" read "Mo...".
+  // CLAUDE BUILT THAT WRONG THE FIRST TIME, as ONE ranked list showing
+  // its two ends. He caught it in a sentence: "what is number 4 on
+  // this list? i was expecting two top 3 lists... there should never
+  // be a 4 on a list with only top 3." He was right. One list of six
+  // is the thing he asked to get away from, just in one column.
   //
-  // WITH SIX OR FEWER CATEGORIES THERE IS NO MIDDLE TO HIDE, so all of
-  // them are shown and no gap is drawn. Above six, the three best and
-  // the three worst, and the rank numbers jumping is what says a
-  // middle was left out. The gap is not labelled: a label would be
-  // copy nobody has written.
-  const CAT_END = 3;
-  const catSplit = cats.length > CAT_END * 2;
-  const catRows = [
-    ...cats.slice(0, CAT_END).map((r, i) => ({ r, rank: i + 1 })),
-    ...(catSplit ? cats.slice(-CAT_END) : cats.slice(CAT_END)).map((r, i) => ({
-      r,
-      rank: cats.length - (catSplit ? CAT_END : cats.length - CAT_END) + i + 1,
-    })),
-  ];
+  // Two lists, each numbered 1 to 3, and everything in the middle is
+  // hidden. That is the point of the change.
+  //
+  // BEST AND WORST, NOT WINNERS AND LOSERS. His ruling, 31 August
+  // 2026, overturning CLAUDE's: "a bottom 3 does not have to be a
+  // loss. Top 3 are the best performing categories regardless of
+  // outcome. Bottom 3 are the worst performing, regardless of
+  // outcome."
+  //
+  // So on a losing record the Top 3 can be three red figures, and that
+  // is correct: they are still the three that hurt least. The colour
+  // still tells the truth about the sign, because that is a money rule
+  // and money rules do not bend to a heading.
+  //
+  // THE TWO LISTS CAN NEVER SHARE A ROW. The bottom takes only what
+  // the top did not, so with four categories it is three and one, and
+  // with three it is three and none rather than the same rows twice.
+  const CAT_TOP = 3;
+  // `cats` is sorted by profit, best first, so the top is already in
+  // order and the bottom is reversed to lead with the worst.
+  const catBest = cats.slice(0, CAT_TOP);
+  const catWorst =
+    cats.length > CAT_TOP
+      ? cats.slice(Math.max(CAT_TOP, cats.length - CAT_TOP)).reverse()
+      : [];
 
   return (
     <>
@@ -361,8 +373,8 @@ export default function TotalsApp({
         </div>
       </Card>
 
-      {/* Per Category, ONE wide column, matching Profit by Sport above
-          it. See the note beside catRows for why. */}
+      {/* Per Category: TWO lists, the best 3 and the worst 3. See the
+          note beside catBest for why it is two lists and not one. */}
       <Card className="mt-[11px] pb-[10px]">
         <SectionHead
           title="Per Category"
@@ -376,52 +388,68 @@ export default function TotalsApp({
         />
         <div className="mt-[8px] px-[13px]">
           <div
-            className={`flex items-center pb-[4px] ${T_TINY} ${W_SEMI}`}
+            className={`flex items-center pb-[3px] ${T_TINY} ${W_SEMI}`}
             style={{ color: GREY_TEXT }}
           >
             <span className="flex-1" />
             <span className="w-[42px] text-right">Record</span>
             <span className="w-[62px] text-right">P/L</span>
           </div>
-          {catRows.map(({ r, rank }, i) => (
-            <div
-              key={r.key}
-              className="flex items-center py-[6px]"
-              style={{
-                borderTop: `1px solid ${HAIRLINE}`,
-                // The one gap, where the middle was left out.
-                marginTop: catSplit && i === CAT_END ? 9 : undefined,
-              }}
-            >
-              <span
-                className={`w-[13px] ${T_MICRO} ${W_SEMI}`}
-                style={{ color: GREY_TEXT }}
-              >
-                {rank}
-              </span>
-              <span
-                className="mr-[5px] flex h-[17px] w-[17px] shrink-0 items-center justify-center rounded-[6px]"
-                style={{ background: PILL_LAV }}
-              >
-                {chipIcon(catChip(r.key), false, undefined, 11)}
-              </span>
-              <span className={`min-w-0 flex-1 truncate ${T_META} ${W_SEMI}`}>
-                {shortLabel(r.label)}
-              </span>
-              <span
-                className={`w-[42px] text-right ${T_MICRO} ${W_SEMI}`}
-                style={{ color: NET_LABEL }}
-              >
-                {record(r)}
-              </span>
-              <span
-                className={`w-[62px] text-right ${T_META} ${W_BOLD}`}
-                style={{ color: r.profit < 0 ? RED : r.profit > 0 ? GREEN : NET_LABEL }}
-              >
-                {r.profit === 0 ? "$0.00" : cash(r.profit)}
-              </span>
-            </div>
-          ))}
+          {[
+            { heading: "Top 3", rows: catBest },
+            // His wording, 31 August 2026: "Bottom 3 is better wording
+            // than top 3 losses".
+            { heading: "Bottom 3", rows: catWorst },
+          ]
+            .filter((list) => list.rows.length > 0)
+            .map((list, li) => (
+              <div key={list.heading} className={li ? "mt-[11px]" : undefined}>
+                <p
+                  className={`pb-[3px] uppercase tracking-[0.04em] ${T_TINY} ${W_SEMI}`}
+                  style={{ color: GREY_TEXT }}
+                >
+                  {list.heading}
+                </p>
+                {list.rows.map((r, i) => (
+                  <div
+                    key={r.key}
+                    className="flex items-center py-[6px]"
+                    style={{ borderTop: `1px solid ${HAIRLINE}` }}
+                  >
+                    <span
+                      className={`w-[13px] ${T_MICRO} ${W_SEMI}`}
+                      style={{ color: GREY_TEXT }}
+                    >
+                      {i + 1}
+                    </span>
+                    <span
+                      className="mr-[5px] flex h-[17px] w-[17px] shrink-0 items-center justify-center rounded-[6px]"
+                      style={{ background: PILL_LAV }}
+                    >
+                      {chipIcon(catChip(r.key), false, undefined, 11)}
+                    </span>
+                    <span className={`min-w-0 flex-1 truncate ${T_META} ${W_SEMI}`}>
+                      {shortLabel(r.label)}
+                    </span>
+                    <span
+                      className={`w-[42px] text-right ${T_MICRO} ${W_SEMI}`}
+                      style={{ color: NET_LABEL }}
+                    >
+                      {record(r)}
+                    </span>
+                    <span
+                      className={`w-[62px] text-right ${T_META} ${W_BOLD}`}
+                      style={{
+                        color:
+                          r.profit < 0 ? RED : r.profit > 0 ? GREEN : NET_LABEL,
+                      }}
+                    >
+                      {r.profit === 0 ? "$0.00" : cash(r.profit)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ))}
         </div>
       </Card>
 

@@ -1519,10 +1519,8 @@ two. It counts the loads now.
 
 - **One page frame**, so the `padded` prop on TabBar can die.
 - **The stretching gap** above the bar on a tall window.
-- **Totals' Per Category on a phone.** Its names still truncate, and
-  the fix is his tabled question below.
 
-### Per Category: one wide column, top 3 and bottom 3. DONE, 31 August 2026
+### Per Category: two lists, Top 3 and Bottom 3. DONE, 31 August 2026
 
 **Phase 2 and phase 3a were accepted first**, his words on his phone:
 "looks great! omg thank you. NOW its starting to feel like an app
@@ -1539,11 +1537,31 @@ leak included, would vanish from a page whose whole argument is
 honesty. Offered top 3, top 3 plus bottom 3, or all of them like Profit
 by Sport, he answered: "top 3 and bottom 3, go".
 
-- **Six or fewer categories: all of them, no gap.** There is no middle
-  to hide, so drawing a gap would be a lie about what was left out.
-- **More than six: the three best, a gap, the three worst.** The rank
-  numbers jumping from 3 to 7 is what says a middle was left out. The
-  gap is NOT labelled, because a label would be copy nobody wrote.
+**CLAUDE BUILT IT WRONG AND HE CAUGHT IT.** The first build was ONE
+ranked list showing its two ends, numbered 1, 2, 3, then 7, 8, 9. He
+read it in a sentence: "i am confused. what is number 4 on this list?
+i was expecting two top 3 lists. Top 3 profits / Top 3 Losses. there
+should never be a 4 on a list with only top 3." He was right. One list
+of six was the thing he asked to get away from, just in one column.
+
+- **Two separate lists, each headed and each numbered 1, 2, 3.** No
+  number above 3 appears anywhere in the block. Everything in the
+  middle is simply not drawn.
+- **The headings are "Top 3" and "Bottom 3".** His wording, chosen over
+  CLAUDE's "Top 3 losses": "Bottom 3 is better wording than top 3
+  losses".
+- **BEST AND WORST, NOT WINNERS AND LOSERS. He overturned CLAUDE on
+  this.** CLAUDE had decided a Bottom 3 should hold only negative
+  figures, and drop to two rows or one when there were not three
+  losing categories. His ruling: "a bottom 3 does not have to be a
+  loss. Top 3 are the best performing categories regardless of
+  outcome. Bottom 3 are the worst performing, regardless of outcome."
+  So on a winning record the Bottom 3 can be three green figures, and
+  on a losing one the Top 3 can be three red ones. The colour still
+  tells the truth about the sign, because that is a money rule.
+- **The two lists can never share a row.** The bottom takes only what
+  the top did not: with four categories it is three and one, with
+  three it is three and none.
 - **The row is Profit by Sport's row**, which sits directly above it:
   rank, icon, full name, a Record column and a P/L column. That was
   the point of the change.
@@ -1553,6 +1571,22 @@ by Sport, he answered: "top 3 and bottom 3, go".
   31 August 2026 that these rows do not need to be: "no need to be able
   to tap Totals' six Per Category rows. dont have to do anything."
   Profit by Sport has no chevron either.
+
+### Every test script finds Chromium the same way. 31 August 2026
+
+Not his ruling, a bug the machine should have caught and now does.
+
+**Three test scripts could not start.** `instanttest.mjs`,
+`jumptest.mjs` and `periodtest.mjs` fell through to Playwright's own
+browser lookup, which pointed at a build number that was not on disk
+after the container changed. `controlstest.mjs` and `sitecheck.mjs`
+ran fine, because they pinned a path by hand. A test that cannot start
+is worse than one that fails: it looks like nothing is wrong.
+
+**`testbrowser.mjs` is now the one answer.** It reads what is actually
+in `/opt/pw-browsers` and takes the newest build, so the next bump
+does not break it. Every script imports `launchOpts()` from it and no
+script pins a path any more. `PLAYWRIGHT_CHROMIUM` still wins if set.
 
 ## The go-live day, 31 August 2026
 

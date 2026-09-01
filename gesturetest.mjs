@@ -4,12 +4,11 @@
 //   3 hold still, then drag            -> the chart locks, page stays put
 //   4 thumb wobble then vertical swipe -> still scrolls
 import { chromium } from "playwright";
+import { launchOpts } from "./testbrowser.mjs";
 
 const OUT =
   "/tmp/claude-0/-home-user-celebets/1db5ff81-a9a7-5fe4-8520-6be8e5866368/scratchpad";
-const b = await chromium.launch({
-  executablePath: "/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
-});
+const b = await chromium.launch(launchOpts());
 
 async function fresh() {
   const p = await b.newPage({

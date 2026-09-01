@@ -14,6 +14,7 @@
 //
 // Run it against a dev server: node sitecheck.mjs 3105
 import { chromium } from "playwright";
+import { launchOpts } from "./testbrowser.mjs";
 
 // Takes a port for a dev server, or a full address for the real site:
 //   node sitecheck.mjs 3105
@@ -112,9 +113,7 @@ const stopServer = () => {
   }
 };
 
-const browser = await chromium.launch({
-  executablePath: "/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
-});
+const browser = await chromium.launch(launchOpts());
 
 // Phone first, because the app is for phones: every page, both
 // themes. Then the public pages again at laptop width, where the

@@ -28,11 +28,8 @@
 // not told to open. The transient states below are opened by hand for
 // that reason. Add to them rather than trusting the page shots alone.
 import { chromium } from "playwright";
+import { launchOpts } from "./testbrowser.mjs";
 import { readdirSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
-
-const EXE =
-  process.env.PLAYWRIGHT_CHROMIUM ||
-  "/opt/pw-browsers/chromium-1194/chrome-linux/chrome";
 
 // Motion off, cursor off, scrollbar off, and the Next dev overlay
 // hidden. Without the last one every page on a dev server that has
@@ -113,7 +110,7 @@ const STATES = [
 
 async function shoot(port, out, theme, set) {
   mkdirSync(out, { recursive: true });
-  const browser = await chromium.launch({ executablePath: EXE });
+  const browser = await chromium.launch(launchOpts());
   const base = `http://localhost:${port}`;
   const open = async (width, height) => {
     const page = await browser.newPage({
@@ -184,7 +181,7 @@ async function shoot(port, out, theme, set) {
 
 async function diff(a, b, marks) {
   if (marks) mkdirSync(marks, { recursive: true });
-  const browser = await chromium.launch({ executablePath: EXE });
+  const browser = await chromium.launch(launchOpts());
   const page = await browser.newPage();
   let bad = 0;
   for (const name of readdirSync(a).filter((f) => f.endsWith(".png")).sort()) {

@@ -13,13 +13,12 @@
 // so this script is the finger.
 
 import { chromium } from "playwright";
+import { launchOpts } from "./testbrowser.mjs";
 
 const port = process.argv[2] ?? "3000";
 const url = `http://localhost:${port}/preview/performance`;
 
-const browser = await chromium.launch({
-  executablePath: "/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
-});
+const browser = await chromium.launch(launchOpts());
 // Both themes. The chart panel can be light now, and a gesture that
 // works on one surface is not proof it works on the other: the light
 // variants changed the panel's classes, and a class change is exactly

@@ -17,6 +17,7 @@
 //
 //   node controlstest.mjs <port>
 import { chromium } from "playwright";
+import { launchOpts } from "./testbrowser.mjs";
 
 const port = process.argv[2] ?? "3105";
 const B = `http://localhost:${port}/preview/`;
@@ -55,8 +56,7 @@ const stopServer = () => {
   }
 };
 
-const exe = process.env.PLAYWRIGHT_CHROMIUM || "/opt/pw-browsers/chromium-1194/chrome-linux/chrome";
-const browser = await chromium.launch({ executablePath: exe });
+const browser = await chromium.launch(launchOpts());
 const page = await browser.newPage({ viewport: { width: 390, height: 900 } });
 let fails = 0;
 const say = (ok, m) => {

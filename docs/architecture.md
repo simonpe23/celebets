@@ -132,6 +132,13 @@ that. Run one dev server on a git worktree of the old code
 diff them. It reports the number of pixels that moved, so "it looks
 the same to me" is never the answer.
 
+**Every script finds the browser the same way.** `testbrowser.mjs`
+reads what is actually in `/opt/pw-browsers` and takes the newest
+build, so a container bump does not silently stop a script starting.
+Set `PLAYWRIGHT_CHROMIUM` to override it. **Never pin a browser path
+inside a script**: three of them were dead for exactly that reason on
+31 August 2026 and nothing said so.
+
 Standalone scripts:
 
 | Script | Proves |

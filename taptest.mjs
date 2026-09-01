@@ -11,11 +11,10 @@
 //
 //   node taptest.mjs [port]
 import { chromium } from "playwright";
+import { launchOpts } from "./testbrowser.mjs";
 
 const port = process.argv[2] ?? "3000";
-const browser = await chromium.launch({
-  executablePath: "/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
-});
+const browser = await chromium.launch(launchOpts());
 const page = await browser.newPage({
   viewport: { width: 393, height: 664 }, hasTouch: true, isMobile: true,
 });
