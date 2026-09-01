@@ -1522,20 +1522,37 @@ two. It counts the loads now.
 - **Totals' Per Category on a phone.** Its names still truncate, and
   the fix is his tabled question below.
 
-### TABLED, bring back when phase 2 and 3a are accepted
+### Per Category: one wide column, top 3 and bottom 3. DONE, 31 August 2026
 
-His words: "table this, phase 2 still looks bad. remind me when phase 2
-is done."
+**Phase 2 and phase 3a were accepted first**, his words on his phone:
+"looks great! omg thank you. NOW its starting to feel like an app
+again." He had tabled this until then: "table this, phase 2 still looks
+bad. remind me when phase 2 is done."
 
-**Per Category becomes one wide column, and how many rows.** He asked
-for it himself: "instead of a list of top 6 categories in 2 columns. a
-top 3 list in 1 wider column is my preferred look. possible?" It is,
-and Profit by Sport directly above it is already exactly that.
+**The one column was his own idea:** "instead of a list of top 6
+categories in 2 columns. a top 3 list in 1 wider column is my preferred
+look. possible?"
 
-The question he has not answered: WHICH rows. Sorted best to worst, a
-top 3 shows only winners and his biggest leak disappears from the page.
-The three offered were top 3, top 3 plus bottom 3, or all of them like
-Profit by Sport.
+**The rows were his decision, taken after being told the cost.** A
+plain top 3 shows only winners, so every losing category, his biggest
+leak included, would vanish from a page whose whole argument is
+honesty. Offered top 3, top 3 plus bottom 3, or all of them like Profit
+by Sport, he answered: "top 3 and bottom 3, go".
+
+- **Six or fewer categories: all of them, no gap.** There is no middle
+  to hide, so drawing a gap would be a lie about what was left out.
+- **More than six: the three best, a gap, the three worst.** The rank
+  numbers jumping from 3 to 7 is what says a middle was left out. The
+  gap is NOT labelled, because a label would be copy nobody wrote.
+- **The row is Profit by Sport's row**, which sits directly above it:
+  rank, icon, full name, a Record column and a P/L column. That was
+  the point of the change.
+- **Nothing truncates any more**, at 320, 390 or 1440. Measured, not
+  looked at.
+- **The chevron is gone.** It implied the row was tappable. He ruled on
+  31 August 2026 that these rows do not need to be: "no need to be able
+  to tap Totals' six Per Category rows. dont have to do anything."
+  Profit by Sport has no chevron either.
 
 ## The go-live day, 31 August 2026
 

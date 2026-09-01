@@ -200,8 +200,32 @@ export default function TotalsApp({
     { value: `$${(all.returned / 1000).toFixed(1)}K`, label: "Returned" },
   ];
 
-  const catLeft = cats.slice(0, 3);
-  const catRight = cats.slice(3, 6);
+  // PER CATEGORY IS TOP 3 AND BOTTOM 3, IN ONE WIDE COLUMN.
+  //
+  // His idea and his choice, 31 August 2026: "instead of a list of top
+  // 6 categories in 2 columns. a top 3 list in 1 wider column is my
+  // preferred look. possible?" Then, told a plain top 3 would hide
+  // every losing category: "top 3 and bottom 3, go".
+  //
+  // Two columns had stopped working. The names were readable at 7.2px
+  // and 7.2px is not a size, it is a photograph of one; at 11px, the
+  // app's smallest step, half a phone cannot hold a rank, an icon, a
+  // name, a record and a figure, so "Moneyline" read "Mo...".
+  //
+  // WITH SIX OR FEWER CATEGORIES THERE IS NO MIDDLE TO HIDE, so all of
+  // them are shown and no gap is drawn. Above six, the three best and
+  // the three worst, and the rank numbers jumping is what says a
+  // middle was left out. The gap is not labelled: a label would be
+  // copy nobody has written.
+  const CAT_END = 3;
+  const catSplit = cats.length > CAT_END * 2;
+  const catRows = [
+    ...cats.slice(0, CAT_END).map((r, i) => ({ r, rank: i + 1 })),
+    ...(catSplit ? cats.slice(-CAT_END) : cats.slice(CAT_END)).map((r, i) => ({
+      r,
+      rank: cats.length - (catSplit ? CAT_END : cats.length - CAT_END) + i + 1,
+    })),
+  ];
 
   return (
     <>
@@ -337,7 +361,8 @@ export default function TotalsApp({
         </div>
       </Card>
 
-      {/* Per Category, two columns. */}
+      {/* Per Category, ONE wide column, matching Profit by Sport above
+          it. See the note beside catRows for why. */}
       <Card className="mt-[11px] pb-[10px]">
         <SectionHead
           title="Per Category"
@@ -349,50 +374,52 @@ export default function TotalsApp({
             onJumpGroup("what");
           }}
         />
-        <div className="mt-[6px] flex px-[11px]">
-          {[catLeft, catRight].map((col, ci) => (
+        <div className="mt-[8px] px-[13px]">
+          <div
+            className={`flex items-center pb-[4px] ${T_TINY} ${W_SEMI}`}
+            style={{ color: GREY_TEXT }}
+          >
+            <span className="flex-1" />
+            <span className="w-[42px] text-right">Record</span>
+            <span className="w-[62px] text-right">P/L</span>
+          </div>
+          {catRows.map(({ r, rank }, i) => (
             <div
-              key={ci}
-              className="min-w-0 flex-1"
+              key={r.key}
+              className="flex items-center py-[6px]"
               style={{
-                borderLeft: ci === 1 ? `1px solid ${HAIRLINE}` : undefined,
-                paddingLeft: ci === 1 ? "9px" : undefined,
-                paddingRight: ci === 0 ? "9px" : undefined,
+                borderTop: `1px solid ${HAIRLINE}`,
+                // The one gap, where the middle was left out.
+                marginTop: catSplit && i === CAT_END ? 9 : undefined,
               }}
             >
-              {col.map((r, i) => (
-                <div
-                  key={r.key}
-                  className="flex items-center py-[7px]"
-                  style={{ borderTop: i === 0 ? undefined : `1px solid ${HAIRLINE}` }}
-                >
-                  <span
-                    className={`w-[10px] ${T_MICRO} ${W_SEMI}`}
-                    style={{ color: ci * 3 + i === 3 ? INDIGO : GREY_TEXT }}
-                  >
-                    {ci * 3 + i + 1}
-                  </span>
-                  <span
-                    className="ml-[3px] mr-[5px] flex h-[17px] w-[17px] shrink-0 items-center justify-center rounded-[6px]"
-                    style={{ background: PILL_LAV }}
-                  >
-                    {chipIcon(catChip(r.key), false, undefined, 11)}
-                  </span>
-                  <span className={`min-w-0 flex-1 truncate text-xs ${W_SEMI}`}>
-                    {shortLabel(r.label)}
-                  </span>
-                  <span className={`ml-[3px] text-xs ${W_SEMI}`} style={{ color: NET_LABEL }}>
-                    {record(r)}
-                  </span>
-                  <span
-                    className={`ml-[4px] whitespace-nowrap text-xs ${W_BOLD}`}
-                    style={{ color: r.profit < 0 ? RED : r.profit > 0 ? GREEN : NET_LABEL }}
-                  >
-                    {r.profit === 0 ? "$0.00" : cash(r.profit)}
-                  </span>
-                  <Chev size={8} color={CHEV} />
-                </div>
-              ))}
+              <span
+                className={`w-[13px] ${T_MICRO} ${W_SEMI}`}
+                style={{ color: GREY_TEXT }}
+              >
+                {rank}
+              </span>
+              <span
+                className="mr-[5px] flex h-[17px] w-[17px] shrink-0 items-center justify-center rounded-[6px]"
+                style={{ background: PILL_LAV }}
+              >
+                {chipIcon(catChip(r.key), false, undefined, 11)}
+              </span>
+              <span className={`min-w-0 flex-1 truncate ${T_META} ${W_SEMI}`}>
+                {shortLabel(r.label)}
+              </span>
+              <span
+                className={`w-[42px] text-right ${T_MICRO} ${W_SEMI}`}
+                style={{ color: NET_LABEL }}
+              >
+                {record(r)}
+              </span>
+              <span
+                className={`w-[62px] text-right ${T_META} ${W_BOLD}`}
+                style={{ color: r.profit < 0 ? RED : r.profit > 0 ? GREEN : NET_LABEL }}
+              >
+                {r.profit === 0 ? "$0.00" : cash(r.profit)}
+              </span>
             </div>
           ))}
         </div>
