@@ -16,6 +16,14 @@ import { useEffect, useState } from "react";
 // Track captures data. Performance is where you understand yourself,
 // insights included. Research is where you understand the game before
 // the next bet.
+//
+// PROFILE JOINED ON 31 AUGUST 2026, phase 1 of the size and layout job.
+// It was ruled the fourth tab on 26 August 2026 and had been missing
+// here ever since, while the Performance area's own private copy of
+// this bar drew all four. That is what made the bar change shape as
+// you moved around the app: three tabs on Track, four on Performance.
+// Profile IS today's Settings page, promoted to a tab and due a
+// rework, so it points at /settings until that happens.
 const TABS = [
   { href: "/app", label: "Track", match: (p: string) => p === "/app" },
   {
@@ -27,6 +35,11 @@ const TABS = [
     href: "/recommendations",
     label: "Research",
     match: (p: string) => p.startsWith("/recommendations"),
+  },
+  {
+    href: "/settings",
+    label: "Profile",
+    match: (p: string) => p.startsWith("/settings"),
   },
 ];
 
@@ -46,6 +59,19 @@ const ICON = "h-[23px] w-[23px]";
 // Light uses the button's own top shade, dark uses the mark, which
 // lifts off the navy bar. Both come from globals.css.
 const ACTIVE = "text-brand-top dark:text-brand-mark";
+
+// LIGHT ONLY, for the one area that has no dark mode.
+//
+// The Performance pages paint themselves light in both themes, his
+// ruling: no dark mode there until the app wide redesign. Their own
+// tab bar used to be hardcoded light to match. When they started
+// drawing this bar instead, on 31 August 2026, the page stayed white
+// in dark mode and the bar turned navy, which looked broken. These
+// are the same three strings with the dark half removed, so that area
+// gets back exactly what it had.
+const ACTIVE_LIGHT = "text-brand-top";
+const IDLE_LIGHT = "text-neutral-500"; // LIGHT ONLY, see above
+const SURFACE_LIGHT = "bg-[#ECECF3] ring-1 ring-neutral-900/[0.07]";
 
 function TrackIcon({ active }: { active: boolean }) {
   return active ? (
@@ -126,7 +152,31 @@ function ResearchIcon({ active }: { active: boolean }) {
   );
 }
 
-const ICONS = [TrackIcon, PerformanceIcon, ResearchIcon];
+function ProfileIcon({ active }: { active: boolean }) {
+  // A head and shoulders, the same shape the Performance bar drew,
+  // redrawn in this bar's idiom: outline idle, solid when selected.
+  return active ? (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={ICON} aria-hidden="true">
+      <circle cx="12" cy="8" r="4" />
+      <path d="M12 14c-4.1 0-7.5 2.4-7.5 5.4 0 .6.5 1.1 1.1 1.1h12.8c.6 0 1.1-.5 1.1-1.1 0-3-3.4-5.4-7.5-5.4Z" />
+    </svg>
+  ) : (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.9}
+      strokeLinecap="round"
+      className={ICON}
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4.5 20.2c0-3.2 3.4-5.7 7.5-5.7s7.5 2.5 7.5 5.7" />
+    </svg>
+  );
+}
+
+const ICONS = [TrackIcon, PerformanceIcon, ResearchIcon, ProfileIcon];
 
 // activeHref exists for the local preview, whose URL is /preview and
 // would otherwise light no tab at all.
@@ -149,6 +199,9 @@ const SURFACE =
 export default function TabBar({
   activeHref,
   inline = false,
+  padded = false,
+  links = true,
+  light = false,
 }: {
   activeHref?: string;
   // Drops the fixed positioning so the local preview can place the bar
@@ -156,6 +209,25 @@ export default function TabBar({
   // classes, so the preview cannot override `fixed` from its own file.
   // The app never passes this.
   inline?: boolean;
+  // TRANSITIONAL, phase 1 of the size and layout job, 31 August 2026.
+  //
+  // Every app page frames itself with `PAGE` from src/lib/ui.ts, which
+  // carries px-4 sm:px-6, and this bar cancels that padding and puts
+  // it back so it can bleed to the page edge. The Performance area has
+  // its own frame with no padding, so the bar has to carry the padding
+  // itself there or it would sit flush against the screen edge.
+  //
+  // Phase 3 gives every page ONE frame and this prop dies with it. Do
+  // not add a third case: fix the frame instead.
+  padded?: boolean;
+  // The public previews under /preview draw a picture of a design. The
+  // Performance previews have always had an untappable bar, because a
+  // tap that jumped out of the preview and into a login screen would
+  // be a surprise. Passing false keeps that exactly as it was.
+  links?: boolean;
+  // Stay light in both themes. Only the Performance area passes this,
+  // because it paints itself light in both. See ACTIVE_LIGHT above.
+  light?: boolean;
 }) {
   // usePathname is called unconditionally on purpose. Writing
   // `activeHref ?? usePathname()` short-circuits, which skips the hook
@@ -215,27 +287,45 @@ export default function TabBar({
       className={
         inline
           ? ""
-          : "sticky bottom-0 z-40 -mx-4 mt-auto px-4 pt-4 pb-[calc(0.625rem+env(safe-area-inset-bottom))] sm:-mx-6 sm:px-6"
+          : `sticky bottom-0 z-40 mt-auto pt-4 pb-[calc(0.625rem+env(safe-area-inset-bottom))] ${
+              padded
+                ? "px-4 sm:px-6"
+                : "-mx-4 px-4 sm:-mx-6 sm:px-6"
+            }`
       }
     >
       <div
-        className={`mx-auto flex w-full max-w-md items-stretch rounded-xl p-1 shadow-[0_6px_20px_-10px_rgba(16,16,26,0.4)] ${SURFACE}`}
+        className={`mx-auto flex w-full max-w-md items-stretch rounded-xl p-1 shadow-[0_6px_20px_-10px_rgba(16,16,26,0.4)] ${
+          light ? SURFACE_LIGHT : SURFACE
+        }`}
       >
         {TABS.map((tab, i) => {
           const Icon = ICONS[i];
           const active = tab.match(shown);
-          return (
+          const on = light ? ACTIVE_LIGHT : ACTIVE;
+          const off = light ? IDLE_LIGHT : "text-neutral-500 dark:text-neutral-400";
+          const cls = `flex flex-1 flex-col items-center justify-center gap-0.5 py-1.5 text-[11px] font-semibold ${
+            active ? on : off
+          }`;
+          const inner = (
+            <>
+              <Icon active={active} />
+              {tab.label}
+            </>
+          );
+          return links ? (
             <Link
               key={tab.href}
               href={tab.href}
               onClick={() => setPending(tab.href)}
-              className={`flex flex-1 flex-col items-center justify-center gap-0.5 py-1.5 text-[11px] font-semibold ${
-                active ? ACTIVE : "text-neutral-500 dark:text-neutral-400"
-              }`}
+              className={cls}
             >
-              <Icon active={active} />
-              {tab.label}
+              {inner}
             </Link>
+          ) : (
+            <span key={tab.href} className={cls}>
+              {inner}
+            </span>
           );
         })}
       </div>

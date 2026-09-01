@@ -7,72 +7,24 @@
 // when anything about it changes.
 //
 // What a page keeps for itself is its content. What every page shares
-// is here, and the measurements come from `./performance-ui`.
+// is here, and the measurements come from `./ui`.
 //
-// The tab bar is drawn, not wired: these are previews, and the four
-// tabs do not navigate. That was true before this component existed
-// and nothing about it changed.
+// THE TAB BAR IS NOT HERE ANY MORE, since 31 August 2026. It is the
+// app's own `src/components/TabBar.tsx`, the one every other page has
+// always drawn. This file used to hold a second one, and the two
+// disagreed about how many tabs the app has.
 
 import type { ReactNode } from "react";
-import Link from "next/link";
+import TabBar from "@/components/TabBar";
 import {
   COL_W,
   FONT_CLASS,
   FONT_FAMILY,
-  INDIGO,
   INK,
   PAGE_BG,
   PerfTail,
-  R_BAR,
-  TAB_BAR_W,
-  TAB_EDGE,
-  TAB_GLASS,
-  TAB_ICON,
-  TAB_IDLE,
   TAIL_SHORT,
-  T_LABEL,
-  W_SEMI,
 } from "./ui";
-import {
-  PerformanceTabIcon,
-  ProfileTabIcon,
-  ResearchTabIcon,
-  TrackTabIcon,
-} from "./icons";
-
-// The four bottom tabs. On the public previews they are inert: a
-// preview is a picture of a design, and a tap that left the preview
-// area would be a surprise. On the live pages they are real links, or
-// the bar would strand you on Performance.
-const LIVE_TABS = {
-  track: "/app",
-  performance: "/stats",
-  research: "/recommendations",
-  // Profile IS today's Settings page, promoted to a tab by his ruling
-  // of 26 August 2026 and due a rework.
-  profile: "/settings",
-};
-
-// One tab: a link on the live pages, a plain span on the previews.
-function TabSlot({
-  live,
-  href,
-  children,
-}: {
-  live: boolean;
-  href: string;
-  children: ReactNode;
-}) {
-  const cls =
-    "flex flex-1 flex-col items-center justify-center gap-[4px] py-1.5";
-  return live ? (
-    <Link href={href} className={cls}>
-      {children}
-    </Link>
-  ) : (
-    <span className={cls}>{children}</span>
-  );
-}
 
 export default function PerfPage({
   children,
@@ -101,46 +53,28 @@ export default function PerfPage({
         <div className={tail} />
       </div>
 
-      {/* The tab bar: a floating card, sticky at the foot of the page
-          like every other page in the app (see TabBar.tsx for why
-          sticky, mt-auto and last child are the mechanics). Taller,
-          icons more prominent: the owner's round 2 instruction 6. */}
-      <nav className="sticky bottom-0 z-40 mt-auto px-3 pb-[calc(0.625rem+env(safe-area-inset-bottom))] pt-3">
-        <div
-          className={`mx-auto flex w-full ${TAB_BAR_W} items-stretch ${R_BAR} p-1`}
-          style={{
-            background: TAB_GLASS,
-            backdropFilter: "blur(10px)",
-            WebkitBackdropFilter: "blur(10px)",
-            boxShadow: `0 6px 20px -10px rgba(16,16,26,0.35), inset 0 0 0 1px ${TAB_EDGE}`,
-          }}
-        >
-          <TabSlot live={live} href={LIVE_TABS.track}>
-            <TrackTabIcon size={TAB_ICON} />
-            <span className={`${T_LABEL} ${W_SEMI}`} style={{ color: TAB_IDLE }}>
-              Track
-            </span>
-          </TabSlot>
-          <TabSlot live={live} href={LIVE_TABS.performance}>
-            <PerformanceTabIcon size={TAB_ICON} />
-            <span className={`${T_LABEL} ${W_SEMI}`} style={{ color: INDIGO }}>
-              Performance
-            </span>
-          </TabSlot>
-          <TabSlot live={live} href={LIVE_TABS.research}>
-            <ResearchTabIcon size={TAB_ICON} />
-            <span className={`${T_LABEL} ${W_SEMI}`} style={{ color: TAB_IDLE }}>
-              Research
-            </span>
-          </TabSlot>
-          <TabSlot live={live} href={LIVE_TABS.profile}>
-            <ProfileTabIcon size={TAB_ICON} />
-            <span className={`${T_LABEL} ${W_SEMI}`} style={{ color: TAB_IDLE }}>
-              Profile
-            </span>
-          </TabSlot>
-        </div>
-      </nav>
+      {/* THE BAR IS THE APP'S OWN NOW, 31 August 2026, phase 1 of the
+          size and layout job. His words: "we're gonna fix the bottom
+          menu bar", and on which of the two wins: "I prefer Track's
+          wide grey bar."
+
+          This file used to draw its own: four tabs in a floating white
+          card, 382px wide, while the rest of the app drew three tabs in
+          a 448px grey one. Two bars in two files is why the bar changed
+          shape as you moved around the app. There is one now.
+
+          `padded` because this frame carries no horizontal padding of
+          its own, unlike every other page. Phase 3 fixes that and the
+          prop dies. `links` off on the previews keeps the bar
+          untappable there, exactly as it was. `light` because these
+          pages paint themselves light in both themes, his ruling, and
+          a navy bar under a white page looked broken. */}
+      <TabBar
+        padded
+        light
+        links={live}
+        activeHref={live ? undefined : "/stats"}
+      />
     </div>
   );
 }

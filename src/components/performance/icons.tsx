@@ -18,7 +18,6 @@ import {
   ORANGE,
   SELECTOR_CHEV,
   SUBGREEN,
-  TAB_GLYPH,
   TARGET_RED,
   WASH_DOT,
   WASH_LINE,
@@ -253,62 +252,11 @@ export function OrbLayers({ size = 22 }: { size?: number }) {
   );
 }
 
-// The tab bar marks from the top list sheet: a target for Track, a
-// rising arrow for Performance, the magnifier, the person.
-export function TrackTabIcon({ size = 13 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" aria-hidden>
-      <circle cx="16" cy="16" r="11" stroke={TAB_GLYPH} strokeWidth="2.4" />
-      <circle cx="16" cy="16" r="4" stroke={TAB_GLYPH} strokeWidth="2.4" />
-    </svg>
-  );
-}
-
-// A double zigzag rising arrow, like the mockup's Performance mark.
-export function PerformanceTabIcon({ size = 13 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" aria-hidden>
-      <path
-        d="M5 20 l8 -8 4.5 4 9.5 -9.5"
-        stroke={MARK}
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path d="M20.5 6 h6.5 v6.5" stroke={MARK} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-      <path
-        d="M5 26 l8 -8 4.5 4 6 -6"
-        stroke={MARK}
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-export function ResearchTabIcon({ size = 13 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" aria-hidden>
-      <circle cx="14" cy="14" r="8.5" stroke={TAB_GLYPH} strokeWidth="2.4" />
-      <path d="M20.5 20.5 L27 27" stroke={TAB_GLYPH} strokeWidth="2.4" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-export function ProfileTabIcon({ size = 13 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" aria-hidden>
-      <circle cx="16" cy="10.5" r="5.5" stroke={TAB_GLYPH} strokeWidth="2.4" />
-      <path
-        d="M5.5 27 a10.5 8.5 0 0 1 21 0"
-        stroke={TAB_GLYPH}
-        strokeWidth="2.4"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
+// THE FOUR TAB BAR MARKS ARE GONE, 31 August 2026. A target for
+// Track, a rising arrow for Performance, a magnifier and a person,
+// drawn from the top list sheet for this area's own tab bar. That bar
+// was deleted: every page draws the app's own `TabBar.tsx` now, and it
+// brings its own icons. Nothing else imported these four.
 
 // The faint contour lines and dot grid living inside the wash. Round
 // 2 note from the owner: subtle, and behind the chart. Kept close to

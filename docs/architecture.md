@@ -139,6 +139,7 @@ Standalone scripts:
 | `motiontest.mjs <port>` | Page and sheet motion, chart draw, counting numbers, reduced-motion. |
 | `pftest.mjs <port>` | Every sport is reachable in the Portfolio prototype's pickers. |
 | `synctest.mjs` | Kalshi money splits and competition normalisation. |
+| `design-check.mjs` rule 13 | There is ONE bottom bar. Any other file building a bottom-stuck bar that names three or more tabs fails the build. |
 | `jumptest.mjs <port>` | The doors between the Home and Lab previews: row taps arrive with the fact selected, Explore Lab lands empty, and Home's KPI row mirrors Lab's cell for cell. |
 | `periodtest.mjs <port>` | The Performance period filter really filters: every period changes the numbers, Custom takes two dates, and the window survives a tab switch. |
 | `instanttest.mjs <port>` | NOTHING under Performance loads a page. Every door between the six views (menu tabs, ranked rows, the Heat Map pill and its tiles, See these bets, Compare, See all bets, every back arrow) causes ZERO server page requests, each view's own address still opens it, and the chosen window travels. |

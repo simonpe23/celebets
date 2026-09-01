@@ -55,8 +55,17 @@ a line to that file and import it.** Spacing used once, on one page,
 stays on the page. `design-check.mjs` rule 12 fails the build on this.
 
 Three things are shared components, not copies: `shell.tsx` (the
-column, the face and the tab bar), `menu.tsx` (Home / Lab / Totals) and
+column and the face), `menu.tsx` (Home / Lab / Totals) and
 `header.tsx` (the back header).
+
+**THE BOTTOM BAR IS NOT ONE OF THEM ANY MORE.** This area drew its own
+until 31 August 2026, four tabs in a floating white card, while the
+rest of the app drew three in a wide grey one. `shell.tsx` renders
+`src/components/TabBar.tsx` now, like every other page, with `padded`
+(this frame has no horizontal padding of its own) and `light` (these
+pages have no dark mode). Both props die in phase 3 of the size and
+layout job. `design-check` rule 13 stops a second bar appearing here
+again.
 
 ANY chat may edit those without asking or pausing. The existing
 convention holds: whoever merges second merges `main` in first.

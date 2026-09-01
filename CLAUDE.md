@@ -84,6 +84,7 @@ coordination."
 |---|---|
 | `src/app/globals.css` | The whole app's colours, type scale and corner radii. |
 | `src/lib/ui.ts` | The live app's repeated class strings: the page frame, its column, the page title, a card's heading. |
+| `src/components/TabBar.tsx` | **The app's ONE bottom bar**, four tabs, on every page. `design-check.mjs` rule 13 fails the build if a second one appears. |
 | `src/components/performance/ui.ts` | Everything the six Performance views share: colours, the face, the type scale, weights, radii, the menu, the header and the chart heights. |
 
 - **Never write a colour, a font family or a shared size inside a
@@ -208,6 +209,23 @@ still uses the engine because that is where the engine started life.
 
 **Check this before starting anything, so two chats do not collide.**
 Keep it current: when a job finishes, delete its line.
+
+- **THE SIZE AND LAYOUT JOB.** Four phases, approved 31 August 2026.
+  His problem, his words: "My app looks like two different products."
+  His end state: one bar, one size scale, one set of spacing rules,
+  and one place in the code to change any of it.
+  1. **One bottom bar. DONE.** `src/components/TabBar.tsx` is the only
+     one, with four tabs. Rule 13 in `design-check.mjs` stops a second.
+  2. **One size scale.** NOT STARTED. **He must choose first, and he
+     asked to be reminded of the trade-off when phase 2 begins: read
+     "THE PHASE 2 REMINDER HE ASKED FOR" in `docs/decisions.md` and
+     put it in front of him before anything is built.**
+  3. **One layout system.** The 320px sideways scroll and the
+     stretching gap on Performance die here.
+  4. **Laptop and full responsive.** He picks from three options
+     first. He is designing this himself, not briefing a designer.
+  **FONTS AND COLOURS ARE OUT OF THIS JOB, his ruling.** He is doing
+  those separately and locally. Do not touch either.
 
 - **The Performance page rebuild.** Three tabs inside `/stats`: Home,
   Lab, Totals. **Do not redesign `/stats`, `StatsView.tsx` or anything

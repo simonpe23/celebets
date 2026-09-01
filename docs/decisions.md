@@ -1299,6 +1299,122 @@ should never be asked to.
 **The rule: one chat owns the whole area, design and numbers.** A
 second chat may not touch `src/app/preview/` or `src/app/stats/`.
 
+## The size and layout job, 31 August 2026
+
+His own words on the problem: "My app looks like two different
+products." And on the end state: "The app operates under ONE set of
+rules... one bar, one size scale, one set of spacing rules, and one
+place in the code where I change any of it for every page at once."
+
+**NOT IN THIS JOB, his ruling:** fonts and colours. "Track and
+Performance use different faces and different purples. I know. That is
+my redesign and I am doing it separately, locally, with a proper
+design system that will work across all pages. Do not touch either."
+
+**THE LAPTOP DESIGN COMES FROM HIM, not a designer.** Asked, he said:
+"i will not brief my designer. we will redesign locally in the next few
+days and see what happens."
+
+**Three decisions he reserved:** whose size scale wins ("Show me both,
+do not pick"), whether the laptop design happens now or later, and
+anything else with more than one reasonable answer. "Ask me. Do not
+choose and tell me afterwards."
+
+### What was measured before any of it was planned
+
+Every app page, six widths. The numbers are the argument.
+
+- **Only Performance scrolls sideways at 320px**, by 22 to 52px. Track,
+  Settings, Research, Insights and the old stats page are clean. He
+  believed it was the whole app.
+- **The bar does not overlap anything.** Every page was scrolled to the
+  bottom at laptop size and nothing hides behind it. He suspected a
+  bug; there is none.
+- **Nothing in the app grows past 448px, ever.** From 768px to 1920px
+  not one pixel changes. Performance stops at 390px.
+- **It is not two type scales, it is five.** Track 10 to 40px,
+  Performance 7 to 45px, Settings and Research 10 to 22px, Insights 11
+  to 22px, old stats 10 to 42px.
+- **The column is written out four times**, and two of the four do not
+  use the shared one.
+- **The Performance dead gap grows with the window**: 184px at his
+  zoom, 248px on a taller one. Track's is a constant 16px.
+- **The landing page is already responsive** to 1300px. Only the app
+  half is stuck.
+- **The checker's laptop pass covers six public pages only.** Track,
+  Performance, Settings and Research had never been loaded above phone
+  width by anything.
+
+### The four phases, approved 31 August 2026
+
+Each merged before the next starts, his condition, so he sees it work
+on his phone as it goes.
+
+1. **One bottom bar.** Done, below.
+2. **One size scale.** He must choose first.
+3. **One layout system.** One column, one frame, one spacing rule. The
+   320px overflow and the stretching gap die here.
+4. **Laptop and full responsive.** He picks from three options first.
+
+### Phase 1: one bottom bar. DONE, 31 August 2026
+
+His choice between the two: "I prefer Track's wide grey bar."
+
+- **`src/components/TabBar.tsx` is the only bar.** The Performance
+  area's private copy is deleted, along with its four icons and the
+  six dial entries only it used.
+- **Profile is the fourth tab**, pointing at `/settings`. It was ruled
+  the fourth tab on 26 August 2026 and had been missing from this bar
+  ever since.
+- **Settings lights Profile now, not Track.** It lit Track because
+  until today there was no Profile tab to light.
+- **`design-check.mjs` rule 13** fails the build if any file other than
+  TabBar.tsx builds a bottom-stuck bar naming three or more tabs. It
+  was tested by planting a second bar, which it caught.
+
+**A regression CLAUDE caused and fixed before shipping:** in dark mode
+the Performance pages paint themselves light, and the shared bar
+turned navy under a white page. TabBar gained a `light` prop that
+drops its dark half, which is exactly what that area's own bar did.
+Found by testing dark mode, not by looking at light screenshots.
+
+**Two transitional props on TabBar, both documented to die in phase 3:**
+`padded`, because the Performance frame carries no horizontal padding
+of its own, and `light` above.
+
+**The bar wears each page's own font**, because fonts are out of this
+job by his ruling. So the labels are Geist on Track and Figtree on
+Performance. Same shape, same size, same colour, different face. His
+to change when he does the font work.
+
+### THE PHASE 2 REMINDER HE ASKED FOR
+
+His words: "ok let's wait until phase 2, remind me of this then."
+
+**What he is deciding: how small the smallest text in the app may be.**
+
+- Track's list: 12, 14, 16, 18, 20, 24, 30px.
+- Performance's list: 7.6, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 15px.
+- They share nothing. Performance's biggest ordinary size is 15px;
+  Track's smallest is 12px.
+
+**CLAUDE's recommendation, his to overturn: Track's list wins and
+Performance moves up onto it, using its small end.**
+
+- 7px cannot be read. Apple's own floor is 11px.
+- Those sizes were measured off a PICTURE of a phone so the build would
+  match his mockup image. Right for copying a picture, wrong for a
+  screen.
+- Performance still gets to look denser than Track: one list, used at
+  different ends. He allowed that: "Pages are allowed to look
+  different from each other for now."
+
+**The cost he must be told again before he chooses:** Performance gets
+visibly bigger, and Home will no longer fit five rows plus the chart on
+one phone screen the way his mockup did. Either it scrolls or it loses
+rows.
+
+
 ## The go-live day, 31 August 2026
 
 Every ruling he made while taking Performance live, in his own words.

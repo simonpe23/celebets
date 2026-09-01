@@ -187,9 +187,17 @@ for (const file of files) {
     }
 
     // 3. Muted text must carry its dark counterpart.
+    //
+    // ONE EXEMPTION, and it is deliberate: a line that says LIGHT ONLY
+    // is for the Performance area, which paints itself light in both
+    // themes by his ruling and would otherwise get a navy tab bar
+    // under a white page. The marker has to be on the line, so nobody
+    // drops a dark half by accident and calls it a decision.
+    const lightOnly = line.includes("LIGHT ONLY");
     if (
       line.includes("text-neutral-500") &&
-      !line.includes("dark:text-neutral-400")
+      !line.includes("dark:text-neutral-400") &&
+      !lightOnly
     ) {
       note(file, n, "text-neutral-500 without dark:text-neutral-400");
     }
@@ -716,6 +724,54 @@ for (const file of PROSE_FILES) {
         note(file, i + 1, "em dash. Use a comma, a period, a colon or brackets");
       }
     });
+}
+
+// ===================================================================
+// RULE 13: THERE IS ONE BOTTOM BAR.
+//
+// Added 31 August 2026, phase 1 of the size and layout job. His words
+// on what was wrong: "There are two bottom bars. One has three tabs,
+// one has four. It changes as you move around the app."
+//
+// There were. `src/components/TabBar.tsx` drew three tabs in a wide
+// grey bar and `src/components/performance/shell.tsx` drew four in a
+// narrow floating white one. Nobody meant to build two; the second one
+// grew inside a folder that looked like a sandbox. A person reviewing
+// either file alone sees nothing wrong, which is exactly the kind of
+// thing that has to be a rule rather than a promise.
+//
+// The test: only TabBar.tsx may build a row of the app's four tab
+// names. Anything else naming three or more of them inside a <nav> is
+// a second bar being born.
+// ===================================================================
+{
+  const TAB_NAMES = ["Track", "Performance", "Research", "Profile"];
+  const BAR_OWNER = "src/components/TabBar.tsx";
+  // The signature of a bottom bar: it is stuck to the foot of the
+  // screen AND it names the app's destinations. The landing page has a
+  // <nav> and says all three words in its copy, so <nav> alone is not
+  // the test.
+  const STUCK = /(sticky|fixed)\s+bottom-0/;
+  for (const file of PROSE_FILES) {
+    const f = file.replace(/^\.\//, "");
+    if (!f.endsWith(".tsx") || f === BAR_OWNER) continue;
+    // The old rejected concepts under /preview are dead code kept for
+    // the history. Holding them to today's system would only mean
+    // editing pages nobody looks at. The Performance pages are live
+    // and are checked.
+    if (f.startsWith("src/app/preview/") && !f.startsWith("src/app/preview/performance"))
+      continue;
+    const text = readFileSync(file, "utf8");
+    if (!STUCK.test(text)) continue;
+    const hits = TAB_NAMES.filter((n) => new RegExp(`>\\s*${n}\\s*<`).test(text));
+    if (hits.length >= 3) {
+      note(
+        f,
+        1,
+        `a bar stuck to the bottom here names ${hits.length} of the app's tabs. There is ONE bottom bar, ${BAR_OWNER}. Import it`
+      );
+    }
+  }
 }
 
 if (problems.length === 0) {
