@@ -382,7 +382,7 @@ export default function LabApp({
       {/* The colour wash behind the answer panel, the accepted Home's
           own asset, placed exactly as Home places it: starting at the
           Net profit row and fading out through the KPI row. */}
-      <div className="pointer-events-none absolute inset-x-0 top-[112px] h-[245px]">
+      <div className="pointer-events-none absolute inset-x-0 top-[112px] h-[245px] overflow-hidden">
         {/* Saturation is pulled down so the asset reads beige, not
             purple: his 29 August order ("i hate the purple fade...
             it's supposed to be beige-ish"). Lab's line dips lower
@@ -392,8 +392,10 @@ export default function LabApp({
           alt=""
           fill
           priority
-          sizes="390px"
-          style={{ objectFit: "fill", filter: "saturate(0.6)" }}
+          sizes="448px"
+          // COVER, NOT FILL: see the same note on Home. `fill`
+          // stretched the artwork at every width but 390.
+          style={{ objectFit: "cover", filter: "saturate(0.6)" }}
         />
         <WashTexture />
       </div>
@@ -488,21 +490,24 @@ export default function LabApp({
         </div>
       )}
 
-      <div className="relative mt-[16px] flex items-center pl-[33px]">
-        {["96px", "188px", "284px"].map((left) => (
-          <span
-            key={left}
-            className="absolute top-1/2 h-[28px] w-px -translate-y-1/2"
-            style={{ left, background: DIVIDER }}
-          />
-        ))}
+      {/* FOUR EQUAL COLUMNS since 31 August 2026, phase 3. Same markup
+          as Home's row, which is what keeps the two lining up, and the
+          same reason: the widths and divider positions were measured
+          off a 390px mockup and were wrong at every other width. */}
+      <div className="relative mt-[16px] grid grid-cols-4 pl-[22px] pr-[12px]">
         {[
           { icon: <FactNote size={19} />, value: `${picks}`, label: "Bets" },
           { icon: <FactWave size={19} />, value: recordOf(whole), label: "Record" },
           { icon: <FactTarget size={19} />, value: hitOf(whole), label: "Hit rate" },
           { icon: <FactTrend size={19} />, value: picks > 0 ? `${roiOf(whole)}` : "-", label: "ROI" },
         ].map((f, i) => (
-          <div key={f.label} className="flex items-center gap-[6px]" style={{ width: ["78px", "92px", "96px", "auto"][i] }}>
+          <div key={f.label} className="relative flex items-center gap-[6px]">
+            {i > 0 ? (
+              <span
+                className="absolute -left-[7px] top-1/2 h-[28px] w-px -translate-y-1/2"
+                style={{ background: DIVIDER }}
+              />
+            ) : null}
             <span className="relative top-[-3px]">{f.icon}</span>
             <div>
               <p className={`text-base ${W_BOLD} leading-none tracking-[-0.01em]`}>{f.value}</p>

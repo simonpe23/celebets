@@ -120,7 +120,8 @@ values and ON for the rest.
 3. `tsc --noEmit`.
 4. `next build`, **required**, because ESLint's rules-of-hooks only
    runs here.
-5. `sitecheck.mjs`, loads every page in both themes and reads what
+5. `sitecheck.mjs`, loads every page at 320, 393 and 1512 in both
+   themes, 180 page loads, and reads what
    actually rendered.
 
 **Proving a change is invisible.** Some jobs are meant to change

@@ -70,6 +70,10 @@ const LOCAL = !ARG.startsWith("http");
 const RENDERED = LOCAL ? [...PUBLIC, ...PREVIEW] : PUBLIC;
 
 const problems = [];
+// Counted rather than calculated. The old line multiplied a guess by
+// two and went wrong the moment phase 3 added a third width, which is
+// exactly the sort of number that quietly lies for months.
+let loads = 0;
 const note = (where, what) => problems.push(`${where}\n      ${what}`);
 
 // Start a dev server if nothing is already listening, and stop it at
@@ -117,9 +121,20 @@ const browser = await chromium.launch({
 // landing layout is completely different. The squashed-logo bug
 // lived exactly in that gap: correct at one width, warped at the
 // other.
+// PHASE 3 OF THE SIZE AND LAYOUT JOB, 31 August 2026. His words:
+// "Nothing above phone width has ever been checked. Not by a script,
+// not by me." He was right, and this list was the reason: the laptop
+// pass ran the six PUBLIC pages only, so Track, Performance, Settings
+// and Research had never been loaded above phone width by anything.
+//
+// 320 is the narrowest phone still in use, an iPhone SE. Every page
+// overflowed it before phase 3, by 22 to 52px, and no screenshot
+// round ever caught it because a screenshot is taken at the page's
+// own width, not the phone's.
 const PASSES = [
+  { width: 320, height: 800, label: "small phone", paths: null },
   { width: 393, height: 852, label: "phone", paths: null },
-  { width: 1512, height: 800, label: "laptop", paths: PUBLIC },
+  { width: 1512, height: 800, label: "laptop", paths: null },
 ];
 
 for (const theme of ["light", "dark"]) {
@@ -130,6 +145,7 @@ for (const theme of ["light", "dark"]) {
   });
 
   for (const path of pass.paths ?? [...RENDERED, ...GATED, ...OLD_AUTH]) {
+    loads += 1;
     const page = await ctx.newPage();
     const errors = [];
     const failedRequests = [];
@@ -272,7 +288,9 @@ await browser.close();
 stopServer();
 
 if (problems.length === 0) {
-  console.log(`Site check passed. ${(RENDERED.length + GATED.length + OLD_AUTH.length + PUBLIC.length) * 2} page loads, nothing broken.`);
+  console.log(
+    `Site check passed. ${loads} page loads across ${PASSES.length} widths and both themes, nothing broken.`
+  );
 } else {
   console.log(`Site check found ${problems.length} problem(s):\n`);
   for (const p of problems) console.log("  " + p + "\n");

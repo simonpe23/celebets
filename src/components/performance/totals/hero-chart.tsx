@@ -65,10 +65,18 @@ export function HeroLine({
   const ticks: number[] = [];
   for (let v = hi; v >= lo - 1; v -= step) ticks.push(v);
 
+  // FLUID SINCE 31 AUGUST 2026, phase 3. The wrapper was a fixed
+  // `width + 34`, so on a 320px phone the chart plus its axis column
+  // reached 20px past the screen and dragged the page sideways. The
+  // viewBox keeps the drawing identical; the box it is painted into
+  // now follows whatever room the row has.
   return (
-    <div className="relative" style={{ width: width + 34 }}>
+    <div
+      className="relative w-full"
+      style={{ maxWidth: width + 34, minWidth: 0 }}
+    >
       <svg
-        width={width}
+        width="100%"
         height={height}
         viewBox={`0 0 ${width} ${height}`}
         fill="none"
@@ -110,7 +118,7 @@ export function HeroLine({
         />
       </svg>
       <div
-        className={`pointer-events-none absolute right-0 top-0 h-full w-[32px] text-xs ${W_SEMI}`}
+        className={`pointer-events-none absolute right-0 top-0 h-full w-[30px] text-xs ${W_SEMI}`}
         style={{ color: GREY_TEXT }}
       >
         {ticks.map((v) => (

@@ -220,8 +220,13 @@ Keep it current: when a job finishes, delete its line.
      `/preview/scale`. The list is 11, 12, 13, 15, 17, 20, 26 and a
      34px hero, in `src/app/globals.css` and nowhere else. Rule 14 in
      `design-check.mjs` fails the build on a size written by hand.
-  3. **One layout system.** The 320px sideways scroll and the
-     stretching gap on Performance die here.
+  3. **One layout system. PART DONE.** Performance now expands to the
+     app's 448px column like every other page, his complaint of 31
+     August 2026, and the 320px sideways scroll is gone everywhere.
+     `sitecheck.mjs` checks every page at 320, 393 and 1512 in both
+     themes now, which it never did. STILL TO DO: one page frame (so
+     TabBar's `padded` prop can die), and the stretching gap above the
+     bar on a tall window.
   4. **Laptop and full responsive.** He picks from three options
      first. He is designing this himself, not briefing a designer.
   **FONTS AND COLOURS ARE OUT OF THIS JOB, his ruling.** He is doing

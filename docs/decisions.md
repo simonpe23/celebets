@@ -1476,6 +1476,67 @@ size is identical before and after.
 takes the biggest money figure on the page. A test that names a pixel
 breaks on every design decision, which teaches people to ignore it.
 
+### Phase 3a: Performance expands like every other page. DONE, 31 August 2026
+
+He found this himself, with a screenshot and black lines drawn on it:
+"the biggest one is that the old pages, track, research profile are
+wider than Performance, why?... i want performance to expand as well as
+the other pages do." Then, zoomed in: "the gap becomes clear when
+zooming in."
+
+He was right. Track was 448px, Performance was 390px. On his laptop the
+bottom bar was visibly wider than the page under it.
+
+**IT COULD NOT SIMPLY BE WIDENED.** Performance was full of positions
+measured off a 390px mockup image, correct at exactly one width:
+
+- The Home / Lab / Totals menu put its tabs at left 59, 181 and 296,
+  and its pill at 4, 126 and 248 with a fixed 110px width.
+- The KPI dividers were nailed at 96, 188 and 284, and the four columns
+  were 78, 92, 96 and auto.
+- The ranked row's name and sparkline were 100px and 74px, both
+  shrink-0, in a row whose other parts already needed 180.
+- Totals' hero chart was a fixed `width + 34` wrapper.
+- The wash image was `objectFit: fill`, which stretches to any box.
+
+**All of them are proportional now**, and the column reads the app's
+own `max-w-md`. One width, one file.
+
+**THE SIDEWAYS SCROLL ON SMALL PHONES IS GONE**, which was the same
+cause. Home was 35px over at 320, Lab 22, Totals 52. Every page at 320,
+360, 390 and 1440 is clean.
+
+**THE CHECKER NOW LOOKS ABOVE PHONE WIDTH.** His words: "Nothing above
+phone width has ever been checked. Not by a script, not by me." The
+cause was one line: `sitecheck.mjs` ran its laptop pass over the six
+public pages only. It runs every page at 320, 393 and 1512 in both
+themes now: 180 page loads, up from 72.
+
+**Its own count was lying too.** The summary line multiplied a guess by
+two. It counts the loads now.
+
+**STILL TO DO IN PHASE 3:**
+
+- **One page frame**, so the `padded` prop on TabBar can die.
+- **The stretching gap** above the bar on a tall window.
+- **Totals' Per Category on a phone.** Its names still truncate, and
+  the fix is his tabled question below.
+
+### TABLED, bring back when phase 2 and 3a are accepted
+
+His words: "table this, phase 2 still looks bad. remind me when phase 2
+is done."
+
+**Per Category becomes one wide column, and how many rows.** He asked
+for it himself: "instead of a list of top 6 categories in 2 columns. a
+top 3 list in 1 wider column is my preferred look. possible?" It is,
+and Profit by Sport directly above it is already exactly that.
+
+The question he has not answered: WHICH rows. Sorted best to worst, a
+top 3 shows only winners and his biggest leak disappears from the page.
+The three offered were top 3, top 3 plus bottom 3, or all of them like
+Profit by Sport.
+
 ## The go-live day, 31 August 2026
 
 Every ruling he made while taking Performance live, in his own words.

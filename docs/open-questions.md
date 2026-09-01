@@ -49,16 +49,21 @@ old words, and every provider mapper points at them.
 
 ## Not blocking, still open
 
-**FIRST JOB OF PHASE 3, and the one thing phase 2 made worse:**
+**TABLED BY HIM, bring it back when phase 2 and 3a are accepted.** His
+words: "table this, phase 2 still looks bad. remind me when phase 2 is
+done." The question is which rows a one column Per Category shows: top
+3, top 3 plus bottom 3, or all of them like Profit by Sport. He asked
+for the one column himself.
 
-**Totals' Per Category grid truncates its names.** "Moneyline" reads
+**Totals' Per Category grid truncates its names ON A PHONE.** "Moneyline" reads
 "Mo...", "Spread / Handicap" reads "Spread /...". Those names used to
 fit because they were 7.2px, and 7.2px is not a size, it is a
 photograph of one. At 11px, the app's smallest step, two columns on a
 390px phone cannot hold a rank, an icon, a name, a record, a figure
 and a chevron. There is no size that fixes it: the row needs a
-different layout, which is exactly phase 3. Flagged to him with the
-merge, not hidden.
+different layout, which is his own tabled question above. Phase 3a
+widened the column, which fixed it on a laptop and changed nothing on
+a phone, because a phone was never wider than 390 to begin with.
 
 **LIVE AND UNFIXED, 31 August 2026. These are on his live page now.**
 

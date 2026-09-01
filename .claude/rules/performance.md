@@ -61,6 +61,23 @@ the build. The Heat Map's tile figures are the one place with numbers,
 because a treemap tile is not a fixed box and the figure must shrink to
 fit it; those numbers are still steps off the same list.
 
+## The column is the APP'S, and nothing is positioned in pixels
+
+Since 31 August 2026, phase 3. `COL_W` reads the app's own `max-w-md`,
+so Performance is exactly as wide as Track, Settings and Research at
+every screen size. It was `max-w-[390px]`, the width of the mockup
+image these pages were measured from, and on a laptop it sat 58px
+narrower than the bar above it.
+
+**Never position anything here in absolute pixels off a 390px
+assumption.** The menu's tabs, the KPI dividers, the ranked row's
+columns and both hero charts were all pixel positions that were correct
+at exactly one width, and they were why small phones scrolled sideways.
+Use fractions, flex or a grid.
+
+`sitecheck.mjs` loads every page at 320, 393 and 1512 in both themes
+and fails on sideways scroll, so this cannot come back quietly.
+
 ## One file holds every shared value
 
 `src/components/performance/ui.ts` holds the colours, the font, the
