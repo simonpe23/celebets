@@ -50,6 +50,9 @@ const PREVIEW = [
   "/preview/performance-compare",
   "/preview/performance-heatmap",
   "/preview/performance-bets",
+  // The size decision page, phase 2. Temporary: delete both this line
+  // and the page once he has chosen a scale.
+  "/preview/scale",
   "/preview/settings",
   "/preview/research",
   "/preview/insights",
