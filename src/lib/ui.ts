@@ -11,7 +11,10 @@ export const CARD =
 export const INNER =
   "rounded-xl bg-neutral-50 ring-1 ring-neutral-900/[0.05] dark:bg-white/[0.03] dark:ring-white/[0.06]";
 
-// The primary action. Nearly square corners, and the mockup's own
+// The primary action. text-base is 13px on the app's one list, which
+// is exactly what this button was before phase 2 of the size and
+// layout job: it is the one control whose size did not move. Nearly
+// square corners, and the mockup's own
 // vertical gradient: #5525C6 at the top down to #4915AD at the foot,
 // both sampled from mobile-dark-10.png. The owner chose this over the
 // flatter, darker #4C1D95 he had been shown before.
@@ -19,7 +22,7 @@ export const INNER =
 // The shape is still squarer than instinct suggests. He rejected
 // rounded-xl and rounded-lg as too much of a pill.
 export const BTN =
-  "rounded-md bg-gradient-to-b from-brand-top to-brand-bottom text-[13px] font-semibold text-white active:from-brand-bottom active:to-brand-press disabled:opacity-60";
+  "rounded-md bg-gradient-to-b from-brand-top to-brand-bottom text-base font-semibold text-white active:from-brand-bottom active:to-brand-press disabled:opacity-60";
 
 // Add to any row that scrolls sideways. iOS paints a grey bar along
 // the bottom of the row while a finger is on it, and in a row of chips
@@ -103,15 +106,21 @@ export const PAGE = "flex min-h-svh flex-col px-4 pt-6 pb-2 sm:px-6";
 // wider, with a standard gap between blocks.
 export const COLUMN = "mx-auto w-full max-w-md space-y-4";
 
+// EVERY SIZE HERE IS A NAME FROM THE ONE SCALE, since 31 August 2026,
+// phase 2 of the size and layout job. They used to be hand written
+// pixels. The list lives in `src/app/globals.css` and nowhere else,
+// and `design-check.mjs` rule 14 fails the build on a size typed by
+// hand anywhere in the app.
+
 // The page's own name, top left. One per screen.
-export const PAGE_TITLE = "text-[22px] font-bold tracking-tight";
+export const PAGE_TITLE = "text-2xl font-bold tracking-tight";
 
 // The heading on a card. Track's "Track a bet", Settings' "Your
 // account", Research's "Coming to Research".
-export const SECTION_HEAD = "text-[17px] font-bold";
+export const SECTION_HEAD = "text-lg font-bold";
 
 // A money figure inside a card, in the numeral face. It is the same
 // size as SECTION_HEAD today and deliberately a separate line: a
 // heading and a number are different jobs, and moving one should not
 // move the other.
-export const CARD_FIGURE = "font-money text-[17px] font-bold tabular-nums";
+export const CARD_FIGURE = "font-money text-lg font-bold tabular-nums";

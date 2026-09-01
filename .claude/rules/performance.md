@@ -45,6 +45,22 @@ server for nothing.
   callback on tap. `instanttest.mjs` counts server page requests and
   fails on any.
 
+## The text sizes are the APP'S, not this folder's
+
+Since 31 August 2026. `ui.ts` still exports T_TITLE, T_LEAD, T_STRONG
+and the rest, but every one of them is now a name from the one list in
+`src/app/globals.css`. Ten hand written steps from 7.6px to 15px
+became five steps of the app's list: 11, 12, 13, 15, 17.
+
+Performance uses the SMALL END of that list, which is what keeps it
+denser than Track while both obey the same rules. His ruling: "Pages
+are allowed to look different from each other for now."
+
+**Never write a text size by hand here.** `design-check` rule 14 fails
+the build. The Heat Map's tile figures are the one place with numbers,
+because a treemap tile is not a fixed box and the figure must shrink to
+fit it; those numbers are still steps off the same list.
+
 ## One file holds every shared value
 
 `src/components/performance/ui.ts` holds the colours, the font, the

@@ -223,7 +223,7 @@ export default function LiveBets({ bets }: Props) {
                 <div className="flex w-full items-center justify-between gap-3 text-left">
                   <span className="flex min-w-0 items-center gap-2.5">
                     {isParlay ? (
-                      <span className="shrink-0 rounded-md bg-neutral-200/70 px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-neutral-600 dark:bg-white/10 dark:text-neutral-300">
+                      <span className="shrink-0 rounded-md bg-neutral-200/70 px-2 py-1 text-xs font-bold uppercase tracking-wide text-neutral-600 dark:bg-white/10 dark:text-neutral-300">
                         Parlay
                       </span>
                     ) : (
@@ -235,7 +235,7 @@ export default function LiveBets({ bets }: Props) {
                       {/* Kalshi titles are whole questions: two
                           lines before the ellipsis, same ruling as
                           Betting history. */}
-                      <span className="line-clamp-2 block text-[15px] font-bold">
+                      <span className="line-clamp-2 block text-lg font-bold">
                         {isParlay
                           ? `${bet.legs.length} Leg Parlay`
                           : (bet.legs[0]?.description ??
@@ -251,7 +251,7 @@ export default function LiveBets({ bets }: Props) {
                           : ""}
                         {bet.status !== "pending" && (
                           <span
-                            className={`ml-1.5 rounded-full px-2 py-0.5 text-[10px] font-bold capitalize ${STATUS_BADGE[bet.status]}`}
+                            className={`ml-1.5 rounded-full px-2 py-0.5 text-xs font-bold capitalize ${STATUS_BADGE[bet.status]}`}
                           >
                             {bet.status}
                           </span>
@@ -269,10 +269,10 @@ export default function LiveBets({ bets }: Props) {
                       places. */}
                   <span className="flex shrink-0 items-center gap-2">
                     <span className="text-right">
-                      <span className="block font-money text-[15px] font-bold tabular-nums">
+                      <span className="block font-money text-lg font-bold tabular-nums">
                         {formatMoney(toCollect)}
                       </span>
-                      <span className="block text-[11px] text-neutral-500 dark:text-neutral-400">
+                      <span className="block text-xs text-neutral-500 dark:text-neutral-400">
                         {bet.status === "pending" ? "to collect" : "collected"}
                       </span>
                     </span>

@@ -82,10 +82,10 @@ export function Donut({
           })}
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <p className={`text-[14px] ${W_BOLD} leading-none`} style={{ color: INK }}>
+        <p className={`text-lg ${W_BOLD} leading-none`} style={{ color: INK }}>
           {center}
         </p>
-        <p className={`mt-[3px] text-[7.5px] ${W_SEMI}`} style={{ color: GREY_TEXT }}>
+        <p className={`mt-[3px] text-xs ${W_SEMI}`} style={{ color: GREY_TEXT }}>
           {caption}
         </p>
       </div>

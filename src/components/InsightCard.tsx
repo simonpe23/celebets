@@ -74,7 +74,7 @@ export default function InsightCard({
             {linked ? "Insight of the day" : "Today's Insight"}
           </span>
         </span>
-        <span className="mt-2 line-clamp-3 text-[15px] font-semibold leading-snug">
+        <span className="mt-2 line-clamp-3 text-lg font-semibold leading-snug">
           {text}
         </span>
       </span>

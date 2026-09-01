@@ -122,7 +122,7 @@ export default function ProfitPanel({
               key={key}
               type="button"
               onClick={() => onPeriodChange(key)}
-              className={`rounded-full px-2.5 py-1 text-[11px] font-bold tracking-wide transition-colors ${
+              className={`rounded-full px-2.5 py-1 text-xs font-bold tracking-wide transition-colors ${
                 period === key
                   ? "bg-white text-[#0E0E14] shadow-sm dark:text-[#080D20]"
                   : "text-neutral-500 dark:text-neutral-400"

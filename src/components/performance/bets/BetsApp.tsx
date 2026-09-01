@@ -211,7 +211,7 @@ export default function BetsApp({
           {stats.wins}–{stats.losses} record
         </span>
         <span
-          className={`text-[13px] ${W_BOLD}`}
+          className={`text-base ${W_BOLD}`}
           style={{ color: stats.profit < 0 ? RED : stats.profit > 0 ? SUBGREEN : NET_LABEL }}
         >
           {stats.profit === 0 ? "$0.00" : cash(stats.profit)}

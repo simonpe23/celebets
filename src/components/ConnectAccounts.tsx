@@ -450,7 +450,7 @@ export default function ConnectAccounts({
             <span className="min-w-0 grow">
               <span className="block text-sm font-semibold">Polymarket</span>
             </span>
-            <span className="shrink-0 rounded-full bg-[#22C55E]/15 px-2 py-0.5 text-[10px] font-bold text-[#22C55E]">
+            <span className="shrink-0 rounded-full bg-[#22C55E]/15 px-2 py-0.5 text-xs font-bold text-[#22C55E]">
               Coming Soon
             </span>
           </div>
@@ -692,7 +692,7 @@ export default function ConnectAccounts({
           Nothing syncing? Check what Kalshi answers
         </button>
         {diagnosis && (
-          <pre className="mt-2 max-h-80 overflow-auto rounded-lg bg-neutral-100 p-3 text-[10px] leading-relaxed dark:bg-black/40">
+          <pre className="mt-2 max-h-80 overflow-auto rounded-lg bg-neutral-100 p-3 text-xs leading-relaxed dark:bg-black/40">
             {diagnosis}
           </pre>
         )}

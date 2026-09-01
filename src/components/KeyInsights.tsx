@@ -125,7 +125,7 @@ export default function KeyInsights({ bets }: { bets: BetWithLegs[] }) {
                 </span>
               </span>
               <span
-                className={`shrink-0 font-money text-[15px] font-bold tabular-nums ${toneClass(
+                className={`shrink-0 font-money text-lg font-bold tabular-nums ${toneClass(
                   row.tone
                 )}`}
               >

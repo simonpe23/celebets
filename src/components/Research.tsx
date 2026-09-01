@@ -96,7 +96,7 @@ const DOORS = [
 
 function Soon() {
   return (
-    <span className="shrink-0 rounded-full bg-neutral-200/70 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-neutral-500 dark:bg-white/10 dark:text-neutral-400">
+    <span className="shrink-0 rounded-full bg-neutral-200/70 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-neutral-500 dark:bg-white/10 dark:text-neutral-400">
       Soon
     </span>
   );
