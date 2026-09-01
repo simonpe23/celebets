@@ -49,7 +49,30 @@ export default function PerfPage({
         fontFamily: FONT_FAMILY,
       }}
     >
-      <div className={`relative mx-auto flex w-full ${COL_W} flex-1 flex-col`}>
+      <div
+        // THE COLUMN STRETCHES ON A PHONE AND A LAPTOP, AND STOPS
+        // ABOVE THAT, since 31 August 2026, phase 3.
+        //
+        // `flex-1` is what feeds Home's growing gaps: it makes this
+        // column as tall as the window, and the spacers inside share
+        // out whatever is left over. That was tuned on a phone, where
+        // the leftover is a few dozen pixels.
+        //
+        // On a window taller than any laptop the leftover is five
+        // hundred, and it has to go somewhere. Stretching it made
+        // Home four visible holes; capping the spacers moved the same
+        // emptiness to the foot of the column, above the bar. Both are
+        // the dead band he asked to be rid of.
+        //
+        // So above 1000px of window height the column simply sizes to
+        // its content and PAGE_FRAME centres the whole page, bar
+        // included, which is the option he picked. 1000 is clear of
+        // every phone (his biggest is 932) and of his laptop (950), so
+        // NOTHING CHANGES ON ANYTHING HE LOOKS AT. Verified by
+        // measuring every spacer at 320, 390, 430 and 1512 before and
+        // after: identical.
+        className={`relative mx-auto flex w-full ${COL_W} flex-col [@media(max-height:1000px)]:flex-1`}
+      >
         {children}
         <div className={tail} />
       </div>

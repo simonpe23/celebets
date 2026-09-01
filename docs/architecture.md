@@ -122,8 +122,10 @@ values and ON for the rest.
    runs here.
 5. `sitecheck.mjs`, loads every page at 320, 393 and 1512 in both
    themes, 180 page loads, and reads what
-   actually rendered. Since 31 August 2026 it also fails if a page's
-   content does not start and end on the same line as the tab bar.
+   actually rendered. Since 31 August 2026 it also runs a fourth pass
+   at a tall 1512x1600, 240 page loads, and fails if a page's content
+   does not start and end on the same line as the tab bar, or if a
+   page's first line ends up above the top of the window.
 
 **Proving a change is invisible.** Some jobs are meant to change
 nothing on screen: moving a value into a shared file, pulling a

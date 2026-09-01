@@ -113,7 +113,27 @@ export const OUTCOME_LOST =
 // the bar; on a laptop they sat 11px inside it, and the sign flipped
 // between the two. The bar needed a `padded` prop to cope. There is
 // one rule now and the prop is gone.
-export const PAGE_FRAME = "flex min-h-svh flex-col px-4 sm:px-6";
+//
+// IT ALSO CENTRES THE PAGE ON A WINDOW TALLER THAN THE CONTENT, his
+// pick of three drawn side by side on 31 August 2026. The bar used to
+// be pinned to the very bottom by `mt-auto`, which left about 570px
+// of dead band between the last card and the bar on a tall laptop
+// window, with the bar stranded down there on its own. The two
+// options he turned down were leaving it, and letting the bar follow
+// the content with all the dead space below it.
+//
+// `safe` is insurance, not the load bearing part. The frame is
+// `min-h-svh`, a MINIMUM height, so it always grows to its own
+// content and centring never has negative space to split: a page
+// taller than the window is simply top aligned and scrolls, which is
+// every phone. Tested by swapping `safe center` for plain `center`
+// and running the site check: nothing was cut off.
+//
+// `safe` is here so that if anyone ever changes `min-h-svh` to a
+// fixed `h-svh`, the first card cannot end up above the top of the
+// window where no amount of scrolling reaches it.
+export const PAGE_FRAME =
+  "flex min-h-svh flex-col px-4 [justify-content:safe_center] sm:px-6";
 
 // The ordinary page adds its own vertical rhythm on top of the frame.
 // Performance does not: it opens on a menu with its own measured gap,

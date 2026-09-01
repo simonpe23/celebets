@@ -293,8 +293,21 @@ export const COL_W = "max-w-md";
 // height is shared out. Home and Lab distribute it (they have their
 // own growing gaps higher up and this one has to lose); the other
 // four simply hold a floor.
-export const TAIL_TALL = "min-h-[8px] grow-[3]";
-export const TAIL_SHORT = "min-h-[6px] grow";
+//
+// THEY ARE CAPPED, since 31 August 2026, phase 3. They were tuned on
+// a phone, where the leftover height is a few dozen pixels and
+// spreading it makes the page sit properly on the glass. On a tall
+// laptop window the leftover is five hundred, and Home spread it into
+// four visible holes: 77px under the chart, 154 above and below the
+// insight banner, 231 at the foot. That is the same dead band he
+// asked to be rid of, wearing a different hat.
+//
+// The caps are the measured maximum on his biggest phone (430x932)
+// and on a 1512x950 laptop, rounded up, so NOTHING changes on any
+// phone or on a normal laptop. Past that the spacer stops and
+// PAGE_FRAME centres the whole page instead, which is what he picked.
+export const TAIL_TALL = "min-h-[8px] max-h-[64px] grow-[3]";
+export const TAIL_SHORT = "min-h-[6px] max-h-[32px] grow";
 export type PerfTail = typeof TAIL_TALL | typeof TAIL_SHORT;
 
 // THE FLOATING TAB BAR IS GONE, 31 August 2026. Its width, its icon

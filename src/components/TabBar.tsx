@@ -263,9 +263,16 @@ export default function TabBar({
   // element and no ancestor may clip overflow. It is the last child of
   // <main> on every page. Move it and it silently stops sticking.
   //
-  // mt-auto is why every page turned into `flex min-h-svh flex-col`.
-  // On a page shorter than the screen there is nothing to stick to, and
-  // without it the bar would sit halfway up under the content.
+  // mt-auto IS GONE, 31 August 2026, phase 3. It pinned the bar to the
+  // very bottom of a window taller than the content, which left a
+  // stretching dead band between the last card and the bar: about
+  // 570px on a tall laptop. The frame centres the whole page instead
+  // now, his pick of three, so the bar sits under the content and the
+  // leftover height is split above and below the lot. See PAGE_FRAME
+  // in src/lib/ui.ts.
+  //
+  // It changes nothing on a phone or on any page that scrolls, because
+  // there is no free height to share out there.
   //
   // Whether this fully kills the shake is a phone question. A headless
   // browser has no collapsing toolbar to shake against, so only a real
@@ -285,7 +292,7 @@ export default function TabBar({
             // the bar always cancels it and always puts it back, and
             // the prop is gone. Do not add a second case: give the
             // page the app's frame instead.
-            "sticky bottom-0 z-40 mt-auto -mx-4 px-4 pt-4 pb-[calc(0.625rem+env(safe-area-inset-bottom))] sm:-mx-6 sm:px-6"
+            "sticky bottom-0 z-40 -mx-4 px-4 pt-4 pb-[calc(0.625rem+env(safe-area-inset-bottom))] sm:-mx-6 sm:px-6"
       }
     >
       <div

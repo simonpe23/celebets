@@ -289,7 +289,7 @@ export default function HomeContent({
           </div>
         </div>
 
-        <div className="min-h-[16px] grow" />
+        <div className="min-h-[16px] max-h-[24px] grow" />
 
         {/* One cohesive KPI row on the wash, groups packed closer by
             his 29 August edit 7.
@@ -327,7 +327,7 @@ export default function HomeContent({
           ))}
         </div>
 
-        <div className="min-h-[12px] grow-[2]" />
+        <div className="min-h-[12px] max-h-[44px] grow-[2]" />
 
         {/* Actuals noticed: its own section on the plain page. Tapping
             it opens the insights sheet, his ruling of 31 August 2026.
@@ -373,7 +373,7 @@ export default function HomeContent({
           onClose={() => setInsights(null)}
         />
 
-        <div className="min-h-[12px] grow-[2]" />
+        <div className="min-h-[12px] max-h-[44px] grow-[2]" />
 
         {/* What drives your result. */}
         <div className="relative flex items-start justify-between pl-[6px] pr-[5px]">

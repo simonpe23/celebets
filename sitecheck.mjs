@@ -130,10 +130,17 @@ const browser = await chromium.launch(launchOpts());
 // overflowed it before phase 3, by 22 to 52px, and no screenshot
 // round ever caught it because a screenshot is taken at the page's
 // own width, not the phone's.
+//
+// THE TALL PASS exists for the centring. Since 31 August 2026 a page
+// shorter than its window is centred rather than pinned to the top
+// with the bar stranded at the bottom, and that layout only happens
+// at a height no page fills. Without this pass every check below
+// would run on pages that scroll, where centring does nothing.
 const PASSES = [
   { width: 320, height: 800, label: "small phone", paths: null },
   { width: 393, height: 852, label: "phone", paths: null },
   { width: 1512, height: 800, label: "laptop", paths: null },
+  { width: 1512, height: 1600, label: "tall window", paths: null },
 ];
 
 for (const theme of ["light", "dark"]) {
@@ -296,6 +303,39 @@ for (const theme of ["light", "dark"]) {
         note(
           where,
           `content does not line up with the tab bar: ${edges.l}px on the left, ${edges.r}px on the right`
+        );
+
+      // NOTHING MAY SIT ABOVE THE TOP OF THE PAGE. A page centred in
+      // a FIXED height container overflows equally at both ends, and
+      // the part above y=0 is unreachable: no amount of scrolling
+      // brings it back.
+      //
+      // It cannot happen today, because PAGE_FRAME is `min-h-svh` and
+      // so always grows to its content. This guards the day someone
+      // makes that a fixed height, which is a one character change
+      // with no other visible effect.
+      const clipped = await page.evaluate(() => {
+        const nav = document.querySelector("nav");
+        if (!nav) return null;
+        const frame = nav.parentElement;
+        let top = Infinity;
+        let what = "";
+        for (const e of frame.querySelectorAll("*")) {
+          if (nav.contains(e)) continue;
+          if (!(e.textContent || "").trim()) continue;
+          const r = e.getBoundingClientRect();
+          if (r.height < 6) continue;
+          if (r.top < top) {
+            top = r.top;
+            what = (e.textContent || "").trim().slice(0, 30);
+          }
+        }
+        return Number.isFinite(top) ? { top: Math.round(top), what } : null;
+      });
+      if (clipped && clipped.top < -1)
+        note(
+          where,
+          `content is cut off above the top of the window by ${-clipped.top}px and cannot be scrolled to: "${clipped.what}"`
         );
 
       // Images that were requested but never arrived, and images with

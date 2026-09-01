@@ -227,10 +227,12 @@ Keep it current: when a job finishes, delete its line.
      `src/lib/ui.ts`. Every page's content now starts and ends on the
      same line as the tab bar, which no Performance page did before.
      TabBar's `padded` prop is deleted. `sitecheck.mjs` checks every
-     page at 320, 393 and 1512 in both themes and fails on a
-     misaligned edge. STILL TO DO: the stretching gap above the bar
-     on a tall window, which is waiting on his pick from three
-     drawn options.
+     page at 320, 393, 1512 and a tall 1512x1600 in both themes and
+     fails on a misaligned edge. **The stretching gap is gone too:**
+     a page shorter than its window is centred as one block, bar
+     included, his pick of three drawn on the real page. Nothing
+     changes on a phone or a laptop, proved with `shotdiff.mjs`.
+     **PHASE 3 IS DONE.**
   4. **Laptop and full responsive.** He picks from three options
      first. He is designing this himself, not briefing a designer.
   **FONTS AND COLOURS ARE OUT OF THIS JOB, his ruling.** He is doing

@@ -121,6 +121,25 @@ edge is fine, an inset from the screen edge is not.
 `sitecheck.mjs` fails the build if any page's content does not start
 and end on the same line as the tab bar.
 
+## Leftover height is spread on a phone, and not above that
+
+`shell.tsx` gives the column `flex-1` only below 1000px of window
+height, and `TAIL_TALL`, `TAIL_SHORT` and Home's own three gaps are
+capped.
+
+`flex-1` is what feeds Home's growing gaps: it makes the column as
+tall as the window and the spacers share out the leftover. That was
+tuned on a phone, where the leftover is a few dozen pixels. On a
+1400px window it is five hundred, and Home spread it into four
+visible holes.
+
+The caps are the measured maximum on his biggest phone (430x932) and
+on a 1512x950 laptop, so **nothing changes on anything he uses**.
+Above 1000px the column sizes to its content and `PAGE_FRAME` centres
+the whole page, bar included, which is what he picked.
+
+Prove any change here with `shotdiff.mjs`, not by eye.
+
 ## What design-check does here
 
 **Exempt, and only here: the three COLOUR rules.** Is this hex in the

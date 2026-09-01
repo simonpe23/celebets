@@ -32,6 +32,11 @@ Full reference: `docs/design-system.md`. The rules that bite:
   own (11, 14, 15 and 20px), so none of them lined up with the bar
   and the error flipped sign between a phone and a laptop.
   `sitecheck.mjs` fails the build on it now.
+- **A PAGE SHORTER THAN ITS WINDOW IS CENTRED**, bar included, since
+  31 August 2026. `PAGE_FRAME` centres and TabBar has no `mt-auto`.
+  It used to pin the bar to the very bottom, leaving about 570px of
+  dead band above it on a tall laptop window. Nothing changes on a
+  phone or a laptop.
 - **Colours, type sizes and corner radii live in three files and
   nowhere else:** `src/app/globals.css` (the app's scale and radii),
   `src/lib/ui.ts` (the live app's repeated class strings) and
