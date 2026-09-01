@@ -1,9 +1,8 @@
 import { chromium } from "playwright";
+import { launchOpts } from "./testbrowser.mjs";
 const OUT = "/tmp/claude-0/-home-user-celebets/1db5ff81-a9a7-5fe4-8520-6be8e5866368/scratchpad";
 const V = process.argv[2] ?? "a";
-const browser = await chromium.launch({
-  executablePath: "/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
-});
+const browser = await chromium.launch(launchOpts());
 const page = await browser.newPage({ viewport: { width: 390, height: 900 }, deviceScaleFactor: 2 });
 await page.goto("http://localhost:3000/preview/connect", { waitUntil: "networkidle" });
 await page.waitForTimeout(600);

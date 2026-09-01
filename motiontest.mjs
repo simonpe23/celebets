@@ -15,13 +15,12 @@
 //
 // Run it against a dev server: node motiontest.mjs 3000
 import { chromium } from "playwright";
+import { launchOpts } from "./testbrowser.mjs";
 
 const PORT = process.argv[2] ?? "3000";
 const URL = `http://localhost:${PORT}/preview/pf`;
 
-const browser = await chromium.launch({
-  executablePath: "/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
-});
+const browser = await chromium.launch(launchOpts());
 
 let failures = 0;
 function check(name, ok, detail = "") {

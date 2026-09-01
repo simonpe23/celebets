@@ -8,6 +8,7 @@
 // Run this after any visual change to Track, Performance or Research:
 //   node makeshots.mjs [port]
 import { chromium } from "playwright";
+import { launchOpts } from "./testbrowser.mjs";
 
 const port = process.argv[2] ?? "3000";
 const OUT = "public/shots";
@@ -15,9 +16,7 @@ const OUT = "public/shots";
 // 2x is enough. These are drawn about 300px wide on the landing page,
 // so 2x already has pixels to spare, and 3x doubles the file size for
 // nothing.
-const browser = await chromium.launch({
-  executablePath: "/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
-});
+const browser = await chromium.launch(launchOpts());
 
 const SHOTS = [
   ["track", "/preview"],

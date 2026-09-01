@@ -8,14 +8,14 @@
 //
 // Usage: node jumptest.mjs <port>
 import { chromium } from "playwright";
+import { launchOpts } from "./testbrowser.mjs";
 
 const port = process.argv[2];
 if (!port) {
   console.error("usage: node jumptest.mjs <port of a running dev server>");
   process.exit(2);
 }
-const exe = process.env.PLAYWRIGHT_CHROMIUM || undefined;
-const browser = await chromium.launch(exe ? { executablePath: exe } : {});
+const browser = await chromium.launch(launchOpts());
 const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 let fails = 0;
 

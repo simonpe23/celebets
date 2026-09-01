@@ -14,6 +14,7 @@
 //
 //   node bartest.mjs [port]
 import { chromium } from "playwright";
+import { launchOpts } from "./testbrowser.mjs";
 
 const port = process.argv[2] ?? "3000";
 const H = 664; // an iPhone in Chrome, toolbars showing
@@ -24,9 +25,7 @@ const PAGES = [
   ["Settings", "/preview/settings"],
 ];
 
-const browser = await chromium.launch({
-  executablePath: "/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
-});
+const browser = await chromium.launch(launchOpts());
 
 const problems = [];
 for (const [name, url] of PAGES) {

@@ -200,8 +200,44 @@ export default function TotalsApp({
     { value: `$${(all.returned / 1000).toFixed(1)}K`, label: "Returned" },
   ];
 
-  const catLeft = cats.slice(0, 3);
-  const catRight = cats.slice(3, 6);
+  // PER CATEGORY IS TWO LISTS: THE BEST 3 AND THE WORST 3.
+  //
+  // His idea and his words, 31 August 2026: "instead of a list of top
+  // 6 categories in 2 columns. a top 3 list in 1 wider column is my
+  // preferred look." Then, told a plain top 3 would hide every losing
+  // category: "top 3 and bottom 3, go".
+  //
+  // CLAUDE BUILT THAT WRONG THE FIRST TIME, as ONE ranked list showing
+  // its two ends. He caught it in a sentence: "what is number 4 on
+  // this list? i was expecting two top 3 lists... there should never
+  // be a 4 on a list with only top 3." He was right. One list of six
+  // is the thing he asked to get away from, just in one column.
+  //
+  // Two lists, each numbered 1 to 3, and everything in the middle is
+  // hidden. That is the point of the change.
+  //
+  // BEST AND WORST, NOT WINNERS AND LOSERS. His ruling, 31 August
+  // 2026, overturning CLAUDE's: "a bottom 3 does not have to be a
+  // loss. Top 3 are the best performing categories regardless of
+  // outcome. Bottom 3 are the worst performing, regardless of
+  // outcome."
+  //
+  // So on a losing record the Top 3 can be three red figures, and that
+  // is correct: they are still the three that hurt least. The colour
+  // still tells the truth about the sign, because that is a money rule
+  // and money rules do not bend to a heading.
+  //
+  // THE TWO LISTS CAN NEVER SHARE A ROW. The bottom takes only what
+  // the top did not, so with four categories it is three and one, and
+  // with three it is three and none rather than the same rows twice.
+  const CAT_TOP = 3;
+  // `cats` is sorted by profit, best first, so the top is already in
+  // order and the bottom is reversed to lead with the worst.
+  const catBest = cats.slice(0, CAT_TOP);
+  const catWorst =
+    cats.length > CAT_TOP
+      ? cats.slice(Math.max(CAT_TOP, cats.length - CAT_TOP)).reverse()
+      : [];
 
   return (
     <>
@@ -337,7 +373,8 @@ export default function TotalsApp({
         </div>
       </Card>
 
-      {/* Per Category, two columns. */}
+      {/* Per Category: TWO lists, the best 3 and the worst 3. See the
+          note beside catBest for why it is two lists and not one. */}
       <Card className="mt-[11px] pb-[10px]">
         <SectionHead
           title="Per Category"
@@ -349,52 +386,70 @@ export default function TotalsApp({
             onJumpGroup("what");
           }}
         />
-        <div className="mt-[6px] flex px-[11px]">
-          {[catLeft, catRight].map((col, ci) => (
-            <div
-              key={ci}
-              className="min-w-0 flex-1"
-              style={{
-                borderLeft: ci === 1 ? `1px solid ${HAIRLINE}` : undefined,
-                paddingLeft: ci === 1 ? "9px" : undefined,
-                paddingRight: ci === 0 ? "9px" : undefined,
-              }}
-            >
-              {col.map((r, i) => (
-                <div
-                  key={r.key}
-                  className="flex items-center py-[7px]"
-                  style={{ borderTop: i === 0 ? undefined : `1px solid ${HAIRLINE}` }}
+        <div className="mt-[8px] px-[13px]">
+          <div
+            className={`flex items-center pb-[3px] ${T_TINY} ${W_SEMI}`}
+            style={{ color: GREY_TEXT }}
+          >
+            <span className="flex-1" />
+            <span className="w-[42px] text-right">Record</span>
+            <span className="w-[62px] text-right">P/L</span>
+          </div>
+          {[
+            { heading: "Top 3", rows: catBest },
+            // His wording, 31 August 2026: "Bottom 3 is better wording
+            // than top 3 losses".
+            { heading: "Bottom 3", rows: catWorst },
+          ]
+            .filter((list) => list.rows.length > 0)
+            .map((list, li) => (
+              <div key={list.heading} className={li ? "mt-[11px]" : undefined}>
+                <p
+                  className={`pb-[3px] uppercase tracking-[0.04em] ${T_TINY} ${W_SEMI}`}
+                  style={{ color: GREY_TEXT }}
                 >
-                  <span
-                    className={`w-[10px] ${T_MICRO} ${W_SEMI}`}
-                    style={{ color: ci * 3 + i === 3 ? INDIGO : GREY_TEXT }}
+                  {list.heading}
+                </p>
+                {list.rows.map((r, i) => (
+                  <div
+                    key={r.key}
+                    className="flex items-center py-[6px]"
+                    style={{ borderTop: `1px solid ${HAIRLINE}` }}
                   >
-                    {ci * 3 + i + 1}
-                  </span>
-                  <span
-                    className="ml-[3px] mr-[5px] flex h-[17px] w-[17px] shrink-0 items-center justify-center rounded-[6px]"
-                    style={{ background: PILL_LAV }}
-                  >
-                    {chipIcon(catChip(r.key), false, undefined, 11)}
-                  </span>
-                  <span className={`min-w-0 flex-1 truncate text-xs ${W_SEMI}`}>
-                    {shortLabel(r.label)}
-                  </span>
-                  <span className={`ml-[3px] text-xs ${W_SEMI}`} style={{ color: NET_LABEL }}>
-                    {record(r)}
-                  </span>
-                  <span
-                    className={`ml-[4px] whitespace-nowrap text-xs ${W_BOLD}`}
-                    style={{ color: r.profit < 0 ? RED : r.profit > 0 ? GREEN : NET_LABEL }}
-                  >
-                    {r.profit === 0 ? "$0.00" : cash(r.profit)}
-                  </span>
-                  <Chev size={8} color={CHEV} />
-                </div>
-              ))}
-            </div>
-          ))}
+                    <span
+                      className={`w-[13px] ${T_MICRO} ${W_SEMI}`}
+                      style={{ color: GREY_TEXT }}
+                    >
+                      {i + 1}
+                    </span>
+                    <span
+                      className="mr-[5px] flex h-[17px] w-[17px] shrink-0 items-center justify-center rounded-[6px]"
+                      style={{ background: PILL_LAV }}
+                    >
+                      {chipIcon(catChip(r.key), false, undefined, 11)}
+                    </span>
+                    <span className={`min-w-0 flex-1 truncate ${T_META} ${W_SEMI}`}>
+                      {shortLabel(r.label)}
+                    </span>
+                    <span
+                      className={`w-[42px] text-right ${T_MICRO} ${W_SEMI}`}
+                      style={{ color: NET_LABEL }}
+                    >
+                      {record(r)}
+                    </span>
+                    <span
+                      className={`w-[62px] text-right ${T_META} ${W_BOLD}`}
+                      style={{
+                        color:
+                          r.profit < 0 ? RED : r.profit > 0 ? GREEN : NET_LABEL,
+                      }}
+                    >
+                      {r.profit === 0 ? "$0.00" : cash(r.profit)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ))}
         </div>
       </Card>
 

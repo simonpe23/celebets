@@ -49,13 +49,12 @@ old words, and every provider mapper points at them.
 
 ## Not blocking, still open
 
-**TABLED BY HIM, bring it back when phase 2 and 3a are accepted.** His
-words: "table this, phase 2 still looks bad. remind me when phase 2 is
-done." The question is which rows a one column Per Category shows: top
-3, top 3 plus bottom 3, or all of them like Profit by Sport. He asked
-for the one column himself.
+**RESOLVED 31 August 2026: Totals' Per Category is one wide column,
+top 3 and bottom 3, his choice.** Nothing truncates any more. See
+`docs/decisions.md`. What follows is the record of why it had to
+change.
 
-**Totals' Per Category grid truncates its names ON A PHONE.** "Moneyline" reads
+**It used to truncate its names on a phone.** "Moneyline" reads
 "Mo...", "Spread / Handicap" reads "Spread /...". Those names used to
 fit because they were 7.2px, and 7.2px is not a size, it is a
 photograph of one. At 11px, the app's smallest step, two columns on a
