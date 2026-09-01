@@ -16,6 +16,7 @@
 
 import type { ReactNode } from "react";
 import TabBar from "@/components/TabBar";
+import { PAGE_FRAME } from "@/lib/ui";
 import {
   COL_W,
   FONT_CLASS,
@@ -41,14 +42,37 @@ export default function PerfPage({
 }) {
   return (
     <div
-      className={`${FONT_CLASS} flex min-h-svh flex-col`}
+      className={`${FONT_CLASS} ${PAGE_FRAME}`}
       style={{
         background: PAGE_BG,
         color: INK,
         fontFamily: FONT_FAMILY,
       }}
     >
-      <div className={`relative mx-auto flex w-full ${COL_W} flex-1 flex-col`}>
+      <div
+        // THE COLUMN STRETCHES ON A PHONE AND A LAPTOP, AND STOPS
+        // ABOVE THAT, since 31 August 2026, phase 3.
+        //
+        // `flex-1` is what feeds Home's growing gaps: it makes this
+        // column as tall as the window, and the spacers inside share
+        // out whatever is left over. That was tuned on a phone, where
+        // the leftover is a few dozen pixels.
+        //
+        // On a window taller than any laptop the leftover is five
+        // hundred, and it has to go somewhere. Stretching it made
+        // Home four visible holes; capping the spacers moved the same
+        // emptiness to the foot of the column, above the bar. Both are
+        // the dead band he asked to be rid of.
+        //
+        // So above 1000px of window height the column simply sizes to
+        // its content and PAGE_FRAME centres the whole page, bar
+        // included, which is the option he picked. 1000 is clear of
+        // every phone (his biggest is 932) and of his laptop (950), so
+        // NOTHING CHANGES ON ANYTHING HE LOOKS AT. Verified by
+        // measuring every spacer at 320, 390, 430 and 1512 before and
+        // after: identical.
+        className={`relative mx-auto flex w-full ${COL_W} flex-col [@media(max-height:1000px)]:flex-1`}
+      >
         {children}
         <div className={tail} />
       </div>
@@ -63,14 +87,14 @@ export default function PerfPage({
           a 448px grey one. Two bars in two files is why the bar changed
           shape as you moved around the app. There is one now.
 
-          `padded` because this frame carries no horizontal padding of
-          its own, unlike every other page. Phase 3 fixes that and the
-          prop dies. `links` off on the previews keeps the bar
-          untappable there, exactly as it was. `light` because these
-          pages paint themselves light in both themes, his ruling, and
-          a navy bar under a white page looked broken. */}
+          `padded` IS GONE, 31 August 2026, phase 3. This frame carries
+          the app's own horizontal padding now, like every other page,
+          so the bar has nothing to compensate for. `links` off on the
+          previews keeps the bar untappable there, exactly as it was.
+          `light` because these pages paint themselves light in both
+          themes, his ruling, and a navy bar under a white page looked
+          broken. */}
       <TabBar
-        padded
         light
         links={live}
         activeHref={live ? undefined : "/stats"}

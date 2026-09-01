@@ -190,7 +190,7 @@ export default function BetsApp({
       />
 
       <p
-        className={`relative mt-[6px] px-[24px] text-center ${T_BODY} ${W_SEMI}`}
+        className={`relative mt-[6px] px-[9px] text-center ${T_BODY} ${W_SEMI}`}
         style={{ color: GREY_TEXT }}
       >
         {what}, {when}
@@ -198,7 +198,7 @@ export default function BetsApp({
 
       {/* The selection's own record, so the list and the number above
           it can never say different things. */}
-      <div className={`relative mx-[15px] mt-[12px] flex items-center justify-between ${R_TILE} px-[13px] py-[11px]`}
+      <div className={`relative mt-[12px] flex items-center justify-between ${R_TILE} px-[13px] py-[11px]`}
         style={{ background: CARD, boxShadow: "0 1px 5px rgba(24,20,50,0.07)" }}
       >
         <span className={`${T_LABEL} ${W_SEMI}`} style={{ color: NET_LABEL }}>
@@ -220,14 +220,14 @@ export default function BetsApp({
 
       {rows.length === 0 ? (
         <p
-          className={`relative mx-[15px] mt-[10px] ${R_CARD} px-[20px] py-[34px] text-center ${T_LABEL} ${W_SEMI}`}
+          className={`relative mt-[10px] ${R_CARD} px-[20px] py-[34px] text-center ${T_LABEL} ${W_SEMI}`}
           style={{ background: CARD, color: GREY_TEXT, boxShadow: "0 1px 5px rgba(24,20,50,0.07)" }}
         >
           No settled bets match this yet.
         </p>
       ) : (
         <div
-          className={`relative mx-[15px] mb-[6px] mt-[10px] ${R_CARD} pb-[8px] pt-[4px]`}
+          className={`relative mb-[6px] mt-[10px] ${R_CARD} pb-[8px] pt-[4px]`}
           style={{ background: CARD, boxShadow: "0 1px 5px rgba(24,20,50,0.07)" }}
         >
           {rows.map(({ bet, matched, legs, hits }, i) => {

@@ -402,12 +402,12 @@ export default function LabApp({
 
       {/* The current view tray: clean white pills, the mockup's own
           treatment, never filled purple. */}
-      <div className="relative mt-[12px] pl-[22px]">
+      <div className="relative mt-[12px] pl-[8px]">
         <p className={`${T_LABEL} ${W_SEMI}`} style={{ color: NET_LABEL }}>
           Your current view
         </p>
       </div>
-      <div className="relative mt-[7px] flex flex-wrap items-center gap-[6px] pl-[20px] pr-[14px]">
+      <div className="relative mt-[7px] flex flex-wrap items-center gap-[6px] pl-[6px]">
         {sel.map((c) => (
           <button
             key={`${c.group}~${c.kind}~${c.value}`}
@@ -449,7 +449,7 @@ export default function LabApp({
           Lab's live numbers. Net profit row, the number, the green
           ROI and record line, the chart riding up beside the number,
           then the four ruled KPIs with Home's dividers. */}
-      <div className="relative mt-[12px] flex items-center justify-between pl-[22px] pr-[10px]">
+      <div className="relative mt-[12px] flex items-center justify-between pl-[8px]">
         <p
           className={`flex items-center gap-[1px] ${T_LABEL} ${W_SEMI}`}
           style={{ color: NET_LABEL }}
@@ -469,13 +469,13 @@ export default function LabApp({
         </span>
       </div>
       <p
-        className={`relative mt-[4px] pl-[18px] text-hero ${W_BOLD} leading-none`}
+        className={`relative mt-[4px] pl-[4px] text-hero ${W_BOLD} leading-none`}
         style={{ color: whole.profit < 0 ? RED : INDIGO }}
       >
         {money(whole.profit)}
       </p>
       {picks === 0 ? (
-        <p className={`relative mt-[16px] pl-[22px] ${T_LABEL}`} style={{ color: GREY_TEXT }}>
+        <p className={`relative mt-[16px] pl-[8px] ${T_LABEL}`} style={{ color: GREY_TEXT }}>
           No picks match this view yet.
         </p>
       ) : (
@@ -494,7 +494,7 @@ export default function LabApp({
           as Home's row, which is what keeps the two lining up, and the
           same reason: the widths and divider positions were measured
           off a 390px mockup and were wrong at every other width. */}
-      <div className="relative mt-[16px] grid grid-cols-4 pl-[22px] pr-[12px]">
+      <div className="relative mt-[16px] grid grid-cols-4 pl-[8px]">
         {[
           { icon: <FactNote size={19} />, value: `${picks}`, label: "Bets" },
           { icon: <FactWave size={19} />, value: recordOf(whole), label: "Record" },
@@ -531,7 +531,7 @@ export default function LabApp({
       <button
         onClick={() => setInsights(rollInsights(bets))}
         aria-label="Open your insights"
-        className={`relative mx-[15px] mt-[16px] flex h-[45px] w-[calc(100%-30px)] items-center ${R_CHIP} pl-[7px] pr-[12px] text-left`}
+        className={`relative mt-[16px] flex h-[45px] w-full items-center ${R_CHIP} pl-[7px] pr-[12px] text-left`}
         style={{ background: AMBER_BG, boxShadow: `inset 0 0 0 1px ${AMBER_EDGE}` }}
       >
         <span
@@ -565,7 +565,7 @@ export default function LabApp({
           at exactly two selections. Both keep a real address and both
           swap the view in place when the tab area is driving. */}
       {sel.length > 0 ? (
-        <div className="relative mx-[15px] mt-[10px] flex gap-[8px]">
+        <div className="relative mt-[10px] flex gap-[8px]">
           {/* Job 5. It was a button that did nothing; it opens All
               Bets now, carrying the selection and the period. */}
           <Link
@@ -628,7 +628,7 @@ export default function LabApp({
       ) : null}
 
       {/* Add another fact. */}
-      <div ref={groupsRef} className="relative mt-[22px] scroll-mt-[10px] pl-[20px] pr-[19px]">
+      <div ref={groupsRef} className="relative mt-[22px] scroll-mt-[10px] pl-[6px] pr-[5px]">
         <h2 className={`text-base ${W_BOLD}`}>
           {sel.length === 0 ? "Build your view" : "Add another fact"}
         </h2>
@@ -652,7 +652,7 @@ export default function LabApp({
               : { background: "transparent", borderRadius: 14 }
           }
         >
-          <div className="flex items-center justify-between pl-[20px] pr-[19px]">
+          <div className="flex items-center justify-between pl-[6px] pr-[5px]">
             {g.key === "sport" ? (
               <div className="relative">
                 <button

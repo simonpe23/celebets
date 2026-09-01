@@ -130,10 +130,17 @@ const browser = await chromium.launch(launchOpts());
 // overflowed it before phase 3, by 22 to 52px, and no screenshot
 // round ever caught it because a screenshot is taken at the page's
 // own width, not the phone's.
+//
+// THE TALL PASS exists for the centring. Since 31 August 2026 a page
+// shorter than its window is centred rather than pinned to the top
+// with the bar stranded at the bottom, and that layout only happens
+// at a height no page fills. Without this pass every check below
+// would run on pages that scroll, where centring does nothing.
 const PASSES = [
   { width: 320, height: 800, label: "small phone", paths: null },
   { width: 393, height: 852, label: "phone", paths: null },
   { width: 1512, height: 800, label: "laptop", paths: null },
+  { width: 1512, height: 1600, label: "tall window", paths: null },
 ];
 
 for (const theme of ["light", "dark"]) {
@@ -236,6 +243,100 @@ for (const theme of ["light", "dark"]) {
       );
       if (sideways > 1)
         note(where, `page scrolls sideways by ${sideways}px`);
+
+      // THE EDGE RULE. Content and the tab bar must start and end on
+      // the same line, on every page and at every width.
+      //
+      // Added 31 August 2026, phase 3 of the size and layout job. The
+      // three ordinary pages had always agreed with the bar. The six
+      // Performance pages never did: each carried its own inset off
+      // the mockup it was measured from, 11px on Totals, 14 on Home
+      // and Lab, 15 on the Heat Map and All Bets, 20 on Compare. On a
+      // phone Totals' cards stuck out 5px PAST the bar, on a laptop
+      // they sat 11px inside it, and the sign flipped between the
+      // two. Nine screenshot rounds never showed it, because a few
+      // pixels at the edge of a card is exactly what an eye forgives
+      // and a ruler does not.
+      const edges = await page.evaluate(() => {
+        const nav = document.querySelector("nav");
+        if (!nav) return null;
+        const bar = nav.querySelector("div");
+        if (!bar) return null;
+        const b = bar.getBoundingClientRect();
+        let L = Infinity;
+        let R = -Infinity;
+        for (const e of document.querySelectorAll("*")) {
+          if (e === nav || nav.contains(e)) continue;
+          const r = e.getBoundingClientRect();
+          if (r.width < 40 || r.height < 8) continue;
+          const st = getComputedStyle(e);
+          // Only boxes that actually paint an edge. Invisible wrappers
+          // are allowed to be any width.
+          if (
+            st.backgroundColor === "rgba(0, 0, 0, 0)" &&
+            st.boxShadow === "none" &&
+            st.borderTopWidth === "0px"
+          )
+            continue;
+          // The page's own full width backdrop is not content.
+          if (r.width > window.innerWidth - 4) continue;
+          // A sideways scroller is allowed to run past the edge: that
+          // is what makes it scroll. Its own box still has to fit.
+          let p = e;
+          let inScroller = false;
+          while (p && p !== document.body) {
+            const ps = getComputedStyle(p);
+            if (ps.overflowX === "auto" || ps.overflowX === "scroll" || ps.overflowX === "hidden") {
+              inScroller = true;
+              break;
+            }
+            p = p.parentElement;
+          }
+          if (inScroller) continue;
+          L = Math.min(L, r.left);
+          R = Math.max(R, r.right);
+        }
+        if (!Number.isFinite(L)) return null;
+        return { l: Math.round(L - b.left), r: Math.round(b.right - R) };
+      });
+      if (edges && (edges.l !== 0 || edges.r !== 0))
+        note(
+          where,
+          `content does not line up with the tab bar: ${edges.l}px on the left, ${edges.r}px on the right`
+        );
+
+      // NOTHING MAY SIT ABOVE THE TOP OF THE PAGE. A page centred in
+      // a FIXED height container overflows equally at both ends, and
+      // the part above y=0 is unreachable: no amount of scrolling
+      // brings it back.
+      //
+      // It cannot happen today, because PAGE_FRAME is `min-h-svh` and
+      // so always grows to its content. This guards the day someone
+      // makes that a fixed height, which is a one character change
+      // with no other visible effect.
+      const clipped = await page.evaluate(() => {
+        const nav = document.querySelector("nav");
+        if (!nav) return null;
+        const frame = nav.parentElement;
+        let top = Infinity;
+        let what = "";
+        for (const e of frame.querySelectorAll("*")) {
+          if (nav.contains(e)) continue;
+          if (!(e.textContent || "").trim()) continue;
+          const r = e.getBoundingClientRect();
+          if (r.height < 6) continue;
+          if (r.top < top) {
+            top = r.top;
+            what = (e.textContent || "").trim().slice(0, 30);
+          }
+        }
+        return Number.isFinite(top) ? { top: Math.round(top), what } : null;
+      });
+      if (clipped && clipped.top < -1)
+        note(
+          where,
+          `content is cut off above the top of the window by ${-clipped.top}px and cannot be scrolled to: "${clipped.what}"`
+        );
 
       // Images that were requested but never arrived, and images with
       // no alt text, which is both an accessibility and a copy problem.

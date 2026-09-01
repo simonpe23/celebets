@@ -1515,10 +1515,113 @@ themes now: 180 page loads, up from 72.
 **Its own count was lying too.** The summary line multiplied a guess by
 two. It counts the loads now.
 
-**STILL TO DO IN PHASE 3:**
+**PHASE 3 IS DONE.** Phase 4, laptop and full responsive, is next
+and he is designing that himself.
 
-- **One page frame**, so the `padded` prop on TabBar can die.
-- **The stretching gap** above the bar on a tall window.
+### The stretching gap: centre the page. DONE, 31 August 2026
+
+**His pick, from three drawn on the real page and shown side by
+side.** On a tall laptop window there was about 570px of dead band
+between the last card and the bar, with the bar stranded at the very
+bottom on its own.
+
+- **A. Leave it.** Rejected.
+- **B. Bar follows the content**, dead space all below it. Rejected.
+- **C. Centre the whole page as one block**, bar attached under the
+  content, leftover height split above and below. **His pick.**
+
+**How it is built:** `PAGE_FRAME` centres, and `mt-auto` is gone from
+the tab bar. That was what pinned the bar to the bottom of the window.
+
+**PERFORMANCE NEEDED A SECOND FIX, and it was the same complaint
+wearing a different hat.** Home spreads leftover height into four
+gaps of its own, which was tuned on a phone where the leftover is a
+few dozen pixels. On a 1400px window the leftover is five hundred and
+Home spread it into four visible holes: 77px under the chart, 154
+above and below the insight banner, 231 at the foot.
+
+Two things fix it, and **NEITHER CHANGES ANYTHING ON A PHONE OR A
+LAPTOP**:
+
+- **The spacers are capped** at their measured maximum on his biggest
+  phone (430x932) and on a 1512x950 laptop, rounded up.
+- **The column only stretches below 1000px of window height.** Above
+  that it sizes to its content and the frame centres the lot. 1000 is
+  clear of every phone (his biggest is 932) and of his laptop (950).
+
+**Proved invisible, not assumed.** `shotdiff.mjs` between the code
+before and after this change, across every page at phone and laptop:
+"IDENTICAL. Nothing on screen moved."
+
+**`safe center` is insurance, not the load bearing part.** The frame
+is `min-h-svh`, a MINIMUM, so it always grows to its content and
+centring never has negative space to split. Tested by swapping it for
+a plain `center` and running the site check: nothing was cut off. The
+`safe` is there for the day someone makes it a fixed `h-svh`.
+
+**`sitecheck.mjs` grew a fourth pass, 1512x1600**, because every other
+pass runs on pages that scroll, where centring does nothing. 240 page
+loads now. It also fails if any page's first line ends up above the
+top of the window, where no scrolling reaches it.
+
+### One page frame, one edge rule. DONE, 31 August 2026
+
+His instruction: "go for the page frame and the gap".
+
+**THE FRAME JOB TURNED OUT TO BE A REAL BUG, not a tidy-up.** The
+`padded` prop existed because Performance's frame had no horizontal
+padding while every other frame had `px-4 sm:px-6`. Chasing that
+found the actual defect underneath it.
+
+**Content and the tab bar did not line up on any Performance page,
+and the error flipped sign between a phone and a laptop.** Measured,
+31 August 2026, at 390 and 1512:
+
+| Page | Phone | Laptop |
+|---|---|---|
+| Track, Research, Settings | exact | exact |
+| Home | 4px outside the bar | 12px inside |
+| Lab | 2px outside | 14px inside |
+| Totals | 5px outside | 11px inside |
+| Compare | 4px inside | 20px inside |
+| Heat Map, All Bets | 1px outside | 15px inside |
+
+Each of the six carried its own inset, measured off whichever mockup
+image it was built from: 11px on Totals, 14 on Home and Lab, 15 on
+the Heat Map and All Bets, 20 on Compare. So the six pages did not
+agree with the app, and they did not agree with each other either.
+
+**There is ONE edge rule now**, `PAGE_FRAME` in `src/lib/ui.ts`, and
+every page reads it. All nine pages line up with the bar exactly at
+320, 390 and 1512. **`padded` is deleted.**
+
+**THE COST, and it is real:** Performance's phone column went from
+390px full bleed to 358px, because it now keeps the app's 16px margin
+like every other page. Three strings stopped fitting and were bought
+back with 2 to 5px of per page padding: "American Football" on
+Totals, "Build your performance view" on Home, "Moneyline" on Home at
+320. One of those three was already clipping before the change.
+
+**A ONE PIXEL OVERFLOW COSTS FIVE CHARACTERS.** `truncate` reserves
+room for the ellipsis, so "American Football" at 1px too long renders
+"American Footb...". This is why the three had to be fixed rather
+than accepted.
+
+**Two machine checks came out of it**, because nine rounds of
+screenshots had never shown any of this:
+
+- **`sitecheck.mjs` now fails the build** if any page's content does
+  not start and end on the same line as the tab bar, at every width
+  and in both themes. Run against the old code it fires on all six
+  Performance pages with exactly the numbers in the table above.
+- **`fittest.mjs`** diffs old code against new and fails if a string
+  that used to fit is now cut. Same shape as `shotdiff.mjs`: a
+  worktree of the old code on one port, the new on another.
+
+**The one deliberate difference left between the two frames is
+vertical.** `PAGE` adds `pt-6 pb-2` for pages that open on a title;
+Performance opens on its menu and does not. Not touched, because he
+did not ask for it.
 
 ### Per Category: two lists, Top 3 and Bottom 3. DONE, 31 August 2026
 

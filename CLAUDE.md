@@ -220,13 +220,19 @@ Keep it current: when a job finishes, delete its line.
      `/preview/scale`. The list is 11, 12, 13, 15, 17, 20, 26 and a
      34px hero, in `src/app/globals.css` and nowhere else. Rule 14 in
      `design-check.mjs` fails the build on a size written by hand.
-  3. **One layout system. PART DONE.** Performance now expands to the
-     app's 448px column like every other page, his complaint of 31
-     August 2026, and the 320px sideways scroll is gone everywhere.
-     `sitecheck.mjs` checks every page at 320, 393 and 1512 in both
-     themes now, which it never did. STILL TO DO: one page frame (so
-     TabBar's `padded` prop can die), and the stretching gap above the
-     bar on a tall window.
+  3. **One layout system. PART DONE.** Performance expands to the
+     app's 448px column like every other page, the 320px sideways
+     scroll is gone everywhere, and since 31 August 2026 there is
+     **ONE PAGE FRAME AND ONE EDGE RULE**, `PAGE_FRAME` in
+     `src/lib/ui.ts`. Every page's content now starts and ends on the
+     same line as the tab bar, which no Performance page did before.
+     TabBar's `padded` prop is deleted. `sitecheck.mjs` checks every
+     page at 320, 393, 1512 and a tall 1512x1600 in both themes and
+     fails on a misaligned edge. **The stretching gap is gone too:**
+     a page shorter than its window is centred as one block, bar
+     included, his pick of three drawn on the real page. Nothing
+     changes on a phone or a laptop, proved with `shotdiff.mjs`.
+     **PHASE 3 IS DONE.**
   4. **Laptop and full responsive.** He picks from three options
      first. He is designing this himself, not briefing a designer.
   **FONTS AND COLOURS ARE OUT OF THIS JOB, his ruling.** He is doing

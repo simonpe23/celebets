@@ -102,7 +102,7 @@ function Card({
 }) {
   return (
     <div
-      className={`relative mx-[11px] ${R_CARD} ${className}`}
+      className={`relative ${R_CARD} ${className}`}
       style={{ background: CARD, boxShadow: "0 1px 5px rgba(24,20,50,0.07)" }}
     >
       {children}
@@ -242,7 +242,7 @@ export default function TotalsApp({
   return (
     <>
       {/* The period selector, then the result beside its line. */}
-      <div className="relative z-30 mt-[10px] flex items-center pl-[15px]">
+      <div className="relative z-30 mt-[10px] flex items-center pl-[4px]">
         <PeriodPill
           period={period}
           onPick={onPeriod}
@@ -255,7 +255,7 @@ export default function TotalsApp({
         />
       </div>
 
-      <div className="relative mt-[6px] flex items-start justify-between pl-[15px] pr-[8px]">
+      <div className="relative mt-[6px] flex items-start justify-between pl-[4px]">
         <div className="pt-[4px]">
           <p
             className={`text-hero ${W_BOLD} leading-none tracking-[-0.015em]`}
@@ -327,7 +327,7 @@ export default function TotalsApp({
             onJumpGroup("sport");
           }}
         />
-        <div className="mt-[8px] flex items-center gap-[8px] pl-[9px] pr-[11px]">
+        <div className="mt-[8px] flex items-center gap-[8px] pl-[9px] pr-[9px]">
           <Donut
             size={104}
             slices={sports.map((s) => ({ key: s.key, value: s.profit, profit: s.profit }))}
@@ -454,7 +454,7 @@ export default function TotalsApp({
       </Card>
 
       {/* Odds Groups beside Singles vs Parlays. */}
-      <div className="relative mt-[11px] flex gap-[9px] px-[11px]">
+      <div className="relative mt-[11px] flex gap-[9px]">
         <div
           className={`min-w-0 flex-1 ${R_CARD} pb-[11px]`}
           style={{ background: CARD, boxShadow: "0 1px 5px rgba(24,20,50,0.07)" }}
