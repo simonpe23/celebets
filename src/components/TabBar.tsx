@@ -199,7 +199,6 @@ const SURFACE =
 export default function TabBar({
   activeHref,
   inline = false,
-  padded = false,
   links = true,
   light = false,
 }: {
@@ -209,17 +208,6 @@ export default function TabBar({
   // classes, so the preview cannot override `fixed` from its own file.
   // The app never passes this.
   inline?: boolean;
-  // TRANSITIONAL, phase 1 of the size and layout job, 31 August 2026.
-  //
-  // Every app page frames itself with `PAGE` from src/lib/ui.ts, which
-  // carries px-4 sm:px-6, and this bar cancels that padding and puts
-  // it back so it can bleed to the page edge. The Performance area has
-  // its own frame with no padding, so the bar has to carry the padding
-  // itself there or it would sit flush against the screen edge.
-  //
-  // Phase 3 gives every page ONE frame and this prop dies with it. Do
-  // not add a third case: fix the frame instead.
-  padded?: boolean;
   // The public previews under /preview draw a picture of a design. The
   // Performance previews have always had an untappable bar, because a
   // tap that jumped out of the preview and into a login screen would
@@ -287,11 +275,17 @@ export default function TabBar({
       className={
         inline
           ? ""
-          : `sticky bottom-0 z-40 mt-auto pt-4 pb-[calc(0.625rem+env(safe-area-inset-bottom))] ${
-              padded
-                ? "px-4 sm:px-6"
-                : "-mx-4 px-4 sm:-mx-6 sm:px-6"
-            }`
+          : // ONE CASE, since 31 August 2026, phase 3 of the size and
+            // layout job. There were two: the bar cancelled its
+            // frame's padding and put it back, unless a caller passed
+            // `padded`, which the Performance area did because its
+            // frame had no padding at all.
+            //
+            // Every frame carries `PAGE_FRAME`'s px-4 sm:px-6 now, so
+            // the bar always cancels it and always puts it back, and
+            // the prop is gone. Do not add a second case: give the
+            // page the app's frame instead.
+            "sticky bottom-0 z-40 mt-auto -mx-4 px-4 pt-4 pb-[calc(0.625rem+env(safe-area-inset-bottom))] sm:-mx-6 sm:px-6"
       }
     >
       <div

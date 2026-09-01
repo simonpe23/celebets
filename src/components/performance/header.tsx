@@ -51,7 +51,7 @@ export default function PerfHeader({
   return (
     <div
       className={`relative mt-[10px] flex ${tall ? HEAD_H_TALL : HEAD_H} items-center ${
-        tall ? "px-[16px]" : "px-[15px]"
+        tall ? "px-[1px]" : ""
       }`}
     >
       <Link

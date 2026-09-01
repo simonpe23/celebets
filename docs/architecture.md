@@ -122,7 +122,8 @@ values and ON for the rest.
    runs here.
 5. `sitecheck.mjs`, loads every page at 320, 393 and 1512 in both
    themes, 180 page loads, and reads what
-   actually rendered.
+   actually rendered. Since 31 August 2026 it also fails if a page's
+   content does not start and end on the same line as the tab bar.
 
 **Proving a change is invisible.** Some jobs are meant to change
 nothing on screen: moving a value into a shared file, pulling a
@@ -143,6 +144,7 @@ Standalone scripts:
 
 | Script | Proves |
 |---|---|
+| `fittest.mjs <old port> <new port>` | No string that used to fit its box is cut by a change. Needs a worktree of the old code on its own dev server, like `shotdiff.mjs`. |
 | `scrubtest.mjs <port> <theme>` | The Performance chart's press-and-hold scrubbing is alive. |
 | `motiontest.mjs <port>` | Page and sheet motion, chart draw, counting numbers, reduced-motion. |
 | `pftest.mjs <port>` | Every sport is reachable in the Portfolio prototype's pickers. |

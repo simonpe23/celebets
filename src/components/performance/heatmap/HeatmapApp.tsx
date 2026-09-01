@@ -496,7 +496,7 @@ export default function HeatmapApp({
 
       {/* Four findings, each a door into Lab. A card is left out when
           the record cannot support it, rather than inventing one. */}
-      <div className="relative mt-[11px] flex gap-[8px] px-[15px]">
+      <div className="relative mt-[11px] flex gap-[8px]">
         {edge ? (
           <InsightCard
             kind="edge"
@@ -519,7 +519,7 @@ export default function HeatmapApp({
         ) : null}
       </div>
       {hot || cool ? (
-        <div className="relative mt-[7px] flex gap-[8px] px-[15px]">
+        <div className="relative mt-[7px] flex gap-[8px]">
           {hot ? (
             <InsightCard
               kind="hot"
@@ -546,7 +546,7 @@ export default function HeatmapApp({
       {/* The map. Area is the share of the result, colour is which way
           it went, and every tile opens Lab on that fact. */}
       <div
-        className={`relative mx-[15px] mt-[10px] ${R_CARD} px-[9px] pb-[11px] pt-[11px]`}
+        className={`relative mt-[10px] ${R_CARD} px-[9px] pb-[11px] pt-[11px]`}
         style={{ background: CARD, boxShadow: "0 1px 5px rgba(24,20,50,0.07)" }}
       >
         <p
@@ -645,7 +645,7 @@ export default function HeatmapApp({
         )}
       </div>
       <p
-        className={`relative mt-[9px] flex items-center justify-center gap-[4px] px-[15px] text-center ${T_MICRO} ${W_SEMI}`}
+        className={`relative mt-[9px] flex items-center justify-center gap-[4px] text-center ${T_MICRO} ${W_SEMI}`}
         style={{ color: GREY_TEXT }}
       >
         <Explain term="Map sizing" size={11} />

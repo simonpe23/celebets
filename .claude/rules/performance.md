@@ -94,14 +94,32 @@ column and the face), `menu.tsx` (Home / Lab / Totals) and
 **THE BOTTOM BAR IS NOT ONE OF THEM ANY MORE.** This area drew its own
 until 31 August 2026, four tabs in a floating white card, while the
 rest of the app drew three in a wide grey one. `shell.tsx` renders
-`src/components/TabBar.tsx` now, like every other page, with `padded`
-(this frame has no horizontal padding of its own) and `light` (these
-pages have no dark mode). Both props die in phase 3 of the size and
-layout job. `design-check` rule 13 stops a second bar appearing here
-again.
+`src/components/TabBar.tsx` now, like every other page, with `light`
+(these pages have no dark mode). `design-check` rule 13 stops a second
+bar appearing here again.
 
 ANY chat may edit those without asking or pausing. The existing
 convention holds: whoever merges second merges `main` in first.
+
+## The edge is the APP'S, and no page sets its own
+
+Since 31 August 2026, phase 3. `shell.tsx` frames itself with
+`PAGE_FRAME` from `src/lib/ui.ts`, so Performance keeps the same
+16px margin as Track, Settings and Research, and the `padded` prop on
+TabBar is deleted.
+
+Each of these six pages used to carry its own inset off whatever
+mockup it was measured from: 11px on Totals, 14 on Home and Lab, 15
+on the Heat Map and All Bets, 20 on Compare. Content therefore never
+lined up with the bar, and the error flipped sign between a phone
+(cards up to 5px OUTSIDE the bar) and a laptop (up to 20px inside).
+
+**Never set a horizontal margin or padding on a direct child of the
+column.** The frame owns the edge. An indent measured from the card
+edge is fine, an inset from the screen edge is not.
+
+`sitecheck.mjs` fails the build if any page's content does not start
+and end on the same line as the tab bar.
 
 ## What design-check does here
 

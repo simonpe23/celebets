@@ -314,7 +314,11 @@ export const MENU_PILL_H = "h-[28px]";
 // one third of a 390px column, and it stopped being one third the
 // moment the column could be any other size. Phase 3, 31 August 2026.
 export const MENU_PAD = 4;
-export const MENU_INSET = "mx-[14px] mt-[7px]";
+// NO HORIZONTAL INSET SINCE 31 AUGUST 2026, phase 3. It was
+// mx-[14px], the menu's distance from a 390px mockup's edge. The
+// frame carries the app's one edge rule now, so the menu starts
+// where every card and every other page's content starts.
+export const MENU_INSET = "mt-[7px]";
 export const MENU_PILL_TOP = "top-[4px]";
 
 // THE BACK HEADER on Compare, All Bets and the Heat Map.

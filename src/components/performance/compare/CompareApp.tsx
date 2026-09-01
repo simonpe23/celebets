@@ -302,7 +302,7 @@ export default function CompareApp({
       />
 
       {/* The two cards, with the winner bordered and crowned. */}
-      <div className="relative mt-[8px] flex items-stretch px-[20px]">
+      <div className="relative mt-[8px] flex items-stretch">
         {[
           { chip: pair[0], s: statsA, winner: leaderIsA },
           { chip: pair[1], s: statsB, winner: !leaderIsA },
@@ -379,7 +379,7 @@ export default function CompareApp({
 
       {/* The metric toggle. */}
       <div
-        className="relative mx-[20px] mt-[12px] flex h-[38px] items-center rounded-full p-[3px]"
+        className="relative mt-[12px] flex h-[38px] items-center rounded-full p-[3px]"
         style={{ background: TRACK }}
       >
         {METRICS.map((m) => (
@@ -400,7 +400,7 @@ export default function CompareApp({
 
       {/* The chart card. */}
       <div
-        className={`relative mx-[20px] mt-[11px] ${R_CARD} px-[12px] pb-[11px] pt-[12px]`}
+        className={`relative mt-[11px] ${R_CARD} px-[12px] pb-[11px] pt-[12px]`}
         style={{ background: CARD, boxShadow: "0 1px 5px rgba(24,20,50,0.07)" }}
       >
         <div className="flex items-start justify-between">
@@ -477,7 +477,7 @@ export default function CompareApp({
 
       {/* Head to head. */}
       <div
-        className={`relative mx-[20px] mt-[11px] overflow-hidden ${R_CARD} pt-[12px]`}
+        className={`relative mt-[11px] overflow-hidden ${R_CARD} pt-[12px]`}
         style={{ background: CARD, boxShadow: "0 1px 5px rgba(24,20,50,0.07)" }}
       >
         <div className="flex items-center justify-between px-[13px]">
@@ -545,7 +545,7 @@ export default function CompareApp({
       {/* Why the leader wins. */}
       {topReasons.length > 0 ? (
         <div
-          className={`relative mx-[20px] mb-[6px] mt-[11px] ${R_CARD} px-[12px] py-[12px]`}
+          className={`relative mb-[6px] mt-[11px] ${R_CARD} px-[12px] py-[12px]`}
           style={{ background: PILL_LAV }}
         >
           <div className="flex items-center gap-[10px]">

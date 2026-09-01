@@ -214,7 +214,7 @@ export default function HomeContent({
         </div>
 
         {/* Net profit and the period selector. */}
-        <div className="relative mt-[10px] flex items-center justify-between pl-[22px] pr-[10px]">
+        <div className="relative mt-[10px] flex items-center justify-between pl-[8px]">
           <p
             className={`flex items-center gap-[1px] ${T_LABEL} ${W_SEMI}`}
             style={{ color: NET_LABEL }}
@@ -236,7 +236,7 @@ export default function HomeContent({
 
         {/* The number. */}
         <p
-          className={`relative mt-[4px] pl-[18px] text-hero ${W_BOLD} leading-none`}
+          className={`relative mt-[4px] pl-[4px] text-hero ${W_BOLD} leading-none`}
           style={{ color: view.positive ? INDIGO : RED }}
         >
           {view.netProfit}
@@ -256,7 +256,7 @@ export default function HomeContent({
         {/* The chart: full width, no card, blending into the wash. Its
             right end rides up beside the number, like the sheet. */}
         <div className="relative mt-[-7.25px]">
-          <div className="pl-[22px] pr-[54px]">
+          <div className="pl-[8px] pr-[40px]">
             <HeroChart
               values={view.series}
               top={view.chartTop}
@@ -302,7 +302,7 @@ export default function HomeContent({
             expand as well as the other pages do." A quarter each is a
             quarter each at every width, and Lab's row is the same
             markup, so the two still line up. */}
-        <div className="relative grid grid-cols-4 pl-[22px] pr-[12px]">
+        <div className="relative grid grid-cols-4 pl-[8px]">
           {view.kpis.map((f, i) => (
             <div
               key={f.label}
@@ -340,7 +340,7 @@ export default function HomeContent({
         <button
           onClick={() => setInsights(rollInsights(bets))}
           aria-label="Open your insights"
-          className={`relative mx-[15px] flex h-[45px] items-center ${R_CHIP} pl-[7px] pr-[12px] text-left`}
+          className={`relative flex h-[45px] items-center ${R_CHIP} pl-[7px] pr-[12px] text-left`}
           style={{
             background: AMBER_BG,
             boxShadow: `inset 0 0 0 1px ${AMBER_EDGE}`,
@@ -376,7 +376,7 @@ export default function HomeContent({
         <div className="min-h-[12px] grow-[2]" />
 
         {/* What drives your result. */}
-        <div className="relative flex items-start justify-between pl-[20px] pr-[19px]">
+        <div className="relative flex items-start justify-between pl-[6px] pr-[5px]">
           <div>
             <h2 className={`whitespace-nowrap text-base ${W_BOLD}`}>
               What drives your result
@@ -423,8 +423,8 @@ export default function HomeContent({
               }}
               className={
                 i === 0
-                  ? `mx-[12px] mb-[4px] flex h-[49px] items-center ${R_INNER} bg-white pl-[8px] pr-[12px]`
-                  : "mx-[12px] flex h-[47px] items-center pl-[8px] pr-[12px]"
+                  ? `mb-[4px] flex h-[49px] items-center ${R_INNER} bg-white pl-[8px] pr-[8px]`
+                  : "flex h-[47px] items-center pl-[8px] pr-[8px]"
               }
               style={
                 i === 0
@@ -501,7 +501,7 @@ export default function HomeContent({
             e.preventDefault();
             onJump("");
           }}
-          className={`relative mx-[14px] mt-[8px] flex h-[69px] items-center ${R_TILE} pl-[15px] pr-[15px]`}
+          className={`relative mt-[8px] flex h-[69px] items-center ${R_TILE} pl-[15px] pr-[8px]`}
           style={{ background: LAB_CARD }}
         >
           <span

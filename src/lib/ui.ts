@@ -98,9 +98,28 @@ export const OUTCOME_LOST =
 // on that page.
 // ===================================================================
 
-// The page frame. Every full screen in the app is this: a column that
+// THE PAGE FRAME. Every full screen in the app is this: a column that
 // fills the height, with the tab bar as its last child.
-export const PAGE = "flex min-h-svh flex-col px-4 pt-6 pb-2 sm:px-6";
+//
+// THE HORIZONTAL PADDING IS THE APP'S ONE EDGE RULE, since 31 August
+// 2026, phase 3 of the size and layout job. It decides how far from
+// the screen edge anything is allowed to sit, and the tab bar reads
+// the same rule, so content and bar line up on every page.
+//
+// It used to be one rule for most of the app and no rule at all in
+// Performance, whose six pages each carried their own edge inset:
+// 11px on Totals, 14 on Home and Lab, 15 on the Heat Map and All
+// Bets, 20 on Compare. On a phone Totals' cards stuck out 5px PAST
+// the bar; on a laptop they sat 11px inside it, and the sign flipped
+// between the two. The bar needed a `padded` prop to cope. There is
+// one rule now and the prop is gone.
+export const PAGE_FRAME = "flex min-h-svh flex-col px-4 sm:px-6";
+
+// The ordinary page adds its own vertical rhythm on top of the frame.
+// Performance does not: it opens on a menu with its own measured gap,
+// not on a page title. That is the ONE deliberate difference between
+// the two, and it is vertical only.
+export const PAGE = `${PAGE_FRAME} pt-6 pb-2`;
 
 // The readable column inside it. Phone width, centred on anything
 // wider, with a standard gap between blocks.

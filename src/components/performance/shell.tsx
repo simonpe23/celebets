@@ -16,6 +16,7 @@
 
 import type { ReactNode } from "react";
 import TabBar from "@/components/TabBar";
+import { PAGE_FRAME } from "@/lib/ui";
 import {
   COL_W,
   FONT_CLASS,
@@ -41,7 +42,7 @@ export default function PerfPage({
 }) {
   return (
     <div
-      className={`${FONT_CLASS} flex min-h-svh flex-col`}
+      className={`${FONT_CLASS} ${PAGE_FRAME}`}
       style={{
         background: PAGE_BG,
         color: INK,
@@ -63,14 +64,14 @@ export default function PerfPage({
           a 448px grey one. Two bars in two files is why the bar changed
           shape as you moved around the app. There is one now.
 
-          `padded` because this frame carries no horizontal padding of
-          its own, unlike every other page. Phase 3 fixes that and the
-          prop dies. `links` off on the previews keeps the bar
-          untappable there, exactly as it was. `light` because these
-          pages paint themselves light in both themes, his ruling, and
-          a navy bar under a white page looked broken. */}
+          `padded` IS GONE, 31 August 2026, phase 3. This frame carries
+          the app's own horizontal padding now, like every other page,
+          so the bar has nothing to compensate for. `links` off on the
+          previews keeps the bar untappable there, exactly as it was.
+          `light` because these pages paint themselves light in both
+          themes, his ruling, and a navy bar under a white page looked
+          broken. */}
       <TabBar
-        padded
         light
         links={live}
         activeHref={live ? undefined : "/stats"}
