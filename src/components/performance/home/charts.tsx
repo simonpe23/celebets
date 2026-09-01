@@ -120,10 +120,15 @@ export function Spark({
   const color = positive ? INDIGO : SPARK_RED;
   const id = `ph-spark-${positive ? "up" : "down"}`;
   return (
+    // FLUID SINCE 31 AUGUST 2026, phase 3. It was width={width}, a
+    // fixed 73.6px, which is fine at 390 and is 74px the row does not
+    // have at 320. The viewBox keeps the drawing identical; only the
+    // box it is painted into follows the row now.
     <svg
-      width={width}
+      width="100%"
       height={height}
       viewBox={`0 0 ${width} ${height}`}
+      preserveAspectRatio="none"
       style={{ display: "block", overflow: "visible" }}
       aria-hidden
     >

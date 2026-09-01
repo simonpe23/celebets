@@ -251,7 +251,7 @@ export default function TotalsApp({
             <span style={{ color: NET_LABEL }}>{record(all)} Record</span>
           </p>
         </div>
-        <div className="relative top-[10px] shrink-0">
+        <div className="relative top-[10px] min-w-0 flex-1">
           <HeroLine points={series} width={168} height={86} />
         </div>
       </div>

@@ -270,7 +270,24 @@ export const R_SMALL = "rounded-[10px]"; // the smallest boxed thing
 
 // THE PAGE COLUMN. Every Performance page is a 390pt phone column
 // centred on whatever screen it lands on.
-export const COL_W = "max-w-[390px]";
+// THE COLUMN IS THE APP'S, since 31 August 2026, phase 3 of the size
+// and layout job.
+//
+// It was max-w-[390px], the width of the mockup image these pages were
+// measured from, while every other page in the app is max-w-md, which
+// is 448. On any screen wider than 448 the two sat side by side in his
+// browser 58px apart, and he sent a zoomed screenshot with the gap
+// marked: the bottom bar visibly wider than the page under it.
+//
+// His words: "the biggest one is that the old pages, track, research
+// profile are wider than Performance, why?... i want performance to
+// expand as well as the other pages do."
+//
+// It reads `COLUMN` from src/lib/ui.ts so there is ONE width, and
+// changing it changes every page in the app at once. Widening this
+// was only possible after the menu and the KPI dividers stopped being
+// pixel positions measured at 390.
+export const COL_W = "max-w-md";
 
 // The bottom spacer inside that column, which decides how leftover
 // height is shared out. Home and Lab distribute it (they have their
@@ -292,7 +309,11 @@ export type PerfTail = typeof TAIL_TALL | typeof TAIL_SHORT;
 // menu height is one of the things he named.
 export const MENU_H = "h-[36px]";
 export const MENU_PILL_H = "h-[28px]";
-export const MENU_PILL_W = "w-[110px]";
+// The pill's inset from the track's edge, in pixels because the pill's
+// width is calculated from it. Its WIDTH is gone: it was w-[110px],
+// one third of a 390px column, and it stopped being one third the
+// moment the column could be any other size. Phase 3, 31 August 2026.
+export const MENU_PAD = 4;
 export const MENU_INSET = "mx-[14px] mt-[7px]";
 export const MENU_PILL_TOP = "top-[4px]";
 

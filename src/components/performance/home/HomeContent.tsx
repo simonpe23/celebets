@@ -190,14 +190,25 @@ export default function HomeContent({
             from "2. big chart Aug 28.png": his 29 August order to go
             back to that sheet's fade. It ends before the insight card,
             which stands on the plain page. */}
-        <div className="pointer-events-none absolute inset-x-0 top-[48px] h-[245px]">
+        {/* overflow-hidden since 31 August 2026, phase 3. The texture
+            inside is a fixed viewBox drawn with overflow visible, so on
+            a 320px phone its curves painted 16px past the screen edge
+            and dragged the page sideways. A decoration must never be
+            the reason a page scrolls. */}
+        <div className="pointer-events-none absolute inset-x-0 top-[48px] h-[245px] overflow-hidden">
           <Image
             src="/preview-assets/home-wash.png"
             alt=""
             fill
             priority
-            sizes="390px"
-            style={{ objectFit: "fill" }}
+            sizes="448px"
+            // COVER, NOT FILL, since 31 August 2026, phase 3. `fill`
+            // stretches the artwork to whatever box it is given, which
+            // was exactly right while that box was always 390x245 and
+            // wrong the moment the column could be any width. The
+            // checker caught it at both 320 and 448 the first time it
+            // was allowed to look at more than one width.
+            style={{ objectFit: "cover" }}
           />
           <WashTexture />
         </div>
@@ -281,24 +292,28 @@ export default function HomeContent({
         <div className="min-h-[16px] grow" />
 
         {/* One cohesive KPI row on the wash, groups packed closer by
-            his 29 August edit 7. The divider positions and the four
-            column widths are LAB'S, so the two rows line up: his
-            instruction of 31 August 2026 was to mirror Lab, and the
-            labels changed length when the four figures changed. */}
-        <div className="relative flex items-center pl-[33px]">
-          {["96px", "188px", "284px"].map((left) => (
-            <span
-              key={left}
-              className="absolute top-1/2 h-[28px] w-px -translate-y-1/2"
-              style={{ left, background: DIVIDER }}
-            />
-          ))}
+            his 29 August edit 7.
+
+            FOUR EQUAL COLUMNS since 31 August 2026, phase 3 of the size
+            and layout job. The four widths were 78, 92, 96 and auto,
+            and the three dividers were nailed at 96, 188 and 284: all
+            of them measured off a 390px mockup and all of them wrong
+            at any other width. His words: "i want performance to
+            expand as well as the other pages do." A quarter each is a
+            quarter each at every width, and Lab's row is the same
+            markup, so the two still line up. */}
+        <div className="relative grid grid-cols-4 pl-[22px] pr-[12px]">
           {view.kpis.map((f, i) => (
             <div
               key={f.label}
-              className="flex items-center gap-[6px]"
-              style={{ width: ["78px", "92px", "96px", "auto"][i] }}
+              className="relative flex items-center gap-[6px]"
             >
+              {i > 0 ? (
+                <span
+                  className="absolute -left-[7px] top-1/2 h-[28px] w-px -translate-y-1/2"
+                  style={{ background: DIVIDER }}
+                />
+              ) : null}
               <span className="relative top-[-3px]">{FACT_ICONS[i]}</span>
               <div>
                 <p className={`text-base ${W_BOLD} leading-none tracking-[-0.01em]`}>
@@ -433,26 +448,35 @@ export default function HomeContent({
               >
                 {rowIcon(row)}
               </span>
-              <div className="ml-[16px] w-[100px] shrink-0">
-                <p className={`whitespace-nowrap ${T_STRONG} ${W_BOLD} leading-[1.2]`}>
+              {/* THE NAME AND THE SPARKLINE SHARE WHATEVER IS LEFT,
+                  3 to 2, since 31 August 2026, phase 3. They were
+                  w-[100px] and w-[74px], both shrink-0, which is 174px
+                  of fixed width in a row whose other parts already
+                  need 180. On a 320px phone that overflowed the screen
+                  by 35px, which is one of the two things that made
+                  small phones scroll sideways. The money never
+                  shrinks: it is the one thing on the row that must not
+                  be cut. */}
+              <div className="ml-[16px] min-w-0 flex-[3]">
+                <p className={`truncate ${T_STRONG} ${W_BOLD} leading-[1.2]`}>
                   {row.name}
                 </p>
                 <p
-                  className={`mt-[2px] flex items-center gap-[7px] whitespace-nowrap text-xs ${W_SEMI}`}
+                  className={`mt-[2px] flex items-center gap-[7px] truncate text-xs ${W_SEMI}`}
                   style={{ color: GREY_TEXT }}
                 >
                   {row.record}
                   <span
-                    className="inline-block h-[2.5px] w-[2.5px] rounded-full"
+                    className="inline-block h-[2.5px] w-[2.5px] shrink-0 rounded-full"
                     style={{ background: GREY_TEXT }}
                   />
                   {row.hit}
                 </p>
               </div>
-              <div className="ml-[8px] w-[74px] shrink-0">
+              <div className="ml-[8px] min-w-0 max-w-[74px] flex-[2]">
                 <Spark values={row.spark} positive={row.positive} />
               </div>
-              <div className="ml-auto w-[58px] shrink-0 text-right">
+              <div className="ml-[8px] shrink-0 text-right">
                 <p className={`${T_LEAD} ${W_BOLD} leading-[1.2]`} style={{ color: row.positive ? GREEN : RED }}>
                   {row.moneyLabel}
                 </p>
