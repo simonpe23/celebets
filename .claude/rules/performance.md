@@ -152,6 +152,32 @@ designer's palette, and the new palette is not chosen yet. See
 vocabulary, em dashes, the old brand name, the hand cursor, the money
 numeral face, the shared components.
 
+## Home has two modes, and the heading says which
+
+Since 2 September 2026, phase 2 of the silence job.
+
+| Mode | When | Heading |
+|---|---|---|
+| Ranked | three or more facts clear both gates | "What drives your result" |
+| Thin | fewer than three do | "What your record is so far" |
+| Waiting | nothing settled at all | the subtitle says so |
+
+**Three, not zero.** One row is not a ranking. Six settled Football
+bets clear the gates for exactly one fact, and the page used to head a
+single "Medium odds" row with "ranked by contribution".
+
+**`rankedFacts` relaxes its gates rather than return nothing**, in
+rungs: both, no floor, no ceiling, neither. Rung one is the old
+behaviour exactly, so a rankable record cannot move.
+
+**`factsIn` applies no gates at all** and is what the thin mode lists.
+Do not use it for anything that ranks or sums: on one bet, Football and
+Premier League and Moneyline are all the same bet, and adding them up
+would count it five times.
+
+**The thin mode's groups are Lab's**, in Lab's order, or the two pages
+would describe one bet two different ways.
+
 ## Testing
 
 Every one of these needs a running dev server.

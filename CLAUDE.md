@@ -330,19 +330,24 @@ Keep it current: when a job finishes, delete its line.
      six records from an empty account to ten settled bets, and
      `emptytest.mjs` fails the build on a new silence. 13 known
      silences are listed in the script and the list can only shrink.
-  2. **The ranked list works for everybody.** NOT just a new user
-     problem: a bettor who sticks to one sport, one league, one
-     category and one odds band NEVER gets a row, measured at 200
-     settled bets.
+  2. **The ranked list works for everybody. DONE.** Home has two
+     modes and the heading says which: ranked when there are three or
+     more rows, otherwise "What your record is so far" listing every
+     fact grouped as Lab groups them. The engine relaxes its two gates
+     rather than return nothing, and `factsIn` lists a record ungated.
+     The focused bettor bug is fixed: one sport, one league, one
+     category, one odds band used to give an EMPTY list at 200 settled
+     bets. His own page is pixel identical, proved with `shotdiff`.
   3. **The banner and Compare.** Positive insights; Compare uses their
      real top two instead of a hardcoded Football versus Basketball.
   4. **The lies.** A 40 cent loss prints "+$0"; one 3-leg parlay makes
      Home say "Bets 3" while All Bets says "1 bet".
   5. **Track and the leftovers**, including one product call: whether a
      pending bet should read as "-$50 net profit" on day one.
-  **STILL OWED BY HIM before phase 2:** should a thin record only show
-  things he actually chose (Football, Premier League, Moneyline) rather
-  than things the app derived (Low odds, Full time, Singles)?
+  **ANSWERED, 2 September 2026:** show everything that was part of the
+  bet, and show it on Home the way Lab shows it. "Full time" is the one
+  exclusion, because it is the app naming the absence of a period, and
+  Lab leaves it out of its own When group for the same reason.
   **FONTS, COLOURS AND DESKTOP ARE OUT**, his ruling.
 
 - **App Store submission**, in a separate chat with the owner. Settings

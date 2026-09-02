@@ -219,6 +219,12 @@ export interface Engine {
     losses: number;
   }[];
   rankedFacts: (context: Chip[], minPicks: number, before?: number) => Fact[];
+  /**
+   * Every fact the record contains, with no gates at all: no minimum
+   * picks, no coverage ceiling, no ranking. For listing what a record
+   * IS, which is a different question from what drives it.
+   */
+  factsIn: (context: Chip[]) => Fact[];
   sortFacts: (facts: Fact[], mode: SortMode) => Fact[];
   // The bets behind a selection, newest first, for the All Bets page.
   // It lives here rather than in that page so there is ONE matcher:
@@ -364,35 +370,116 @@ export function makeEngine(bets: BetWithLegs[]): Engine {
     return out;
   })();
 
+  // TWO GATES DECIDE WHETHER A FACT IS WORTH RANKING, and until 2
+  // September 2026 they could silence the page completely.
+  //
+  //   the floor     a fact needs at least `minPicks` settled picks
+  //   the ceiling   a fact covering more than 85% of the record is cut,
+  //                 because "you bet Football" is not an explanation of
+  //                 a record that IS Football
+  //
+  // Both are right on a real record and together they were fatal on a
+  // small one, because everything a thin record contains covers 100% of
+  // it. Measured 2 September 2026: a bettor who sticks to one sport,
+  // one league, one category and one odds band gets an EMPTY list at
+  // 200 settled bets. Not a new user problem, a permanent one.
+  //
+  // THE LADDER. His ruling: "The 85% rule should only cut a fact when
+  // cutting it still leaves something to show. If the list would come
+  // out empty, do not cut." So the gates are tried strictest first and
+  // each rung is only reached when the one above it found nothing:
+  //
+  //   1. both gates          what every real record uses
+  //   2. no floor            a thin record, where 5 picks is a lot
+  //   3. no ceiling          a focused record, where everything is 100%
+  //   4. neither             one bet, where both gates cut everything
+  //
+  // IT CANNOT MOVE A PAGE THAT ALREADY HAS ROWS. Rung 1 is today's
+  // behaviour exactly, and the lower rungs are unreachable while it
+  // returns anything at all.
   function rankedFacts(
     context: Chip[],
     minPicks: number,
     before?: number
   ): Fact[] {
     const whole = statsFor(context, before);
+    const wholePicks = whole.wins + whole.losses;
+
+    const build = (floor: number, ceiling: boolean): Fact[] => {
+      const facts: Fact[] = [];
+      for (const chip of board) {
+        if (context.some((c) => c.group === chip.group)) continue;
+        if (MUTED.has(chip.value)) continue;
+        const s = statsFor([...context, chip], before);
+        const picks = s.wins + s.losses;
+        if (picks < floor) continue;
+        if (ceiling && picks > 0.85 * wholePicks) continue;
+        const recentStats = statsFor(
+          [...context, chip],
+          before,
+          (before ?? now + 1) - WEEK
+        );
+        const recentPicks = recentStats.wins + recentStats.losses;
+        const recentShare = picks > 0 ? recentPicks / picks : 0;
+        const score =
+          Math.abs(s.profit) *
+          Math.sqrt(picks / (picks + 10)) *
+          DIM_WEIGHT[chip.group] *
+          (1 + 0.4 * recentShare);
+        facts.push({ chip, s, score, recent: recentStats.profit, spark: [] });
+      }
+      facts.sort((a, b) => b.score - a.score);
+      return facts;
+    };
+
+    // A rung is only good enough if it yields a LIST, not a lone fact.
+    //
+    // His example in the brief was six settled Football bets. That
+    // record clears both gates, but for exactly one fact, so the page
+    // was headed "ranked by contribution" over a single row reading
+    // "Medium odds". One row is not a ranking, and calling it one is
+    // the same lie as an empty list, just harder to spot. Three is
+    // where a list starts being a comparison.
+    const RANKABLE = 3;
+
+    // A fact still has to be ABOUT something: one settled pick at
+    // least, or the list fills with every box the record never ticked.
+    const rungs: [number, boolean][] = [
+      [minPicks, true],
+      [1, true],
+      [minPicks, false],
+      [1, false],
+    ];
+    let best: Fact[] = [];
+    for (const [floor, ceiling] of rungs) {
+      const facts = build(floor, ceiling);
+      if (facts.length >= RANKABLE) return facts;
+      if (facts.length > best.length) best = facts;
+    }
+    // Nothing reached three. Return the richest rung, which is the
+    // most the record can say about itself.
+    return best;
+  }
+
+  // EVERY FACT, UNGATED. The gates in rankedFacts exist to decide what
+  // is worth RANKING. Listing what a record contains is a different
+  // question and neither gate belongs to it: on one bet, "Football"
+  // covers 100% of the record and that is exactly the thing worth
+  // saying.
+  //
+  // His words, 2 September 2026: "a thin record should always show
+  // everything that was a part of the bet."
+  function factsIn(context: Chip[]): Fact[] {
     const facts: Fact[] = [];
     for (const chip of board) {
       if (context.some((c) => c.group === chip.group)) continue;
       if (MUTED.has(chip.value)) continue;
-      const s = statsFor([...context, chip], before);
-      const picks = s.wins + s.losses;
-      if (picks < minPicks) continue;
-      if (picks > 0.85 * (whole.wins + whole.losses)) continue;
-      const recentStats = statsFor(
-        [...context, chip],
-        before,
-        (before ?? now + 1) - WEEK
-      );
-      const recentPicks = recentStats.wins + recentStats.losses;
-      const recentShare = picks > 0 ? recentPicks / picks : 0;
-      const score =
-        Math.abs(s.profit) *
-        Math.sqrt(picks / (picks + 10)) *
-        DIM_WEIGHT[chip.group] *
-        (1 + 0.4 * recentShare);
-      facts.push({ chip, s, score, recent: recentStats.profit, spark: [] });
+      const s = statsFor([...context, chip]);
+      // One settled pick at least, or the list fills with every box
+      // the record never ticked.
+      if (s.wins + s.losses < 1) continue;
+      facts.push({ chip, s, score: Math.abs(s.profit), recent: 0, spark: [] });
     }
-    facts.sort((a, b) => b.score - a.score);
     return facts;
   }
 
@@ -472,6 +559,7 @@ export function makeEngine(bets: BetWithLegs[]): Engine {
     runningFor,
     betsFor,
     rankedFacts,
+    factsIn,
     sortFacts,
   };
 }

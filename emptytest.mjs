@@ -170,15 +170,6 @@ const PROBES = [
 // or to justify. Delete a line when the fix lands; the script fails if
 // a listed entry starts speaking, so the list cannot go stale.
 const KNOWN = new Set([
-  // HOME'S RANKED LIST. The heading "What drives your result" is drawn
-  // and nothing is under it. A fact needs 5 settled picks AND must
-  // cover no more than 85% of the record, and on a small record
-  // everything you have done covers 100% of it. Phase 2 fixes this.
-  "none/home/the ranked list",
-  "pending/home/the ranked list",
-  "one/home/the ranked list",
-  "three/home/the ranked list",
-
   // TOTALS on an account with nothing settled. Two cards draw their
   // headings over nothing. Phase 3.
   "none/totals/Profit by Sport",

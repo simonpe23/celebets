@@ -21,6 +21,7 @@ import {
   roiOf,
   type Chip,
   type Engine,
+  type GroupKey,
   type Fact,
   type Stats,
 } from "@/lib/performance-engine";
@@ -43,6 +44,19 @@ export interface HomeView {
   positive: boolean;
   kpis: { value: string; label: string }[];
   rows: HomeRow[];
+  /**
+   * True when the record cannot be ranked yet, so Home lists what the
+   * record IS instead of what drives it. See buildHomeView.
+   */
+  thin: boolean;
+  /** The thin mode's content: every fact, grouped the way Lab groups. */
+  groups: { label: string; rows: HomeRow[] }[];
+  /**
+   * What the block is waiting for, when it has nothing at all to list.
+   * His rule: "If the app cannot say something interesting yet, it
+   * should say what it is waiting for."
+   */
+  waiting: string | null;
   /** The Actuals noticed sentence, or null when nothing is losing. */
   insight: string | null;
   series: number[];
@@ -147,17 +161,63 @@ export function leakInsight(engine: Engine, ranked?: Fact[]): string | null {
   return `${worst.chip.value} is your biggest leak at ${money(worst.s.profit)}.`;
 }
 
+// THE GROUPS OF THE THIN MODE, and their order, are Lab's. His answer
+// on 2 September 2026 to "what should Home do with its empty block":
+// show the same five, its own way. Lab already lists everything a
+// record contains from one bet, so Home must group it identically or
+// the two pages describe the same bet differently.
+const THIN_GROUPS: { key: GroupKey; label: string }[] = [
+  { key: "sport", label: "Sport" },
+  { key: "where", label: "League" },
+  { key: "what", label: "Category" },
+  { key: "when", label: "When" },
+  { key: "how", label: "Bet Type" },
+  { key: "risk", label: "Risk" },
+];
+
+// The app names this when a bet carries no period, so it is the
+// absence of data wearing a label. Lab leaves it out of its When
+// group; Home leaves it out of the same group for the same reason.
+const NOT_A_CHOICE = new Set(["Full time"]);
+
 export function buildHomeView(engine: Engine): HomeView {
   const whole = engine.statsFor([]);
   const running = engine.runningFor([]);
   const series = running.map((r) => r.profit);
 
-  const facts: Fact[] = engine.sortFacts(
-    dedupeFacts(engine.rankedFacts([], 5)),
-    "profit"
-  );
+  const all: Fact[] = engine.rankedFacts([], 5);
 
-  const rows: HomeRow[] = facts.slice(0, 5).map((f) => ({
+  // WHEN IS A RECORD TOO THIN TO RANK? When nothing in it clears both
+  // of the ranking gates: five settled picks, and no more than 85% of
+  // the whole record.
+  //
+  // The engine relaxes those gates rather than return nothing (see
+  // rankedFacts), so this asks the question the strict way to find out
+  // which mode Home is in. A record that can be ranked is ranked
+  // exactly as before; nothing here can move it.
+  const wholePicks = whole.wins + whole.losses;
+  const strict = all.filter((f) => {
+    const picks = f.s.wins + f.s.losses;
+    return picks >= 5 && picks <= 0.85 * wholePicks;
+  });
+
+  // ONE ROW IS NOT A RANKING, and neither is two.
+  //
+  // His own example in the brief was six settled Football bets. That
+  // record does clear the gates, but only for a single fact, so the
+  // page used to be headed "Ranked by contribution to net profit" over
+  // one row reading "Medium odds": the one thing it could say was the
+  // one thing the user never chose. Passing that off as a ranking is
+  // the same lie as an empty list, just harder to spot.
+  //
+  // Three is where a list starts being a comparison, which is what the
+  // heading promises.
+  const RANKABLE = 3;
+  const thin = strict.length < RANKABLE && all.length > 0;
+
+  const facts: Fact[] = engine.sortFacts(dedupeFacts(strict), "profit");
+
+  const toRow = (f: Fact): HomeRow => ({
     chip: f.chip,
     name: f.chip.value,
     record: recordOf(f.s),
@@ -169,7 +229,37 @@ export function buildHomeView(engine: Engine): HomeView {
     // fact is its own call.
     spark: engine.sparkFor([f.chip]),
     sel: `${f.chip.group}~${f.chip.kind}~${f.chip.value}`,
-  }));
+  });
+
+  const rows: HomeRow[] = facts.slice(0, 5).map(toRow);
+
+  // THE THIN MODE'S CONTENT. Every fact the record contains, grouped
+  // and labelled the way Lab groups them.
+  //
+  // NOT DEDUPED, deliberately. dedupeFacts hides a fact whose record
+  // matches another's, because two rows for one set of bets would
+  // double count in a ranked list. Here nothing is being ranked or
+  // added up: with one bet, Football and Premier League and Moneyline
+  // ARE all the same bet, and showing all of them is the point. His
+  // words: "a thin record should always show everything that was a
+  // part of the bet."
+  //
+  // Markets are left out of Category for the same reason Lab leaves
+  // them out: "Moneyline" and "Match Winner" are one choice described
+  // twice, and a list of one bet does not need to say it twice.
+  const groups = THIN_GROUPS.map(({ key, label }) => ({
+    label,
+    rows: engine
+      .factsIn([])
+      .filter(
+        (f) =>
+          f.chip.group === key &&
+          f.chip.kind !== "market" &&
+          !NOT_A_CHOICE.has(f.chip.value)
+      )
+      .sort((a, b) => b.s.profit - a.s.profit)
+      .map(toRow),
+  })).filter((g) => g.rows.length > 0);
 
   // Five date labels across the span the line covers.
   const xLabels =
@@ -204,7 +294,17 @@ export function buildHomeView(engine: Engine): HomeView {
       { value: picks > 0 ? roiOf(whole) : "-", label: "ROI" },
     ],
     rows,
-    insight: leakInsight(engine, facts),
+    // A record with nothing settled has nothing to list and nothing to
+    // rank, so the block says what would fill it. It is deliberately
+    // true of both cases it covers: an account that has tracked
+    // nothing, and one whose only bet is still running.
+    thin: thin || groups.length === 0,
+    groups,
+    waiting:
+      groups.length === 0
+        ? "Nothing has settled yet. Your first result fills this in."
+        : null,
+    insight: leakInsight(engine, thin ? all : facts),
     series,
     chartTop: scale.top,
     chartBottom: scale.bottom,
