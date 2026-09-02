@@ -980,21 +980,45 @@ export function sinceLine(
 // has not lost, so it belongs to neither side of profit until it
 // settles.
 //
-// THE CONSEQUENCE, and it is why `pendingStakeOf` exists beside this:
-// balance no longer equals startedWith + netProfit, because the money
-// riding on open bets sits between them. Every surface that prints
-// those three together MUST also print what is riding, or its own
-// numbers visibly fail to add up.
-export function netProfitOf(bets: BetWithLegs[]): number {
+// THE BALANCE FOLLOWS THE SAME RULE, see `balanceOf` below, so the
+// card's figures still add up with nothing extra on screen.
+/**
+ * The four fields the money rules actually read. Declared so a page
+ * that queried only what it needs can still use them: Settings selects
+ * five columns, not a whole bet with its legs.
+ */
+export type SettledFields = Pick<
+  BetWithLegs,
+  "stake" | "payout" | "status" | "settled_at"
+>;
+
+export function netProfitOf(bets: SettledFields[]): number {
   return bets
     .filter((b) => b.status !== "pending" && b.settled_at !== null)
     .reduce((sum, b) => sum + Number(b.payout ?? 0) - Number(b.stake), 0);
 }
 
-// What is riding on bets that have not settled. The third part of the
-// balance: startedWith - riding + netProfit = balance.
-export function pendingStakeOf(bets: BetWithLegs[]): number {
-  return bets
-    .filter((b) => b.status === "pending" || b.settled_at === null)
-    .reduce((sum, b) => sum + Number(b.stake), 0);
+// A BET THAT HAS NOT SETTLED TOUCHES NOTHING. His correction, 2
+// September 2026: "pending bets are pending even on the balance card.
+// aka does not needs to be updated until the bet is settled."
+//
+// So the balance is a ledger of what has actually happened: money put
+// in, money taken out, and the results of bets that are done. A stake
+// on an open bet is committed but not yet spent, and it appears the
+// moment the bet settles.
+//
+// This is what keeps the card's three figures adding up with nothing
+// extra on screen:
+//
+//     startedWith + netProfit = balance
+//
+// My first attempt reduced the balance by open stakes and then had to
+// print a third "still riding" figure to explain the gap. His answer
+// removes the gap instead of explaining it.
+export function balanceOf(
+  bets: SettledFields[],
+  deposits: number,
+  withdrawals: number
+): number {
+  return deposits - withdrawals + netProfitOf(bets);
 }

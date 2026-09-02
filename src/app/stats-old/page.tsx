@@ -12,7 +12,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import StatsView from "@/components/StatsView";
-import { netProfitOf, sinceLine } from "@/lib/stats";
+import { balanceOf, netProfitOf, sinceLine } from "@/lib/stats";
 import type { BetWithLegs } from "@/lib/types";
 
 export default async function StatsPage() {
@@ -54,13 +54,10 @@ export default async function StatsPage() {
   const withdrawals = allTransactions
     .filter((t) => t.type === "withdrawal")
     .reduce((sum, t) => sum + Number(t.amount), 0);
-  const totalStaked = allBets.reduce((sum, b) => sum + Number(b.stake), 0);
-  const totalPayouts = allBets.reduce(
-    (sum, b) => sum + Number(b.payout ?? 0),
-    0
-  );
-
-  const balance = deposits - withdrawals - totalStaked + totalPayouts;
+  // AN OPEN BET DOES NOT MOVE THE BALANCE, his correction of 2
+  // September 2026, and this page must derive it exactly as Track
+  // does or the two disagree by the size of whatever is running.
+  const balance = balanceOf(allBets, deposits, withdrawals);
 
   // The fresh start line. See src/lib/stats.ts. The Snapshot must show
   // the same number as the Track page, so both derive it the same way.

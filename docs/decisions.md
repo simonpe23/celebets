@@ -2029,11 +2029,11 @@ as changed, which is as useless as reporting none.
 and it was never wired into this script.** It now refuses any page that
 does not return 200 and render the tab bar.
 
-### Net profit counts settled bets only. HIS RULING, 2 September 2026
+### An unsettled bet moves nothing. HIS RULING, 2 September 2026
 
-**He took this against my recommendation and I have recorded that.** I
-gave him three options and advised leaving the number alone; he chose
-to change it.
+**He took this against my recommendation and then corrected my build of
+it.** Both are recorded because the second correction is the better
+design and it was his.
 
 **The case he was shown:** a brand new user places one $50 bet, it is
 still running, and Track greets them with "-$50.00 net profit, all
@@ -2041,25 +2041,40 @@ time" in red. Correct under the old rule, because the stake really has
 left the balance, and still the first thing the app ever said to them
 was a loss they had not made.
 
-**THE RULE NOW: a running bet is not a result.** Its stake has left the
-balance but it has not lost, so it belongs to neither side of profit
-until it settles. `netProfitOf` in `src/lib/stats.ts` carries it, and
-both Track and `/stats-old` go through that one function, so the two
-pages cannot print two different net profits.
+**MY FIRST BUILD WAS HALF THE ANSWER AND IT WAS WORSE.** I took net
+profit off the open stake but left the BALANCE reduced by it, so the
+card's three figures stopped reconciling and I had to print a third one
+to explain the gap: "$450.00" over "$0.00 net profit · $50.00 still
+riding".
 
-**IT FORCED A SECOND CHANGE, and this part was not optional.** Balance
-no longer equals startedWith plus netProfit, because the money riding
-on open bets sits between them:
+**HIS CORRECTION, in his words:** "The missing $50 will appear once the
+bet is settled. pending bets are pending even on the balance card. aka
+does not needs to be updated until the bet is settled."
 
-    startedWith - riding + netProfit = balance
+**THE RULE: an unsettled bet touches neither figure.** The balance is a
+ledger of what has actually happened, money in, money out, and the
+results of bets that are done. The stake and its payout both land the
+moment the bet settles. Day one reads "$500.00" over "$0.00 net profit,
+all time", and nothing extra is needed on screen because the figures
+add up on their own:
 
-So the card MUST print what is riding, or its own three figures visibly
-fail to add up. Day one now reads "$450.00" over "$0.00 net profit, all
-time · $50.00 still riding". `pendingStakeOf` is the third figure and
-lives beside `netProfitOf` for that reason.
+    startedWith + netProfit = balance
 
-**Performance was already right** and did not move: its engine has
-always counted only bets with a settled date.
+**Three functions in `src/lib/stats.ts` hold it and every page goes
+through them:** `netProfitOf`, `balanceOf` and the `SettledFields`
+type, which is the four columns the money rules actually read, so
+Settings can query five columns instead of a whole bet and still get
+the same number. Track, `/stats-old` and Settings all derive the
+balance from `balanceOf` now; each used to compute its own copy of the
+same expression.
+
+**Performance never needed changing:** its engine has only ever counted
+bets with a settled date.
+
+**One consequence he should know and has not been asked about:** the
+balance no longer shows that money is committed. Someone holding $500
+with $400 riding still reads $500. That is what he asked for and it is
+consistent, but it is the trade the rule makes.
 
 ### Two more of his rulings, 2 September 2026
 
