@@ -19,14 +19,23 @@
 
 import type { BetWithLegs, Leg, Sport } from "@/lib/types";
 
-// Dates are counted back from a fixed day so the previews do not drift
-// as the weeks pass. A moving date would make two screenshots of the
-// same record disagree.
-const ANCHOR = new Date("2026-09-02T18:00:00.000Z");
-
+// DATES ARE COUNTED BACK FROM TODAY, not from a fixed day.
+//
+// A fixed anchor was the first attempt and it was wrong. The records
+// aged as real time passed, so bets drifted out of the "this week" and
+// "this month" windows that the insight cards read, and `emptytest`
+// reported a different scoreboard on two runs an hour apart. A check
+// that changes its answer while the code stands still is worse than no
+// check.
+//
+// Counting back from today keeps every record the same age forever, so
+// the check is stable. The cost is that date labels differ between two
+// screenshots taken on different days, which is what the other demo
+// data (lab-data.ts) has always done and has never mattered.
 function daysAgo(days: number): string {
-  const d = new Date(ANCHOR);
+  const d = new Date();
   d.setDate(d.getDate() - days);
+  d.setHours(18, 0, 0, 0);
   return d.toISOString();
 }
 
