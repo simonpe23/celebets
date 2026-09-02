@@ -322,6 +322,29 @@ Keep it current: when a job finishes, delete its line.
     Home ships first and goes live alone: on day one Totals holds
     today's `/stats` content unredesigned and Lab wears a Soon badge.
     A mockup showing a two tab switcher is still built with three.
+- **THE SILENCE JOB.** Five phases, approved 2 September 2026. His
+  problem, his words: "Actuals says nothing to a new user for a long
+  time, and I only found out by asking." His end state: "The app
+  responds from the first bet... Not 'does not crash'. Responds."
+  1. **See it. DONE.** `/preview/firstbets` draws every page against
+     six records from an empty account to ten settled bets, and
+     `emptytest.mjs` fails the build on a new silence. 13 known
+     silences are listed in the script and the list can only shrink.
+  2. **The ranked list works for everybody.** NOT just a new user
+     problem: a bettor who sticks to one sport, one league, one
+     category and one odds band NEVER gets a row, measured at 200
+     settled bets.
+  3. **The banner and Compare.** Positive insights; Compare uses their
+     real top two instead of a hardcoded Football versus Basketball.
+  4. **The lies.** A 40 cent loss prints "+$0"; one 3-leg parlay makes
+     Home say "Bets 3" while All Bets says "1 bet".
+  5. **Track and the leftovers**, including one product call: whether a
+     pending bet should read as "-$50 net profit" on day one.
+  **STILL OWED BY HIM before phase 2:** should a thin record only show
+  things he actually chose (Football, Premier League, Moneyline) rather
+  than things the app derived (Low odds, Full time, Singles)?
+  **FONTS, COLOURS AND DESKTOP ARE OUT**, his ruling.
+
 - **App Store submission**, in a separate chat with the owner. Settings
   and store config, not code.
 

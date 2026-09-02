@@ -126,6 +126,14 @@ values and ON for the rest.
    at a tall 1512x1600, 240 page loads, and fails if a page's content
    does not start and end on the same line as the tab bar, or if a
    page's first line ends up above the top of the window.
+6. `emptytest.mjs`, added 2 September 2026, loads every page against
+   six records from an empty account to ten settled bets and asks each
+   block whether it says something, says what it is waiting for, or is
+   silent. **It is a ratchet, not a pass/fail:** today's silences are
+   listed in `KNOWN` inside the script, and the build fails both on a
+   NEW silence and on a listed one that has started speaking, so the
+   list can only shrink and cannot go stale. It starts its own dev
+   server, because `sitecheck` stops the one it started.
 
 **Proving a change is invisible.** Some jobs are meant to change
 nothing on screen: moving a value into a shared file, pulling a
@@ -147,6 +155,7 @@ Standalone scripts:
 | Script | Proves |
 |---|---|
 | `fittest.mjs <old port> <new port>` | No string that used to fit its box is cut by a change. Needs a worktree of the old code on its own dev server, like `shotdiff.mjs`. |
+| `emptytest.mjs [port]` | What every page says on a brand new account and through its first ten bets. Runs inside `npm run check`. |
 | `scrubtest.mjs <port> <theme>` | The Performance chart's press-and-hold scrubbing is alive. |
 | `motiontest.mjs <port>` | Page and sheet motion, chart draw, counting numbers, reduced-motion. |
 | `pftest.mjs <port>` | Every sport is reachable in the Portfolio prototype's pickers. |

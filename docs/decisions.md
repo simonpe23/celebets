@@ -1691,6 +1691,130 @@ in `/opt/pw-browsers` and takes the newest build, so the next bump
 does not break it. Every script imports `launchOpts()` from it and no
 script pins a path any more. `PLAYWRIGHT_CHROMIUM` still wins if set.
 
+## THE SILENCE JOB, 2 September 2026
+
+**His problem, his words:** "Actuals says nothing to a new user for a
+long time, and I only found out by asking." And: "Silence is the thing
+I am fixing. If the app cannot say something interesting yet, it should
+say what it is waiting for."
+
+**His end state:** "The app responds from the first bet. Every page:
+Track, Performance Home, Lab, Totals, and anywhere else with this
+problem. Not 'does not crash'. Responds. Says something true and
+useful about the one bet they have."
+
+**NOT IN THIS JOB, his words:** "Fonts and colours. That is my
+redesign, happening separately. Desktop layout. That is its own job, in
+its own chat, after this."
+
+### His three rulings, 2 September 2026
+
+1. **The tie-break order is broadest first:** Sport, then League, then
+   What you bet, then Singles or Parlays, then Risk, then **When
+   goes last**. So a first row reads "Football", not "Low odds". His
+   reason: which of the five survives is currently arbitrary, because
+   with one bet they all tie.
+2. **The 85% rule only cuts when cutting still leaves something to
+   show.** If the list would come out empty, do not cut. His words: "On
+   a small record, 'you have only bet Football' IS the finding."
+3. **Positive insights are allowed.** The "Actuals noticed" banner may
+   say something good, not only name a leak. Asked directly, he said
+   "yes to positive insights".
+4. **Compare uses their real top two**, not the hardcoded Football vs
+   Basketball it opens on today.
+
+### What was actually measured before anything was built
+
+His instruction: "Tell me what you find at one bet, three bets and five
+bets on every page, before you change anything." Measured 2 September
+2026 by rendering every page against records of 1, 3, 5, 6 and 10
+settled bets.
+
+**Three of his assumptions were wrong, and the corrections matter:**
+
+- **Six settled Football bets does NOT show nothing.** It shows exactly
+  ONE row: "Medium odds, 3-2, +$79". A fact needs 5 or more picks and
+  no more than 85% of the record, and "Medium odds" happened to cover
+  5 of the 6. So the one thing the app says to a new user is the least
+  useful fact it owns.
+- **The floor is 6 settled bets, not ten to fifteen.** 5 divided by
+  0.85 is 5.88, so six is the arithmetic minimum, and only when one
+  fact covers exactly five of them.
+- **It is not every page. Three are already good.** Totals says
+  everything true from ONE bet: the sport, the category, the odds
+  group, the bet type, the bet itself. Lab shows eight chips with real
+  records from one bet. All Bets works from one bet. Track works.
+
+**The silence is two places:** Home's ranked list, and the "Actuals
+noticed" banner. They read the same function, so they go quiet
+together.
+
+**Compare is worse than silent, it invents.** It opens hardcoded on
+Football versus Basketball, so someone who has never bet Basketball
+sees a comparison against a sport they have never touched, all zeros.
+
+**Track's day one reads as a loss, and it is not a bug.** One pending
+$50 bet shows "-$50.00 net profit, all time" in red, because the stake
+has left the balance and net profit has one definition in this app.
+Correct by the rule, and still the first thing a new user sees after
+their first action. **Flagged to him as a product call, not fixed.**
+
+### What his tie-break ruling actually changes, measured
+
+Run against the demo record (58 bets, 87 picks) on 2 September 2026:
+
+- **Home's visible top five does NOT change.** Verified by simulating
+  the tie-break and comparing.
+- **Five names swap further down the list:** NBA becomes Basketball,
+  ATP becomes Tennis, Price Direction becomes Crypto, NHL becomes Ice
+  Hockey, MLB becomes Baseball. They sit at positions 7 and below, so
+  Home never shows them, but **the Heat Map does**.
+- That swap is the direction he asked for in August 2026: "i can not
+  filter on sport... i can compare leagues but not sports."
+- A league is almost always a subset of exactly one sport, so these
+  ties are structural rather than accidental. Any record will have
+  them.
+
+### Phase 1 of the silence job: see it. DONE, 2 September 2026
+
+His approval: "Approving the plan, go."
+
+**Nothing changed for users.** This phase exists so the other four are
+provable rather than claimed.
+
+**`/preview/firstbets`** draws every page of the app against six
+records: an account that has done nothing, one bet still running, then
+1, 3, 6 and 10 settled bets. Six views of Performance plus Track, 42
+addresses, all public like every other preview. Its dates are anchored
+to a fixed day so two screenshots of the same record cannot disagree.
+
+**`emptytest.mjs`** reads the same records and asks every block on
+every page one question: does it say something, does it say what it is
+waiting for, or is it silent? It runs inside `npm run check`.
+
+**IT IS A RATCHET, NOT A PASS/FAIL.** The app is silent in thirteen
+places today, so failing on all of them would just be a red build
+nobody can fix in one commit. Those thirteen are listed in `KNOWN`
+inside the script, and the build fails on two things: a NEW silence,
+and a listed silence that has started speaking. So the list can only
+shrink, and it cannot be quietly ignored.
+
+**The thirteen, measured rather than guessed.** My first attempt at the
+list was wrong in both directions, in six places, which is the whole
+argument for the script:
+
+- **Home's ranked list is silent at 0, 1 and 3 settled bets.** Phase 2.
+- **Totals draws "Profit by Sport" and "Recent Bets" over nothing**
+  when nothing has settled. Phase 3.
+- **Compare invents at 0, 1, 3 and 6 bets.** It opens on a hardcoded
+  Football versus Basketball, both sides reading 0-0, with a crown on
+  one of them. Phase 3.
+
+**What was already fine, and stays fine because the script now holds
+it there:** 50 of the 72 blocks say something real from one bet, Lab
+and the Heat Map say what they are waiting for, and Track's history
+card has a proper empty state.
+
 ## The go-live day, 31 August 2026
 
 Every ruling he made while taking Performance live, in his own words.

@@ -59,6 +59,15 @@ const PREVIEW = [
   "/preview/insights",
   "/preview/auth",
   "/preview/connect",
+  // THE FIRST DAYS, added 2 September 2026 for the silence job. The
+  // index plus the two extremes: an account that has done nothing, and
+  // one with ten settled bets. `emptytest.mjs` walks all six records
+  // and every view; these three are here so the ordinary checks
+  // (sideways scroll, the edge rule, broken images) cover them too.
+  "/preview/firstbets",
+  "/preview/firstbets/none",
+  "/preview/firstbets/none/track",
+  "/preview/firstbets/ten",
 ];
 
 // Anything matching this must not appear in rendered text or in a URL.
@@ -349,8 +358,29 @@ for (const theme of ["light", "dark"]) {
       // compresses a fixed-height image sideways rather than
       // overflowing, so the distortion is silent: this exact failure
       // shipped the squashed logo to the owner's phone.
-      const warped = await page.$$eval("img", (imgs) =>
-        imgs
+      //
+      // WAIT FOR THE IMAGE TO ACTUALLY DECODE FIRST. Added 2 September
+      // 2026 after this check reported a false positive twice in one
+      // run: it said Home's background wash was drawn 1.18:1 against a
+      // file of 1.05:1, when the file is 1.59:1 and the element is
+      // `object-fit: cover`, which this check is meant to skip. Both
+      // readings were taken mid-load, before the styles applied to the
+      // element and before the real bytes were decoded, so it compared
+      // a placeholder against a default. A check that cries wolf is
+      // worse than no check, because the next real warp gets waved
+      // through.
+      const warped = await page.$$eval("img", async (imgs) => {
+        // Bounded, because decode() on an image that never arrives
+        // never settles, and a check that hangs is a check that gets
+        // deleted.
+        const settle = (p) =>
+          Promise.race([p, new Promise((r) => setTimeout(r, 2000))]);
+        await Promise.all(
+          imgs.map((i) =>
+            i.decode ? settle(i.decode().catch(() => {})) : Promise.resolve()
+          )
+        );
+        return imgs
           .filter((i) => i.complete && i.naturalWidth > 0)
           .map((i) => {
             // object-cover and friends CROP to the box, they never
@@ -365,8 +395,8 @@ for (const theme of ["light", "dark"]) {
               ? `${i.getAttribute("src")} drawn ${got.toFixed(2)}:1, file is ${want.toFixed(2)}:1`
               : null;
           })
-          .filter(Boolean)
-      );
+          .filter(Boolean);
+      });
       for (const m of warped) note(where, `image squeezed out of shape: ${m}`);
 
       const altBrand = await page.$$eval("img[alt]", (imgs) =>
