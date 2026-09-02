@@ -265,3 +265,22 @@ run both behind a switch while the numbers are checked?
 - **Per-sport ROI.** Still has no honest formula, because a parlay stake
   spans sports. Needs a rule from the owner before Performance can show
   it.
+
+## Should Performance honour a record restart?
+
+Found 2 September 2026 while fixing false copy in Settings.
+
+**Track honours it.** `src/app/app/page.tsx` uses `sinceLine` so net
+profit counts only the bets since the restart.
+
+**The live Performance never reads it at all.** Grep `tracking_since`
+across `src/app/stats`, `src/components/performance` and
+`src/lib/performance-engine.ts`: nothing. So after a restart, Track
+shows a fresh number and Performance shows the whole record, and
+neither page says which it is doing.
+
+The old page at `/stats-old` does have an All time switch, and the
+Settings copy used to promise that switch on Performance. The copy has
+been corrected to describe what actually happens. The behaviour is
+still his call, because either answer changes numbers he reads.
+

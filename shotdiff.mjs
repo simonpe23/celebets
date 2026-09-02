@@ -130,11 +130,39 @@ async function shoot(port, out, theme, set) {
     return page;
   };
 
+  // A SHOT OF AN ERROR PAGE IS NOT A SHOT. Added 2 September 2026,
+  // after a zombie dev server left over from an earlier run held the
+  // port, served 500s from a directory that no longer existed, and
+  // this saved all 24 of them. The diff then reported every page as
+  // changed, which is the same lie as reporting none.
+  //
+  // The `ui-change` skill has demanded this since 29 August 2026 and
+  // it was never wired in here.
+  const visit = async (page, url) => {
+    const res = await page.goto(url, { waitUntil: "networkidle" });
+    const status = res ? res.status() : 0;
+    if (status !== 200) {
+      console.error(`\n${url} returned ${status}. Refusing to save a shot of it.`);
+      console.error("A dev server is down, or another process is holding the port.");
+      await browser.close();
+      process.exit(1);
+    }
+    // Text, not HTML: Next embeds "This page could not be found." in a
+    // script tag on every healthy page, so innerText is the only
+    // honest test.
+    const text = await page.evaluate(() => document.body.innerText);
+    if (!text.includes("Track")) {
+      console.error(`\n${url} rendered without the tab bar. It is not the real page.`);
+      await browser.close();
+      process.exit(1);
+    }
+  };
+
   if (set === "live") {
     for (const [size, width, height] of SIZES) {
       for (const [name, url] of LIVE) {
         const page = await open(width, height);
-        await page.goto(base + url, { waitUntil: "networkidle" });
+        await visit(page, base + url);
         await page.addStyleTag({ content: FREEZE });
         await page.waitForTimeout(1600);
         await page.screenshot({
@@ -152,7 +180,7 @@ async function shoot(port, out, theme, set) {
   for (const [size, width, height] of SIZES) {
     for (const [name, url] of PAGES) {
       const page = await open(width, height);
-      await page.goto(base + url, { waitUntil: "networkidle" });
+      await visit(page, base + url);
       await page.addStyleTag({ content: FREEZE });
       await page.waitForTimeout(1400);
       await page.screenshot({ path: `${out}/${name}-${size}.png`, fullPage: true });
@@ -163,7 +191,7 @@ async function shoot(port, out, theme, set) {
 
   for (const [name, url, clicks] of STATES) {
     const page = await open(390, 844);
-    await page.goto(base + url, { waitUntil: "networkidle" });
+    await visit(page, base + url);
     await page.addStyleTag({ content: FREEZE });
     await page.waitForTimeout(900);
     for (const sel of clicks) {

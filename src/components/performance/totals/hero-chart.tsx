@@ -22,6 +22,14 @@ function tick(v: number): string {
   return `${v < 0 ? "-" : ""}$${t}`;
 }
 
+// The rungs a money axis is allowed to use. Lab's own list, so Totals
+// and Lab cannot draw the same record on two different ladders.
+function niceStep(reach: number): number {
+  const steps = [10, 25, 50, 100, 250, 500, 1000, 1500, 2000, 3000, 5000];
+  for (const s of steps) if (reach <= s) return s;
+  return Math.ceil(reach / 5000) * 5000;
+}
+
 export function HeroLine({
   points,
   width = 205,
@@ -49,10 +57,27 @@ export function HeroLine({
 
   if (points.length < 2) return null;
 
+
   const t0 = points[0].t;
   const span = Math.max(1, points[points.length - 1].t - t0);
   const vs = points.map((p) => p.v);
-  const step = 1500;
+  // THE LADDER FOLLOWS THE RECORD. It was a fixed $1,500 step, so every
+  // chart was drawn inside a $3,000 window whatever it held: a $200
+  // record was a flat scratch along the middle beside an axis reading
+  // $1.5K / $0 / -$1.5K, claiming a range the user will not reach for
+  // months. Fixed 2 September 2026.
+  //
+  // The steps are the ones Lab already uses, so the two charts cannot
+  // pick different ladders for the same record. Above $1,500 nothing
+  // changes, which is where his own record sits.
+  // HALF THE REACH, so the axis keeps about the same number of rungs it
+  // always had. Taking the whole reach as the step gave a three rung
+  // ladder and quietly coarsened his own chart from
+  // $3K/$1.5K/$0/-$1.5K to $3K/$0/-$3K, which is a change he did not
+  // ask for. At his scale this returns 1500, the old constant, so his
+  // chart is untouched.
+  const reach = Math.max(Math.abs(Math.max(...vs, 0)), Math.abs(Math.min(...vs, 0)));
+  const step = niceStep(reach / 2);
   const hi = Math.max(Math.ceil(Math.max(...vs) / step) * step, step);
   const lo = Math.min(Math.floor(Math.min(...vs, 0) / step) * step, -step);
   const x = (t: number) => ((t - t0) / span) * width;

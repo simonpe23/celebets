@@ -653,18 +653,32 @@ export default function CompareApp({
 
 // Green and red mean money moved, so they colour the money rows and
 // the rate rows only, and only where the two sides differ.
+// A DASH IS NOT A RESULT, so it must not be painted like one. Fixed 2
+// September 2026: a side with no settled bets in the chosen period
+// showed a bare "-" in GREEN on the ROI row and a bare "-" in RED on
+// the hit rate row, because both nulls were collapsed to a number
+// before the sign was read. Green and red mean money moved; nothing
+// moved here.
 function toneColor(
   r: { label: string },
   isA: boolean,
   a: Stats,
   b: Stats
 ): string {
-  const value =
+  const value: number | null =
     r.label === "Net profit"
-      ? (isA ? a.profit : b.profit)
+      ? isA
+        ? a.profit
+        : b.profit
       : r.label === "ROI"
-        ? (isA ? roi(a) : roi(b)) ?? 0
-        : ((isA ? hitRate(a) : hitRate(b)) ?? 0) - 0.5;
+        ? isA
+          ? roi(a)
+          : roi(b)
+        : (() => {
+            const h = isA ? hitRate(a) : hitRate(b);
+            return h === null ? null : h - 0.5;
+          })();
+  if (value === null) return GREY_TEXT;
   return value < 0 ? RED : GREEN;
 }
 

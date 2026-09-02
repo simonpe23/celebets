@@ -23,9 +23,25 @@ export default function PageSkeleton({
   title,
   activeHref,
   cards = 3,
+  back = false,
 }: {
-  title: string;
+  /**
+   * The page's own title, word for word, or null when the page has no
+   * title at all. Fixed 2 September 2026: Track has no title, it opens
+   * on a brand mark and a greeting, and this drew a large "Track"
+   * heading that appeared and then vanished on every single tap of the
+   * tab. A loading state that shows something the page does not have
+   * is not a preview of it.
+   */
+  title: string | null;
   activeHref: string;
+  /**
+   * True when the real page opens with a back arrow. The skeleton
+   * reserves its width so the title does not jump sideways when the
+   * page lands. Settings used to shift its heading right by an arrow
+   * plus a gap on every visit.
+   */
+  back?: boolean;
   // Roughly how many blocks this page opens with. Getting it close
   // matters more than getting it exact: the closer the grey shapes sit
   // to the real ones, the less the page moves when it arrives.
@@ -34,7 +50,12 @@ export default function PageSkeleton({
   return (
     <main className={PAGE}>
       <div className={COLUMN}>
-        <h1 className={PAGE_TITLE}>{title}</h1>
+        {title !== null && (
+          <div className="flex items-center gap-3">
+            {back && <span className="h-6 w-6 shrink-0" aria-hidden="true" />}
+            <h1 className={PAGE_TITLE}>{title}</h1>
+          </div>
+        )}
 
         <div className="animate-pulse space-y-4" aria-hidden="true">
           {Array.from({ length: cards }).map((_, i) => (
@@ -46,7 +67,7 @@ export default function PageSkeleton({
         </div>
 
         <p className="sr-only" role="status">
-          Loading {title}
+          {title === null ? "Loading" : `Loading ${title}`}
         </p>
       </div>
 

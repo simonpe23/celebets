@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import TabBar from "@/components/TabBar";
 import { buildInsightPool, buildSportInsightPool } from "@/lib/stats";
 import { SPORT_EMOJI, type BetWithLegs, type Sport } from "@/lib/types";
@@ -51,7 +52,31 @@ export default function AllInsights({ bets, sport }: Props) {
   return (
     <main className={PAGE}>
       <div className={COLUMN}>
-        <header>
+        {/* A WAY BACK. Added 2 September 2026: this page is reached
+            from the Research tab and from Performance, and it had no
+            back arrow at all while the bottom bar lit Performance, so
+            anyone arriving from Research had no way to return to where
+            they came from. The arrow follows Settings' own pattern. */}
+        <header className="flex items-center gap-3">
+          <Link
+            href="/stats"
+            aria-label="Back to Performance"
+            className="shrink-0 text-neutral-600 dark:text-neutral-300"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-6 w-6"
+              aria-hidden="true"
+            >
+              <path d="M15 5l-7 7 7 7" />
+            </svg>
+          </Link>
+          <div className="min-w-0">
           <h1 className={PAGE_TITLE}>
             {sport === null
               ? "Your insights"
@@ -62,6 +87,7 @@ export default function AllInsights({ bets, sport }: Props) {
               ? "Every statement that is currently true about your settled bets."
               : `Every statement that is currently true about your ${sport} picks.`}
           </p>
+          </div>
         </header>
 
         {insights === null ? (

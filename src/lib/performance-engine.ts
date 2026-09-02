@@ -143,9 +143,29 @@ export interface Fact {
   spark: number[];
 }
 
+// A LOSS MUST NEVER PRINT A PLUS SIGN. Fixed 2 September 2026.
+//
+// `Math.round(-0.4)` is NEGATIVE ZERO, and `-0 < 0` is false in
+// JavaScript, so every loss between a cent and fifty cents came out as
+// "+$0" and was then painted red. The hero, the ranked rows, the Heat
+// Map tiles, the Compare cards and the "Actuals noticed" sentence all
+// print through here, so all of them said it.
+//
+// The value is still rounded the way it always was, so no figure the
+// app already shows can move: only the case that rounds away to
+// nothing behaves differently, and that case was the bug.
 export function money(v: number): string {
   const r = Math.round(v);
-  return `${r < 0 ? "-" : "+"}$${Math.abs(r).toLocaleString("en-US")}`;
+  // -0 === 0 is true, so this is also the "rounds away to nothing"
+  // test, which is exactly where the sign used to be lost.
+  if (r !== 0) return `${r < 0 ? "-" : "+"}$${Math.abs(r).toLocaleString("en-US")}`;
+
+  // Under half a cent is nothing, and nothing has no direction.
+  if (Math.abs(v) < 0.005) return "$0";
+
+  // It rounds to nothing but it is not nothing. Say which way it went
+  // and say how much, because "-$0" is not a figure.
+  return `${v < 0 ? "-" : "+"}$${Math.abs(v).toFixed(2)}`;
 }
 
 export function hitOf(s: Stats): string {

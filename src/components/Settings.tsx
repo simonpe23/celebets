@@ -543,8 +543,16 @@ export default function Settings({
                   Your record started on {shortDate(recordStartedAt)}
                 </span>
                 <span className="mt-0.5 block text-xs text-neutral-500 dark:text-neutral-400">
+                  {/* IT PROMISED A SWITCH THAT IS NOT THERE. Fixed 2
+                      September 2026: the live Performance never reads
+                      the restart line (grep tracking_since across
+                      src/app/stats and src/components/performance:
+                      nothing), so "Performance has an All time switch"
+                      was false of the page the tab actually opens.
+                      Track does honour the line. Whether Performance
+                      should is a real question, and his to answer. */}
                   {trackingSince
-                    ? "You restarted your record on this date. Everything you tracked before it is still saved, and Performance has an All time switch to see it."
+                    ? "You restarted your record on this date. Everything you tracked before it is still saved."
                     : "Everything you have tracked counts toward your stats."}
                 </span>
               </div>
@@ -575,7 +583,12 @@ export default function Settings({
           <button
             type="button"
             onClick={() => {
-              setFreshAmount(String(balance));
+              // NOT WHEN THE BALANCE IS ZERO. Fixed 2 September 2026:
+              // a new user has a balance of 0, this prefilled "0", and
+              // parseMoney rejects 0, so pressing the only button in
+              // the sheet did nothing at all. Blank lets the
+              // placeholder do its job instead.
+              setFreshAmount(balance > 0 ? String(balance) : "");
               setFreshOpen(true);
             }}
             className="text-xs text-neutral-500 underline underline-offset-4 dark:text-neutral-400"
@@ -743,8 +756,8 @@ export default function Settings({
                 <li>Every bet, pick and result is kept.</li>
                 <li>Bets still running carry over to the new record.</li>
                 <li>
-                  Performance keeps an All time switch, so the old record
-                  is one tap away.
+                  Your balance and profit start again from the number you
+                  type. Nothing is deleted.
                 </li>
                 <li>You can undo this at any time, from this page.</li>
               </ul>
@@ -768,12 +781,23 @@ export default function Settings({
                 Your balance today is {formatMoney(balance)}.
               </p>
 
+              {/* THE ERROR BELONGS TO THE SHEET, not to the page
+                  behind it. It used to render only at the top of the
+                  page, underneath this full screen overlay, so the
+                  one thing that could tell the user why nothing
+                  happened was invisible. */}
+              {error && (
+                <p className="mt-3 text-sm font-semibold text-red-600 dark:text-red-400">
+                  {error}
+                </p>
+              )}
               <div className="mt-5 grid grid-cols-2 gap-3">
                 <button
                   type="button"
                   onClick={() => {
                     setFreshOpen(false);
                     setFreshAmount("");
+                    setError(null);
                   }}
                   className="h-11 rounded-md border border-neutral-300 text-sm font-bold dark:border-white/15"
                 >

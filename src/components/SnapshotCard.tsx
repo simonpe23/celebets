@@ -56,9 +56,21 @@ export default function SnapshotCard({
   const losses = settled.filter((b) => b.status === "lost").length;
   const decided = wins + losses;
   const hitRate = decided === 0 ? null : Math.round((wins / decided) * 100);
-  const best = sportRows(settled)
+  const ranked = sportRows(settled)
     .filter((row) => row.wins + row.losses > 0)
-    .sort((a, b) => b.profit - a.profit)[0];
+    .sort((a, b) => b.profit - a.profit);
+  const best = ranked[0];
+  // THE WORD "BEST" HAS TO BE TRUE. Fixed 2 September 2026: a user
+  // whose only sport had lost money read "Best Sport / Football /
+  // -$100", a label contradicted by the red figure under it. "Best" is
+  // a claim about a comparison, and there is no comparison when there
+  // is one sport, nor anything best about a loss.
+  const bestLabel =
+    !best || best.profit <= 0
+      ? "Top Sport"
+      : ranked.length === 1
+        ? "Your Sport"
+        : "Best Sport";
 
   return (
     <section className={`${CARD} p-4`}>
@@ -107,7 +119,7 @@ export default function SnapshotCard({
         </div>
 
         <div className="pl-2">
-          <p className={LABEL}>Best Sport</p>
+          <p className={LABEL}>{bestLabel}</p>
           {best ? (
             <>
               {/* Wraps rather than truncates. A quarter of the card is

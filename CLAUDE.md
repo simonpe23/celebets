@@ -344,10 +344,24 @@ Keep it current: when a job finishes, delete its line.
      derives the best against the worst of the first dimension that
      splits the record, and says so when there is nothing to compare.
      **`emptytest`'s known-silence list is now EMPTY**, from thirteen.
-  4. **The lies.** A 40 cent loss prints "+$0"; one 3-leg parlay makes
-     Home say "Bets 3" while All Bets says "1 bet".
-  5. **Track and the leftovers**, including one product call: whether a
-     pending bet should read as "-$50 net profit" on day one.
+  4. **The lies. DONE.** The money formatter printed a plus sign on any
+     loss under 50 cents (`Math.round(-0.4)` is negative zero and
+     `-0 < 0` is false). The Home chart drew a line on the floor with
+     nothing settled and a flat line through the middle with one bet.
+     The date axis repeated itself below five points. Totals printed
+     "$0.0K" for a $40 record and put "Top 3" over one row. Compare
+     painted a bare dash green and red. "Best Sport" sat over a red
+     figure.
+  5. **Track and the leftovers. DONE.** The Insights page stuttered the
+     same sentences three times and had no way back. "Restart my
+     record" was dead for a new user and its copy promised an All time
+     switch that does not exist. The loading states disagreed with the
+     pages they preceded.
+  **THREE PRODUCT CALLS ARE WITH HIM**, none blocking: the pending
+  stake reading as a loss on day one, the dead "How it works" control,
+  and whether the Snapshot should say how few bets it is built on.
+  **A fourth is in `docs/open-questions.md`:** the live Performance
+  never honours a record restart, though Track does.
   **ANSWERED, 2 September 2026:** show everything that was part of the
   bet, and show it on Home the way Lab shows it. "Full time" is the one
   exclusion, because it is the app naming the absence of a period, and

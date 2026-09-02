@@ -536,14 +536,35 @@ function observationInsights(settledBets: BetWithLegs[]): Insight[] {
     { label: "overall", from: null },
   ];
 
-  // Per sport, per period: a record fact and a money fact.
+  // A PERIOD ONLY EARNS A SENTENCE IF IT SAYS SOMETHING THE WIDER ONE
+  // DOES NOT. Fixed 2 September 2026.
+  //
+  // With one settled bet, "this week", "this month" and "overall" all
+  // contain that same bet, so the page printed the identical pair of
+  // sentences three times over, differing only in the last two words.
+  // A new user's first visit to Insights read as a stutter.
+  //
+  // The windows are nested, so equal counts mean equal sets: if this
+  // week holds everything the month holds, the month's sentence adds
+  // nothing.
+  const inPeriod = (from: Date | null) =>
+    from === null
+      ? settledBets
+      : settledBets.filter(
+          (b) => b.settled_at && new Date(b.settled_at) >= from
+        );
+  const distinct: { label: string; bets: BetWithLegs[] }[] = [];
   for (const { label, from } of periods) {
-    const bets =
-      from === null
-        ? settledBets
-        : settledBets.filter(
-            (b) => b.settled_at && new Date(b.settled_at) >= from
-          );
+    const bets = inPeriod(from);
+    if (bets.length === 0) continue;
+    // Widest last, so a narrower window that already holds everything
+    // wins the sentence and the wider one is dropped as a repeat.
+    if (distinct.some((d) => d.bets.length === bets.length)) continue;
+    distinct.push({ label, bets });
+  }
+
+  // Per sport, per period: a record fact and a money fact.
+  for (const { label, bets } of distinct) {
     for (const row of sportRows(bets)) {
       const picks = row.wins + row.losses;
       if (picks === 0) continue;
