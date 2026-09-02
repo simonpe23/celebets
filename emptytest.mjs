@@ -169,25 +169,11 @@ const PROBES = [
 // THE KNOWN SILENCES, 2 September 2026. Each line is a promise to fix
 // or to justify. Delete a line when the fix lands; the script fails if
 // a listed entry starts speaking, so the list cannot go stale.
-const KNOWN = new Set([
-  // TOTALS on an account with nothing settled. Two cards draw their
-  // headings over nothing. Phase 3.
-  "none/totals/Profit by Sport",
-  "none/totals/Recent Bets",
-  "pending/totals/Profit by Sport",
-  "pending/totals/Recent Bets",
-
-  // COMPARE INVENTS. It opens on a hardcoded Football versus
-  // Basketball, so someone who has never bet Basketball is shown a
-  // comparison against a sport they have never touched, both sides
-  // reading 0-0, with a winner's crown on one of them. His ruling of 2
-  // September 2026: use their real top two. Phase 3.
-  "none/compare/the two sides",
-  "pending/compare/the two sides",
-  "one/compare/the two sides",
-  "three/compare/the two sides",
-  "six/compare/the two sides",
-]);
+// EMPTY, since 2 September 2026, and it should stay that way. Every
+// block on every page now either says something or says what it is
+// waiting for. A line added back here is a promise to fix, not a
+// place to park a regression.
+const KNOWN = new Set([]);
 
 const BAD = new Set(["silent", "invents"]);
 

@@ -77,6 +77,12 @@ const cash = (v: number) =>
   })}`;
 
 // The sheet's own shorthand, so the longest name is not truncated.
+// What an empty card is waiting for. His rule: "If the app cannot say
+// something interesting yet, it should say what it is waiting for."
+// One sentence, defined once, or two cards answer one question two
+// ways.
+const WAITING = "Nothing has settled yet. Your first result fills this in.";
+
 const SHORT: Record<string, string> = {
   "Totals (Over/Under)": "Totals (O/U)",
 };
@@ -315,7 +321,20 @@ export default function TotalsApp({
         </div>
       </Card>
 
-      {/* Profit by Sport: the ring, then the ranked list. */}
+      {/* NOTHING SETTLED, so say what would fill this rather than draw
+          a heading, a grey ring and a column of nothing. Added 2
+          September 2026, phase 3 of the silence job. */}
+      {sports.length === 0 ? (
+        <Card className="mt-[11px] pb-[13px]">
+          <SectionHead title="Profit by Sport" />
+          <p
+            className={`px-[13px] pt-[6px] ${T_BODY} ${W_SEMI}`}
+            style={{ color: GREY_TEXT }}
+          >
+            {WAITING}
+          </p>
+        </Card>
+      ) : (
       <Card className="mt-[11px] pb-[12px]">
         <SectionHead
           title="Profit by Sport"
@@ -372,6 +391,7 @@ export default function TotalsApp({
           </div>
         </div>
       </Card>
+      )}
 
       {/* Per Category: TWO lists, the best 3 and the worst 3. See the
           note beside catBest for why it is two lists and not one. */}
@@ -525,7 +545,18 @@ export default function TotalsApp({
         </div>
       </div>
 
-      {/* The ledger. */}
+      {/* The ledger. Same rule as above when nothing has settled. */}
+      {recent.length === 0 ? (
+        <Card className="mb-[6px] mt-[11px] pb-[13px]">
+          <SectionHead title="Recent Bets" />
+          <p
+            className={`px-[13px] pt-[6px] ${T_BODY} ${W_SEMI}`}
+            style={{ color: GREY_TEXT }}
+          >
+            {WAITING}
+          </p>
+        </Card>
+      ) : (
       <Card className="mb-[6px] mt-[11px] pb-[8px]">
         <div className="flex items-center justify-between px-[13px] pt-[13px]">
           <h2 className={`text-sm ${W_BOLD}`}>Recent Bets</h2>
@@ -577,6 +608,7 @@ export default function TotalsApp({
           ))}
         </div>
       </Card>
+      )}
 
       <div className="min-h-[8px]" />
     </>

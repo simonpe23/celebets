@@ -22,6 +22,8 @@ import {
   makeEngine,
   money,
   type Chip,
+  type Engine,
+  type GroupKey,
   type Stats,
 } from "@/lib/performance-engine";
 import type { BetWithLegs } from "@/lib/types";
@@ -97,13 +99,44 @@ function parseSel(raw: string | null): Chip[] {
 
 const chipKey = (c: Chip) => `${c.group}~${c.kind}~${c.value}`;
 
-// The demo pairing when Compare is opened cold, chosen to tell the
-// sheet's own story with honest numbers: a clear earner against the
-// record's clear leak.
-const DEMO: Chip[] = [
-  { group: "sport", kind: "plain", value: "Football" },
-  { group: "sport", kind: "plain", value: "Basketball" },
-];
+// WHAT COMPARE OPENS ON WHEN NOBODY PICKED ANYTHING.
+//
+// It used to be hardcoded: Football against Basketball. Measured 2
+// September 2026, that meant a user who had never bet Basketball was
+// shown a comparison against a sport they had never touched, both
+// sides reading 0-0 and $0, with a winner's crown on one of them.
+// Worse than silence, because it is not an absence, it is an
+// invention. His ruling the same day: "use their real top two."
+//
+// TWO THINGS OF THE SAME KIND, or the comparison is nonsense. Football
+// against Moneyline is not a contest, it is the same bets counted
+// twice, because a Moneyline bet on Arsenal is also a Football bet.
+// So this walks the dimensions broadest first and takes the first one
+// that actually splits the record in two.
+const COMPARABLE: GroupKey[] = ["sport", "where", "what", "how", "risk"];
+
+// THE BEST AGAINST THE WORST, not the two biggest. That is what the
+// hardcoded pair was reaching for, in the words of the comment it
+// replaced: "a clear earner against the record's clear leak". Two
+// winners side by side is not much of a contest.
+//
+// On the demo record this picks Football against Basketball, which is
+// exactly the pair that used to be typed in by hand. The difference is
+// that it is now true of whoever is looking.
+function realTopTwo(engine: Engine): Chip[] | null {
+  const facts = engine.factsIn([]);
+  for (const group of COMPARABLE) {
+    const inGroup = facts
+      .filter((f) => f.chip.group === group && f.chip.kind !== "market")
+      .sort((a, b) => b.s.profit - a.s.profit);
+    if (inGroup.length >= 2)
+      return [inGroup[0].chip, inGroup[inGroup.length - 1].chip];
+  }
+  // A record with one sport, one league, one category and one odds
+  // band has nothing to compare with anything. Saying so is the
+  // honest answer; drawing two empty cards is not.
+  return null;
+}
 
 function hitRate(s: Stats): number | null {
   const picks = s.wins + s.losses;
@@ -152,9 +185,16 @@ export default function CompareApp({
   const leagueSportMap = useMemo(() => leagueSports(engine.settled), [engine]);
 
   // Exactly two selections, the ruled trigger. Anything else falls
-  // back to the demo pair rather than showing a broken page.
+  // back to the record's own top two, and to nothing at all when the
+  // record holds nothing to compare.
   const parsed = parseSel(sel !== undefined ? sel : params.get("sel"));
-  const pair = parsed.length === 2 ? parsed : DEMO;
+  const chosen = parsed.length === 2 ? parsed : realTopTwo(engine);
+  const hasPair = chosen !== null;
+  // A placeholder so the arithmetic below stays total. Nothing
+  // computed from it is ever drawn: the page returns early when
+  // hasPair is false.
+  const BLANK: Chip = { group: "sport", kind: "plain", value: "" };
+  const pair = chosen ?? [BLANK, BLANK];
   const backSel = pair.map(chipKey).join("|");
 
   const days = PERIODS.find((p) => p.key === period)?.days ?? null;
@@ -301,6 +341,23 @@ export default function CompareApp({
         tall
       />
 
+      {/* NOTHING TO COMPARE, so say so rather than draw two empty
+          cards. A record with one sport, one league, one category and
+          one odds band holds no two things that can be set against
+          each other. It used to invent a pair here. */}
+      {!hasPair && (
+        <p
+          className={`relative mt-[14px] px-[8px] text-center ${T_BODY} ${W_SEMI}`}
+          style={{ color: GREY_TEXT }}
+        >
+          Nothing to compare yet. Once your record holds two of
+          anything, a sport, a league or a market, they can be set
+          against each other here.
+        </p>
+      )}
+
+      {hasPair && (
+      <>
       {/* The two cards, with the winner bordered and crowned. */}
       <div className="relative mt-[8px] flex items-stretch">
         {[
@@ -586,6 +643,8 @@ export default function CompareApp({
           </div>
         </div>
       ) : null}
+      </>
+      )}
 
       <div className="min-h-[10px]" />
     </>
