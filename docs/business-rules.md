@@ -202,3 +202,33 @@ nothing.
 Month and Year begin. Weeks start Monday. Both the Track balance strip
 and the Performance chips read it, so the same label can never mean two
 different date ranges.
+
+## An unsettled bet moves nothing
+
+**Changed 2 September 2026, his ruling.** A running bet is not a
+result and not a spend: it touches neither the balance nor net profit
+until it settles, and then both move together.
+
+His words: "pending bets are pending even on the balance card. aka does
+not needs to be updated until the bet is settled."
+
+Before this, both figures counted an open bet's stake as though it had
+already lost, so a new user's first screen read "-$50.00 net profit,
+all time" in red the moment they tracked their first bet.
+
+**The two figures reconcile with nothing extra on screen:**
+
+    startedWith + netProfit = balance
+
+**`netProfitOf` and `balanceOf` in `src/lib/stats.ts` are the one
+definition**, and `SettledFields` is the four columns they read, so a
+page that queried only what it needs can still use them. Track,
+`/stats-old` and Settings all go through `balanceOf`; each used to
+write out the same expression itself.
+
+Performance never needed changing: its engine has only ever counted
+bets with a settled date.
+
+**The trade:** the balance does not show that money is committed.
+Someone holding $500 with $400 riding still reads $500.
+

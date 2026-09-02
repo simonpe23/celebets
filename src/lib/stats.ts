@@ -536,14 +536,35 @@ function observationInsights(settledBets: BetWithLegs[]): Insight[] {
     { label: "overall", from: null },
   ];
 
-  // Per sport, per period: a record fact and a money fact.
+  // A PERIOD ONLY EARNS A SENTENCE IF IT SAYS SOMETHING THE WIDER ONE
+  // DOES NOT. Fixed 2 September 2026.
+  //
+  // With one settled bet, "this week", "this month" and "overall" all
+  // contain that same bet, so the page printed the identical pair of
+  // sentences three times over, differing only in the last two words.
+  // A new user's first visit to Insights read as a stutter.
+  //
+  // The windows are nested, so equal counts mean equal sets: if this
+  // week holds everything the month holds, the month's sentence adds
+  // nothing.
+  const inPeriod = (from: Date | null) =>
+    from === null
+      ? settledBets
+      : settledBets.filter(
+          (b) => b.settled_at && new Date(b.settled_at) >= from
+        );
+  const distinct: { label: string; bets: BetWithLegs[] }[] = [];
   for (const { label, from } of periods) {
-    const bets =
-      from === null
-        ? settledBets
-        : settledBets.filter(
-            (b) => b.settled_at && new Date(b.settled_at) >= from
-          );
+    const bets = inPeriod(from);
+    if (bets.length === 0) continue;
+    // Widest last, so a narrower window that already holds everything
+    // wins the sentence and the wider one is dropped as a repeat.
+    if (distinct.some((d) => d.bets.length === bets.length)) continue;
+    distinct.push({ label, bets });
+  }
+
+  // Per sport, per period: a record fact and a money fact.
+  for (const { label, bets } of distinct) {
     for (const row of sportRows(bets)) {
       const picks = row.wins + row.losses;
       if (picks === 0) continue;
@@ -946,9 +967,58 @@ export function sinceLine(
 // everything paid out minus everything staked, money still riding
 // included. All time this equals balance + removals minus additions,
 // which is why the two agree on every screen.
-export function netProfitOf(bets: BetWithLegs[]): number {
-  return bets.reduce(
-    (sum, b) => sum + Number(b.payout ?? 0) - Number(b.stake),
-    0
-  );
+// NET PROFIT COUNTS SETTLED BETS ONLY, since 2 September 2026.
+//
+// HIS RULING, and he took it against my recommendation, which is
+// recorded in docs/decisions.md. The case he was shown: a brand new
+// user places one $50 bet, it is still running, and Track greeted them
+// with "-$50.00 net profit, all time" in red. Correct under the old
+// rule, because the stake really has left the balance, and still the
+// first thing the app ever said to them was a loss they had not made.
+//
+// A RUNNING BET IS NOT A RESULT. Its stake has left the balance but it
+// has not lost, so it belongs to neither side of profit until it
+// settles.
+//
+// THE BALANCE FOLLOWS THE SAME RULE, see `balanceOf` below, so the
+// card's figures still add up with nothing extra on screen.
+/**
+ * The four fields the money rules actually read. Declared so a page
+ * that queried only what it needs can still use them: Settings selects
+ * five columns, not a whole bet with its legs.
+ */
+export type SettledFields = Pick<
+  BetWithLegs,
+  "stake" | "payout" | "status" | "settled_at"
+>;
+
+export function netProfitOf(bets: SettledFields[]): number {
+  return bets
+    .filter((b) => b.status !== "pending" && b.settled_at !== null)
+    .reduce((sum, b) => sum + Number(b.payout ?? 0) - Number(b.stake), 0);
+}
+
+// A BET THAT HAS NOT SETTLED TOUCHES NOTHING. His correction, 2
+// September 2026: "pending bets are pending even on the balance card.
+// aka does not needs to be updated until the bet is settled."
+//
+// So the balance is a ledger of what has actually happened: money put
+// in, money taken out, and the results of bets that are done. A stake
+// on an open bet is committed but not yet spent, and it appears the
+// moment the bet settles.
+//
+// This is what keeps the card's three figures adding up with nothing
+// extra on screen:
+//
+//     startedWith + netProfit = balance
+//
+// My first attempt reduced the balance by open stakes and then had to
+// print a third "still riding" figure to explain the gap. His answer
+// removes the gap instead of explaining it.
+export function balanceOf(
+  bets: SettledFields[],
+  deposits: number,
+  withdrawals: number
+): number {
+  return deposits - withdrawals + netProfitOf(bets);
 }

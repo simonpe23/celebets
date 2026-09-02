@@ -29,16 +29,23 @@ function toPoints(
   floor?: number,
   ceiling?: number
 ): number[][] {
-  if (values.length === 0) return [[0, height], [width, height]];
-  if (values.length === 1) return [[0, height / 2], [width, height / 2]];
+  // NO VALUES MEANS NO LINE. Until 2 September 2026 this returned a
+  // line along the FLOOR of the box, and the break even line sits in
+  // the middle, so an account that had never settled a bet drew as
+  // flat and deep in the red. HeroChart draws nothing at all now.
+  if (values.length === 0) return [];
   const lo = floor ?? Math.min(0, ...values);
   const hi = ceiling ?? Math.max(0, ...values);
   const span = hi - lo || 1;
+  // ONE VALUE IS A POINT, NOT A LINE, and it belongs at its own height.
+  // It used to be drawn flat across the MIDDLE of the box whatever it
+  // was, so a first bet of +$100 sat on the $25 gridline, contradicting
+  // the "+$100" printed directly above it.
+  const y = (v: number) =>
+    Number((height - ((v - lo) / span) * height).toFixed(2));
+  if (values.length === 1) return [[width, y(values[0])]];
   const step = width / (values.length - 1);
-  return values.map((v, i) => [
-    Number((i * step).toFixed(2)),
-    Number((height - ((v - lo) / span) * height).toFixed(2)),
-  ]);
+  return values.map((v, i) => [Number((i * step).toFixed(2)), y(v)]);
 }
 
 export function HeroChart({
@@ -58,11 +65,15 @@ export function HeroChart({
 }) {
   const h = height;
   const pts = toPoints(values, width, h, bottom, top);
-  const last = pts[pts.length - 1] ?? [width, h];
+  const last = pts[pts.length - 1];
+  // A line needs two points. With one settled bet there is a dot and
+  // nothing else, which is the truth: one result is not a trend.
+  const hasLine = pts.length > 1;
   // Zero is always inside the range, so the dotted line is the break
   // even line rather than decoration: above it you are up, below it
   // you are down.
   const zeroY = h - ((0 - bottom) / (top - bottom || 1)) * h;
+  if (pts.length === 0) return null;
   return (
     <svg
       width="100%"
@@ -85,19 +96,23 @@ export function HeroChart({
         strokeWidth="1"
         strokeDasharray="2 4"
       />
-      <path
-        d={`${path(pts)} L${width} ${h} L0 ${h} Z`}
-        fill="url(#ph-hero-fill)"
-        stroke="none"
-      />
-      <path
-        d={path(pts)}
-        fill="none"
-        stroke={INDIGO}
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-      />
-      <circle cx={last[0]} cy={last[1]} r="4.3" fill={INDIGO} />
+      {hasLine && (
+        <>
+          <path
+            d={`${path(pts)} L${width} ${h} L0 ${h} Z`}
+            fill="url(#ph-hero-fill)"
+            stroke="none"
+          />
+          <path
+            d={path(pts)}
+            fill="none"
+            stroke={INDIGO}
+            strokeWidth="1.8"
+            strokeLinejoin="round"
+          />
+        </>
+      )}
+      {last && <circle cx={last[0]} cy={last[1]} r="4.3" fill={INDIGO} />}
     </svg>
   );
 }

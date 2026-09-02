@@ -1,3 +1,4 @@
+import { balanceOf, type SettledFields } from "@/lib/stats";
 import { createClient } from "@/lib/supabase/server";
 import Settings from "@/components/Settings";
 import type { BetWithLegs } from "@/lib/types";
@@ -12,13 +13,15 @@ export default async function SettingsPage() {
   // and to work out the transaction it has to write.
   const [{ data: transactions }, { data: bets }] = await Promise.all([
     supabase.from("transactions").select("amount, type, created_at"),
-    supabase.from("bets").select("stake, payout, placed_at"),
+    // `status` and `settled_at` are here so `balanceOf` can tell an open
+    // bet from a finished one. Without them this page would compute a
+    // different balance from Track's, and it prefills the restart sheet
+    // with that number.
+    supabase.from("bets").select("stake, payout, placed_at, status, settled_at"),
   ]);
 
   const allTransactions = transactions ?? [];
-  const allBets = (bets ?? []) as (Pick<BetWithLegs, "stake" | "payout"> & {
-    placed_at: string;
-  })[];
+  const allBets = (bets ?? []) as (SettledFields & { placed_at: string })[];
 
   const deposits = allTransactions
     .filter((t) => t.type === "deposit")
@@ -26,10 +29,12 @@ export default async function SettingsPage() {
   const withdrawals = allTransactions
     .filter((t) => t.type === "withdrawal")
     .reduce((sum, t) => sum + Number(t.amount), 0);
-  const staked = allBets.reduce((sum, b) => sum + Number(b.stake), 0);
-  const payouts = allBets.reduce((sum, b) => sum + Number(b.payout ?? 0), 0);
-
-  const balance = deposits - withdrawals - staked + payouts;
+  // THE SAME BALANCE TRACK SHOWS, through the same function. An open
+  // bet moves nothing until it settles, his correction of 2 September
+  // 2026, and this page prefills the "Restart my record" sheet with the
+  // balance, so a different rule here would restart people on a number
+  // they have never seen.
+  const balance = balanceOf(allBets, deposits, withdrawals);
 
   const trackingSince =
     (user?.user_metadata?.tracking_since as string | undefined) ?? null;

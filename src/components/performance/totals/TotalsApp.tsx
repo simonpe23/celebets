@@ -77,6 +77,17 @@ const cash = (v: number) =>
   })}`;
 
 // The sheet's own shorthand, so the longest name is not truncated.
+// K IS FOR THOUSANDS, so a figure below a thousand must not wear one.
+// Fixed 2 September 2026: a user who had staked $40 read "Wagered
+// $0.0K", and one who had staked $120 read "$0.1K". Every record under
+// a thousand dollars was rounded away to nothing, which is every new
+// user. Above a thousand nothing changes, so his own strip is
+// untouched.
+function thousands(v: number): string {
+  if (Math.abs(v) < 1000) return `$${Math.round(v).toLocaleString("en-US")}`;
+  return `$${(v / 1000).toFixed(1)}K`;
+}
+
 // What an empty card is waiting for. His rule: "If the app cannot say
 // something interesting yet, it should say what it is waiting for."
 // One sentence, defined once, or two cards answer one question two
@@ -202,8 +213,8 @@ export default function TotalsApp({
     { value: pctRound(hitOf(all)), label: "Hit rate" },
     { value: all.staked > 0 ? `${((all.profit / all.staked) * 100).toFixed(1)}%` : "-", label: "ROI" },
     { value: all.avgOdds === null ? "-" : all.avgOdds.toFixed(2), label: "Avg odds" },
-    { value: `$${(all.staked / 1000).toFixed(1)}K`, label: "Wagered" },
-    { value: `$${(all.returned / 1000).toFixed(1)}K`, label: "Returned" },
+    { value: thousands(all.staked), label: "Wagered" },
+    { value: thousands(all.returned), label: "Returned" },
   ];
 
   // PER CATEGORY IS TWO LISTS: THE BEST 3 AND THE WORST 3.
@@ -237,13 +248,21 @@ export default function TotalsApp({
   // the top did not, so with four categories it is three and one, and
   // with three it is three and none rather than the same rows twice.
   const CAT_TOP = 3;
+  // A HEADING SAYING "TOP 3" MUST HAVE THREE ROWS UNDER IT. Fixed 2
+  // September 2026. With four categories the split gave three and one,
+  // so "Bottom 3" sat over a single row; with two it gave "Top 3" over
+  // two. That is the thing he rejected on 31 August: "there should
+  // never be a 4 on a list with only top 3."
+  //
+  // Below six categories there is no top and bottom to speak of, so
+  // they are simply listed, best first, with no heading claiming
+  // anything. At six and above the split is exactly as he approved it,
+  // and his own record has six, so his page does not move.
+  const split = cats.length >= CAT_TOP * 2;
   // `cats` is sorted by profit, best first, so the top is already in
   // order and the bottom is reversed to lead with the worst.
-  const catBest = cats.slice(0, CAT_TOP);
-  const catWorst =
-    cats.length > CAT_TOP
-      ? cats.slice(Math.max(CAT_TOP, cats.length - CAT_TOP)).reverse()
-      : [];
+  const catBest = split ? cats.slice(0, CAT_TOP) : cats;
+  const catWorst = split ? cats.slice(cats.length - CAT_TOP).reverse() : [];
 
   return (
     <>
@@ -416,20 +435,22 @@ export default function TotalsApp({
             <span className="w-[62px] text-right">P/L</span>
           </div>
           {[
-            { heading: "Top 3", rows: catBest },
+            { heading: split ? "Top 3" : "", rows: catBest },
             // His wording, 31 August 2026: "Bottom 3 is better wording
             // than top 3 losses".
             { heading: "Bottom 3", rows: catWorst },
           ]
             .filter((list) => list.rows.length > 0)
             .map((list, li) => (
-              <div key={list.heading} className={li ? "mt-[11px]" : undefined}>
+              <div key={list.heading || "all"} className={li ? "mt-[11px]" : undefined}>
+                {list.heading ? (
                 <p
                   className={`pb-[3px] uppercase tracking-[0.04em] ${T_TINY} ${W_SEMI}`}
                   style={{ color: GREY_TEXT }}
                 >
                   {list.heading}
                 </p>
+                ) : null}
                 {list.rows.map((r, i) => (
                   <div
                     key={r.key}

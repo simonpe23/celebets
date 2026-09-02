@@ -1925,6 +1925,170 @@ proof.
 It now refuses an empty set, and refuses two sets of different sizes,
 which is the other way a half-finished shoot lies.
 
+### Phases 4 and 5: the lies, and Track's leftovers. DONE, 2 September 2026
+
+His instruction: "do phase 4 and 5 and let me know if you need a
+product call. if you do, recommend a solution."
+
+**Every claim below was reproduced from the code before it was
+touched**, and several claims from the earlier sweep were disproved and
+left alone.
+
+**THE MONEY FORMATTER PRINTED A PLUS SIGN ON A LOSS.**
+`Math.round(-0.4)` is NEGATIVE ZERO, and `-0 < 0` is false in
+JavaScript, so every loss between a cent and fifty cents came out as
+"+$0" and was then painted red. The hero, the ranked rows, the Compare
+cards and the "Actuals noticed" sentence all print through that one
+function. Rounding is unchanged, so none of the 35 figures on the demo
+record moves; only the case that rounded away to nothing behaves
+differently, and that case was the bug.
+
+**THE LEAK SENTENCE NEEDED A FLOOR IN DOLLARS, not only a share.** The
+5% rule added in phase 3 does not close the case where the leak IS the
+record's biggest figure, because the test collapses to
+`|worst| >= 0.05 * |worst|`, which passes for any number. A 40 cent
+loss was still being announced. One dollar is now the floor, matching
+the floor the Heat Map already uses.
+
+**THE HOME CHART LIED TWICE.** With nothing settled it drew a solid
+line along the FLOOR with the break even line above it, so an account
+that had never settled a bet read as flat and deep in the red; it draws
+nothing now. With one settled bet it drew a flat line across the MIDDLE
+whatever the value was, so a first bet of +$100 sat on the $25
+gridline; one result is a dot at its own height now, because one result
+is not a trend.
+
+**THE DATE AXIS REPEATED ITSELF.** It always asked for five labels, so
+three settled bets gave the indices [0, 1, 1, 2, 2] and printed two
+dates twice. It asks for as many as there are points, up to five, so
+five points and above are untouched.
+
+**"K" IS FOR THOUSANDS.** Totals printed "Wagered $0.0K" for a $40
+record. Below a thousand it prints the figure.
+
+**"TOP 3" OVER ONE ROW.** With four categories the split gave three and
+one, so "Bottom 3" sat over a single row: the exact thing he rejected
+on 31 August. Below six categories they are simply listed, best first,
+with no heading claiming anything. His own record has six, so his page
+does not move.
+
+**THE TOTALS AXIS WAS A FIXED $1,500 STEP**, so a $200 record was a
+scratch inside a $3,000 window. It follows the record now, using Lab's
+own rungs. **Half the reach, not the whole reach:** taking the whole
+reach coarsened his own chart from $3K/$1.5K/$0/-$1.5K to $3K/$0/-$3K,
+which he did not ask for. At his scale the rule returns 1500, the old
+constant.
+
+**A DASH IS NOT A RESULT.** Compare painted a bare "-" green on the ROI
+row and red on the hit rate row, because both nulls were collapsed to a
+number before the sign was read.
+
+**"BEST SPORT" OVER A RED FIGURE.** The word is a claim about a
+comparison. With one sport it reads "Your Sport"; when the top sport
+lost money it reads "Top Sport".
+
+**THE INSIGHTS PAGE STUTTERED.** It looped "this week", "this month"
+and "overall", so one settled bet produced the same two sentences three
+times. A period only earns a sentence when it holds something the wider
+one does not. One bet now gives three distinct sentences instead of
+seven with repeats.
+
+**THE INSIGHTS PAGE HAD NO WAY BACK**, while the bottom bar lit
+Performance, so anyone arriving from Research was stranded. It has the
+same back arrow Settings uses.
+
+**"RESTART MY RECORD" WAS DEAD FOR A NEW USER.** The sheet prefilled
+the starting balance with the balance, which is 0, `parseMoney` rejects
+0, and the error rendered at the top of the page UNDERNEATH the full
+screen sheet. The field starts blank now and the error is inside the
+sheet that caused it.
+
+**AND ITS COPY PROMISED SOMETHING THAT DOES NOT EXIST:** "Performance
+keeps an All time switch, so the old record is one tap away." The live
+Performance never reads the restart line at all. The copy says what
+actually happens now. **Whether Performance SHOULD honour a restart is
+a real question and it is his**, recorded in open-questions.
+
+**THE LOADING STATES DISAGREED WITH THEIR PAGES.** Track has no title,
+and its skeleton drew a large "Track" heading that appeared and
+vanished on every tap. Insights' skeleton said "Insights" where the
+page says "Your insights". Settings' heading shifted right by a back
+arrow's width on arrival.
+
+### shotdiff saved 24 screenshots of an error page. 2 September 2026
+
+The second time this class of bug nearly reached him, and worse than
+the first.
+
+A dev server left over from an earlier run held the port and served
+500s from a directory that had been deleted. `shotdiff shoot` saved all
+24 error pages without complaint, and the diff then reported every page
+as changed, which is as useless as reporting none.
+
+**The `ui-change` skill has demanded this check since 29 August 2026
+and it was never wired into this script.** It now refuses any page that
+does not return 200 and render the tab bar.
+
+### An unsettled bet moves nothing. HIS RULING, 2 September 2026
+
+**He took this against my recommendation and then corrected my build of
+it.** Both are recorded because the second correction is the better
+design and it was his.
+
+**The case he was shown:** a brand new user places one $50 bet, it is
+still running, and Track greets them with "-$50.00 net profit, all
+time" in red. Correct under the old rule, because the stake really has
+left the balance, and still the first thing the app ever said to them
+was a loss they had not made.
+
+**MY FIRST BUILD WAS HALF THE ANSWER AND IT WAS WORSE.** I took net
+profit off the open stake but left the BALANCE reduced by it, so the
+card's three figures stopped reconciling and I had to print a third one
+to explain the gap: "$450.00" over "$0.00 net profit · $50.00 still
+riding".
+
+**HIS CORRECTION, in his words:** "The missing $50 will appear once the
+bet is settled. pending bets are pending even on the balance card. aka
+does not needs to be updated until the bet is settled."
+
+**THE RULE: an unsettled bet touches neither figure.** The balance is a
+ledger of what has actually happened, money in, money out, and the
+results of bets that are done. The stake and its payout both land the
+moment the bet settles. Day one reads "$500.00" over "$0.00 net profit,
+all time", and nothing extra is needed on screen because the figures
+add up on their own:
+
+    startedWith + netProfit = balance
+
+**Three functions in `src/lib/stats.ts` hold it and every page goes
+through them:** `netProfitOf`, `balanceOf` and the `SettledFields`
+type, which is the four columns the money rules actually read, so
+Settings can query five columns instead of a whole bet and still get
+the same number. Track, `/stats-old` and Settings all derive the
+balance from `balanceOf` now; each used to compute its own copy of the
+same expression.
+
+**Performance never needed changing:** its engine has only ever counted
+bets with a settled date.
+
+**One consequence he should know and has not been asked about:** the
+balance no longer shows that money is committed. Someone holding $500
+with $400 riding still reads $500. That is what he asked for and it is
+consistent, but it is the trade the rule makes.
+
+### Two more of his rulings, 2 September 2026
+
+- **"How it works" is deleted.** His word: "Delete it." It was drawn
+  because it is in his mockup, and it was a bare span with no handler
+  styled exactly like the "View all ›" links that do work, so a new
+  user's most likely tap for help was the one thing on the page that
+  did nothing. It comes back the day there is a walkthrough behind it.
+- **The Performance Snapshot says how few bets it is built on**, below
+  five: "Performance Snapshot · from 1 bet". The card gives four
+  confident judgements and "ROI -100.0%" off one settled bet reads as a
+  verdict. The app's own bar for naming a strength or a weakness
+  elsewhere is five settled picks. Nothing is hidden and nothing moves.
+
 ## The go-live day, 31 August 2026
 
 Every ruling he made while taking Performance live, in his own words.

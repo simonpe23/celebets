@@ -164,6 +164,17 @@ function axis(series: number[]): { top: number; bottom: number; labels: string[]
 // is, and that sentence is unchanged by this rule.
 const WORTH_NAMING = 0.05;
 
+// AND A FLOOR IN DOLLARS, because the share alone is not enough. On a
+// record that is small all over, the worst fact IS the biggest figure,
+// so the share test collapses to |worst| >= 0.05 * |worst| and passes
+// for any number at all. A 40 cent loss was still being announced as
+// the user's biggest leak.
+//
+// One dollar is the floor the Heat Map already uses to decide a fact
+// is worth drawing (heat-model.ts), so the two agree about what counts
+// as an amount.
+const WORTH_A_DOLLAR = 1;
+
 // THE BANNER MAY SAY SOMETHING GOOD, since 2 September 2026. Asked
 // directly whether it should be allowed to, he answered "yes to
 // positive insights".
@@ -187,11 +198,14 @@ export function leakInsight(engine: Engine, ranked?: Fact[]): string | null {
   const losing = facts.filter((f) => f.s.profit < 0);
   if (losing.length > 0) {
     const worst = losing.reduce((a, b) => (a.s.profit <= b.s.profit ? a : b));
-    if (Math.abs(worst.s.profit) >= scale * WORTH_NAMING)
+    if (
+      Math.abs(worst.s.profit) >= WORTH_A_DOLLAR &&
+      Math.abs(worst.s.profit) >= scale * WORTH_NAMING
+    )
       return `${worst.chip.value} is your biggest leak at ${money(worst.s.profit)}.`;
   }
 
-  const winning = facts.filter((f) => f.s.profit > 0);
+  const winning = facts.filter((f) => f.s.profit >= WORTH_A_DOLLAR);
   if (winning.length === 0) return null;
   const best = winning.reduce((a, b) => (a.s.profit >= b.s.profit ? a : b));
   return `${best.chip.value} is your best earner at ${money(best.s.profit)}.`;
@@ -297,11 +311,20 @@ export function buildHomeView(engine: Engine): HomeView {
       .map(toRow),
   })).filter((g) => g.rows.length > 0);
 
-  // Five date labels across the span the line covers.
+  // AS MANY DATE LABELS AS THERE ARE POINTS, up to five. Fixed 2
+  // September 2026: it always asked for five, so three settled bets
+  // produced the indices [0, 1, 1, 2, 2] and the axis printed two
+  // dates twice, e.g. "Aug 27  Aug 29  Aug 29  Aug 31  Aug 31".
+  //
+  // A repeated label is not a small thing on this page: it is the axis
+  // of the only chart, and it reads as a bug.
+  const LABELS = Math.min(5, running.length);
   const xLabels =
     running.length > 1
-      ? [0, 1, 2, 3, 4].map((i) =>
-          dayLabel(running[Math.round(((running.length - 1) * i) / 4)].t)
+      ? Array.from({ length: LABELS }, (_, i) =>
+          dayLabel(
+            running[Math.round(((running.length - 1) * i) / (LABELS - 1))].t
+          )
         )
       : [];
 

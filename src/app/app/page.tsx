@@ -6,7 +6,7 @@ import Greeting from "@/components/Greeting";
 import HomeDashboard from "@/components/HomeDashboard";
 import KalshiAutoSync from "@/components/KalshiAutoSync";
 import TabBar from "@/components/TabBar";
-import { netProfitOf, sinceLine } from "@/lib/stats";
+import { balanceOf, netProfitOf, sinceLine } from "@/lib/stats";
 import type { BetWithLegs } from "@/lib/types";
 import {
   COLUMN,
@@ -53,14 +53,14 @@ export default async function HomePage() {
   const withdrawals = allTransactions
     .filter((t) => t.type === "withdrawal")
     .reduce((sum, t) => sum + Number(t.amount), 0);
-  const totalStaked = allBets.reduce((sum, b) => sum + Number(b.stake), 0);
-  // Payouts exist on won bets and on cashed out bets (even lost ones).
-  const totalPayouts = allBets.reduce(
-    (sum, b) => sum + Number(b.payout ?? 0),
-    0
-  );
-
-  const balance = deposits - withdrawals - totalStaked + totalPayouts;
+  // AN OPEN BET DOES NOT MOVE THE BALANCE, his correction of 2
+  // September 2026: "pending bets are pending even on the balance card.
+  // aka does not needs to be updated until the bet is settled."
+  //
+  // The stake and its payout both land the moment the bet settles, so
+  // the card never shows a loss the user has not taken. `balanceOf`
+  // holds the rule; payouts exist on won bets and on cashed out ones.
+  const balance = balanceOf(allBets, deposits, withdrawals);
 
   // THE FRESH START LINE. With no line, net profit is the all time
   // figure: balance plus removals minus additions, which equals
@@ -71,12 +71,17 @@ export default async function HomePage() {
   const trackingSince =
     (user?.user_metadata?.tracking_since as string | undefined) ?? null;
   const counted = sinceLine(allBets, trackingSince);
-  const allTimeProfit = balance + withdrawals - deposits;
-  const netProfit = trackingSince ? netProfitOf(counted) : allTimeProfit;
+  // SETTLED BETS ONLY, his ruling of 2 September 2026. `netProfitOf`
+  // carries the rule and the reasoning; both branches go through it
+  // now, so the fresh start line and the all time figure cannot drift
+  // apart. It used to read `balance + withdrawals - deposits`, which
+  // counts a running bet's stake as if it had already lost.
+  const netProfit = netProfitOf(trackingSince ? counted : allBets);
 
   // What the user put in. startedWith + netProfit = balance always,
   // whether or not a line exists, which is what keeps the card
   // readable: the parts still add up to the total.
+  // startedWith + netProfit = balance, always.
   const startedWith = balance - netProfit;
 
   // The most recent stake, shown only as a quick chip under the

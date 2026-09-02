@@ -12,7 +12,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import StatsView from "@/components/StatsView";
-import { netProfitOf, sinceLine } from "@/lib/stats";
+import { balanceOf, netProfitOf, sinceLine } from "@/lib/stats";
 import type { BetWithLegs } from "@/lib/types";
 
 export default async function StatsPage() {
@@ -54,22 +54,24 @@ export default async function StatsPage() {
   const withdrawals = allTransactions
     .filter((t) => t.type === "withdrawal")
     .reduce((sum, t) => sum + Number(t.amount), 0);
-  const totalStaked = allBets.reduce((sum, b) => sum + Number(b.stake), 0);
-  const totalPayouts = allBets.reduce(
-    (sum, b) => sum + Number(b.payout ?? 0),
-    0
-  );
-
-  const balance = deposits - withdrawals - totalStaked + totalPayouts;
+  // AN OPEN BET DOES NOT MOVE THE BALANCE, his correction of 2
+  // September 2026, and this page must derive it exactly as Track
+  // does or the two disagree by the size of whatever is running.
+  const balance = balanceOf(allBets, deposits, withdrawals);
 
   // The fresh start line. See src/lib/stats.ts. The Snapshot must show
   // the same number as the Track page, so both derive it the same way.
   const trackingSince =
     (user?.user_metadata?.tracking_since as string | undefined) ?? null;
-  const allTimeProfit = balance + withdrawals - deposits;
-  const netProfit = trackingSince
-    ? netProfitOf(sinceLine(allBets, trackingSince))
-    : allTimeProfit;
+  // SETTLED BETS ONLY, his ruling of 2 September 2026, the same rule
+  // Track uses. Both branches go through `netProfitOf` so this page and
+  // Track cannot print two different net profits, which is the whole
+  // reason the comment above says they derive it the same way. It used
+  // to be `balance + withdrawals - deposits`, which counts a running
+  // bet's stake as if it had already lost.
+  const netProfit = netProfitOf(
+    trackingSince ? sinceLine(allBets, trackingSince) : allBets
+  );
 
   return (
     <StatsView
