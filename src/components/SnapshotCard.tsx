@@ -75,7 +75,21 @@ export default function SnapshotCard({
   return (
     <section className={`${CARD} p-4`}>
       <div className="flex items-baseline justify-between gap-3">
-        <h2 className={SECTION_HEAD}>Performance Snapshot</h2>
+        {/* HOW MANY BETS IT IS BUILT ON, his ruling of 2 September
+            2026. The card gives four confident judgements, and off one
+            settled bet "ROI -100.0%" reads as a verdict rather than as
+            a sample of one. The app's own bar for naming a strength or
+            a weakness elsewhere is five settled picks. Nothing is
+            hidden and nothing moves: the reader can weigh it. */}
+        <h2 className={SECTION_HEAD}>
+          Performance Snapshot
+          {decided > 0 && decided < 5 && (
+            <span className="font-normal text-neutral-500 dark:text-neutral-400">
+              {" "}
+              · from {decided} {decided === 1 ? "bet" : "bets"}
+            </span>
+          )}
+        </h2>
         {linked ? (
           <Link
             href="/stats"

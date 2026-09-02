@@ -17,6 +17,16 @@ interface Props {
   netProfit: number;
   // What the user put in: everything added, minus everything removed.
   startedWith: number;
+  /**
+   * What is riding on bets that have not settled.
+   *
+   * Since 2 September 2026 net profit counts settled bets only, his
+   * ruling, so the money on open bets sits BETWEEN what the user put in
+   * and what they hold: startedWith - riding + netProfit = balance.
+   * If this is not on screen beside the other two, the card's own
+   * figures visibly fail to add up.
+   */
+  riding?: number;
   // False until a tracking balance has ever been set. Some people never
   // set one and only track bets and profit, which the product supports
   // on purpose, so this card has two shapes instead of one.
@@ -60,6 +70,7 @@ export default function BalanceCard({
   balance,
   netProfit,
   startedWith,
+  riding = 0,
   hasBalance,
   trackingSince,
   betCount,
@@ -218,6 +229,18 @@ export default function BalanceCard({
                   ? `net profit since ${shortDate(trackingSince)}`
                   : "net profit, all time"}
               </span>
+              {/* The third figure, and it is not decoration: net profit
+                  no longer includes it, so without it the balance above
+                  does not follow from the numbers around it. */}
+              {riding > 0 && (
+                <span className="text-sm text-neutral-500 dark:text-neutral-400">
+                  {"· "}
+                  <span className="font-money tabular-nums">
+                    {formatMoney(riding)}
+                  </span>{" "}
+                  still riding
+                </span>
+              )}
             </p>
             {control === "under" && <div className="mt-3">{smallButton}</div>}
           </div>
@@ -320,6 +343,15 @@ export default function BalanceCard({
                   <span className="font-money tabular-nums">
                     {formatMoney(startedWith)}
                   </span>
+                  {riding > 0 && (
+                    <>
+                      {" · "}
+                      <span className="font-money tabular-nums">
+                        {formatMoney(riding)}
+                      </span>{" "}
+                      riding
+                    </>
+                  )}
                   {" · "}
                   <Link
                     href="/transactions"

@@ -14,6 +14,8 @@ interface Props {
   balance: number;
   netProfit: number;
   startedWith: number;
+  /** What is riding on unsettled bets. See BalanceCard. */
+  riding?: number;
   // The fresh start line, or null. Everything the user judges
   // themselves on counts from here: the balance line, the snapshot,
   // and the insights.
@@ -36,6 +38,7 @@ export default function HomeDashboard({
   balance,
   netProfit,
   startedWith,
+  riding = 0,
   trackingSince,
   hasBalance,
   lastStake,
@@ -71,6 +74,7 @@ export default function HomeDashboard({
         balance={balance}
         netProfit={netProfit}
         startedWith={startedWith}
+        riding={riding}
         hasBalance={hasBalance}
         betCount={settled.length}
         userId={userId}

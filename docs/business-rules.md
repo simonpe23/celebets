@@ -202,3 +202,27 @@ nothing.
 Month and Year begin. Weeks start Monday. Both the Track balance strip
 and the Performance chips read it, so the same label can never mean two
 different date ranges.
+
+## Net profit counts settled bets only
+
+**Changed 2 September 2026, his ruling.** A running bet is not a
+result: its stake has left the balance but it has not lost, so it
+belongs to neither side of profit until it settles.
+
+Before this, net profit was `balance + withdrawals - deposits`, which
+counts an open bet's stake as if it had already lost. A new user's
+first screen read "-$50.00 net profit, all time" in red the moment they
+tracked their first bet.
+
+**The three figures now reconcile like this:**
+
+    startedWith - riding + netProfit = balance
+
+**`riding` has to be on screen wherever the other two are.** Without
+it the card's own numbers do not add up. `netProfitOf` and
+`pendingStakeOf` in `src/lib/stats.ts` are the one definition of both,
+and Track and `/stats-old` both go through them.
+
+Performance never needed changing: its engine has only ever counted
+bets with a settled date.
+

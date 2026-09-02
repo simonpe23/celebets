@@ -2029,6 +2029,51 @@ as changed, which is as useless as reporting none.
 and it was never wired into this script.** It now refuses any page that
 does not return 200 and render the tab bar.
 
+### Net profit counts settled bets only. HIS RULING, 2 September 2026
+
+**He took this against my recommendation and I have recorded that.** I
+gave him three options and advised leaving the number alone; he chose
+to change it.
+
+**The case he was shown:** a brand new user places one $50 bet, it is
+still running, and Track greets them with "-$50.00 net profit, all
+time" in red. Correct under the old rule, because the stake really has
+left the balance, and still the first thing the app ever said to them
+was a loss they had not made.
+
+**THE RULE NOW: a running bet is not a result.** Its stake has left the
+balance but it has not lost, so it belongs to neither side of profit
+until it settles. `netProfitOf` in `src/lib/stats.ts` carries it, and
+both Track and `/stats-old` go through that one function, so the two
+pages cannot print two different net profits.
+
+**IT FORCED A SECOND CHANGE, and this part was not optional.** Balance
+no longer equals startedWith plus netProfit, because the money riding
+on open bets sits between them:
+
+    startedWith - riding + netProfit = balance
+
+So the card MUST print what is riding, or its own three figures visibly
+fail to add up. Day one now reads "$450.00" over "$0.00 net profit, all
+time · $50.00 still riding". `pendingStakeOf` is the third figure and
+lives beside `netProfitOf` for that reason.
+
+**Performance was already right** and did not move: its engine has
+always counted only bets with a settled date.
+
+### Two more of his rulings, 2 September 2026
+
+- **"How it works" is deleted.** His word: "Delete it." It was drawn
+  because it is in his mockup, and it was a bare span with no handler
+  styled exactly like the "View all ›" links that do work, so a new
+  user's most likely tap for help was the one thing on the page that
+  did nothing. It comes back the day there is a walkthrough behind it.
+- **The Performance Snapshot says how few bets it is built on**, below
+  five: "Performance Snapshot · from 1 bet". The card gives four
+  confident judgements and "ROI -100.0%" off one settled bet reads as a
+  verdict. The app's own bar for naming a strength or a weakness
+  elsewhere is five settled picks. Nothing is hidden and nothing moves.
+
 ## The go-live day, 31 August 2026
 
 Every ruling he made while taking Performance live, in his own words.

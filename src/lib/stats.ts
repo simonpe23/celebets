@@ -967,9 +967,34 @@ export function sinceLine(
 // everything paid out minus everything staked, money still riding
 // included. All time this equals balance + removals minus additions,
 // which is why the two agree on every screen.
+// NET PROFIT COUNTS SETTLED BETS ONLY, since 2 September 2026.
+//
+// HIS RULING, and he took it against my recommendation, which is
+// recorded in docs/decisions.md. The case he was shown: a brand new
+// user places one $50 bet, it is still running, and Track greeted them
+// with "-$50.00 net profit, all time" in red. Correct under the old
+// rule, because the stake really has left the balance, and still the
+// first thing the app ever said to them was a loss they had not made.
+//
+// A RUNNING BET IS NOT A RESULT. Its stake has left the balance but it
+// has not lost, so it belongs to neither side of profit until it
+// settles.
+//
+// THE CONSEQUENCE, and it is why `pendingStakeOf` exists beside this:
+// balance no longer equals startedWith + netProfit, because the money
+// riding on open bets sits between them. Every surface that prints
+// those three together MUST also print what is riding, or its own
+// numbers visibly fail to add up.
 export function netProfitOf(bets: BetWithLegs[]): number {
-  return bets.reduce(
-    (sum, b) => sum + Number(b.payout ?? 0) - Number(b.stake),
-    0
-  );
+  return bets
+    .filter((b) => b.status !== "pending" && b.settled_at !== null)
+    .reduce((sum, b) => sum + Number(b.payout ?? 0) - Number(b.stake), 0);
+}
+
+// What is riding on bets that have not settled. The third part of the
+// balance: startedWith - riding + netProfit = balance.
+export function pendingStakeOf(bets: BetWithLegs[]): number {
+  return bets
+    .filter((b) => b.status === "pending" || b.settled_at === null)
+    .reduce((sum, b) => sum + Number(b.stake), 0);
 }

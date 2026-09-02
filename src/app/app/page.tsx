@@ -6,7 +6,7 @@ import Greeting from "@/components/Greeting";
 import HomeDashboard from "@/components/HomeDashboard";
 import KalshiAutoSync from "@/components/KalshiAutoSync";
 import TabBar from "@/components/TabBar";
-import { netProfitOf, sinceLine } from "@/lib/stats";
+import { netProfitOf, pendingStakeOf, sinceLine } from "@/lib/stats";
 import type { BetWithLegs } from "@/lib/types";
 import {
   COLUMN,
@@ -71,13 +71,21 @@ export default async function HomePage() {
   const trackingSince =
     (user?.user_metadata?.tracking_since as string | undefined) ?? null;
   const counted = sinceLine(allBets, trackingSince);
-  const allTimeProfit = balance + withdrawals - deposits;
-  const netProfit = trackingSince ? netProfitOf(counted) : allTimeProfit;
+  // SETTLED BETS ONLY, his ruling of 2 September 2026. `netProfitOf`
+  // carries the rule and the reasoning; both branches go through it
+  // now, so the fresh start line and the all time figure cannot drift
+  // apart. It used to read `balance + withdrawals - deposits`, which
+  // counts a running bet's stake as if it had already lost.
+  const netProfit = netProfitOf(trackingSince ? counted : allBets);
+  // The money between startedWith and balance. Without it on screen the
+  // card's own three figures do not add up.
+  const riding = pendingStakeOf(trackingSince ? counted : allBets);
 
   // What the user put in. startedWith + netProfit = balance always,
   // whether or not a line exists, which is what keeps the card
   // readable: the parts still add up to the total.
-  const startedWith = balance - netProfit;
+  // startedWith - riding + netProfit = balance, always.
+  const startedWith = balance + riding - netProfit;
 
   // The most recent stake, shown only as a quick chip under the
   // stake field. The form itself always opens blank.
@@ -164,6 +172,7 @@ export default async function HomePage() {
           balance={balance}
           netProfit={netProfit}
           startedWith={startedWith}
+          riding={riding}
           trackingSince={trackingSince}
           hasBalance={allTransactions.length > 0}
           lastStake={lastStake}

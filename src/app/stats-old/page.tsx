@@ -66,10 +66,15 @@ export default async function StatsPage() {
   // the same number as the Track page, so both derive it the same way.
   const trackingSince =
     (user?.user_metadata?.tracking_since as string | undefined) ?? null;
-  const allTimeProfit = balance + withdrawals - deposits;
-  const netProfit = trackingSince
-    ? netProfitOf(sinceLine(allBets, trackingSince))
-    : allTimeProfit;
+  // SETTLED BETS ONLY, his ruling of 2 September 2026, the same rule
+  // Track uses. Both branches go through `netProfitOf` so this page and
+  // Track cannot print two different net profits, which is the whole
+  // reason the comment above says they derive it the same way. It used
+  // to be `balance + withdrawals - deposits`, which counts a running
+  // bet's stake as if it had already lost.
+  const netProfit = netProfitOf(
+    trackingSince ? sinceLine(allBets, trackingSince) : allBets
+  );
 
   return (
     <StatsView

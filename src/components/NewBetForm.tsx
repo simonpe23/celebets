@@ -488,25 +488,15 @@ export default function NewBetForm({
     <section className={`${CARD} p-4`}>
       <div className="flex items-center justify-between gap-3">
         <h2 className={SECTION_HEAD}>Track a bet</h2>
-        {compact && (
-          /* Inert until there is a walkthrough behind it. It is in the
-             owner's mockup, so it is drawn; it just does not pretend to
-             play anything yet. */
-          <span className="flex items-center gap-1.5 text-sm font-semibold text-neutral-600 dark:text-neutral-300">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              className="h-4 w-4"
-              aria-hidden="true"
-            >
-              <circle cx="12" cy="12" r="9" />
-              <path d="M10 9l5 3-5 3V9Z" fill="currentColor" stroke="none" />
-            </svg>
-            How it works
-          </span>
-        )}
+        {/* "HOW IT WORKS" IS GONE, his ruling of 2 September 2026:
+            "Delete it."
+
+            It was drawn because it is in his mockup, and it was a bare
+            span with no handler, styled character for character like
+            the "View all >" links that do work. A new user's most
+            likely tap for help was the one thing on the page that did
+            nothing. It comes back the day there is a walkthrough behind
+            it, not before. */}
       </div>
       {!compact && (
         <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
