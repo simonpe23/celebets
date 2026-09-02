@@ -31,6 +31,18 @@ They carry made up demo numbers, never user data.
 Do not "fix" this by adding a gate back. And never put real user data
 on a preview page: public is the standing state.
 
+## The first days
+
+`/preview/firstbets` draws every page of the app against six records,
+from an account that has done nothing to one with ten settled bets.
+Added 2 September 2026 for the silence job, because the owner could not
+see what a new user sees and neither could anyone else.
+
+`emptytest.mjs` reads the same records, so what he looks at is what the
+build checks. **Change `src/app/preview/firstbets/data.ts` and you
+change both.** Its dates are anchored to a fixed day on purpose: a
+moving date makes two screenshots of the same record disagree.
+
 ## What is live here
 
 - **NOTHING under `/preview` is live any more**, since 31 August 2026.

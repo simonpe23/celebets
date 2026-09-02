@@ -1775,6 +1775,46 @@ Run against the demo record (58 bets, 87 picks) on 2 September 2026:
   ties are structural rather than accidental. Any record will have
   them.
 
+### Phase 1 of the silence job: see it. DONE, 2 September 2026
+
+His approval: "Approving the plan, go."
+
+**Nothing changed for users.** This phase exists so the other four are
+provable rather than claimed.
+
+**`/preview/firstbets`** draws every page of the app against six
+records: an account that has done nothing, one bet still running, then
+1, 3, 6 and 10 settled bets. Six views of Performance plus Track, 42
+addresses, all public like every other preview. Its dates are anchored
+to a fixed day so two screenshots of the same record cannot disagree.
+
+**`emptytest.mjs`** reads the same records and asks every block on
+every page one question: does it say something, does it say what it is
+waiting for, or is it silent? It runs inside `npm run check`.
+
+**IT IS A RATCHET, NOT A PASS/FAIL.** The app is silent in thirteen
+places today, so failing on all of them would just be a red build
+nobody can fix in one commit. Those thirteen are listed in `KNOWN`
+inside the script, and the build fails on two things: a NEW silence,
+and a listed silence that has started speaking. So the list can only
+shrink, and it cannot be quietly ignored.
+
+**The thirteen, measured rather than guessed.** My first attempt at the
+list was wrong in both directions, in six places, which is the whole
+argument for the script:
+
+- **Home's ranked list is silent at 0, 1 and 3 settled bets.** Phase 2.
+- **Totals draws "Profit by Sport" and "Recent Bets" over nothing**
+  when nothing has settled. Phase 3.
+- **Compare invents at 0, 1, 3 and 6 bets.** It opens on a hardcoded
+  Football versus Basketball, both sides reading 0-0, with a crown on
+  one of them. Phase 3.
+
+**What was already fine, and stays fine because the script now holds
+it there:** 50 of the 72 blocks say something real from one bet, Lab
+and the Heat Map say what they are waiting for, and Track's history
+card has a proper empty state.
+
 ## The go-live day, 31 August 2026
 
 Every ruling he made while taking Performance live, in his own words.

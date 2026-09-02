@@ -59,6 +59,15 @@ const PREVIEW = [
   "/preview/insights",
   "/preview/auth",
   "/preview/connect",
+  // THE FIRST DAYS, added 2 September 2026 for the silence job. The
+  // index plus the two extremes: an account that has done nothing, and
+  // one with ten settled bets. `emptytest.mjs` walks all six records
+  // and every view; these three are here so the ordinary checks
+  // (sideways scroll, the edge rule, broken images) cover them too.
+  "/preview/firstbets",
+  "/preview/firstbets/none",
+  "/preview/firstbets/none/track",
+  "/preview/firstbets/ten",
 ];
 
 // Anything matching this must not appear in rendered text or in a URL.
