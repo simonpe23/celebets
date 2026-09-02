@@ -377,12 +377,25 @@ export default function HomeContent({
 
         {/* What drives your result. */}
         <div className="relative flex items-start justify-between pl-[6px] pr-[5px]">
+          {/* THE HEADING TELLS THE TRUTH ABOUT WHICH MODE THIS IS.
+              "Ranked by contribution" is a lie on a record where every
+              fact contributed the same 100%, which is every record too
+              thin to rank. Changed 2 September 2026, phase 2 of the
+              silence job. */}
           <div>
             <h2 className={`whitespace-nowrap text-base ${W_BOLD}`}>
-              What drives your result
+              {view.thin ? "What your record is so far" : "What drives your result"}
             </h2>
-            <p className="mt-[1px] whitespace-nowrap text-xs" style={{ color: GREY_TEXT }}>
-              Ranked by contribution to net profit
+            {/* ONE LINE UNDER THE HEADING, never two. When there is
+                nothing at all to list, what the block is waiting for
+                IS the subtitle: saying "ranking starts when there is
+                more to compare" above "nothing has settled yet" is the
+                same sentence twice. */}
+            <p className="mt-[1px] text-xs" style={{ color: GREY_TEXT }}>
+              {view.waiting ??
+                (view.thin
+                  ? "Ranking starts when there is more to compare"
+                  : "Ranked by contribution to net profit")}
             </p>
           </div>
           <div className="relative top-[3px] flex shrink-0 items-center gap-[6px]">
@@ -410,8 +423,85 @@ export default function HomeContent({
           </div>
         </div>
 
+        {/* WHAT THE RECORD IS, when it is too thin to rank.
+            His answer of 2 September 2026, asked what Home should do
+            with its empty block: show the same five Lab shows, its own
+            way. And on what to show: "a thin record should always show
+            everything that was a part of the bet."
+
+            No rank numbers, because nothing is ranked. No sparkline,
+            because one bet has no line. The groups and their order are
+            Lab's, so the two pages cannot describe one bet two ways. */}
+        {view.thin && (
+          <div className="relative mt-[8px]">
+            {view.groups.map((group) => (
+              <div key={group.label} className="mt-[10px] first:mt-0">
+                <p
+                  className={`pb-[3px] pl-[8px] uppercase tracking-[0.04em] text-xs ${W_SEMI}`}
+                  style={{ color: GREY_TEXT }}
+                >
+                  {group.label}
+                </p>
+                {group.rows.map((row, i) => (
+                  <Link
+                    key={row.chip.group + row.name}
+                    href={`${routes.lab}?sel=${encodeURIComponent(row.sel)}`}
+                    onClick={(e) => {
+                      if (!onJump) return;
+                      e.preventDefault();
+                      onJump(row.sel);
+                    }}
+                    className="flex h-[44px] items-center pl-[8px] pr-[8px]"
+                    style={{ borderTop: i > 0 ? `1px solid ${HAIR}` : undefined }}
+                  >
+                    <span
+                      className={`flex h-[30px] w-[30px] shrink-0 items-center justify-center ${R_SMALL}`}
+                      style={{ background: row.positive ? PILL_LAV : ROW_TILE_BAD }}
+                    >
+                      {rowIcon(row)}
+                    </span>
+                    <div className="ml-[13px] min-w-0 flex-1">
+                      <p className={`truncate ${T_STRONG} ${W_BOLD} leading-[1.2]`}>
+                        {row.name}
+                      </p>
+                      <p
+                        className={`mt-[2px] flex items-center gap-[7px] truncate text-xs ${W_SEMI}`}
+                        style={{ color: GREY_TEXT }}
+                      >
+                        {row.record}
+                        <span
+                          className="inline-block h-[2.5px] w-[2.5px] shrink-0 rounded-full"
+                          style={{ background: GREY_TEXT }}
+                        />
+                        {row.hit}
+                      </p>
+                    </div>
+                    <div className="ml-[8px] shrink-0 text-right">
+                      <p
+                        className={`${T_LEAD} ${W_BOLD} leading-[1.2]`}
+                        style={{ color: row.positive ? GREEN : RED }}
+                      >
+                        {row.moneyLabel}
+                      </p>
+                      <p
+                        className={`mt-[1px] ${T_NANO} ${W_SEMI}`}
+                        style={{ color: row.positive ? GREEN : RED }}
+                      >
+                        {row.roi}
+                      </p>
+                    </div>
+                    <span className="ml-[6px] shrink-0">
+                      <Chev size={10} color={CHEV} />
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* The top list. */}
-        <div className="relative mt-[8px]">
+        <div className={`relative mt-[8px]${view.thin ? " hidden" : ""}`}>
           {view.rows.map((row, i) => (
             <Link
               key={row.chip.group + row.name}

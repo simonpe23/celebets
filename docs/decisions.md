@@ -1815,6 +1815,59 @@ it there:** 50 of the 72 blocks say something real from one bet, Lab
 and the Heat Map say what they are waiting for, and Track's history
 card has a proper empty state.
 
+### Phase 2: Home speaks from the first bet. DONE, 2 September 2026
+
+**His answer to "what should Home do with its empty block":** show the
+same five Lab shows, its own way. And on what to show, his words: "a
+thin record should always show everything that was a part of the bet."
+
+**HOME NOW HAS TWO MODES, and the heading says which one it is in.**
+
+- **Enough to rank:** unchanged. "What drives your result / Ranked by
+  contribution to net profit", the five ranked rows.
+- **Too thin to rank:** "What your record is so far / Ranking starts
+  when there is more to compare", then every fact the record contains,
+  grouped and ordered exactly as Lab groups them: Sport, League,
+  Category, When, Bet Type, Risk. No rank numbers, because nothing is
+  ranked. No sparkline, because one bet has no line.
+- **Nothing settled at all:** "Nothing has settled yet. Your first
+  result fills this in." One line, in place of the subtitle, never
+  stacked under it.
+
+**"TOO THIN TO RANK" MEANS FEWER THAN THREE ROWS, not zero.** His own
+example was six settled Football bets. That record does clear both
+gates, but for exactly one fact, so the page was headed "ranked by
+contribution" over a single row reading "Medium odds": the one thing
+it could say was the one thing the user never chose. One row is not a
+ranking, and calling it one is the same lie as an empty list, only
+harder to spot.
+
+**THE ENGINE GAINED A LADDER AND AN UNGATED LIST.**
+
+- `rankedFacts` tries the gates strictest first and only relaxes when
+  a rung yields fewer than three facts: both gates, then no floor,
+  then no ceiling, then neither. **Rung one is today's behaviour
+  exactly**, so a record that can already be ranked cannot move.
+- `factsIn` is new and applies no gates at all. Listing what a record
+  IS is a different question from what drives it, and neither gate
+  belongs to it: on one bet "Football" covers 100% of the record and
+  that is exactly the thing worth saying.
+
+**THE FOCUSED BETTOR WAS THE REAL BUG, and it was never a new-user
+problem.** Measured 2 September 2026: one sport, one league, one
+category, one odds band, **200 settled bets, empty list**. Any fact
+covering the whole record was always cut, and if you only bet one
+thing every fact covers the whole record. It now shows seven facts at
+every size.
+
+**HIS OWN PAGE DID NOT MOVE, proved rather than claimed.** `shotdiff`
+across every page at phone and laptop, before and after: "IDENTICAL.
+Nothing on screen moved." The demo record's ranked rows are the same
+eight in the same order.
+
+**`emptytest` is down from thirteen known silences to nine.** Home's
+ranked list is off the list at every record size.
+
 ## The go-live day, 31 August 2026
 
 Every ruling he made while taking Performance live, in his own words.
