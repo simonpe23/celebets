@@ -181,10 +181,34 @@ async function shoot(port, out, theme, set) {
 
 async function diff(a, b, marks) {
   if (marks) mkdirSync(marks, { recursive: true });
+
+  // AN EMPTY SET IS NOT A MATCH. Caught 2 September 2026: a shoot
+  // failed because its dev server had died, leaving nothing in the
+  // "before" folder, and this reported "IDENTICAL. Nothing on screen
+  // moved." A check that says all-clear when it compared nothing is
+  // the most dangerous kind, because it is the one you quote back to
+  // the owner.
+  const list = (dir) => readdirSync(dir).filter((f) => f.endsWith(".png")).sort();
+  const inA = list(a);
+  const inB = list(b);
+  if (inA.length === 0 || inB.length === 0) {
+    console.log(
+      `Nothing to compare: ${inA.length} shots in ${a}, ${inB.length} in ${b}.\n` +
+        "A shoot failed, most likely because its dev server was not up."
+    );
+    process.exit(1);
+  }
+  if (inA.length !== inB.length) {
+    console.log(
+      `The two sets are different sizes: ${inA.length} against ${inB.length}. ` +
+        "One of the shoots did not finish."
+    );
+    process.exit(1);
+  }
   const browser = await chromium.launch(launchOpts());
   const page = await browser.newPage();
   let bad = 0;
-  for (const name of readdirSync(a).filter((f) => f.endsWith(".png")).sort()) {
+  for (const name of inA) {
     const load = (dir) =>
       "data:image/png;base64," + readFileSync(`${dir}/${name}`).toString("base64");
     const r = await page.evaluate(async ([sa, sb]) => {

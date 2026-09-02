@@ -152,13 +152,49 @@ function axis(series: number[]): { top: number; bottom: number; labels: string[]
 // `ranked` is an optimisation, nothing more: Home has already paid for
 // this list, so it hands it over instead of making the engine walk
 // every chip a second time.
+// A LEAK WORTH NAMING HAS TO BE WORTH SOMETHING. Not an absolute
+// figure, which would be wrong at both ends of the scale, but a share
+// of the biggest thing the record contains. A $2 leak beside a $73
+// winner is a rounding error; a $926 leak beside a $2,658 winner is
+// the story.
+//
+// Measured 2 September 2026: on a ten bet record this sentence read
+// "Medium odds is your biggest leak at -$2", which is not a leak. On
+// the demo record it reads "NBA is your biggest leak at -$926", which
+// is, and that sentence is unchanged by this rule.
+const WORTH_NAMING = 0.05;
+
+// THE BANNER MAY SAY SOMETHING GOOD, since 2 September 2026. Asked
+// directly whether it should be allowed to, he answered "yes to
+// positive insights".
+//
+// It still leads with the leak when there is a real one, because
+// that is the whole argument of this page: his own starting question
+// was "where am I leaking". It only turns positive when there is
+// nothing worth calling a leak, which used to mean saying nothing at
+// all.
 export function leakInsight(engine: Engine, ranked?: Fact[]): string | null {
   const facts =
     ranked ?? engine.sortFacts(dedupeFacts(engine.rankedFacts([], 5)), "profit");
+  if (facts.length === 0) return null;
+
+  const biggest = facts.reduce((a, b) =>
+    Math.abs(a.s.profit) >= Math.abs(b.s.profit) ? a : b
+  );
+  const scale = Math.abs(biggest.s.profit);
+  if (scale === 0) return null;
+
   const losing = facts.filter((f) => f.s.profit < 0);
-  if (losing.length === 0) return null;
-  const worst = losing.reduce((a, b) => (a.s.profit <= b.s.profit ? a : b));
-  return `${worst.chip.value} is your biggest leak at ${money(worst.s.profit)}.`;
+  if (losing.length > 0) {
+    const worst = losing.reduce((a, b) => (a.s.profit <= b.s.profit ? a : b));
+    if (Math.abs(worst.s.profit) >= scale * WORTH_NAMING)
+      return `${worst.chip.value} is your biggest leak at ${money(worst.s.profit)}.`;
+  }
+
+  const winning = facts.filter((f) => f.s.profit > 0);
+  if (winning.length === 0) return null;
+  const best = winning.reduce((a, b) => (a.s.profit >= b.s.profit ? a : b));
+  return `${best.chip.value} is your best earner at ${money(best.s.profit)}.`;
 }
 
 // THE GROUPS OF THE THIN MODE, and their order, are Lab's. His answer

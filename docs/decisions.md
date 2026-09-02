@@ -1868,6 +1868,63 @@ eight in the same order.
 **`emptytest` is down from thirteen known silences to nine.** Home's
 ranked list is off the list at every record size.
 
+### Phase 3: the banner, Compare, and the last empty cards. DONE, 2 September 2026
+
+**EVERY BLOCK ON EVERY PAGE NOW EITHER SAYS SOMETHING OR SAYS WHAT IT
+IS WAITING FOR.** `emptytest`'s known-silence list is empty, down from
+thirteen when phase 1 wrote it.
+
+**The banner may say something good**, his answer of 2 September 2026:
+"yes to positive insights". It still leads with the leak when there is
+a real one, because that is the argument of the whole page and his own
+starting question was "where am I leaking". It turns positive only
+when there is nothing worth calling a leak.
+
+**A leak worth naming has to be worth something.** Not an absolute
+figure, which is wrong at both ends of the scale, but at least 5% of
+the biggest thing in the record. Measured: a ten bet record used to
+read "Medium odds is your biggest leak at -$2", which is not a leak.
+The demo record still reads "NBA is your biggest leak at -$926", which
+is, and that sentence is unchanged.
+
+**Compare uses their real top two**, his ruling. It opened on a
+hardcoded Football versus Basketball, so someone who had never bet
+Basketball saw a comparison against a sport they had never touched,
+both sides reading 0-0, with a winner's crown on one of them. Worse
+than silence: not an absence, an invention.
+
+- **The best against the worst, not the two biggest.** That is what the
+  hardcoded pair was reaching for. Two winners side by side is not a
+  contest.
+- **Two things of the same kind**, walking sport, league, category, bet
+  type, risk and taking the first that actually splits the record.
+  Football against Moneyline is not a comparison, it is the same bets
+  counted twice.
+- **On the demo record it picks Football against Basketball**, which is
+  exactly the pair that used to be typed in by hand. The difference is
+  that it is now true of whoever is looking.
+- **A record with nothing to compare says so** rather than drawing two
+  empty cards.
+
+**Totals' two empty cards** now say what would fill them, instead of a
+heading over nothing.
+
+**His own pages did not move**, proved with `shotdiff`: 24 shots a
+side, "IDENTICAL. Nothing on screen moved."
+
+### shotdiff called an empty comparison a match. 2 September 2026
+
+Not his ruling, a bug that nearly reached him as a false green.
+
+A shoot failed because its dev server had died, leaving nothing in the
+"before" folder, and `shotdiff diff` reported **"IDENTICAL. Nothing on
+screen moved."** having compared zero images. That is the most
+dangerous kind of check, because it is the one quoted back to him as
+proof.
+
+It now refuses an empty set, and refuses two sets of different sizes,
+which is the other way a half-finished shoot lies.
+
 ## The go-live day, 31 August 2026
 
 Every ruling he made while taking Performance live, in his own words.

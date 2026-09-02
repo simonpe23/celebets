@@ -135,6 +135,12 @@ values and ON for the rest.
    list can only shrink and cannot go stale. It starts its own dev
    server, because `sitecheck` stops the one it started.
 
+**`shotdiff` refuses an empty comparison**, since 2 September 2026. A
+failed shoot used to leave one folder empty and the diff reported
+"IDENTICAL. Nothing on screen moved." A check that says all-clear
+having compared nothing is the most dangerous kind, because it is the
+one quoted as proof.
+
 **Proving a change is invisible.** Some jobs are meant to change
 nothing on screen: moving a value into a shared file, pulling a
 repeated block into one component. `shotdiff.mjs` is the check for

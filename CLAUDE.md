@@ -338,8 +338,12 @@ Keep it current: when a job finishes, delete its line.
      The focused bettor bug is fixed: one sport, one league, one
      category, one odds band used to give an EMPTY list at 200 settled
      bets. His own page is pixel identical, proved with `shotdiff`.
-  3. **The banner and Compare.** Positive insights; Compare uses their
-     real top two instead of a hardcoded Football versus Basketball.
+  3. **The banner and Compare. DONE.** The banner may name a winner
+     when there is no leak worth naming (a leak must be at least 5% of
+     the record's biggest figure, so "-$2" no longer counts). Compare
+     derives the best against the worst of the first dimension that
+     splits the record, and says so when there is nothing to compare.
+     **`emptytest`'s known-silence list is now EMPTY**, from thirteen.
   4. **The lies.** A 40 cent loss prints "+$0"; one 3-leg parlay makes
      Home say "Bets 3" while All Bets says "1 bet".
   5. **Track and the leftovers**, including one product call: whether a
