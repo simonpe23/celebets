@@ -102,8 +102,18 @@ const HELPERS = `
 const probe = (page, block, body) => ({ page, block, js: `(() => {${HELPERS}${body}})()` });
 
 const PROBES = [
-  probe("home", "the ranked list", `
-    const slice = between("Ranked by contribution to net profit", "Build your performance view");
+  // HOME DRAWS ONE OF TWO LISTS AND THE PROBE MUST FIND EITHER.
+  // Until 4 September 2026 this anchored on "Ranked by contribution to
+  // net profit", the RANKED subtitle. At one, three and six bets Home
+  // is in its THIN mode under a different heading, so the probe found
+  // nothing, reported the block absent, and the list actually on the
+  // screen was never checked at all. Three of the six records went
+  // through this check untested. Anchoring on the headings covers
+  // ranked, thin and waiting alike, because one of them is always
+  // drawn.
+  probe("home", "the ranked or thin list", `
+    const slice = between("What drives your result", "Build your performance view")
+      ?? between("What your record is so far", "Build your performance view");
     if (slice === null) return "absent";
     if (slice.includes("% hit rate")) return "speaks";
     return waiting(slice) ? "waiting" : "silent";

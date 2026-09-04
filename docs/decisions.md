@@ -2671,3 +2671,41 @@ server is up on the same folder wrecks that server's stylesheet, and the
 pages then render with no CSS at all. It looked exactly like a
 catastrophic design break for about ten minutes. Stop the dev server
 before building.
+
+## THE SILENCE JOB IS DONE, AND THE PROOF HAD A HOLE, 4 September 2026
+
+All five phases are built and merged. `emptytest.mjs` loads every page
+against six records, from an empty account to ten settled bets, and
+reports **72 blocks, 0 silent, 0 fabricated**. `KNOWN` is
+`new Set([])`, so the build now fails on any silence at all, not on a
+list of allowed ones.
+
+**But the check was blind on three of its six records, and it said
+nothing about it.**
+
+The Home list probe anchored on the text "Ranked by contribution to net
+profit". That is the subtitle Home uses when it RANKS. At one, three and
+six bets Home is in its THIN mode, under "What your record is so far",
+so the probe found no anchor, returned `absent`, and the list that was
+actually on the screen was never read.
+
+`absent` is a legal state: it means the block is deliberately not drawn.
+So a blind probe and a correctly hidden block report the same word, and
+the run still says "passed".
+
+**The app was right. The proof was not.** Widening the anchor to the two
+HEADINGS, which are always drawn, took the run from 61 blocks saying
+something to 66, still 0 silent.
+
+**The lesson, for any check written here:** anchor a probe on what the
+page ALWAYS draws, never on the wording of one of its modes. A check
+that silently skips what it cannot find is worse than no check, because
+it reports a pass. If a probe can return "not found", it must be
+impossible for "not found" and "correctly absent" to be the same answer.
+
+**Still open, and not part of this job:** whether Performance should
+honour a record restart. Found while fixing false Settings copy. Track
+counts from the restart line and Performance does not read it at all, so
+the two pages print different profits and neither says which. Six
+options were put to him on 4 September 2026 and he has not answered.
+Nothing may be built until he does. See `docs/open-questions.md`.
