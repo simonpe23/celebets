@@ -136,12 +136,6 @@ not read, three times in one evening. He was right and said so first:
 folder rules were only ever a traffic convention for concurrent chats,
 never a rule about who may do what.
 
-**THE PHASE 4 CHAT OWNS THAT TREE FROM 4 SEPTEMBER 2026.** The chat
-that ran the silence job, the restart work and phases 1 to 3 has
-stopped and holds nothing open. Phase 4 touches every page including
-Performance, so ownership moved with it. See
-`docs/phase4-handover.md`.
-
 ## Where the Performance code lives
 
 **`src/components/performance/`. It moved there on 31 August 2026**, on
@@ -239,13 +233,20 @@ Keep it current: when a job finishes, delete its line.
      included, his pick of three drawn on the real page. Nothing
      changes on a phone or a laptop, proved with `shotdiff.mjs`.
      **PHASE 3 IS DONE.**
-  4. **Laptop and full responsive. NOT STARTED, AND IT MOVED TO ITS
-     OWN CHAT** on his ruling of 4 September 2026. The brief, the
-     measurements and the three directions are written:
-     **`docs/phase4-handover.md`, read it first.** He picks from three
-     options drawn on the real pages. He is designing this himself,
-     not briefing a designer, and he is not a designer: "i am not
-     capable of doing that work".
+  4. **Laptop and full responsive. PARKED ON HIS RULING, 4 September
+     2026. DO NOT START IT.** It happens AFTER his redesign, not
+     before, because a redesign changes how much fits in a column and
+     therefore changes the layout. His words: "Phase 4 might also be
+     unnecessary as the mobile redesign of the app has not been done
+     yet."
+     **Nobody has designed the laptop.** Not him, not a designer. Any
+     doc claiming otherwise is stale: see the correction dated 4
+     September in `docs/decisions.md`.
+     **Nothing on a laptop is broken.** Measured 4 September: no
+     overlap, no sideways scroll, nothing clipped. Every page uses
+     448px of a 1512px window and wastes 1064. Narrow, not failing.
+     **The size and layout job therefore closes at phase 3**, which is
+     done and live.
   **FONTS AND COLOURS ARE OUT OF THIS JOB, his ruling.** He is doing
   those separately and locally. Do not touch either.
 
@@ -406,7 +407,6 @@ he has no decision to make, keep working or wait, do not report.
 | `docs/open-questions.md` | Live, undecided. Nothing here may be built. |
 | `docs/design-system.md` | The full colour, type and component reference. |
 | `docs/performance-rebuild.md` | The in-flight Performance work. |
-| `docs/phase4-handover.md` | **Phase 4, the laptop. The brief, the measurements and the three directions. Read before starting it.** |
 | `docs/owner-summary-performance.md` | **His own written summary of the Performance redesign. Primary source, outranks the rest.** |
 | `docs/performance-brief.md` | The Performance redesign argued through, for the mockup designer. |
 | `docs/todays-stats-page.md` | What live `/stats` actually looks like, for briefing Totals. |

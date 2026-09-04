@@ -1311,9 +1311,25 @@ Performance use different faces and different purples. I know. That is
 my redesign and I am doing it separately, locally, with a proper
 design system that will work across all pages. Do not touch either."
 
-**THE LAPTOP DESIGN COMES FROM HIM, not a designer.** Asked, he said:
-"i will not brief my designer. we will redesign locally in the next few
-days and see what happens."
+**CORRECTED 4 September 2026. THE LINE THAT USED TO SIT HERE WAS
+WRONG.** It read "THE LAPTOP DESIGN COMES FROM HIM, not a designer",
+over his words "i will not brief my designer. we will redesign locally
+in the next few days and see what happens."
+
+**He read it back and said it is 100% incorrect.** His words: "The
+laptop design has not been made yet, not by me, not by a designer, by
+nobody. I have no intention of doing this locally before i have
+discussed the options."
+
+**What the quote was actually about.** It sits directly after the fonts
+and colours ruling above it, and "we will redesign locally" is that
+redesign. An earlier session attached it to the laptop layout, a job it
+was never about, and a later one copied the heading into a handover and
+hardened it. **That is what a paraphrase costs: two sessions repeated a
+misreading nobody had checked against the surrounding lines.**
+
+**Nobody has designed the laptop. It is not his, not a designer's, not
+decided.**
 
 **Three decisions he reserved:** whose size scale wins ("Show me both,
 do not pick"), whether the laptop design happens now or later, and
@@ -2822,10 +2838,16 @@ restart became a control. All Bets reads the same state as every other
 view, so it shows whichever record is selected and hides nothing
 permanently.
 
-## PHASE 4 GOES TO ITS OWN CHAT, 4 September 2026
+## PHASE 4 GOES TO ITS OWN CHAT, 4 September 2026. SUPERSEDED THE SAME DAY.
 
-**His pick**, from four offered: phase 4 in a new chat, with a handover
-written for it.
+**Read the parking ruling at the end of this file instead.** He read
+the handover, found three things wrong in it, and reopened the timing
+question that this section had treated as settled. The handover file is
+deleted and the ownership move was undone. What follows is kept only so
+nobody repeats it.
+
+**His pick at the time**, from four offered: phase 4 in a new chat,
+with a handover written for it.
 
 He had been weighing this since 2 September: "i am now debating to do
 phase 4 here or in a new chat. i am not capable of doing that work. i
@@ -2833,10 +2855,12 @@ am not a designer." Nobody settled it at the time, and this chat filled
 the gap with side work instead of putting the question to him. That was
 the mistake, not the delay.
 
-**The handover is `docs/phase4-handover.md`**: the job in his own
-words, the measurements taken the same day, the three directions, what
-is out of scope, the rules the code must obey, the test scripts and
-four traps that cost this chat hours.
+**The handover was `docs/phase4-handover.md`, now deleted**: the job in
+his own words, the measurements taken the same day, the three
+directions, what is out of scope, the rules the code must obey, the
+test scripts and four traps that cost this chat hours. **The
+measurements survive in the parking ruling at the end of this file.
+Nothing else in it was worth keeping.**
 
 **The audit of that document against this file found five omissions**
 before he saw it, which is the point of running it: the landing page is
@@ -2846,6 +2870,77 @@ stay, and `sitecheck.mjs` holds its own preview list that a new page
 must join or it goes unchecked.
 
 **Ownership of `src/components/performance/`, `src/app/preview/` and
-`src/app/stats/` moved with the job.** Phase 4 touches every page, so
-splitting it from the Performance tree would have recreated exactly the
-three-chat collision he ruled against on 31 August.
+`src/app/stats/` moved with the job, and moved straight back** when the
+job was parked. The tree is not handed to anybody.
+
+## PHASE 4 IS PARKED, 4 September 2026
+
+**His ruling: the laptop happens AFTER his redesign, not before.** He
+reopened the question himself after reading a handover written for it:
+"Phase 4 might also be unnecessary as the mobile redesign of the app
+has not been done yet. Do you recommend doing the laptop design with
+the old design before or after i start redesigning the app?"
+
+**The recommendation he was given, and took: after.** A laptop layout
+decides where things sit; his redesign decides what they look like. New
+type, colours and spacing change how much fits in a column, which
+changes where things sit, so building the laptop first means building
+it twice. Nothing on a laptop is broken: measured 4 September, no
+overlap, no sideways scroll, nothing clipped. It is narrow and wasteful,
+not failing. Actuals is mobile first and his users are on phones.
+
+**The one argument against waiting was given to him too:** on a big
+screen a 448px strip reads as unfinished, which matters the day he
+shows the app to anyone. The cheap partial answer, widening the column
+alone, was offered as an option and not taken.
+
+**THE HANDOVER WRITTEN FOR PHASE 4 IS DELETED**, and so is the
+ownership move that went with it. The Performance tree is not handed to
+anybody.
+
+**The measurements are worth keeping, so they live here.** Taken 4
+September 2026 at 1512x950, every page, light theme:
+
+| Page | Column | Empty sides | Page height |
+|---|---|---|---|
+| Track | 448px | 1064px | 2513px |
+| Performance Home | 448px | 1064px | 950px, shorter than the window |
+| Performance Lab | 448px | 1064px | 1091px |
+| Performance Totals | 448px | 1064px | 1341px |
+| All Bets | 448px | 1064px | 3152px |
+| Compare | 448px | 1064px | 1090px |
+| Heat Map | 448px | 1064px | 950px, shorter than the window |
+| Research | 448px | 1064px | 950px, shorter than the window |
+| Settings | 448px | 1064px | 1189px |
+| Insights | 448px | 1064px | 1654px |
+
+**Not one page differs.** Three directions were drafted and none was
+chosen: a wider column, two columns, or side navigation. Re-measure
+before trusting this if the layout has moved.
+
+### Three things he found wrong in that handover, all fair
+
+1. **"My app looks like two different products" was his phone
+   problem**, Track and Performance disagreeing about bars, scales and
+   purples. It was lifted out of that context to open a laptop
+   document. His words: "it has nothing to do with laptop vs mobile."
+2. **"THE LAPTOP DESIGN COMES FROM HIM, NOT A DESIGNER" was false**,
+   and it was false in this file before it reached the handover. See
+   the correction above.
+3. **The document was vague and assumed a reader who knew the
+   project.** His words: "i would be totally lost if i was the new
+   chat reading this... no suggestions of reading other documents such
+   as info about the company etc."
+
+### The one he did not spot, which was the worst of them
+
+**This file already said the timing was his to decide and unanswered:**
+"Three decisions he reserved: whose size scale wins, whether the laptop
+design happens now or later, and anything else with more than one
+reasonable answer."
+
+**He had never said now.** A handover was written for a job he had
+explicitly parked, and the parking was recorded in the very file the
+handover was audited against. **An audit that reads for omissions but
+not for permission is not an audit.** Check whether a job was approved
+before checking whether its brief is complete.
