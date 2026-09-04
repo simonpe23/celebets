@@ -2709,3 +2709,74 @@ counts from the restart line and Performance does not read it at all, so
 the two pages print different profits and neither says which. Six
 options were put to him on 4 September 2026 and he has not answered.
 Nothing may be built until he does. See `docs/open-questions.md`.
+
+## PERFORMANCE HONOURS A RECORD RESTART, 4 September 2026
+
+**His ruling, picked from six options: "Since restart" is one more
+choice in the period pill Performance already draws.** It is offered
+only to somebody who has restarted, it is their default, and All time
+is one tap away.
+
+**The bug it fixes.** Track has counted from the restart line since the
+feature shipped. The rebuilt Performance never read the line at all, so
+after a restart the two pages printed different profits and neither
+said which record it was showing. That contradicts his own standing
+rule that net profit has one definition.
+
+**Why not a separate All time switch**, which is what `/stats-old`
+does: Performance already has a time control, so a second one puts two
+time controls on one page, and they can contradict each other. "This
+week" plus "All time" is a pair a user can really select. One more
+entry in an existing list says the same thing with nothing new on the
+screen.
+
+### The one rule that made this more than a list entry
+
+**"Since restart" is NOT a date filter.** Every other period in that
+pill keeps a bet by its `settled_at`, which silently drops anything
+still running. The restart line does the opposite on purpose: a bet
+still riding when you draw the line is live money, so it belongs to the
+NEW record. That is `sinceLine` in `src/lib/stats.ts`, the same
+function Track uses.
+
+Written as an ordinary date filter it would have looked right, passed
+every screenshot, agreed with Track most of the time, and quietly lost
+a running bet from somebody's fresh record with nothing on screen to
+say so. **`restarttest.mjs` fails the build if anyone rewrites it that
+way.** It was proved by breaking it on purpose: the plain date filter
+fails three of its cases.
+
+### What it touched
+
+- `lab/period.ts`: the new entry, and `betsIn` takes the line.
+- `lab/PeriodPill.tsx`: `hasRestart` hides the entry from everybody
+  else, because naming a line that does not exist would read exactly
+  like All time.
+- `area.tsx`: one new prop, threaded to the five views that filter by
+  period. A `?period=since` in an address is ignored when there is no
+  line to count from.
+- `src/lib/load-bets.ts`: `loadRestartLine()`, so the six live pages
+  read the date once each from one place rather than six copies, the
+  same reason the bets query lives there.
+- The six `src/app/stats/**` pages read it alongside the bets, both at
+  once rather than one after the other.
+- `src/app/preview/firstbets/[set]/page.tsx` takes `?since=`, which is
+  the only way to see a restarted record without a real account that
+  has restarted. Demo bets, so nothing real is exposed.
+
+**Nothing moves for a user who has never restarted.** With no line
+stored the new entry is not offered, the default is All time exactly as
+before, and `sinceLine` hands the list straight back.
+
+### Left out on purpose, and told to him
+
+**Compare does not follow the restart.** It has its own control
+(1M, 3M, 6M, 1Y, All) and has never taken the shared period, so it
+still reads all time. That is a pre-existing difference, not something
+this change introduced, and widening it was not what he asked for.
+
+### The sub-question answered itself
+
+Whether All Bets should hide pre-restart bets needed no ruling once the
+line became a period. All Bets reads the same pill as every other view,
+so it shows the window that is selected and hides nothing permanently.

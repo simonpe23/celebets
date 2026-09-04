@@ -227,6 +227,7 @@ export default function LabApp({
   initialDomain,
   period,
   range,
+  trackingSince = null,
   onPeriod,
   onRange,
   onBets,
@@ -256,6 +257,8 @@ export default function LabApp({
       show the same window. */
   period: PeriodKey;
   range: CustomRange;
+  /** The restart line, or null. Only the live page passes one. */
+  trackingSince?: string | null;
   onPeriod: (key: PeriodKey) => void;
   onRange: (r: CustomRange) => void;
   /** Open All Bets in place, carrying this selection. The tab area
@@ -277,7 +280,7 @@ export default function LabApp({
   // the row instead, so every fact in that group is on screen at once.
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
   const engine = useMemo(
-    () => makeEngine(betsIn(bets, period, range)),
+    () => makeEngine(betsIn(bets, period, range, trackingSince)),
     [bets, period, range]
   );
   // The "Actuals noticed" sentence, computed from the same filtered
@@ -459,6 +462,7 @@ export default function LabApp({
         </p>
         <span className="relative top-[2px] z-30">
           <PeriodPill
+            hasRestart={!!trackingSince}
             period={period}
             onPick={onPeriod}
             open={periodOpen}

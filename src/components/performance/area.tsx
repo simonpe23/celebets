@@ -82,11 +82,18 @@ export default function PerfArea({
   initial,
   routes = PREVIEW_ROUTES,
   live = false,
+  trackingSince = null,
 }: {
   bets: BetWithLegs[];
   initial: PerfView;
   routes?: PerfRoutes;
   live?: boolean;
+  /**
+   * The restart line, or null for somebody who has never restarted.
+   * Only the live page passes one; the previews are demo records and
+   * pass nothing, so their pill never offers "Since restart".
+   */
+  trackingSince?: string | null;
 }) {
   const params = useSearchParams();
   const [tab, setTab] = useState<PerfView>(initial);
@@ -94,9 +101,19 @@ export default function PerfArea({
   // and inside Totals, travelling between them in the address. They
   // are one page now, so it lives here: change the window on Home and
   // Lab is already looking at the same one.
+  //
+  // SOMEBODY WHO HAS RESTARTED STARTS ON THEIR OWN RECORD, 4 September
+  // 2026. That is what a restart asked for, and it is what Track has
+  // always shown them. Everybody else starts on All time exactly as
+  // before, so nothing moves for a user who has never restarted.
+  //
+  // "since" in an address is ignored when there is no line to count
+  // from, or the pill would name a window it cannot draw.
   const [period, setPeriod] = useState<PeriodKey>(() => {
     const raw = params.get("period");
-    return isPeriod(raw) ? raw : "all";
+    if (raw === "since" && !trackingSince) return "all";
+    if (isPeriod(raw)) return raw;
+    return trackingSince ? "since" : "all";
   });
   const [range, setRange] = useState<CustomRange>(EMPTY_RANGE);
   // Lab is remounted whenever a jump hands it a new selection, because
@@ -200,6 +217,7 @@ export default function PerfArea({
       {tab === "home" && (
         <HomeContent
           bets={bets}
+          trackingSince={trackingSince}
           routes={routes}
           live={live}
           period={period}
@@ -214,6 +232,7 @@ export default function PerfArea({
         <LabApp
           key={labKey}
           bets={bets}
+          trackingSince={trackingSince}
           routes={routes}
           live={live}
           initialSel={labSel}
@@ -230,6 +249,7 @@ export default function PerfArea({
       {tab === "totals" && (
         <TotalsApp
           bets={bets}
+          trackingSince={trackingSince}
           routes={routes}
           period={period}
           range={range}
@@ -242,6 +262,7 @@ export default function PerfArea({
       {tab === "heatmap" && (
         <HeatmapApp
           bets={bets}
+          trackingSince={trackingSince}
           routes={routes}
           period={period}
           range={range}
@@ -262,6 +283,7 @@ export default function PerfArea({
       {tab === "bets" && (
         <BetsApp
           bets={bets}
+          trackingSince={trackingSince}
           routes={routes}
           sel={subSel}
           from={betsFrom}

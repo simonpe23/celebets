@@ -159,12 +159,23 @@ settled before that date.
   is live money, so it belongs to the new record.
 - A bet settled exactly ON the line belongs to the old record.
 - Net profit, ROI, win rate, the chart, the snapshot and the insights all
-  count from the line **on Track and on `/stats-old`. Nothing is deleted.**
-- **THE REBUILT PERFORMANCE AT `/stats` DOES NOT READ THE LINE AT ALL.**
-  Found 2 September 2026. After a restart, Track counts from the line and
-  Performance counts the whole record, and neither page says which it is
-  doing. His call, open in `docs/open-questions.md`. Until he rules, this
-  is a known contradiction, not a design.
+  count from the line. **Nothing is deleted.**
+- **PERFORMANCE READS THE LINE AS A PERIOD**, since 4 September 2026,
+  his ruling. "Since restart" is one more entry in the period pill the
+  page already draws, offered only to somebody who has a line and the
+  default for them. All time is one tap away, so no history is hidden.
+  A second All time switch was rejected: Performance already has a time
+  control, and two of them can contradict each other.
+  Until that day Performance did not read the line at all, so it and
+  Track printed different profits and neither said which.
+- **"Since restart" is NOT a date filter, and this is the trap.** Every
+  other period keeps a bet by its `settled_at`, which drops anything
+  still running. This one uses `sinceLine`, which carries a running bet
+  over. `restarttest.mjs` fails the build if it is ever rewritten as an
+  ordinary period.
+- **Compare does not follow it.** Compare has its own control (1M, 3M,
+  6M, 1Y, All) and has never taken the shared period, so it still reads
+  all time. Flagged to him 4 September 2026, not yet decided.
 - `/stats-old` carries an "All time" switch. The review at its foot
   ignores that switch on purpose: mixing the two would put two different
   profits on one screen.

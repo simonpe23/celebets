@@ -266,59 +266,28 @@ run both behind a switch while the numbers are checked?
   spans sports. Needs a rule from the owner before Performance can show
   it.
 
-## Should Performance honour a record restart?
+## RESOLVED 4 September 2026: Performance honours a record restart
 
-Found 2 September 2026 while fixing false copy in Settings.
+**His pick, from six options put to him: "Since restart" becomes one
+more choice in the period pill Performance already draws.** Offered
+only to somebody who has a line, and their default. All time stays one
+tap away, so no history is hidden.
 
-**Track honours it.** `src/app/app/page.tsx` uses `sinceLine` so net
-profit counts only the bets since the restart.
+He was shown a separate All time switch, which is what `/stats-old`
+does, and rejected it by picking this instead. The argument he was
+given: Performance already has a time control, and two of them on one
+page can contradict each other, since "This week" plus "All time" is a
+pair a user can really select.
 
-**The live Performance never reads it at all.** Grep `tracking_since`
-across `src/app/stats`, `src/components/performance` and
-`src/lib/performance-engine.ts`: nothing. So after a restart, Track
-shows a fresh number and Performance shows the whole record, and
-neither page says which it is doing.
+**Built the same day.** `docs/decisions.md` has what it touched and the
+one rule that made it more than a list entry: "Since restart" is not a
+date filter, because a bet still running crosses the line.
 
-The old page at `/stats-old` does have an All time switch, and the
-Settings copy used to promise that switch on Performance. The copy has
-been corrected to describe what actually happens. The behaviour is
-still his call, because either answer changes numbers he reads.
+**One piece was deliberately left out and flagged to him: Compare.** It
+has its own control (1M, 3M, 6M, 1Y, All) and has never taken the
+shared period, so it still reads all time after a restart. Undecided.
 
-**SIX OPTIONS WERE PUT TO HIM ON 4 SEPTEMBER 2026. HE HAS NOT ANSWERED.**
-Nothing may be built until he does. Recorded so nobody asks him twice.
-
-1. **Performance obeys the line.** Matches Track. Cost: his old bets
-   stop being visible anywhere in Performance, which will feel like
-   deletion even though nothing is deleted.
-2. **Obeys the line, plus a separate All time switch.** What
-   `/stats-old` does. Cost: Performance already has a time pill, so
-   this makes two time controls on one page, and "This week" plus
-   "All time" is a nonsense pair a user can actually select.
-3. **Leave it exactly as today.** Two different profits, no
-   explanation. Would need a line saying the numbers are the whole
-   record.
-4. **"Since restart" becomes one more choice in the time pill that
-   already exists**, shown only to someone who has restarted and
-   default for them. CLAUDE's recommendation: no new control, no
-   contradiction, history one tap away. The pill already offers All
-   time, This year, This month, This week, Today, Custom.
-5. **Restart stops touching statistics entirely**, so Track stops
-   filtering too and a restart only resets the Tracking Balance.
-   Closest to his original ask, which was to reset the balance. Cost:
-   it changes the numbers on Track.
-6. **Performance shows everything, with the restart drawn on the
-   chart** as a marker. Cheap and honest, but does not fix the
-   disagreement.
-
-**A sub-question rides on 1, 2 and 4:** does the All Bets list also
-hide pre-restart bets? **CLAUDE's inference, his to overturn:** no, it
-keeps showing everything, because nothing is deleted and a list of bets
-is not a statistic.
-
-**What it would touch, traced 4 September 2026 so the build is quick:**
-`loadUserBets()` returns bets only, so `src/app/stats/page.tsx` would
-have to read `user_metadata.tracking_since` the way `src/app/app/page.tsx`
-does and hand it to `area.tsx`. The six preview pages pass null. For
-option 4 the list itself lives in
-`src/components/performance/lab/period.ts`.
-
+**The sub-question answered itself.** Whether All Bets should hide
+pre-restart bets needed no ruling once the line became a period: All
+Bets reads the same pill as every other view, so it shows whatever
+window is selected and hides nothing permanently.

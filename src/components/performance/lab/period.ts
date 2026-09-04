@@ -21,10 +21,26 @@
 // compute a different answer from another. That is the same reason
 // every money rule lives in one file.
 
-import { periodStart } from "@/lib/stats";
+import { periodStart, sinceLine } from "@/lib/stats";
 import type { BetWithLegs } from "@/lib/types";
 
+// SINCE RESTART IS A PERIOD, NOT A SECOND CONTROL. His ruling, 4
+// September 2026, picked from six options.
+//
+// Track has always counted from the restart line and the rebuilt
+// Performance never read it, so the two pages printed different
+// profits and neither said which. The fix could have been a separate
+// All time switch, the way `/stats-old` does it, but Performance
+// already has a time control and two of them on one page can
+// contradict each other: "This week" plus "All time" is a pair a user
+// can really select. One more entry in the list this pill already
+// draws says the same thing with nothing new on the screen, and the
+// whole history stays one tap away.
+//
+// It is offered ONLY to someone who has restarted, and it is their
+// default. `PeriodPill` hides it otherwise.
 export const PERIODS = [
+  { key: "since", label: "Since restart" },
   { key: "all", label: "All time" },
   { key: "year", label: "This year" },
   { key: "month", label: "This month" },
@@ -64,9 +80,22 @@ export const isPeriod = (v: string | null): v is PeriodKey =>
 export function betsIn(
   bets: BetWithLegs[],
   key: PeriodKey,
-  range?: CustomRange
+  range?: CustomRange,
+  trackingSince?: string | null
 ): BetWithLegs[] {
   if (key === "all") return bets;
+
+  // SINCE RESTART IS NOT A DATE FILTER, and writing it as one would be
+  // wrong in a way nobody would notice for months. Every other period
+  // here keeps a bet by its `settled_at`, which drops anything still
+  // running. The restart line does the opposite on purpose: a bet
+  // still riding when you draw the line is live money, so it belongs
+  // to the new record. `sinceLine` is that one rule, in
+  // `src/lib/stats.ts`, and Track already counts by it.
+  //
+  // With no line stored, `sinceLine` hands the list straight back, so
+  // a stale `?period=since` in an address cannot hide anybody's bets.
+  if (key === "since") return sinceLine(bets, trackingSince ?? null);
 
   if (key === "custom") {
     const r = range ?? EMPTY_RANGE;

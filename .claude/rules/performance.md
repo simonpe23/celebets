@@ -178,13 +178,34 @@ would count it five times.
 **The thin mode's groups are Lab's**, in Lab's order, or the two pages
 would describe one bet two different ways.
 
+## The restart line is a PERIOD here, not a second control
+
+Since 4 September 2026, his ruling. `area.tsx` takes a `trackingSince`
+prop and threads it to the five views that filter by period. The live
+`src/app/stats/**` pages read it with `loadRestartLine()`; the previews
+pass nothing, so their pill never offers it.
+
+**"Since restart" is NOT a date filter and must never be written as
+one.** Every other period keeps a bet by `settled_at`, which drops
+anything still running. This one calls `sinceLine`, which carries a
+running bet over, because money still riding belongs to the new record.
+`restarttest.mjs` fails the build on the ordinary-date-filter version.
+
+**Compare is the one view that does not follow it.** It has its own
+control and has never taken the shared period. Pre-existing, flagged,
+undecided.
+
 ## Testing
 
-Every one of these needs a running dev server.
+Every one of these needs a running dev server, except `restarttest`.
 
 - `instanttest.mjs <port>` proves nothing loads a page.
 - `jumptest.mjs <port>` proves the doors between Home and Lab, and that
   Home's KPI row mirrors Lab's.
-- `periodtest.mjs <port>` proves the period filter really filters.
+- `periodtest.mjs <port>` proves the period filter really filters, and
+  that "Since restart" is hidden without a line, default with one, and
+  counts differently from All time.
+- `restarttest.mjs` needs no server. It pins the one rule that a
+  screenshot cannot see: a running bet crosses the restart line.
 - `controlstest.mjs <port>` clicks every control.
 - `shotdiff.mjs` proves a change meant to be invisible is invisible.

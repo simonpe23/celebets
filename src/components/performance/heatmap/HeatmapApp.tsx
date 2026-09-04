@@ -329,6 +329,7 @@ export default function HeatmapApp({
   routes = PREVIEW_ROUTES,
   period,
   range,
+  trackingSince = null,
   onPeriod,
   onRange,
   onBack,
@@ -343,6 +344,8 @@ export default function HeatmapApp({
       address, which is what a separate page has to do. */
   period: PeriodKey;
   range: CustomRange;
+  /** The restart line, or null. Only the live page passes one. */
+  trackingSince?: string | null;
   onPeriod: (key: PeriodKey) => void;
   onRange: (r: CustomRange) => void;
   /** Back to Home in place, no page load. */
@@ -356,7 +359,7 @@ export default function HeatmapApp({
   // the filtered record.
   const [periodOpen, setPeriodOpen] = useState(false);
   const engine = useMemo(
-    () => makeEngine(betsIn(bets, period, range)),
+    () => makeEngine(betsIn(bets, period, range, trackingSince)),
     [bets, period, range]
   );
 
@@ -484,6 +487,7 @@ export default function HeatmapApp({
       </p>
       <div className="relative z-30 mt-[8px] flex justify-center">
         <PeriodPill
+          hasRestart={!!trackingSince}
           period={period}
           onPick={onPeriod}
           open={periodOpen}

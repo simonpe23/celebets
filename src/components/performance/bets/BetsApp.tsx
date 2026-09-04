@@ -122,6 +122,7 @@ export default function BetsApp({
   from: fromProp,
   period: periodProp,
   range,
+  trackingSince = null,
   onBack,
 }: {
   /** Demo bets on the public preview, the signed in user's own
@@ -137,6 +138,8 @@ export default function BetsApp({
   /** The window, owned by the tab area and shared with every view. */
   period?: PeriodKey;
   range?: CustomRange;
+  /** The restart line, or null. Only the live page passes one. */
+  trackingSince?: string | null;
   /** Back in place, no page load. */
   onBack?: () => void;
 }) {
@@ -153,7 +156,7 @@ export default function BetsApp({
     fromProp ?? (params.get("from") === "totals" ? "totals" : "lab");
 
   const engine = useMemo(
-    () => makeEngine(betsIn(bets, period, range)),
+    () => makeEngine(betsIn(bets, period, range, trackingSince)),
     [bets, period, range]
   );
   const rows = useMemo(() => engine.betsFor(sel), [engine, sel]);

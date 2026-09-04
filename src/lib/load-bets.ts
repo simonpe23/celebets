@@ -24,3 +24,20 @@ export async function loadUserBets(): Promise<BetWithLegs[]> {
     .order("placed_at", { ascending: false });
   return (data ?? []) as BetWithLegs[];
 }
+
+// THE RESTART LINE, for the live Performance pages. Same reason as the
+// query above: six pages need it, and six copies of one metadata read
+// is six chances for one page to count from a different date than the
+// others.
+//
+// It lives in the auth user's metadata, exactly where Track reads it
+// in `src/app/app/page.tsx`, so the two pages cannot drift. Null means
+// this person has never restarted, and every period then behaves as it
+// always has.
+export async function loadRestartLine(): Promise<string | null> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  return (user?.user_metadata?.tracking_since as string | undefined) ?? null;
+}

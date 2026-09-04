@@ -38,6 +38,7 @@ export default function PeriodPill({
   size = "pill",
   range = EMPTY_RANGE,
   onRange,
+  hasRestart = false,
 }: {
   period: PeriodKey;
   onPick: (key: PeriodKey) => void;
@@ -48,7 +49,13 @@ export default function PeriodPill({
   /** The custom window. Either end may be empty, meaning open there. */
   range?: CustomRange;
   onRange?: (r: CustomRange) => void;
+  /** True once this person has restarted their record. */
+  hasRestart?: boolean;
 }) {
+  // "Since restart" would be a lie to somebody who has never restarted:
+  // it would name a line that does not exist and read the same as
+  // All time. It is in the list only when there is a line to count from.
+  const offered = hasRestart ? PERIODS : PERIODS.filter((p) => p.key !== "since");
   return (
     <div className="relative">
       <button
@@ -90,7 +97,7 @@ export default function PeriodPill({
               boxShadow: `0 10px 24px rgba(28,24,58,0.14), inset 0 0 0 1px ${HAIRLINE}`,
             }}
           >
-            {PERIODS.map((p) => (
+            {offered.map((p) => (
               <button
                 key={p.key}
                 onClick={() => {
