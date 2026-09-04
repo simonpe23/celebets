@@ -24,23 +24,24 @@
 import { periodStart, sinceLine } from "@/lib/stats";
 import type { BetWithLegs } from "@/lib/types";
 
-// SINCE RESTART IS A PERIOD, NOT A SECOND CONTROL. His ruling, 4
-// September 2026, picked from six options.
+// THE RESTART IS NOT IN THIS LIST, and that is deliberate.
 //
-// Track has always counted from the restart line and the rebuilt
-// Performance never read it, so the two pages printed different
-// profits and neither said which. The fix could have been a separate
-// All time switch, the way `/stats-old` does it, but Performance
-// already has a time control and two of them on one page can
-// contradict each other: "This week" plus "All time" is a pair a user
-// can really select. One more entry in the list this pill already
-// draws says the same thing with nothing new on the screen, and the
-// whole history stays one tap away.
+// It was, for about an hour on 4 September 2026, as a "Since restart"
+// entry. Then he asked for a button, and drawn beside the pill the two
+// controls printed the same words next to each other, because the
+// button and the menu were answering the same question.
 //
-// It is offered ONLY to someone who has restarted, and it is their
-// default. `PeriodPill` hides it otherwise.
+// They answer DIFFERENT questions now, which is what a button next to
+// a menu should mean:
+//
+//   the button   WHICH RECORD: everything, or only since your restart
+//   this list    WHICH WINDOW inside that record: all of it, a year,
+//                a month, a week, today, or a range you choose
+//
+// So "Since restart" plus "This month" is a sentence, not a
+// contradiction: this month of your restarted record. The two cannot
+// disagree because they are not about the same thing.
 export const PERIODS = [
-  { key: "since", label: "Since restart" },
   { key: "all", label: "All time" },
   { key: "year", label: "This year" },
   { key: "month", label: "This month" },
@@ -81,21 +82,26 @@ export function betsIn(
   bets: BetWithLegs[],
   key: PeriodKey,
   range?: CustomRange,
-  trackingSince?: string | null
+  trackingSince?: string | null,
+  restarted = false
 ): BetWithLegs[] {
-  if (key === "all") return bets;
-
-  // SINCE RESTART IS NOT A DATE FILTER, and writing it as one would be
-  // wrong in a way nobody would notice for months. Every other period
-  // here keeps a bet by its `settled_at`, which drops anything still
+  // THE RECORD IS CHOSEN FIRST, THEN THE WINDOW INSIDE IT. The two are
+  // different questions, so they compose rather than fight.
+  //
+  // THE RESTART LINE IS NOT A DATE FILTER, and writing it as one would
+  // be wrong in a way nobody would notice for months. Every period
+  // below keeps a bet by its `settled_at`, which drops anything still
   // running. The restart line does the opposite on purpose: a bet
   // still riding when you draw the line is live money, so it belongs
   // to the new record. `sinceLine` is that one rule, in
   // `src/lib/stats.ts`, and Track already counts by it.
   //
-  // With no line stored, `sinceLine` hands the list straight back, so
-  // a stale `?period=since` in an address cannot hide anybody's bets.
-  if (key === "since") return sinceLine(bets, trackingSince ?? null);
+  // With no line stored `sinceLine` hands the list straight back, so
+  // asking for the restarted record when there is no restart cannot
+  // hide anybody's bets.
+  if (restarted) bets = sinceLine(bets, trackingSince ?? null);
+
+  if (key === "all") return bets;
 
   if (key === "custom") {
     const r = range ?? EMPTY_RANGE;

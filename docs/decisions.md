@@ -2712,10 +2712,13 @@ Nothing may be built until he does. See `docs/open-questions.md`.
 
 ## PERFORMANCE HONOURS A RECORD RESTART, 4 September 2026
 
-**His ruling, picked from six options: "Since restart" is one more
-choice in the period pill Performance already draws.** It is offered
-only to somebody who has restarted, it is their default, and All time
-is one tap away.
+**His ruling, picked from six options: Performance counts from the
+restart line.** Then, an hour later: **"add a since restart button,
+that looks good."**
+
+**So it is a BUTTON beside the period pill, and not one of the
+periods.** It is drawn only for somebody who has restarted, and it is
+on when the page opens for them.
 
 **The bug it fixes.** Track has counted from the restart line since the
 feature shipped. The rebuilt Performance never read the line at all, so
@@ -2730,9 +2733,33 @@ week" plus "All time" is a pair a user can really select. One more
 entry in an existing list says the same thing with nothing new on the
 screen.
 
+### Why the button is not one of the periods, learned by drawing it
+
+It was one of them for about an hour. Drawn beside the pill, the button
+and the pill **printed the same words next to each other**, because
+they were answering the same question. That failed his own bar for the
+request, which was "that looks good".
+
+**They answer different questions now:**
+
+| Control | Question |
+|---|---|
+| The button | WHICH RECORD: all of it, or only since your restart |
+| The pill | WHICH WINDOW inside that record |
+
+So "Since restart" plus "This month" is a sentence, not a
+contradiction, and the objection to a second control (that two time
+controls can disagree) does not apply, because only one of them is
+about time. `betsIn` picks the record first, then the window inside it.
+
+**The lesson: two controls side by side must answer two questions.**
+The duplicate was invisible in the code and obvious in the first
+screenshot. It was found by looking at the picture, not by reasoning
+about the model.
+
 ### The one rule that made this more than a list entry
 
-**"Since restart" is NOT a date filter.** Every other period in that
+**The restart line is NOT a date filter.** Every other period in that
 pill keeps a bet by its `settled_at`, which silently drops anything
 still running. The restart line does the opposite on purpose: a bet
 still riding when you draw the line is live money, so it belongs to the
@@ -2748,13 +2775,15 @@ fails three of its cases.
 
 ### What it touched
 
-- `lab/period.ts`: the new entry, and `betsIn` takes the line.
-- `lab/PeriodPill.tsx`: `hasRestart` hides the entry from everybody
-  else, because naming a line that does not exist would read exactly
-  like All time.
-- `area.tsx`: one new prop, threaded to the five views that filter by
-  period. A `?period=since` in an address is ignored when there is no
-  line to count from.
+- `lab/period.ts`: `betsIn` takes the line and a `restarted` flag, and
+  applies the record before the window.
+- `lab/PeriodPill.tsx`: draws the button beside the trigger, so all
+  four pages get it from one place rather than four copies. It wears
+  Lab's selected chip exactly. `hasRestart` keeps it away from everyone
+  who has never restarted, for whom it would name a line that does not
+  exist and behave like All time.
+- `area.tsx`: `restarted` beside `period`, both threaded to the five
+  views that filter. It starts on for somebody with a line.
 - `src/lib/load-bets.ts`: `loadRestartLine()`, so the six live pages
   read the date once each from one place rather than six copies, the
   same reason the bets query lives there.
@@ -2765,8 +2794,8 @@ fails three of its cases.
   has restarted. Demo bets, so nothing real is exposed.
 
 **Nothing moves for a user who has never restarted.** With no line
-stored the new entry is not offered, the default is All time exactly as
-before, and `sinceLine` hands the list straight back.
+stored no button is drawn, the default is All time exactly as before,
+and `sinceLine` hands the list straight back.
 
 ### Left out on purpose, and told to him
 
@@ -2778,5 +2807,6 @@ this change introduced, and widening it was not what he asked for.
 ### The sub-question answered itself
 
 Whether All Bets should hide pre-restart bets needed no ruling once the
-line became a period. All Bets reads the same pill as every other view,
-so it shows the window that is selected and hides nothing permanently.
+restart became a control. All Bets reads the same state as every other
+view, so it shows whichever record is selected and hides nothing
+permanently.

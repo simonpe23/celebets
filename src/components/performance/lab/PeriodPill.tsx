@@ -12,7 +12,9 @@ import {
   CARD,
   HAIRLINE,
   INDIGO,
+  INDIGO_FILL,
   NET_LABEL,
+  ON_BRAND,
   R_INNER,
   SELECTOR_INK,
   T_LABEL,
@@ -29,6 +31,11 @@ import {
   type PeriodKey,
 } from "./period";
 
+// The lift under a resting capsule. One string, used by the trigger
+// and by the Since restart button beside it, so two controls sitting
+// next to each other cannot drift apart.
+const LIFT = "0 1px 3px rgba(30,25,60,0.07)";
+
 export default function PeriodPill({
   period,
   onPick,
@@ -39,6 +46,8 @@ export default function PeriodPill({
   range = EMPTY_RANGE,
   onRange,
   hasRestart = false,
+  restarted = false,
+  onRestarted,
 }: {
   period: PeriodKey;
   onPick: (key: PeriodKey) => void;
@@ -51,13 +60,47 @@ export default function PeriodPill({
   onRange?: (r: CustomRange) => void;
   /** True once this person has restarted their record. */
   hasRestart?: boolean;
+  /** True while the page is counting from that restart. */
+  restarted?: boolean;
+  onRestarted?: (v: boolean) => void;
 }) {
-  // "Since restart" would be a lie to somebody who has never restarted:
-  // it would name a line that does not exist and read the same as
-  // All time. It is in the list only when there is a line to count from.
-  const offered = hasRestart ? PERIODS : PERIODS.filter((p) => p.key !== "since");
   return (
-    <div className="relative">
+    <div className="flex items-center gap-[6px]">
+      {/* SINCE RESTART, HIS ORDER OF 4 SEPTEMBER 2026: "add a since
+          restart button". It was one entry in the menu below, two taps
+          down and invisible until you opened it. As a button it is on
+          the screen, it says which record you are reading without
+          being opened, and it is one tap.
+
+          It wears Lab's selected chip exactly, because that is what it
+          is: a selection that is on or off. Tapping it on counts from
+          your restart, tapping it off returns to your whole record.
+
+          IT IS NOT ONE OF THE PERIODS BESIDE IT. The button chooses
+          WHICH RECORD, the menu chooses WHICH WINDOW inside it, so
+          "Since restart" and "This month" read as one sentence. They
+          were the same control for an hour and printed the same words
+          twice, side by side.
+
+          It is drawn ONLY for somebody who has restarted. To everybody
+          else it would name a line that does not exist and behave
+          exactly like All time. */}
+      {hasRestart ? (
+        <button
+          onClick={() => onRestarted?.(!restarted)}
+          aria-pressed={restarted}
+          aria-label="Count from your restart"
+          className={`flex h-[24px] shrink-0 items-center whitespace-nowrap rounded-full px-[10px] ${T_SMALL} ${W_SEMI}`}
+          style={
+            restarted
+              ? { background: INDIGO_FILL, color: ON_BRAND }
+              : { background: CARD, color: SELECTOR_INK, boxShadow: LIFT }
+          }
+        >
+          Since restart
+        </button>
+      ) : null}
+      <div className="relative">
       <button
         onClick={() => setOpen(!open)}
         aria-label="Change the period"
@@ -71,7 +114,7 @@ export default function PeriodPill({
             ? {
                 background: CARD,
                 color: SELECTOR_INK,
-                boxShadow: "0 1px 3px rgba(30,25,60,0.07)",
+                boxShadow: LIFT,
               }
             : { color: SELECTOR_INK }
         }
@@ -97,7 +140,7 @@ export default function PeriodPill({
               boxShadow: `0 10px 24px rgba(28,24,58,0.14), inset 0 0 0 1px ${HAIRLINE}`,
             }}
           >
-            {offered.map((p) => (
+            {PERIODS.map((p) => (
               <button
                 key={p.key}
                 onClick={() => {
@@ -157,6 +200,7 @@ export default function PeriodPill({
           </div>
         </>
       ) : null}
+      </div>
     </div>
   );
 }

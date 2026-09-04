@@ -160,19 +160,27 @@ settled before that date.
 - A bet settled exactly ON the line belongs to the old record.
 - Net profit, ROI, win rate, the chart, the snapshot and the insights all
   count from the line. **Nothing is deleted.**
-- **PERFORMANCE READS THE LINE AS A PERIOD**, since 4 September 2026,
-  his ruling. "Since restart" is one more entry in the period pill the
-  page already draws, offered only to somebody who has a line and the
-  default for them. All time is one tap away, so no history is hidden.
-  A second All time switch was rejected: Performance already has a time
-  control, and two of them can contradict each other.
-  Until that day Performance did not read the line at all, so it and
-  Track printed different profits and neither said which.
-- **"Since restart" is NOT a date filter, and this is the trap.** Every
-  other period keeps a bet by its `settled_at`, which drops anything
-  still running. This one uses `sinceLine`, which carries a running bet
-  over. `restarttest.mjs` fails the build if it is ever rewritten as an
-  ordinary period.
+- **PERFORMANCE READS THE LINE**, since 4 September 2026, his ruling.
+  Until that day it did not read the line at all, so it and Track
+  printed different profits and neither said which.
+- **It is a BUTTON beside the period pill, not one of the periods**,
+  his order the same day. The two answer different questions:
+
+  | Control | Question |
+  |---|---|
+  | The Since restart button | WHICH RECORD: all of it, or only since your restart |
+  | The period pill | WHICH WINDOW inside that record |
+
+  So "Since restart" plus "This month" is a sentence, not a
+  contradiction. It was one of the periods for about an hour, and the
+  button then printed the same words as the pill right beside it.
+- **The button is drawn only for somebody who has restarted**, and it
+  is on when the page opens for them. Nothing changes for anybody else.
+- **The line is NOT a date filter, and this is the trap.** Every period
+  keeps a bet by its `settled_at`, which drops anything still running.
+  The line uses `sinceLine`, which carries a running bet over.
+  `restarttest.mjs` fails the build if it is ever rewritten as an
+  ordinary date filter.
 - **Compare does not follow it.** Compare has its own control (1M, 3M,
   6M, 1Y, All) and has never taken the shared period, so it still reads
   all time. Flagged to him 4 September 2026, not yet decided.

@@ -178,17 +178,24 @@ would count it five times.
 **The thin mode's groups are Lab's**, in Lab's order, or the two pages
 would describe one bet two different ways.
 
-## The restart line is a PERIOD here, not a second control
+## The restart is a BUTTON beside the pill, and not one of the periods
 
-Since 4 September 2026, his ruling. `area.tsx` takes a `trackingSince`
-prop and threads it to the five views that filter by period. The live
-`src/app/stats/**` pages read it with `loadRestartLine()`; the previews
-pass nothing, so their pill never offers it.
+Since 4 September 2026, his ruling then his order to draw it as a
+button. `PeriodPill` renders both, so all four pages get it from one
+place. `area.tsx` holds `restarted` beside `period` and threads both,
+with `trackingSince`, to the five views that filter. The live
+`src/app/stats/**` pages read the date with `loadRestartLine()`; the
+previews pass nothing, so no button is drawn.
 
-**"Since restart" is NOT a date filter and must never be written as
-one.** Every other period keeps a bet by `settled_at`, which drops
-anything still running. This one calls `sinceLine`, which carries a
-running bet over, because money still riding belongs to the new record.
+**THE TWO CONTROLS ANSWER DIFFERENT QUESTIONS.** The button picks WHICH
+RECORD, the pill picks WHICH WINDOW inside it, so they compose and
+cannot contradict. The restart was one of the periods for about an hour
+and the button beside the pill printed the same words twice.
+
+**The line is NOT a date filter and must never be written as one.**
+Every period keeps a bet by `settled_at`, which drops anything still
+running. The line calls `sinceLine`, which carries a running bet over,
+because money still riding belongs to the new record.
 `restarttest.mjs` fails the build on the ordinary-date-filter version.
 
 **Compare is the one view that does not follow it.** It has its own
@@ -203,8 +210,9 @@ Every one of these needs a running dev server, except `restarttest`.
 - `jumptest.mjs <port>` proves the doors between Home and Lab, and that
   Home's KPI row mirrors Lab's.
 - `periodtest.mjs <port>` proves the period filter really filters, and
-  that "Since restart" is hidden without a line, default with one, and
-  counts differently from All time.
+  that the Since restart button is absent without a line, on by default
+  with one, counts differently when tapped off, and stays on while the
+  window changes.
 - `restarttest.mjs` needs no server. It pins the one rule that a
   screenshot cannot see: a running bet crosses the restart line.
 - `controlstest.mjs <port>` clicks every control.

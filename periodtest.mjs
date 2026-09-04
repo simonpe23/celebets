@@ -74,56 +74,81 @@ await page.click('a:has-text("Totals")');
 await page.waitForTimeout(700);
 say((await pillText()).includes("Aug"), "and to Totals");
 
-// SINCE RESTART, his ruling of 4 September 2026. It is one more entry
-// in this same pill rather than a second control, so it is tested
-// here. `restarttest.mjs` pins the counting rule; this proves what a
-// person can see and reach.
+// THE SINCE RESTART BUTTON, his order of 4 September 2026. It sits
+// beside the pill and answers a different question: the button picks
+// WHICH RECORD, the pill picks WHICH WINDOW inside it.
 //
-// The counting rule matters more than it looks: every other period
-// here drops a bet that is still running, and this one carries it
-// over, because money still riding belongs to the new record.
+// `restarttest.mjs` pins the counting rule, which no screenshot can
+// see: a bet still running crosses the line where every ordinary
+// period would drop it. This proves what a person can see and reach.
+const BTN = 'button[aria-label="Count from your restart"]';
 
-// 1. NOBODY WHO HAS NOT RESTARTED IS OFFERED IT. It would name a line
-//    that does not exist and read exactly like All time.
+// 1. NOBODY WHO HAS NOT RESTARTED SEES THE BUTTON. It would name a
+//    line that does not exist and behave exactly like All time.
 await page.goto(`http://localhost:${port}/preview/firstbets/ten`, {
   waitUntil: "networkidle",
 });
 await page.waitForTimeout(600);
-say((await pillText()) === "All time", "a record with no restart opens on All time");
-await page.click('button[aria-label="Change the period"]');
-await page.waitForTimeout(250);
+say((await page.$$(BTN)).length === 0, "a record with no restart has no button");
+say((await pillText()) === "All time", "and opens on All time");
 const offeredPlain = await page.evaluate(() =>
   document.body.innerText.includes("Since restart")
 );
-say(!offeredPlain, "and is never offered Since restart");
-await page.keyboard.press("Escape").catch(() => {});
+say(!offeredPlain, "and never reads the words Since restart");
 
-// 2. A RESTARTED RECORD OPENS ON ITS OWN RECORD, which is what a
-//    restart asked for and what Track has always shown.
-// COUNTED BACK FROM TODAY, never a fixed date. The firstbets records
-// are themselves counted back from today, so a hardcoded line would
-// drift out of the record and this test would start passing on a
-// coincidence. Ten days splits the ten-bet record, which spans twenty.
+// 2. A RESTARTED RECORD OPENS ON ITS OWN RECORD, with the button on.
+//    COUNTED BACK FROM TODAY, never a fixed date: the firstbets
+//    records are themselves counted back from today, so a hardcoded
+//    line would drift out of the record and this test would start
+//    passing on a coincidence. Ten days splits the ten-bet record,
+//    which spans twenty.
 const line = new Date(Date.now() - 10 * 86400000).toISOString().slice(0, 10);
 await page.goto(
   `http://localhost:${port}/preview/firstbets/ten?since=${line}`,
   { waitUntil: "networkidle" }
 );
 await page.waitForTimeout(600);
-say((await pillText()) === "Since restart", "a restarted record opens on Since restart");
-const sinceProfit = await netProfit();
+say((await page.$$(BTN)).length === 1, "a restarted record shows the button");
+say(
+  (await page.getAttribute(BTN, "aria-pressed")) === "true",
+  "it is on when the page opens"
+);
 
-// 3. THE WHOLE HISTORY IS STILL ONE TAP AWAY, and it says something
-//    different, or the entry would be decoration.
+// 3. THE TWO CONTROLS SAY DIFFERENT THINGS, which is the whole reason
+//    the button is not one of the periods. They printed the same words
+//    twice when it was.
+say(
+  (await pillText()) === "All time",
+  `the pill beside it reads its own answer: "${await pillText()}"`
+);
+const restrictedProfit = await netProfit();
+
+// 4. ONE TAP RETURNS THE WHOLE RECORD, and it says something
+//    different, or the button would be decoration.
+await page.click(BTN);
+await page.waitForTimeout(500);
+say(
+  (await page.getAttribute(BTN, "aria-pressed")) === "false",
+  "one tap turns it off"
+);
+const wholeProfit = await netProfit();
+say(
+  restrictedProfit !== wholeProfit,
+  `and counts differently: since restart ${restrictedProfit}, whole record ${wholeProfit}`
+);
+
+// 5. THE TWO COMPOSE. Turning the button back on and narrowing the
+//    window is one sentence, not a contradiction.
+await page.click(BTN);
+await page.waitForTimeout(400);
 await page.click('button[aria-label="Change the period"]');
 await page.waitForTimeout(250);
-await page.click('button:has-text("All time")');
+await page.click('button:has-text("This year")');
 await page.waitForTimeout(500);
-const allTimeProfit = await netProfit();
-say((await pillText()) === "All time", "All time is one tap away");
 say(
-  sinceProfit !== allTimeProfit,
-  `and counts differently: since restart ${sinceProfit}, all time ${allTimeProfit}`
+  (await page.getAttribute(BTN, "aria-pressed")) === "true" &&
+    (await pillText()) === "This year",
+  "the button stays on while the window changes"
 );
 
 await browser.close();

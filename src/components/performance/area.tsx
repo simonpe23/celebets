@@ -101,20 +101,17 @@ export default function PerfArea({
   // and inside Totals, travelling between them in the address. They
   // are one page now, so it lives here: change the window on Home and
   // Lab is already looking at the same one.
-  //
-  // SOMEBODY WHO HAS RESTARTED STARTS ON THEIR OWN RECORD, 4 September
-  // 2026. That is what a restart asked for, and it is what Track has
-  // always shown them. Everybody else starts on All time exactly as
-  // before, so nothing moves for a user who has never restarted.
-  //
-  // "since" in an address is ignored when there is no line to count
-  // from, or the pill would name a window it cannot draw.
   const [period, setPeriod] = useState<PeriodKey>(() => {
     const raw = params.get("period");
-    if (raw === "since" && !trackingSince) return "all";
-    if (isPeriod(raw)) return raw;
-    return trackingSince ? "since" : "all";
+    return isPeriod(raw) ? raw : "all";
   });
+  // WHICH RECORD, which is a different question from which window.
+  //
+  // Somebody who has restarted opens on their own record, 4 September
+  // 2026. That is what a restart asked for and what Track has always
+  // shown them. Everybody else has no button and no line, so nothing
+  // moves for a user who has never restarted.
+  const [restarted, setRestarted] = useState<boolean>(!!trackingSince);
   const [range, setRange] = useState<CustomRange>(EMPTY_RANGE);
   // Lab is remounted whenever a jump hands it a new selection, because
   // it seeds its chips once and then owns them.
@@ -218,6 +215,8 @@ export default function PerfArea({
         <HomeContent
           bets={bets}
           trackingSince={trackingSince}
+          restarted={restarted}
+          onRestarted={setRestarted}
           routes={routes}
           live={live}
           period={period}
@@ -233,6 +232,8 @@ export default function PerfArea({
           key={labKey}
           bets={bets}
           trackingSince={trackingSince}
+          restarted={restarted}
+          onRestarted={setRestarted}
           routes={routes}
           live={live}
           initialSel={labSel}
@@ -250,6 +251,8 @@ export default function PerfArea({
         <TotalsApp
           bets={bets}
           trackingSince={trackingSince}
+          restarted={restarted}
+          onRestarted={setRestarted}
           routes={routes}
           period={period}
           range={range}
@@ -263,6 +266,8 @@ export default function PerfArea({
         <HeatmapApp
           bets={bets}
           trackingSince={trackingSince}
+          restarted={restarted}
+          onRestarted={setRestarted}
           routes={routes}
           period={period}
           range={range}
@@ -284,6 +289,8 @@ export default function PerfArea({
         <BetsApp
           bets={bets}
           trackingSince={trackingSince}
+          restarted={restarted}
+          onRestarted={setRestarted}
           routes={routes}
           sel={subSel}
           from={betsFrom}

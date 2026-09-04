@@ -268,10 +268,15 @@ run both behind a switch while the numbers are checked?
 
 ## RESOLVED 4 September 2026: Performance honours a record restart
 
-**His pick, from six options put to him: "Since restart" becomes one
-more choice in the period pill Performance already draws.** Offered
-only to somebody who has a line, and their default. All time stays one
-tap away, so no history is hidden.
+**His pick, from six options put to him: Performance counts from the
+restart line, reached from the period pill rather than a second time
+control.** Offered only to somebody who has a line, and their default.
+
+**Then, the same day: "add a since restart button, that looks good."**
+So it is a button beside the pill, and it is NOT one of the periods.
+The button picks WHICH RECORD and the pill picks WHICH WINDOW inside
+it, so the two compose. As a period it duplicated the pill's own label
+right next to it.
 
 He was shown a separate All time switch, which is what `/stats-old`
 does, and rejected it by picking this instead. The argument he was
