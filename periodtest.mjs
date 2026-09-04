@@ -74,6 +74,124 @@ await page.click('a:has-text("Totals")');
 await page.waitForTimeout(700);
 say((await pillText()).includes("Aug"), "and to Totals");
 
+// THE SINCE RESTART BUTTON, his order of 4 September 2026. It sits
+// beside the pill and answers a different question: the button picks
+// WHICH RECORD, the pill picks WHICH WINDOW inside it.
+//
+// `restarttest.mjs` pins the counting rule, which no screenshot can
+// see: a bet still running crosses the line where every ordinary
+// period would drop it. This proves what a person can see and reach.
+const BTN = 'button[aria-label="Count from your restart"]';
+
+// 1. NOBODY WHO HAS NOT RESTARTED SEES THE BUTTON. It would name a
+//    line that does not exist and behave exactly like All time.
+await page.goto(`http://localhost:${port}/preview/firstbets/ten`, {
+  waitUntil: "networkidle",
+});
+await page.waitForTimeout(600);
+say((await page.$$(BTN)).length === 0, "a record with no restart has no button");
+say((await pillText()) === "All time", "and opens on All time");
+const offeredPlain = await page.evaluate(() =>
+  document.body.innerText.includes("Since restart")
+);
+say(!offeredPlain, "and never reads the words Since restart");
+
+// 2. A RESTARTED RECORD OPENS ON ITS OWN RECORD, with the button on.
+//    COUNTED BACK FROM TODAY, never a fixed date: the firstbets
+//    records are themselves counted back from today, so a hardcoded
+//    line would drift out of the record and this test would start
+//    passing on a coincidence. Ten days splits the ten-bet record,
+//    which spans twenty.
+const line = new Date(Date.now() - 10 * 86400000).toISOString().slice(0, 10);
+await page.goto(
+  `http://localhost:${port}/preview/firstbets/ten?since=${line}`,
+  { waitUntil: "networkidle" }
+);
+await page.waitForTimeout(600);
+say((await page.$$(BTN)).length === 1, "a restarted record shows the button");
+say(
+  (await page.getAttribute(BTN, "aria-pressed")) === "true",
+  "it is on when the page opens"
+);
+
+// 3. THE TWO CONTROLS SAY DIFFERENT THINGS, which is the whole reason
+//    the button is not one of the periods. They printed the same words
+//    twice when it was.
+say(
+  (await pillText()) === "All time",
+  `the pill beside it reads its own answer: "${await pillText()}"`
+);
+const restrictedProfit = await netProfit();
+
+// 4. ONE TAP RETURNS THE WHOLE RECORD, and it says something
+//    different, or the button would be decoration.
+await page.click(BTN);
+await page.waitForTimeout(500);
+say(
+  (await page.getAttribute(BTN, "aria-pressed")) === "false",
+  "one tap turns it off"
+);
+const wholeProfit = await netProfit();
+say(
+  restrictedProfit !== wholeProfit,
+  `and counts differently: since restart ${restrictedProfit}, whole record ${wholeProfit}`
+);
+
+// 5. THE TWO COMPOSE. Turning the button back on and narrowing the
+//    window is one sentence, not a contradiction.
+await page.click(BTN);
+await page.waitForTimeout(400);
+await page.click('button[aria-label="Change the period"]');
+await page.waitForTimeout(250);
+await page.click('button:has-text("This year")');
+await page.waitForTimeout(500);
+say(
+  (await page.getAttribute(BTN, "aria-pressed")) === "true" &&
+    (await pillText()) === "This year",
+  "the button stays on while the window changes"
+);
+
+// 6. COMPARE FOLLOWS IT TOO, his order of 4 September 2026: "yes do
+//    compare too". Compare keeps its own window control (1M, 3M, 6M,
+//    1Y, All) and has never taken the shared pill, so it draws the
+//    same chip under its header. Without this it was the one page in
+//    Performance still answering with the whole history after a
+//    restart.
+await page.goto(
+  `http://localhost:${port}/preview/firstbets/ten?since=${line}&view=compare`,
+  { waitUntil: "networkidle" }
+);
+await page.waitForTimeout(700);
+say((await page.$$(BTN)).length === 1, "Compare shows the button");
+say(
+  (await page.getAttribute(BTN, "aria-pressed")) === "true",
+  "and opens counting from the restart"
+);
+// The caption under Compare's control must not claim the whole record
+// while the button is restricting it. It said exactly that until this
+// was caught by looking at the screenshot.
+say(
+  await page.evaluate(() => document.body.innerText.includes("since your restart")),
+  "and its caption says so rather than claiming the whole record"
+);
+const cmpRestricted = await page.evaluate(() => document.body.innerText);
+await page.click(BTN);
+await page.waitForTimeout(600);
+const cmpWhole = await page.evaluate(() => document.body.innerText);
+say(cmpRestricted !== cmpWhole, "and tapping it off changes what Compare shows");
+say(
+  await page.evaluate(() => document.body.innerText.includes("your whole record")),
+  "and the caption then says the whole record"
+);
+
+// 7. And Compare shows nothing of it to somebody who never restarted.
+await page.goto(
+  `http://localhost:${port}/preview/firstbets/ten?view=compare`,
+  { waitUntil: "networkidle" }
+);
+await page.waitForTimeout(700);
+say((await page.$$(BTN)).length === 0, "Compare has no button without a restart");
+
 await browser.close();
 console.log(fails ? `${fails} problem(s)` : "The period filter works.");
 process.exit(fails ? 1 : 0);

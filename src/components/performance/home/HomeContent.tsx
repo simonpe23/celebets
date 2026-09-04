@@ -151,6 +151,9 @@ export default function HomeContent({
   onHeatmap,
   period,
   range,
+  trackingSince = null,
+  restarted = false,
+  onRestarted,
   onPeriod,
   onRange,
   live = false,
@@ -174,6 +177,11 @@ export default function HomeContent({
       that read "This month" over an all time number. */
   period: PeriodKey;
   range: CustomRange;
+  /** The restart line, or null. Only the live page passes one. */
+  trackingSince?: string | null;
+  /** True while the page counts from that restart rather than all of it. */
+  restarted?: boolean;
+  onRestarted?: (v: boolean) => void;
   onPeriod: (key: PeriodKey) => void;
   onRange: (r: CustomRange) => void;
 }) {
@@ -183,7 +191,7 @@ export default function HomeContent({
   // The period is applied by filtering the bets, so every figure on
   // the page follows: the number, the chart, the KPI row and the
   // ranked list, with no call site knowing about dates.
-  const view = buildHomeView(makeEngine(betsIn(bets, period, range)));
+  const view = buildHomeView(makeEngine(betsIn(bets, period, range, trackingSince, restarted)));
   return (
     <>
         {/* The colour wash behind the chart and KPI row, re-extracted
@@ -224,6 +232,9 @@ export default function HomeContent({
           </p>
           <span className="relative top-[2px] z-30">
             <PeriodPill
+              hasRestart={!!trackingSince}
+          restarted={restarted}
+          onRestarted={onRestarted}
               period={period}
               onPick={onPeriod}
               open={periodOpen}

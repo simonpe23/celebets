@@ -7,6 +7,7 @@
 // dropdown, same geometry and same shadow, for the same reason.
 
 import { ChevDown } from "@/components/performance/icons";
+import RestartChip, { LIFT } from "@/components/performance/restart-chip";
 import { Chev } from "@/components/performance/icons";
 import {
   CARD,
@@ -38,6 +39,9 @@ export default function PeriodPill({
   size = "pill",
   range = EMPTY_RANGE,
   onRange,
+  hasRestart = false,
+  restarted = false,
+  onRestarted,
 }: {
   period: PeriodKey;
   onPick: (key: PeriodKey) => void;
@@ -48,9 +52,19 @@ export default function PeriodPill({
   /** The custom window. Either end may be empty, meaning open there. */
   range?: CustomRange;
   onRange?: (r: CustomRange) => void;
+  /** True once this person has restarted their record. */
+  hasRestart?: boolean;
+  /** True while the page is counting from that restart. */
+  restarted?: boolean;
+  onRestarted?: (v: boolean) => void;
 }) {
   return (
-    <div className="relative">
+    <div className="flex items-center gap-[6px]">
+      {/* The chip is a shared component, because Compare draws the
+          same one under its own header. See restart-chip.tsx for what
+          it is and why it is not one of the periods. */}
+      {hasRestart ? <RestartChip on={restarted} onChange={onRestarted} /> : null}
+      <div className="relative">
       <button
         onClick={() => setOpen(!open)}
         aria-label="Change the period"
@@ -64,7 +78,7 @@ export default function PeriodPill({
             ? {
                 background: CARD,
                 color: SELECTOR_INK,
-                boxShadow: "0 1px 3px rgba(30,25,60,0.07)",
+                boxShadow: LIFT,
               }
             : { color: SELECTOR_INK }
         }
@@ -150,6 +164,7 @@ export default function PeriodPill({
           </div>
         </>
       ) : null}
+      </div>
     </div>
   );
 }

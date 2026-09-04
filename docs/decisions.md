@@ -2709,3 +2709,115 @@ counts from the restart line and Performance does not read it at all, so
 the two pages print different profits and neither says which. Six
 options were put to him on 4 September 2026 and he has not answered.
 Nothing may be built until he does. See `docs/open-questions.md`.
+
+## PERFORMANCE HONOURS A RECORD RESTART, 4 September 2026
+
+**His ruling, picked from six options: Performance counts from the
+restart line.** Then, an hour later: **"add a since restart button,
+that looks good."**
+
+**So it is a BUTTON beside the period pill, and not one of the
+periods.** It is drawn only for somebody who has restarted, and it is
+on when the page opens for them.
+
+**The bug it fixes.** Track has counted from the restart line since the
+feature shipped. The rebuilt Performance never read the line at all, so
+after a restart the two pages printed different profits and neither
+said which record it was showing. That contradicts his own standing
+rule that net profit has one definition.
+
+**Why not a separate All time switch**, which is what `/stats-old`
+does: Performance already has a time control, so a second one puts two
+time controls on one page, and they can contradict each other. "This
+week" plus "All time" is a pair a user can really select. One more
+entry in an existing list says the same thing with nothing new on the
+screen.
+
+### Why the button is not one of the periods, learned by drawing it
+
+It was one of them for about an hour. Drawn beside the pill, the button
+and the pill **printed the same words next to each other**, because
+they were answering the same question. That failed his own bar for the
+request, which was "that looks good".
+
+**They answer different questions now:**
+
+| Control | Question |
+|---|---|
+| The button | WHICH RECORD: all of it, or only since your restart |
+| The pill | WHICH WINDOW inside that record |
+
+So "Since restart" plus "This month" is a sentence, not a
+contradiction, and the objection to a second control (that two time
+controls can disagree) does not apply, because only one of them is
+about time. `betsIn` picks the record first, then the window inside it.
+
+**The lesson: two controls side by side must answer two questions.**
+The duplicate was invisible in the code and obvious in the first
+screenshot. It was found by looking at the picture, not by reasoning
+about the model.
+
+### The one rule that made this more than a list entry
+
+**The restart line is NOT a date filter.** Every other period in that
+pill keeps a bet by its `settled_at`, which silently drops anything
+still running. The restart line does the opposite on purpose: a bet
+still riding when you draw the line is live money, so it belongs to the
+NEW record. That is `sinceLine` in `src/lib/stats.ts`, the same
+function Track uses.
+
+Written as an ordinary date filter it would have looked right, passed
+every screenshot, agreed with Track most of the time, and quietly lost
+a running bet from somebody's fresh record with nothing on screen to
+say so. **`restarttest.mjs` fails the build if anyone rewrites it that
+way.** It was proved by breaking it on purpose: the plain date filter
+fails three of its cases.
+
+### What it touched
+
+- `lab/period.ts`: `betsIn` takes the line and a `restarted` flag, and
+  applies the record before the window.
+- `lab/PeriodPill.tsx`: draws the button beside the trigger, so all
+  four pages get it from one place rather than four copies. It wears
+  Lab's selected chip exactly. `hasRestart` keeps it away from everyone
+  who has never restarted, for whom it would name a line that does not
+  exist and behave like All time.
+- `area.tsx`: `restarted` beside `period`, both threaded to the five
+  views that filter. It starts on for somebody with a line.
+- `src/lib/load-bets.ts`: `loadRestartLine()`, so the six live pages
+  read the date once each from one place rather than six copies, the
+  same reason the bets query lives there.
+- The six `src/app/stats/**` pages read it alongside the bets, both at
+  once rather than one after the other.
+- `src/app/preview/firstbets/[set]/page.tsx` takes `?since=`, which is
+  the only way to see a restarted record without a real account that
+  has restarted. Demo bets, so nothing real is exposed.
+
+**Nothing moves for a user who has never restarted.** With no line
+stored no button is drawn, the default is All time exactly as before,
+and `sinceLine` hands the list straight back.
+
+### Compare, on his "yes do compare too"
+
+It was left out of the first build and flagged to him, because it has
+its own window control (1M, 3M, 6M, 1Y, All) and has never taken the
+shared pill. He asked for it, so it draws the same chip under its
+header, where it scopes the whole page rather than just the chart.
+
+**The chip is one shared component**, `restart-chip.tsx`, used by the
+period pill and by Compare. Two copies of it would be two chances for
+the two halves of Performance to disagree about what a restart looks
+like.
+
+**Looking at the page found a false sentence a test would not have.**
+Under Compare's control sat "Data shown for your whole record", which
+was a lie the moment the button was on, directly beneath the control
+doing the restricting. The caption names the record as well as the
+window now, and `periodtest.mjs` pins both halves of it.
+
+### The sub-question answered itself
+
+Whether All Bets should hide pre-restart bets needed no ruling once the
+restart became a control. All Bets reads the same state as every other
+view, so it shows whichever record is selected and hides nothing
+permanently.

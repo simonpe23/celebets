@@ -117,16 +117,18 @@ values and ON for the rest.
    until the new palette is approved. See
    `.claude/rules/preview-pages.md`.
 2. `synctest.mjs`, the Kalshi money maths and taxonomy round-trips.
-3. `tsc --noEmit`.
-4. `next build`, **required**, because ESLint's rules-of-hooks only
+3. `restarttest.mjs`, the restart line's one rule: a running bet
+   crosses it, so it is not an ordinary date filter.
+4. `tsc --noEmit`.
+5. `next build`, **required**, because ESLint's rules-of-hooks only
    runs here.
-5. `sitecheck.mjs`, loads every page at 320, 393 and 1512 in both
+6. `sitecheck.mjs`, loads every page at 320, 393 and 1512 in both
    themes, 180 page loads, and reads what
    actually rendered. Since 31 August 2026 it also runs a fourth pass
    at a tall 1512x1600, 240 page loads, and fails if a page's content
    does not start and end on the same line as the tab bar, or if a
    page's first line ends up above the top of the window.
-6. `emptytest.mjs`, added 2 September 2026, loads every page against
+7. `emptytest.mjs`, added 2 September 2026, loads every page against
    six records from an empty account to ten settled bets and asks each
    block whether it says something, says what it is waiting for, or is
    silent. **It is a ratchet, not a pass/fail:** today's silences are
@@ -168,7 +170,8 @@ Standalone scripts:
 | `synctest.mjs` | Kalshi money splits and competition normalisation. |
 | `design-check.mjs` rule 13 | There is ONE bottom bar. Any other file building a bottom-stuck bar that names three or more tabs fails the build. |
 | `jumptest.mjs <port>` | The doors between the Home and Lab previews: row taps arrive with the fact selected, Explore Lab lands empty, and Home's KPI row mirrors Lab's cell for cell. |
-| `periodtest.mjs <port>` | The Performance period filter really filters: every period changes the numbers, Custom takes two dates, and the window survives a tab switch. |
+| `periodtest.mjs <port>` | The Performance period filter really filters: every period changes the numbers, Custom takes two dates, the window survives a tab switch, and the Since restart button is absent without a restart, on by default with one, counts differently when tapped off, and stays on while the window changes. |
+| `restarttest.mjs` | No server needed. The restart line carries a running bet over, where every period would drop it, and it composes with the window rather than replacing it. Proved by breaking it on purpose. |
 | `instanttest.mjs <port>` | NOTHING under Performance loads a page. Every door between the six views (menu tabs, ranked rows, the Heat Map pill and its tiles, See these bets, Compare, See all bets, every back arrow) causes ZERO server page requests, each view's own address still opens it, and the chosen window travels. |
 | `shotdiff.mjs shoot <port> <dir> [light\|dark] [perf\|live]` | `perf` shoots the six Performance previews at both widths plus ten states a page shot cannot reach. `live` shoots the app and the public pages, and needs running twice, once per theme. |
 | `shotdiff.mjs diff <a> <b> [marks]` | Compares two of those folders pixel by pixel, and writes the differing pixels out in magenta. |

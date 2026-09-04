@@ -17,6 +17,7 @@
 
 import { useMemo, useState } from "react";
 import PerfHeader from "@/components/performance/header";
+import RestartChip from "@/components/performance/restart-chip";
 import { useSearchParams } from "next/navigation";
 import {
   makeEngine,
@@ -34,6 +35,7 @@ import {
   InfoDot,
 } from "@/components/performance/icons";
 import { leagueSports } from "@/components/performance/lab/lab-model";
+import { sinceLine } from "@/lib/stats";
 import {
   CARD,
   CARD_WINNER,
@@ -165,6 +167,9 @@ export default function CompareApp({
   routes = PREVIEW_ROUTES,
   sel,
   onBack,
+  trackingSince = null,
+  restarted = false,
+  onRestarted,
 }: {
   /** Demo bets on the public preview, the signed in user's own
       bets on the live page. The component never knows which. */
@@ -176,8 +181,26 @@ export default function CompareApp({
   sel?: string;
   /** Back to Lab in place, with both chips still chosen. */
   onBack?: (sel: string) => void;
+  /** The restart line, or null. Only the live page passes one. */
+  trackingSince?: string | null;
+  /** True while the page counts from that restart rather than all of it. */
+  restarted?: boolean;
+  onRestarted?: (v: boolean) => void;
 }) {
-  const engine = useMemo(() => makeEngine(bets), [bets]);
+  // WHICH RECORD FIRST, exactly as the other five views do it, and for
+  // the same reason: after a restart this page would otherwise be the
+  // only one in Performance still answering with the whole history.
+  //
+  // Compare keeps its OWN window control (1M, 3M, 6M, 1Y, All) and has
+  // never taken the shared period pill, so the restart is applied to
+  // the bets here rather than through `betsIn`. The rule itself is
+  // `sinceLine`, the same one Track counts by: a bet still riding when
+  // you draw the line belongs to the new record.
+  const scoped = useMemo(
+    () => (restarted ? sinceLine(bets, trackingSince ?? null) : bets),
+    [bets, restarted, trackingSince]
+  );
+  const engine = useMemo(() => makeEngine(scoped), [scoped]);
   const params = useSearchParams();
   const [metric, setMetric] = useState<Metric>("Profit");
   const [period, setPeriod] = useState<PeriodKey>("All");
@@ -321,12 +344,23 @@ export default function CompareApp({
   const fmt =
     metric === "Profit" ? axisMoney : (v: number) => `${Math.round(v)}%`;
 
-  const spanLabel =
+  // THE CAPTION SAYS WHICH RECORD AS WELL AS WHICH WINDOW, since 4
+  // September 2026. "Data shown for your whole record" is a false
+  // sentence the moment the restart button is on, and it sat directly
+  // under the control that was doing the restricting.
+  const windowLabel =
     period === "All"
-      ? "Data shown for your whole record"
-      : `Data shown for the past ${
+      ? null
+      : `the past ${
           period === "1M" ? "month" : period === "1Y" ? "12 months" : period.replace("M", " months")
         }`;
+  const spanLabel = restarted
+    ? windowLabel
+      ? `Data shown for ${windowLabel}, since your restart`
+      : "Data shown for your record since your restart"
+    : windowLabel
+      ? `Data shown for ${windowLabel}`
+      : "Data shown for your whole record";
 
   return (
     <>
@@ -340,6 +374,16 @@ export default function CompareApp({
         title="Compare"
         tall
       />
+
+      {/* The restart, drawn here rather than beside a period pill
+          because Compare has never had one. It scopes the whole page,
+          both sides and the head to head, so it sits above them all.
+          See restart-chip.tsx. */}
+      {trackingSince ? (
+        <div className="relative mt-[10px] flex justify-center">
+          <RestartChip on={restarted} onChange={onRestarted} />
+        </div>
+      ) : null}
 
       {/* NOTHING TO COMPARE, so say so rather than draw two empty
           cards. A record with one sport, one league, one category and

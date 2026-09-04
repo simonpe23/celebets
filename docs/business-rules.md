@@ -159,12 +159,36 @@ settled before that date.
   is live money, so it belongs to the new record.
 - A bet settled exactly ON the line belongs to the old record.
 - Net profit, ROI, win rate, the chart, the snapshot and the insights all
-  count from the line **on Track and on `/stats-old`. Nothing is deleted.**
-- **THE REBUILT PERFORMANCE AT `/stats` DOES NOT READ THE LINE AT ALL.**
-  Found 2 September 2026. After a restart, Track counts from the line and
-  Performance counts the whole record, and neither page says which it is
-  doing. His call, open in `docs/open-questions.md`. Until he rules, this
-  is a known contradiction, not a design.
+  count from the line. **Nothing is deleted.**
+- **PERFORMANCE READS THE LINE**, since 4 September 2026, his ruling.
+  Until that day it did not read the line at all, so it and Track
+  printed different profits and neither said which.
+- **It is a BUTTON beside the period pill, not one of the periods**,
+  his order the same day. The two answer different questions:
+
+  | Control | Question |
+  |---|---|
+  | The Since restart button | WHICH RECORD: all of it, or only since your restart |
+  | The period pill | WHICH WINDOW inside that record |
+
+  So "Since restart" plus "This month" is a sentence, not a
+  contradiction. It was one of the periods for about an hour, and the
+  button then printed the same words as the pill right beside it.
+- **The button is drawn only for somebody who has restarted**, and it
+  is on when the page opens for them. Nothing changes for anybody else.
+- **The line is NOT a date filter, and this is the trap.** Every period
+  keeps a bet by its `settled_at`, which drops anything still running.
+  The line uses `sinceLine`, which carries a running bet over.
+  `restarttest.mjs` fails the build if it is ever rewritten as an
+  ordinary date filter.
+- **Compare follows it too**, his order the same day: "yes do compare
+  too". Compare keeps its own window control (1M, 3M, 6M, 1Y, All) and
+  has never taken the shared pill, so it draws the same button under
+  its header, where it scopes the whole page. Without it Compare was
+  the one place in Performance still answering with the whole history
+  after a restart. Its caption names the record as well as the window,
+  because "Data shown for your whole record" was false the moment the
+  button was on.
 - `/stats-old` carries an "All time" switch. The review at its foot
   ignores that switch on purpose: mixing the two would put two different
   profits on one screen.

@@ -166,6 +166,9 @@ export default function TotalsApp({
   routes = PREVIEW_ROUTES,
   period,
   range,
+  trackingSince = null,
+  restarted = false,
+  onRestarted,
   onPeriod,
   onRange,
   onJumpGroup,
@@ -180,6 +183,11 @@ export default function TotalsApp({
       the shared area that would reload the page to change a filter. */
   period: PeriodKey;
   range: CustomRange;
+  /** The restart line, or null. Only the live page passes one. */
+  trackingSince?: string | null;
+  /** True while the page counts from that restart rather than all of it. */
+  restarted?: boolean;
+  onRestarted?: (v: boolean) => void;
   onPeriod: (key: PeriodKey) => void;
   onRange: (r: CustomRange) => void;
   /** Open Lab on a group without leaving the page. */
@@ -193,7 +201,7 @@ export default function TotalsApp({
   // single call site knowing about dates.
   const [periodOpen, setPeriodOpen] = useState(false);
   const engine = useMemo(
-    () => makeEngine(betsIn(bets, period, range)),
+    () => makeEngine(betsIn(bets, period, range, trackingSince, restarted)),
     [bets, period, range]
   );
   const all = useMemo(() => overall(engine), [engine]);
@@ -269,6 +277,9 @@ export default function TotalsApp({
       {/* The period selector, then the result beside its line. */}
       <div className="relative z-30 mt-[10px] flex items-center pl-[4px]">
         <PeriodPill
+          hasRestart={!!trackingSince}
+          restarted={restarted}
+          onRestarted={onRestarted}
           period={period}
           onPick={onPeriod}
           open={periodOpen}
