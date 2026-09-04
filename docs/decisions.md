@@ -2821,3 +2821,31 @@ Whether All Bets should hide pre-restart bets needed no ruling once the
 restart became a control. All Bets reads the same state as every other
 view, so it shows whichever record is selected and hides nothing
 permanently.
+
+## PHASE 4 GOES TO ITS OWN CHAT, 4 September 2026
+
+**His pick**, from four offered: phase 4 in a new chat, with a handover
+written for it.
+
+He had been weighing this since 2 September: "i am now debating to do
+phase 4 here or in a new chat. i am not capable of doing that work. i
+am not a designer." Nobody settled it at the time, and this chat filled
+the gap with side work instead of putting the question to him. That was
+the mistake, not the delay.
+
+**The handover is `docs/phase4-handover.md`**: the job in his own
+words, the measurements taken the same day, the three directions, what
+is out of scope, the rules the code must obey, the test scripts and
+four traps that cost this chat hours.
+
+**The audit of that document against this file found five omissions**
+before he saw it, which is the point of running it: the landing page is
+already responsive to 1300px, the public pages are pinned and exempt
+from the type scale, Performance has no dark mode, `/stats-old` must
+stay, and `sitecheck.mjs` holds its own preview list that a new page
+must join or it goes unchecked.
+
+**Ownership of `src/components/performance/`, `src/app/preview/` and
+`src/app/stats/` moved with the job.** Phase 4 touches every page, so
+splitting it from the Performance tree would have recreated exactly the
+three-chat collision he ruled against on 31 August.
