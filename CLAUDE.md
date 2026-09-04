@@ -322,51 +322,15 @@ Keep it current: when a job finishes, delete its line.
     Home ships first and goes live alone: on day one Totals holds
     today's `/stats` content unredesigned and Lab wears a Soon badge.
     A mockup showing a two tab switcher is still built with three.
-- **THE SILENCE JOB.** Five phases, approved 2 September 2026. His
+- **THE SILENCE JOB IS DONE.** All five phases, 2 September 2026. His
   problem, his words: "Actuals says nothing to a new user for a long
-  time, and I only found out by asking." His end state: "The app
-  responds from the first bet... Not 'does not crash'. Responds."
-  1. **See it. DONE.** `/preview/firstbets` draws every page against
-     six records from an empty account to ten settled bets, and
-     `emptytest.mjs` fails the build on a new silence. 13 known
-     silences are listed in the script and the list can only shrink.
-  2. **The ranked list works for everybody. DONE.** Home has two
-     modes and the heading says which: ranked when there are three or
-     more rows, otherwise "What your record is so far" listing every
-     fact grouped as Lab groups them. The engine relaxes its two gates
-     rather than return nothing, and `factsIn` lists a record ungated.
-     The focused bettor bug is fixed: one sport, one league, one
-     category, one odds band used to give an EMPTY list at 200 settled
-     bets. His own page is pixel identical, proved with `shotdiff`.
-  3. **The banner and Compare. DONE.** The banner may name a winner
-     when there is no leak worth naming (a leak must be at least 5% of
-     the record's biggest figure, so "-$2" no longer counts). Compare
-     derives the best against the worst of the first dimension that
-     splits the record, and says so when there is nothing to compare.
-     **`emptytest`'s known-silence list is now EMPTY**, from thirteen.
-  4. **The lies. DONE.** The money formatter printed a plus sign on any
-     loss under 50 cents (`Math.round(-0.4)` is negative zero and
-     `-0 < 0` is false). The Home chart drew a line on the floor with
-     nothing settled and a flat line through the middle with one bet.
-     The date axis repeated itself below five points. Totals printed
-     "$0.0K" for a $40 record and put "Top 3" over one row. Compare
-     painted a bare dash green and red. "Best Sport" sat over a red
-     figure.
-  5. **Track and the leftovers. DONE.** The Insights page stuttered the
-     same sentences three times and had no way back. "Restart my
-     record" was dead for a new user and its copy promised an All time
-     switch that does not exist. The loading states disagreed with the
-     pages they preceded.
-  **THREE PRODUCT CALLS ARE WITH HIM**, none blocking: the pending
-  stake reading as a loss on day one, the dead "How it works" control,
-  and whether the Snapshot should say how few bets it is built on.
-  **A fourth is in `docs/open-questions.md`:** the live Performance
-  never honours a record restart, though Track does.
-  **ANSWERED, 2 September 2026:** show everything that was part of the
-  bet, and show it on Home the way Lab shows it. "Full time" is the one
-  exclusion, because it is the app naming the absence of a period, and
-  Lab leaves it out of its own When group for the same reason.
-  **FONTS, COLOURS AND DESKTOP ARE OUT**, his ruling.
+  time, and I only found out by asking." Every block on every page now
+  either says something or says what it is waiting for, and
+  `emptytest.mjs` fails the build if that stops being true. The full
+  account is in `docs/decisions.md`.
+  **ONE QUESTION IS PARKED** in `docs/open-questions.md`: Track honours
+  a record restart and Performance ignores it. Either answer changes
+  numbers he reads, so nothing has been built.
 
 - **App Store submission**, in a separate chat with the owner. Settings
   and store config, not code.
@@ -396,6 +360,20 @@ remember any of it.** His only job is clicking Merge.
 4. **Run `npm run check`, then commit and push.**
 5. **Tell him in one bullet what to merge**, and what it changes on the
    live site.
+
+**NEVER SEND THE MERGE LINK WHILE A CHECK IS STILL RUNNING.** Not with
+a "I will confirm when it goes green" beside it. He merges the link he
+is given, because a message that ends with a link reads as finished,
+and twice on 2 September 2026 he merged on a check that had not
+reported. His words: "but you're not working so i thought it was done."
+
+If a check is still running there is nothing to tell him yet. Wait for
+it. The cost of waiting is a few minutes; the cost of him merging a red
+build is on the live site.
+
+**The same rule applies to ending a turn.** Handing the turn back with
+nothing for him to do reads as "finished", whatever the words say. If
+he has no decision to make, keep working or wait, do not report.
 
 ## Secrets
 

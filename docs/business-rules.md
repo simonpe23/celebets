@@ -159,8 +159,13 @@ settled before that date.
   is live money, so it belongs to the new record.
 - A bet settled exactly ON the line belongs to the old record.
 - Net profit, ROI, win rate, the chart, the snapshot and the insights all
-  count from the line. **Nothing is deleted.**
-- Performance carries an "All time" switch. The review at the foot
+  count from the line **on Track and on `/stats-old`. Nothing is deleted.**
+- **THE REBUILT PERFORMANCE AT `/stats` DOES NOT READ THE LINE AT ALL.**
+  Found 2 September 2026. After a restart, Track counts from the line and
+  Performance counts the whole record, and neither page says which it is
+  doing. His call, open in `docs/open-questions.md`. Until he rules, this
+  is a known contradiction, not a design.
+- `/stats-old` carries an "All time" switch. The review at its foot
   ignores that switch on purpose: mixing the two would put two different
   profits on one screen.
 - With no line, `netProfitOf(all bets)` equals balance plus removals
