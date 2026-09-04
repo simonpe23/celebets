@@ -2797,12 +2797,23 @@ fails three of its cases.
 stored no button is drawn, the default is All time exactly as before,
 and `sinceLine` hands the list straight back.
 
-### Left out on purpose, and told to him
+### Compare, on his "yes do compare too"
 
-**Compare does not follow the restart.** It has its own control
-(1M, 3M, 6M, 1Y, All) and has never taken the shared period, so it
-still reads all time. That is a pre-existing difference, not something
-this change introduced, and widening it was not what he asked for.
+It was left out of the first build and flagged to him, because it has
+its own window control (1M, 3M, 6M, 1Y, All) and has never taken the
+shared pill. He asked for it, so it draws the same chip under its
+header, where it scopes the whole page rather than just the chart.
+
+**The chip is one shared component**, `restart-chip.tsx`, used by the
+period pill and by Compare. Two copies of it would be two chances for
+the two halves of Performance to disagree about what a restart looks
+like.
+
+**Looking at the page found a false sentence a test would not have.**
+Under Compare's control sat "Data shown for your whole record", which
+was a lie the moment the button was on, directly beneath the control
+doing the restricting. The caption names the record as well as the
+window now, and `periodtest.mjs` pins both halves of it.
 
 ### The sub-question answered itself
 

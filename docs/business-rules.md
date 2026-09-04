@@ -181,9 +181,14 @@ settled before that date.
   The line uses `sinceLine`, which carries a running bet over.
   `restarttest.mjs` fails the build if it is ever rewritten as an
   ordinary date filter.
-- **Compare does not follow it.** Compare has its own control (1M, 3M,
-  6M, 1Y, All) and has never taken the shared period, so it still reads
-  all time. Flagged to him 4 September 2026, not yet decided.
+- **Compare follows it too**, his order the same day: "yes do compare
+  too". Compare keeps its own window control (1M, 3M, 6M, 1Y, All) and
+  has never taken the shared pill, so it draws the same button under
+  its header, where it scopes the whole page. Without it Compare was
+  the one place in Performance still answering with the whole history
+  after a restart. Its caption names the record as well as the window,
+  because "Data shown for your whole record" was false the moment the
+  button was on.
 - `/stats-old` carries an "All time" switch. The review at its foot
   ignores that switch on purpose: mixing the two would put two different
   profits on one screen.

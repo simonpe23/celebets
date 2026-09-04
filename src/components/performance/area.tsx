@@ -282,6 +282,9 @@ export default function PerfArea({
           bets={bets}
           routes={routes}
           sel={subSel}
+          trackingSince={trackingSince}
+          restarted={restarted}
+          onRestarted={setRestarted}
           onBack={(sel) => go("lab", { sel })}
         />
       )}

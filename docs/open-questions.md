@@ -288,9 +288,9 @@ pair a user can really select.
 one rule that made it more than a list entry: "Since restart" is not a
 date filter, because a bet still running crosses the line.
 
-**One piece was deliberately left out and flagged to him: Compare.** It
-has its own control (1M, 3M, 6M, 1Y, All) and has never taken the
-shared period, so it still reads all time after a restart. Undecided.
+**Compare was left out at first and then included**, on his "yes do
+compare too" the same day. It keeps its own window control and draws
+the button under its header.
 
 **The sub-question answered itself.** Whether All Bets should hide
 pre-restart bets needed no ruling once the line became a period: All

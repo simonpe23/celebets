@@ -198,9 +198,10 @@ running. The line calls `sinceLine`, which carries a running bet over,
 because money still riding belongs to the new record.
 `restarttest.mjs` fails the build on the ordinary-date-filter version.
 
-**Compare is the one view that does not follow it.** It has its own
-control and has never taken the shared period. Pre-existing, flagged,
-undecided.
+**Compare follows it too**, since the same day. It keeps its own window
+control and has never taken the shared pill, so it draws the chip under
+its header and applies `sinceLine` to its own bets. Its caption names
+the record as well as the window.
 
 ## Testing
 

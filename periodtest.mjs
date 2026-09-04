@@ -151,6 +151,47 @@ say(
   "the button stays on while the window changes"
 );
 
+// 6. COMPARE FOLLOWS IT TOO, his order of 4 September 2026: "yes do
+//    compare too". Compare keeps its own window control (1M, 3M, 6M,
+//    1Y, All) and has never taken the shared pill, so it draws the
+//    same chip under its header. Without this it was the one page in
+//    Performance still answering with the whole history after a
+//    restart.
+await page.goto(
+  `http://localhost:${port}/preview/firstbets/ten?since=${line}&view=compare`,
+  { waitUntil: "networkidle" }
+);
+await page.waitForTimeout(700);
+say((await page.$$(BTN)).length === 1, "Compare shows the button");
+say(
+  (await page.getAttribute(BTN, "aria-pressed")) === "true",
+  "and opens counting from the restart"
+);
+// The caption under Compare's control must not claim the whole record
+// while the button is restricting it. It said exactly that until this
+// was caught by looking at the screenshot.
+say(
+  await page.evaluate(() => document.body.innerText.includes("since your restart")),
+  "and its caption says so rather than claiming the whole record"
+);
+const cmpRestricted = await page.evaluate(() => document.body.innerText);
+await page.click(BTN);
+await page.waitForTimeout(600);
+const cmpWhole = await page.evaluate(() => document.body.innerText);
+say(cmpRestricted !== cmpWhole, "and tapping it off changes what Compare shows");
+say(
+  await page.evaluate(() => document.body.innerText.includes("your whole record")),
+  "and the caption then says the whole record"
+);
+
+// 7. And Compare shows nothing of it to somebody who never restarted.
+await page.goto(
+  `http://localhost:${port}/preview/firstbets/ten?view=compare`,
+  { waitUntil: "networkidle" }
+);
+await page.waitForTimeout(700);
+say((await page.$$(BTN)).length === 0, "Compare has no button without a restart");
+
 await browser.close();
 console.log(fails ? `${fails} problem(s)` : "The period filter works.");
 process.exit(fails ? 1 : 0);
